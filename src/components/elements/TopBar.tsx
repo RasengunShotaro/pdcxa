@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Bell, User } from "lucide-react";
 
-export function TopBar() {
+export function Header() {
   return (
     <header className="fixed top-0 left-0 right-0 bg-white h-16 px-6 flex items-center justify-between border-b z-50">
       <div className="flex items-center space-x-4">
