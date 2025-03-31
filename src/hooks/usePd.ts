@@ -1,6 +1,6 @@
 "use client";
 
-import { pdApi } from "@/lib/api/pd";
+import { pdApi } from "@/feature/pd/api/pd";
 import type { Pd } from "@/types/pd";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
