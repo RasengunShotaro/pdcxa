@@ -1,7 +1,7 @@
 "use client";
 
 import { pdApi } from "@/feature/pd/api/pd";
-import type { Pd } from "@/types/pd";
+import type { Pd } from "@/feature/pd/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export const PD_QUERY_KEY = ["pds"] as const;
