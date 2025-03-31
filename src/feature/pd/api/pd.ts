@@ -1,6 +1,6 @@
 "use client";
 
-import type { Pd } from "@/types/pd";
+import type { Pd } from "@/feature/pd/types";
 
 const STORAGE_KEY = "pd_items";
 
@@ -28,10 +28,13 @@ export const pdApi = {
       id: crypto.randomUUID(),
       content,
       createdAt: new Date(),
-      user: "テストユーザー", // TODO: 認証実装後に実際のユーザー情報を使用
-      username: "@test_user",
-      likes: 0,
-      comments: 0,
+      user: {
+        id: "AAAAA",
+        username: "@test_user",
+        displayName: "テストユーザー",
+      },
+      likes: [],
+      rePds: [],
     };
 
     try {
