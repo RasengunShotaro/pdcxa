@@ -1,10 +1,10 @@
 "use client";
 
+import { FloatingPdButton } from "@/feature/pd/components/FloatingPdButton";
+import PdItem from "@/feature/pd/components/PdItem";
+import PdModal from "@/feature/pd/components/PdModal";
 import { usePd } from "@/hooks/usePd";
 import { useState } from "react";
-import PdItem from "../pd/PdItem";
-import PdModal from "../pd/PdModal";
-import { FloatingPdButton } from "./FloatingPdButton";
 
 export function MainContent() {
   const [isModalOpen, setIsModalOpen] = useState(false);

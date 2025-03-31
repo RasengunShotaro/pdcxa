@@ -1,7 +1,7 @@
+import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
+import type { Pd } from "@/types/pd";
 import { Heart, MessageCircle, MoreHorizontal, Share2 } from "lucide-react";
-import type { Pd } from "../../types/pd";
-import { Button } from "../ui/button";
 
 interface PdItemProps {
   post: Pd;
