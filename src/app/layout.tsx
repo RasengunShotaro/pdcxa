@@ -8,8 +8,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "ChatApp",
-  description: "Twitterのような非同期チャットアプリケーション",
+  title: "PDCXA",
+  description: "日々のPDを記録するアプリ",
 };
 
 export default async function RootLayout({
