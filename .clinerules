@@ -2,6 +2,13 @@
 - 機密ファイル、環境変数、APIキーなどの情報を含むファイルの読み取りやPUSHは禁止
 - 勝手なライブラリのアップデートは禁止
 
+## ドメイン用語
+- ドメイン用語を使用すること。
+- PD: チャットと言う意味。
+  - 例：PDする=Chatする、Pd.ts=Chat.ts
+- RePd: リプライと言う意味。
+  - 例：RePdする=リプライする、RePd.ts=Reply.ts
+
 ## 開発環境
 - Next.JS App Router
 - TypeScript
@@ -23,56 +30,3 @@
 
 ## テスト
 - Vitestを採用
-
-## 現在の設計状況
-─────────────────────────────
-
-src/
-├── app/
-│   ├── page.tsx            // ホーム画面（ダッシュボード）
-│   ├── notifications/
-│   │   └── page.tsx        // 通知画面
-│   ├── messages/
-│   │   └── page.tsx        // チャットメッセージ一覧、ルーム選択画面など
-│   ├── profile/
-│   │   └── [id]/
-│   │       └── page.tsx    // ユーザー個別のプロフィール画面（動的ルーティング）
-│   └── layout.tsx          // 全体レイアウト（Header, Sidebar など共通部分）
-
-├── components/
-│   ├── elements/           // 汎用UIパーツ（ボタン、入力フィールド、アイコン等）
-│   └── post/               // 投稿関連コンポーネント
-│       └── PostItem.tsx    // 単一投稿表示コンポーネント
-│
-├── features/
-│   ├── chat/
-│   │   ├── components/     // チャット専用コンポーネント（ChatWindow, ChatMessage等）
-│   │   ├── hooks/          // チャット関連のカスタムフック
-│   │   └── api/            // チャットAPIとの通信処理
-│   └── notification/
-│       ├── components/     // 通知専用コンポーネント（通知リスト、通知アイテム等）
-│       ├── hooks/          // 通知関連のカスタムフック
-│       └── api/            // 通知APIとの通信処理
-
-├── lib/
-│   ├── api/                // 共通で使うAPIクライアント（fetchやaxiosのラッパー）
-│   └── db/                 // データベース接続やクエリ処理（必要な場合）
-
-├── hooks/
-│   ├── useChat.ts          // グローバルなチャットロジック
-│   └── useNotification.ts  // グローバルな通知ロジック
-
-├── types/
-│   ├── chat.ts             // チャット関連の型定義
-│   ├── notification.ts     // 通知関連の型定義
-│   └── post.ts             // 投稿型定義
-
-├── utils/
-│   ├── date.ts             // 日付処理関数
-│   └── format.ts           // フォーマットや変換ユーティリティ
-
-└── constants/
-    ├── routes.ts           // アプリ内ルート情報の定数、パス定義
-    └── config.ts           // 共通設定・環境変数の管理
-
-─────────────────────────────
