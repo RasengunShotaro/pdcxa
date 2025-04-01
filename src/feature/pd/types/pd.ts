@@ -6,7 +6,7 @@ export type Pd = {
   content: string;
   createdAt: Date;
   user: User;
-  rePds: RePd[];
+  rePds: number;
   likes: Like[];
 };
 
