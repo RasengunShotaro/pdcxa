@@ -1,17 +1,14 @@
 "use client";
 
-import { pdApi } from "@/feature/pd/api/pd";
-import type { Pd } from "@/feature/pd/types";
+import { PD_QUERY_KEY, createPd, getPds, updatePdCache } from "@/lib/pdCommon";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-
-export const PD_QUERY_KEY = ["pds"] as const;
 
 export const usePd = () => {
   const queryClient = useQueryClient();
 
   const { data: pds = [], error } = useQuery({
     queryKey: PD_QUERY_KEY,
-    queryFn: pdApi.getPds,
+    queryFn: getPds,
     staleTime: 60 * 1000,
     gcTime: 5 * 60 * 1000,
     refetchOnMount: false,
@@ -19,19 +16,16 @@ export const usePd = () => {
     refetchOnReconnect: false,
   });
 
-  const { mutate: createPd } = useMutation({
-    mutationFn: pdApi.createPd,
+  const { mutate: createNewPd } = useMutation({
+    mutationFn: createPd,
     onSuccess: (newPd) => {
-      queryClient.setQueryData<Pd[]>(PD_QUERY_KEY, (old = []) => [
-        newPd,
-        ...old,
-      ]);
+      updatePdCache(queryClient, newPd);
     },
   });
 
   return {
     pds,
     error,
-    createPd,
+    createPd: createNewPd,
   };
 };
