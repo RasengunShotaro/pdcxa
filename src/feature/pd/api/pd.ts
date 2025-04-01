@@ -34,7 +34,7 @@ export const pdApi = {
         displayName: "テストユーザー",
       },
       likes: [],
-      rePds: [],
+      rePds: 0,
     };
 
     try {
