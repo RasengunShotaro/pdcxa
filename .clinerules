@@ -27,6 +27,7 @@
 ## コーディング規約
 - 基本的にはBiomeのルールに従う
 - letを使わずconstを使う(厳守)
+- shadcn-ui@latestは非推奨のため、shadcn@latestを使用すること
 
 ## テスト
 - Vitestを採用
