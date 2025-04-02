@@ -4,7 +4,7 @@ import PdItem from "@/feature/pd/components/PdItem";
 import { PostPdButton } from "@/feature/pd/components/PostPdButton";
 import { usePd } from "@/hooks/usePd";
 
-export function MainContent() {
+export function TimeLine() {
   const { pds } = usePd();
 
   return (

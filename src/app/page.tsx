@@ -1,5 +1,5 @@
-import { MainContent } from "@/components/elements/MainContent";
+import { TimeLine } from "@/components/elements/TimeLine";
 
-export default function HomePage() {
-  return <MainContent />;
+export default function Page() {
+  return <TimeLine />;
 }
