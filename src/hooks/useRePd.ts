@@ -29,7 +29,15 @@ export const useRePd = (pdId: string) => {
     mutationFn: (content: string) => createRePd(pdId, content),
     onSuccess: () => {
       updateRePdCache(queryClient, pdId);
-      queryClient.invalidateQueries({ queryKey: PD_QUERY_KEY });
+      queryClient.invalidateQueries({
+        queryKey: [...PD_QUERY_KEY, null],
+        exact: true,
+        refetchType: "all",
+      });
+      queryClient.invalidateQueries({
+        queryKey: [...PD_QUERY_KEY, [pdId]],
+        exact: true,
+      });
       queryClient.invalidateQueries({ queryKey: [...REPD_QUERY_KEY, pdId] });
     },
   });
