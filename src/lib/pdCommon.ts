@@ -41,7 +41,7 @@ export const createPd = async (content: string): Promise<Pd> => {
       username: "@test_user",
       displayName: "テストユーザー",
     },
-    rePds: [],
+    rePds: 0,
     likes: [],
   };
 
@@ -77,7 +77,7 @@ export const createRePd = async (
   try {
     const currentPds = await getPds();
     const updatedPds = currentPds.map((pd) =>
-      pd.id === pdId ? { ...pd, rePds: [newRePd, ...pd.rePds] } : pd,
+      pd.id === pdId ? { ...pd, rePds: pd.rePds + 1 } : pd,
     );
     localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedPds));
     return newRePd;
@@ -98,11 +98,8 @@ export const updatePdCache = (
 export const updateRePdCache = (
   queryClient: ReturnType<typeof useQueryClient>,
   pdId: string,
-  newRePd: RePd,
 ) => {
   queryClient.setQueryData<Pd[]>(PD_QUERY_KEY, (old = []) =>
-    old.map((pd) =>
-      pd.id === pdId ? { ...pd, rePds: [newRePd, ...pd.rePds] } : pd,
-    ),
+    old.map((pd) => (pd.id === pdId ? { ...pd, rePds: pd.rePds + 1 } : pd)),
   );
 };
