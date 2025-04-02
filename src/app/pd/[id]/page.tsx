@@ -15,19 +15,15 @@ export default function PdDetail({ params }: PdDetailProps) {
 
   if (!pd) {
     return (
-      <main className="flex flex-col items-center min-h-screen p-4">
-        <div className="w-full max-w-2xl">
-          ご指定のPDが見つかりませんでした。
-        </div>
-      </main>
+      <div className="max-w-2xl mx-auto">
+        ご指定のPDが見つかりませんでした。
+      </div>
     );
   }
 
   return (
-    <main className="flex flex-col items-center min-h-screen p-4">
-      <div className="w-full max-w-2xl">
-        <PdItem pd={pd} />
-      </div>
-    </main>
+    <div className="max-w-2xl mx-auto">
+      <PdItem pd={pd} />
+    </div>
   );
 }
