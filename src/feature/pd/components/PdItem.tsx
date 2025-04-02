@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import type { Pd } from "@/feature/pd/types";
 import { Heart, MessageCircle, MoreHorizontal, Share2 } from "lucide-react";
-
+import Link from "next/link";
 interface PdItemProps {
   pd: Pd;
 }
@@ -36,14 +36,16 @@ const PdItem: React.FC<PdItemProps> = ({ pd }) => {
               <Heart className="h-4 w-4" />
               <span>{pd.likes.length}</span>
             </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="hover:text-blue-500 space-x-1"
-            >
-              <MessageCircle className="h-4 w-4" />
-              <span>{pd.rePds}</span>
-            </Button>
+            <Link href={`/pd/${pd.id}`}>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="hover:text-blue-500 space-x-1"
+              >
+                <MessageCircle className="h-4 w-4" />
+                <span>{pd.rePds}</span>
+              </Button>
+            </Link>
             <Button variant="ghost" size="sm" className="hover:text-green-500">
               <Share2 className="h-4 w-4" />
             </Button>
