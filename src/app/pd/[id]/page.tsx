@@ -2,15 +2,18 @@
 
 import PdItem from "@/feature/pd/components/PdItem";
 import { usePd } from "@/hooks/usePd";
+import { use } from "react";
 
 interface PdDetailProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export default function PdDetail({ params }: PdDetailProps) {
-  const { pds } = usePd([params.id]);
+  const unwrapParams = use(params);
+
+  const { pds } = usePd([unwrapParams.id]);
   const pd = pds[0];
 
   if (!pd) {
