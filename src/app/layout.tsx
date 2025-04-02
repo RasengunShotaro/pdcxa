@@ -1,3 +1,5 @@
+import { AppSidebar as Sidebar } from "@/components/elements/Sidebar";
+import { Header } from "@/components/elements/TopBar";
 import { Providers } from "@/lib/providers";
 import {
   HydrationBoundary,
@@ -25,7 +27,21 @@ export default async function RootLayout({
       <body className="bg-gray-100 min-h-screen">
         <Providers>
           <HydrationBoundary state={dehydratedState}>
-            {children}
+            <div className="h-screen bg-gray-100 overflow-hidden">
+              <div className="fixed top-0 left-0 right-0 z-50">
+                <Header />
+              </div>
+              <div className="flex pt-16">
+                <aside className="w-64 flex-none">
+                  <div className="fixed top-16 h-[calc(100vh-64px)]">
+                    <Sidebar />
+                  </div>
+                </aside>
+                <div className="flex-1 h-[calc(100vh-64px)] overflow-y-auto">
+                  <div className="p-6">{children}</div>
+                </div>
+              </div>
+            </div>
           </HydrationBoundary>
         </Providers>
       </body>
