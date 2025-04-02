@@ -20,6 +20,7 @@ export const usePd = (pdIds?: string[]) => {
     mutationFn: createPd,
     onSuccess: (newPd) => {
       updatePdCache(queryClient, newPd);
+      queryClient.invalidateQueries({ queryKey: PD_QUERY_KEY });
     },
   });
 
