@@ -46,9 +46,6 @@ const PdItem: React.FC<PdItemProps> = ({ pd }) => {
                 <span>{pd.rePds}</span>
               </Button>
             </Link>
-            <Button variant="ghost" size="sm" className="hover:text-green-500">
-              <Share2 className="h-4 w-4" />
-            </Button>
           </div>
         </div>
       </CardHeader>
