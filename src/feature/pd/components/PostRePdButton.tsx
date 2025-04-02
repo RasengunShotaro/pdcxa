@@ -15,7 +15,7 @@ export function PostRePdButton({ pdId }: PostRePdButtonProps) {
     <>
       <Button
         onClick={() => setIsModalOpen(true)}
-        className="fixed bottom-20 right-6 w-14 h-14 rounded-full p-0 shadow-lg"
+        className="fixed bottom-6 right-6 w-14 h-14 rounded-full p-0 shadow-lg"
         size="icon"
       >
         <MessageCircle className="h-4 w-4" />
