@@ -1,6 +1,7 @@
 "use client";
 
 import PdItem from "@/feature/pd/components/PdItem";
+import { PostRePdButton } from "@/feature/pd/components/PostRePdButton";
 import { RePds } from "@/feature/pd/components/RePDs";
 import { usePd } from "@/hooks/usePd";
 import { useRePd } from "@/hooks/useRePd";
@@ -33,6 +34,7 @@ export default function PdDetail({ params }: PdDetailProps) {
       <div className="mt-4 space-y-4">
         <RePds rePds={rePds} />
       </div>
+      <PostRePdButton pdId={pd.id} />
     </div>
   );
 }
