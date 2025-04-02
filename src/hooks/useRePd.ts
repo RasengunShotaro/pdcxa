@@ -12,7 +12,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 export const useRePd = (pdId: string) => {
   const queryClient = useQueryClient();
 
-  const { data: rePds, error } = useQuery({
+  const { data: rePds = [], error } = useQuery({
     queryKey: [...PD_QUERY_KEY, pdId],
     queryFn: async () => {
       const pds = await getRePds(pdId);
