@@ -12,18 +12,21 @@ export const PD_QUERY_KEY = ["pds"] as const;
 export const REPD_QUERY_KEY = ["repds"] as const;
 
 // PDの取得
-export const getPds = async (): Promise<Pd[]> => {
+export const getPds = async ({
+  pdIds,
+}: { pdIds?: string[] }): Promise<Pd[]> => {
   try {
     const storedPds = localStorage.getItem(STORAGE_KEY);
     if (!storedPds) return [];
 
-    const parsedPds = JSON.parse(storedPds).map(
+    const parsedPds: Pd[] = JSON.parse(storedPds).map(
       (pd: Omit<Pd, "createdAt"> & { createdAt: string }) => ({
         ...pd,
         createdAt: new Date(pd.createdAt),
       }),
     );
-    return parsedPds;
+
+    return pdIds ? parsedPds.filter((pd) => pdIds.includes(pd.id)) : parsedPds;
   } catch (error) {
     console.error("PDの読み込みに失敗しました:", error);
     return [];
@@ -46,7 +49,7 @@ export const createPd = async (content: string): Promise<Pd> => {
   };
 
   try {
-    const currentPds = await getPds();
+    const currentPds = await getPds({});
     const updatedPds = [newPd, ...currentPds];
     localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedPds));
     return newPd;
@@ -75,7 +78,7 @@ export const createRePd = async (
   };
 
   try {
-    const currentPds = await getPds();
+    const currentPds = await getPds({});
     const updatedPds = currentPds.map((pd) =>
       pd.id === pdId ? { ...pd, rePds: pd.rePds + 1 } : pd,
     );
