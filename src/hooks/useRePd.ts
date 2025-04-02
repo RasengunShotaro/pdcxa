@@ -13,7 +13,7 @@ export const useRePd = (pdId: string) => {
   const queryClient = useQueryClient();
 
   const { data: rePds = [], error } = useQuery({
-    queryKey: [...PD_QUERY_KEY, pdId],
+    queryKey: [...REPD_QUERY_KEY, pdId],
     queryFn: async () => {
       const pds = await getRePds(pdId);
       return pds;
@@ -29,8 +29,8 @@ export const useRePd = (pdId: string) => {
     mutationFn: (content: string) => createRePd(pdId, content),
     onSuccess: () => {
       updateRePdCache(queryClient, pdId);
-      queryClient.invalidateQueries({ queryKey: [...PD_QUERY_KEY, pdId] });
-      queryClient.invalidateQueries({ queryKey: REPD_QUERY_KEY });
+      queryClient.invalidateQueries({ queryKey: PD_QUERY_KEY });
+      queryClient.invalidateQueries({ queryKey: [...REPD_QUERY_KEY, pdId] });
     },
   });
 
