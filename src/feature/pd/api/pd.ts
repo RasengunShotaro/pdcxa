@@ -1,50 +1,104 @@
-"use client";
-
-import type { Pd } from "@/feature/pd/types";
+import type { Pd, RePd } from "@/feature/pd/types/pd";
+import type { useQueryClient } from "@tanstack/react-query";
 
 const STORAGE_KEY = "pd_items";
 
-export const pdApi = {
-  getPds: async (): Promise<Pd[]> => {
-    try {
-      const storedPds = localStorage.getItem(STORAGE_KEY);
-      if (!storedPds) return [];
+// キャッシュのキー
+export const PD_QUERY_KEY = ["pds"] as const;
+export const REPD_QUERY_KEY = ["repds"] as const;
 
-      const parsedPds = JSON.parse(storedPds).map(
-        (pd: Omit<Pd, "createdAt"> & { createdAt: string }) => ({
-          ...pd,
-          createdAt: new Date(pd.createdAt),
-        }),
-      );
-      return parsedPds;
-    } catch (error) {
-      console.error("PDの読み込みに失敗しました:", error);
-      return [];
-    }
-  },
+// PDの取得
+export const getPds = async ({
+  pdIds,
+}: { pdIds?: string[] }): Promise<Pd[]> => {
+  try {
+    const storedPds = localStorage.getItem(STORAGE_KEY);
+    if (!storedPds) return [];
 
-  createPd: async (content: string): Promise<Pd> => {
-    const newPd: Pd = {
-      id: crypto.randomUUID(),
-      content,
-      createdAt: new Date(),
-      user: {
-        id: "AAAAA",
-        username: "@test_user",
-        displayName: "テストユーザー",
-      },
-      likes: [],
-      rePds: 0,
-    };
+    const parsedPds: Pd[] = JSON.parse(storedPds).map(
+      (pd: Omit<Pd, "createdAt"> & { createdAt: string }) => ({
+        ...pd,
+        createdAt: new Date(pd.createdAt),
+      }),
+    );
 
-    try {
-      const currentPds = await pdApi.getPds();
-      const updatedPds = [newPd, ...currentPds];
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedPds));
-      return newPd;
-    } catch (error) {
-      console.error("PDの保存に失敗しました:", error);
-      throw error;
-    }
-  },
+    return pdIds ? parsedPds.filter((pd) => pdIds.includes(pd.id)) : parsedPds;
+  } catch (error) {
+    console.error("PDの読み込みに失敗しました:", error);
+    return [];
+  }
+};
+
+// PDの作成
+export const createPd = async (content: string): Promise<Pd> => {
+  const newPd: Pd = {
+    id: crypto.randomUUID(),
+    content,
+    createdAt: new Date(),
+    user: {
+      id: "AAAAA",
+      username: "@test_user",
+      displayName: "テストユーザー",
+    },
+    rePds: 0,
+    likes: [],
+  };
+
+  try {
+    const currentPds = await getPds({});
+    const updatedPds = [newPd, ...currentPds];
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedPds));
+    return newPd;
+  } catch (error) {
+    console.error("PDの保存に失敗しました:", error);
+    throw error;
+  }
+};
+
+// リプライの作成
+export const createRePd = async (
+  pdId: string,
+  content: string,
+): Promise<RePd> => {
+  const newRePd: RePd = {
+    id: crypto.randomUUID(),
+    pdId,
+    content,
+    createdAt: new Date(),
+    user: {
+      id: "AAAAA",
+      username: "@test_user",
+      displayName: "テストユーザー",
+    },
+    likes: [],
+  };
+
+  try {
+    const currentPds = await getPds({});
+    const updatedPds = currentPds.map((pd) =>
+      pd.id === pdId ? { ...pd, rePds: pd.rePds + 1 } : pd,
+    );
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedPds));
+    return newRePd;
+  } catch (error) {
+    console.error("リプライの保存に失敗しました:", error);
+    throw error;
+  }
+};
+
+// キャッシュ更新用のユーティリティ関数
+export const updatePdCache = (
+  queryClient: ReturnType<typeof useQueryClient>,
+  newPd: Pd,
+) => {
+  queryClient.setQueryData<Pd[]>(PD_QUERY_KEY, (old = []) => [newPd, ...old]);
+};
+
+export const updateRePdCache = (
+  queryClient: ReturnType<typeof useQueryClient>,
+  pdId: string,
+) => {
+  queryClient.setQueryData<Pd[]>(PD_QUERY_KEY, (old = []) =>
+    old.map((pd) => (pd.id === pdId ? { ...pd, rePds: pd.rePds + 1 } : pd)),
+  );
 };
