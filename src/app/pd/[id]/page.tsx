@@ -1,7 +1,9 @@
 "use client";
 
 import PdItem from "@/feature/pd/components/PdItem";
+import { RePds } from "@/feature/pd/components/RePDs";
 import { usePd } from "@/hooks/usePd";
+import { useRePd } from "@/hooks/useRePd";
 import { use } from "react";
 
 interface PdDetailProps {
@@ -15,6 +17,7 @@ export default function PdDetail({ params }: PdDetailProps) {
 
   const { pds } = usePd([unwrapParams.id]);
   const pd = pds[0];
+  const { rePds } = useRePd(unwrapParams.id);
 
   if (!pd) {
     return (
@@ -27,6 +30,9 @@ export default function PdDetail({ params }: PdDetailProps) {
   return (
     <div className="max-w-2xl mx-auto">
       <PdItem pd={pd} />
+      <div className="mt-4 space-y-4">
+        <RePds rePds={rePds} />
+      </div>
     </div>
   );
 }
