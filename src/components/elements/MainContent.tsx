@@ -1,13 +1,10 @@
 "use client";
 
-import { FloatingPdButton } from "@/feature/pd/components/FloatingPdButton";
 import PdItem from "@/feature/pd/components/PdItem";
-import PdModal from "@/feature/pd/components/PdModal";
+import { PostPdButton } from "@/feature/pd/components/PostPdButton";
 import { usePd } from "@/hooks/usePd";
-import { useState } from "react";
 
 export function MainContent() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const { pds } = usePd();
 
   return (
@@ -17,10 +14,7 @@ export function MainContent() {
           <PdItem key={post.id} pd={post} />
         ))}
       </div>
-
-      <FloatingPdButton onClick={() => setIsModalOpen(true)} />
-
-      <PdModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      <PostPdButton />
     </div>
   );
 }
