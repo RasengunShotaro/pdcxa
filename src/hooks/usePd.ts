@@ -1,6 +1,11 @@
 "use client";
 
-import { PD_QUERY_KEY, createPd, getPds, updatePdCache } from "@/lib/pdCommon";
+import {
+  PD_QUERY_KEY,
+  createPd,
+  getPds,
+  updatePdCache,
+} from "@/feature/pd/api/pd";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export const usePd = (pdIds?: string[]) => {
