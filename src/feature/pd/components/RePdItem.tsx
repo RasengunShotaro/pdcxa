@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import type { RePd } from "@/feature/pd/types";
-import { Heart, MoreHorizontal, Share2 } from "lucide-react";
+import { Heart, MoreHorizontal } from "lucide-react";
 interface PdItemProps {
   rePd: RePd;
 }
