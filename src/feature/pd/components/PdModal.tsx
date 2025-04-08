@@ -9,10 +9,18 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormMessage,
+} from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
 import { usePd } from "@/hooks/usePd";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { MessageSquare } from "lucide-react";
-import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { type PdFormSchema, pdFormSchema } from "../types";
 
 interface PdModalProps {
   isOpen: boolean;
@@ -20,15 +28,18 @@ interface PdModalProps {
 }
 
 export const PdModal: React.FC<PdModalProps> = ({ isOpen, onClose }) => {
-  const [content, setContent] = useState("");
+  const form = useForm<PdFormSchema>({
+    resolver: zodResolver(pdFormSchema),
+    defaultValues: {
+      pd: "",
+    },
+  });
   const { createPd } = usePd();
 
-  const handleSubmit = () => {
-    if (content.trim()) {
-      createPd(content);
-      setContent("");
-      onClose();
-    }
+  const onSubmit = (values: PdFormSchema) => {
+    createPd(values.pd);
+    form.reset();
+    onClose();
   };
 
   return (
@@ -38,26 +49,35 @@ export const PdModal: React.FC<PdModalProps> = ({ isOpen, onClose }) => {
           <DialogTitle>新規PD</DialogTitle>
           <DialogDescription>今の気持ちをPDしましょう</DialogDescription>
         </DialogHeader>
-        <div className="grid gap-4 py-4">
-          <Textarea
-            placeholder="PDを入力してください..."
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            className="min-h-[100px]"
-          />
-        </div>
-        <DialogFooter>
-          <Button variant="outline" onClick={onClose}>
-            キャンセル
-          </Button>
-          <Button onClick={handleSubmit} disabled={!content.trim()}>
-            <MessageSquare className="h-3 w-3" />
-            PDする
-          </Button>
-        </DialogFooter>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <FormField
+              control={form.control}
+              name="pd"
+              render={({ field }) => (
+                <div className="grid gap-4 py-4">
+                  <FormControl>
+                    <Textarea
+                      placeholder="PDを入力してください..."
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </div>
+              )}
+            />
+            <DialogFooter>
+              <Button variant="outline" onClick={onClose}>
+                キャンセル
+              </Button>
+              <Button type="submit">
+                <MessageSquare className="h-3 w-3" />
+                PDする
+              </Button>
+            </DialogFooter>
+          </form>
+        </Form>
       </DialogContent>
     </Dialog>
   );
 };
-
-export default PdModal;
