@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { MessageCircle } from "lucide-react";
 import { useState } from "react";
-import RePdModal from "./RePdModal";
+import { RePdModal } from "./RePdModal";
 
 type PostRePdButtonProps = {
   pdId: string;
