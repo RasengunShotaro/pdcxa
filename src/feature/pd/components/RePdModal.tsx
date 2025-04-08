@@ -1,4 +1,7 @@
 "use client";
+import {} from "@/components/ui/dialog";
+import { useRePd } from "@/hooks/useRePd";
+import { MessageCircle } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -9,10 +12,16 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormMessage,
+} from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
-import { useRePd } from "@/hooks/useRePd";
-import { MessageCircle } from "lucide-react";
-import { useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { type PdFormSchema, pdFormSchema } from "../types";
 
 interface RePdModalProps {
   pdId: string;
@@ -25,15 +34,18 @@ export const RePdModal: React.FC<RePdModalProps> = ({
   isOpen,
   onClose,
 }) => {
-  const [content, setContent] = useState("");
+  const form = useForm<PdFormSchema>({
+    resolver: zodResolver(pdFormSchema),
+    defaultValues: {
+      pd: "",
+    },
+  });
   const { createRePd } = useRePd(pdId);
 
-  const handleSubmit = () => {
-    if (content.trim()) {
-      createRePd(content);
-      setContent("");
-      onClose();
-    }
+  const onSubmit = (values: PdFormSchema) => {
+    createRePd(values.pd);
+    form.reset();
+    onClose();
   };
 
   return (
@@ -45,26 +57,35 @@ export const RePdModal: React.FC<RePdModalProps> = ({
             自分が感じたことを伝えてみましょう
           </DialogDescription>
         </DialogHeader>
-        <div className="grid gap-4 py-4">
-          <Textarea
-            placeholder="RePDを入力してください..."
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            className="min-h-[100px]"
-          />
-        </div>
-        <DialogFooter>
-          <Button variant="outline" onClick={onClose}>
-            キャンセル
-          </Button>
-          <Button onClick={handleSubmit} disabled={!content.trim()}>
-            <MessageCircle className="h-3 w-3" />
-            RePDする
-          </Button>
-        </DialogFooter>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <FormField
+              control={form.control}
+              name="pd"
+              render={({ field }) => (
+                <div className="grid gap-4 py-4">
+                  <FormControl>
+                    <Textarea
+                      placeholder="RePDを入力してください..."
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </div>
+              )}
+            />
+            <DialogFooter>
+              <Button variant="outline" onClick={onClose}>
+                キャンセル
+              </Button>
+              <Button type="submit">
+                <MessageCircle className="h-3 w-3" />
+                RePDする
+              </Button>
+            </DialogFooter>
+          </form>
+        </Form>
       </DialogContent>
     </Dialog>
   );
 };
-
-export default RePdModal;
