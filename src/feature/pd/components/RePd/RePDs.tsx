@@ -1,4 +1,4 @@
-import type { RePd } from "../types";
+import type { RePd } from "../../types";
 import RePdItem from "./RePdItem";
 
 export const RePds = ({ rePds }: { rePds: RePd[] }) => {
