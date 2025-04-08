@@ -1,7 +1,7 @@
 "use client";
 
-import PdItem from "@/feature/pd/components/PdItem";
-import { PostPdButton } from "@/feature/pd/components/PostPdButton";
+import PdItem from "@/feature/pd/components/Pd/PdItem";
+import { PostPdButton } from "@/feature/pd/components/Pd/PostPdButton";
 import { usePd } from "@/hooks/usePd";
 
 export function TimeLine() {

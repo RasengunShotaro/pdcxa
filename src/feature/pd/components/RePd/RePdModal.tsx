@@ -1,7 +1,4 @@
 "use client";
-import {} from "@/components/ui/dialog";
-import { useRePd } from "@/hooks/useRePd";
-import { MessageCircle } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -19,9 +16,11 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
+import { useRePd } from "@/hooks/useRePd";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { MessageCircle } from "lucide-react";
 import { useForm } from "react-hook-form";
-import { type PdFormSchema, pdFormSchema } from "../types";
+import { type PdFormSchema, pdFormSchema } from "../../types";
 
 interface RePdModalProps {
   pdId: string;

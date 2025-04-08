@@ -20,7 +20,7 @@ import { usePd } from "@/hooks/usePd";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { MessageSquare } from "lucide-react";
 import { useForm } from "react-hook-form";
-import { type PdFormSchema, pdFormSchema } from "../types";
+import { type PdFormSchema, pdFormSchema } from "../../types";
 
 interface PdModalProps {
   isOpen: boolean;
