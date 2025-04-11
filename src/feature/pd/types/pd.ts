@@ -1,11 +1,10 @@
 import type { Like } from "./like";
-import type { User } from "./user";
 
 export type Pd = {
   id: string;
   content: string;
   createdAt: Date;
-  user: User;
+  userId: string;
   rePds: number;
   likes: Like[];
 };
@@ -15,6 +14,6 @@ export type RePd = {
   pdId: string;
   content: string;
   createdAt: Date;
-  user: User;
+  userId: string;
   likes: Like[];
 };
