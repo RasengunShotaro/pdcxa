@@ -1,9 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import type { Pd } from "@/feature/pd/types";
+import { useUserDetail } from "@/hooks/useUserDetail";
 import { Heart, MessageCircle, MoreHorizontal } from "lucide-react";
 import Link from "next/link";
-import { useUserDetail } from "../../api/useUserDetail";
 interface PdItemProps {
   pd: Pd;
 }
