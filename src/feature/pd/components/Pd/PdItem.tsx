@@ -3,20 +3,28 @@ import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import type { Pd } from "@/feature/pd/types";
 import { Heart, MessageCircle, MoreHorizontal } from "lucide-react";
 import Link from "next/link";
+import { useUserDetail } from "../../api/useUserDetail";
 interface PdItemProps {
   pd: Pd;
 }
 
 const PdItem: React.FC<PdItemProps> = ({ pd }) => {
+  const userDetail = useUserDetail(pd.userId);
+  const userFullName = `${userDetail?.first_name ?? ""} ${
+    userDetail?.last_name ?? ""
+  }`; // 一瞬undefinedと表示されるより、何も表示されない方が良いため
+
   return (
     <Card key={pd.id} className="border-b">
       <CardHeader className="p-4 space-y-2">
         <div className="flex justify-between items-start">
           <div>
             <CardTitle className="text-base font-bold">
-              {pd.user.displayName}
+              {userFullName}
             </CardTitle>
-            <p className="text-sm text-gray-500">{pd.user.username}</p>
+            <p className="text-sm text-gray-500">{`@${
+              userDetail?.username ?? ""
+            }`}</p>
           </div>
           <Button variant="ghost" size="icon" className="h-8 w-8">
             <MoreHorizontal className="h-4 w-4" />
