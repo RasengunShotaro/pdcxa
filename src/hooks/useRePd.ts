@@ -7,10 +7,12 @@ import {
   getRePds,
   updateRePdCache,
 } from "@/feature/pd/api/pd";
+import { useUser } from "@clerk/nextjs";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export const useRePd = (pdId: string) => {
   const queryClient = useQueryClient();
+  const { user } = useUser();
 
   const { data: rePds = [], error } = useQuery({
     queryKey: [...REPD_QUERY_KEY, pdId],
@@ -26,7 +28,7 @@ export const useRePd = (pdId: string) => {
   });
 
   const { mutate: createNewRePd } = useMutation({
-    mutationFn: (content: string) => createRePd(pdId, content),
+    mutationFn: (pd: string) => createRePd(pdId, pd, user?.id ?? ""),
     onSuccess: () => {
       updateRePdCache(queryClient, pdId);
       queryClient.invalidateQueries({
