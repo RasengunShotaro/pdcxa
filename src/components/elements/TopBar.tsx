@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
-import { Bell, User } from "lucide-react";
+import { UserButton } from "@clerk/nextjs";
+import { Bell } from "lucide-react";
 import Link from "next/link";
 
 export function Header() {
@@ -14,9 +15,7 @@ export function Header() {
         <Button variant="ghost" size="icon" aria-label="通知">
           <Bell className="h-5 w-5" />
         </Button>
-        <Button variant="ghost" size="icon" aria-label="プロフィール">
-          <User className="h-5 w-5" />
-        </Button>
+        <UserButton />
       </div>
     </header>
   );
