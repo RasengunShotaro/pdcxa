@@ -6,10 +6,12 @@ import {
   getPds,
   updatePdCache,
 } from "@/feature/pd/api/pd";
+import { useUser } from "@clerk/nextjs";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export const usePd = (pdIds?: string[]) => {
   const queryClient = useQueryClient();
+  const { user } = useUser();
 
   const { data: pds = [], error } = useQuery({
     queryKey: [...PD_QUERY_KEY, pdIds],
@@ -22,7 +24,7 @@ export const usePd = (pdIds?: string[]) => {
   });
 
   const { mutate: createNewPd } = useMutation({
-    mutationFn: createPd,
+    mutationFn: (pd: string) => createPd(pd, user?.id ?? ""),
     onSuccess: (newPd) => {
       updatePdCache(queryClient, newPd);
       queryClient.invalidateQueries({ queryKey: PD_QUERY_KEY });
