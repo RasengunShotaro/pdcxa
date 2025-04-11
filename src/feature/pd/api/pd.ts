@@ -10,7 +10,9 @@ export const REPD_QUERY_KEY = ["repds"] as const;
 // PDの取得
 export const getPds = async ({
   pdIds,
-}: { pdIds?: string[] }): Promise<Pd[]> => {
+}: {
+  pdIds?: string[];
+}): Promise<Pd[]> => {
   try {
     const storedPds = localStorage.getItem(PD_STORAGE_KEY);
     if (!storedPds) return [];
@@ -19,7 +21,7 @@ export const getPds = async ({
       (pd: Omit<Pd, "createdAt"> & { createdAt: string }) => ({
         ...pd,
         createdAt: new Date(pd.createdAt),
-      }),
+      })
     );
 
     return pdIds ? parsedPds.filter((pd) => pdIds.includes(pd.id)) : parsedPds;
@@ -30,16 +32,15 @@ export const getPds = async ({
 };
 
 // PDの作成
-export const createPd = async (content: string): Promise<Pd> => {
+export const createPd = async (
+  content: string,
+  userId: string
+): Promise<Pd> => {
   const newPd: Pd = {
     id: crypto.randomUUID(),
     content,
     createdAt: new Date(),
-    user: {
-      id: "AAAAA",
-      username: "@test_user",
-      displayName: "テストユーザー",
-    },
+    userId: `${userId}`,
     rePds: 0,
     likes: [],
   };
@@ -59,24 +60,21 @@ export const createPd = async (content: string): Promise<Pd> => {
 export const createRePd = async (
   pdId: string,
   content: string,
+  userId: string
 ): Promise<RePd> => {
   const newRePd: RePd = {
     id: crypto.randomUUID(),
     pdId,
     content,
     createdAt: new Date(),
-    user: {
-      id: "AAAAA",
-      username: "@test_user",
-      displayName: "テストユーザー",
-    },
+    userId: `${userId}`,
     likes: [],
   };
 
   try {
     const currentPds = await getPds({});
     const updatedPds = currentPds.map((pd) =>
-      pd.id === pdId ? { ...pd, rePds: pd.rePds + 1 } : pd,
+      pd.id === pdId ? { ...pd, rePds: pd.rePds + 1 } : pd
     );
     localStorage.setItem(PD_STORAGE_KEY, JSON.stringify(updatedPds));
 
@@ -100,7 +98,7 @@ export const getRePds = async (pdId: string): Promise<RePd[]> => {
     const parsedRePds: RePd[] = JSON.parse(storedRePds)
       .filter(
         (rePd: Omit<RePd, "createdAt"> & { createdAt: string }) =>
-          rePd.pdId === pdId,
+          rePd.pdId === pdId
       )
       .map((rePd: Omit<RePd, "createdAt"> & { createdAt: string }) => ({
         ...rePd,
@@ -116,16 +114,16 @@ export const getRePds = async (pdId: string): Promise<RePd[]> => {
 
 export const updatePdCache = (
   queryClient: ReturnType<typeof useQueryClient>,
-  newPd: Pd,
+  newPd: Pd
 ) => {
   queryClient.setQueryData<Pd[]>(PD_QUERY_KEY, (old = []) => [newPd, ...old]);
 };
 
 export const updateRePdCache = (
   queryClient: ReturnType<typeof useQueryClient>,
-  pdId: string,
+  pdId: string
 ) => {
   queryClient.setQueryData<Pd[]>(PD_QUERY_KEY, (old = []) =>
-    old.map((pd) => (pd.id === pdId ? { ...pd, rePds: pd.rePds + 1 } : pd)),
+    old.map((pd) => (pd.id === pdId ? { ...pd, rePds: pd.rePds + 1 } : pd))
   );
 };
