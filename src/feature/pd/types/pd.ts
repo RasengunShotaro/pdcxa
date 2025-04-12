@@ -1,11 +1,8 @@
-import type { Like } from "./like";
-
 export type Pd = {
   id: string;
   content: string;
   createdAt: Date;
   userId: string;
-  likes: Like[];
 };
 
 export type RePd = {
@@ -14,5 +11,4 @@ export type RePd = {
   content: string;
   createdAt: Date;
   userId: string;
-  likes: Like[];
 };

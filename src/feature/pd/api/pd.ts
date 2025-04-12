@@ -41,7 +41,6 @@ export const createPd = async (
     content,
     createdAt: new Date(),
     userId: `${userId}`,
-    likes: [],
   };
 
   try {
@@ -67,7 +66,6 @@ export const createRePd = async (
     content,
     createdAt: new Date(),
     userId: `${userId}`,
-    likes: [],
   };
 
   try {
