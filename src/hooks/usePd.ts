@@ -12,11 +12,6 @@ export const usePd = (pdIds?: string[]) => {
   const { data: pds = [], error } = useQuery({
     queryKey: ["PD詳細", pdIds],
     queryFn: async () => fetchPds(pdIds),
-    staleTime: 60 * 1000,
-    gcTime: 5 * 60 * 1000,
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
-    refetchOnReconnect: false,
   });
 
   const { mutate: createNewPd } = useMutation({
