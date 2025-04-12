@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import type { Pd } from "@/feature/pd/types";
+import { useRePd } from "@/hooks/useRePd";
 import { useUserDetail } from "@/hooks/useUserDetail";
 import { Heart, MessageCircle, MoreHorizontal } from "lucide-react";
 import Link from "next/link";
@@ -14,6 +15,7 @@ const PdItem: React.FC<PdItemProps> = ({ pd }) => {
   const userFullName = `${userDetail?.first_name ?? ""} ${
     userDetail?.last_name ?? ""
   }`; // 一瞬undefinedと表示されるより、何も表示されない方が良いため
+  const { rePds } = useRePd(pd.id);
 
   return (
     <Card key={pd.id} className="border-b">
@@ -52,7 +54,7 @@ const PdItem: React.FC<PdItemProps> = ({ pd }) => {
                 className="hover:text-blue-500 space-x-1"
               >
                 <MessageCircle className="h-4 w-4" />
-                <span>{0}</span>
+                <span>{rePds.length}</span>
               </Button>
             </Link>
           </div>
