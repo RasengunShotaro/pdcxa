@@ -2,8 +2,10 @@
 import { jaJP } from "@clerk/localizations";
 import { ClerkProvider } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persister";
+import { QueryClient } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import { type ReactNode, useState } from "react";
 
 export function Providers({ children }: { children: ReactNode }) {
@@ -12,6 +14,7 @@ export function Providers({ children }: { children: ReactNode }) {
       new QueryClient({
         defaultOptions: {
           queries: {
+            gcTime: 1000 * 60 * 60 * 24, // persisterのデフォルトが24時間なので、それに合わせた
             staleTime: 60 * 1000,
             retry: 1,
             refetchOnWindowFocus: false,
@@ -21,6 +24,13 @@ export function Providers({ children }: { children: ReactNode }) {
       })
   );
 
+  const [persister] = useState(() =>
+    createSyncStoragePersister({
+      storage: typeof window !== "undefined" ? window.localStorage : undefined,
+      key: "react-query",
+    })
+  );
+
   return (
     <ClerkProvider
       localization={jaJP}
@@ -28,10 +38,13 @@ export function Providers({ children }: { children: ReactNode }) {
         baseTheme: dark,
       }}
     >
-      <QueryClientProvider client={queryClient}>
+      <PersistQueryClientProvider
+        client={queryClient}
+        persistOptions={{ persister }}
+      >
         {children}
         <ReactQueryDevtools initialIsOpen={false} />
-      </QueryClientProvider>
+      </PersistQueryClientProvider>
     </ClerkProvider>
   );
 }
