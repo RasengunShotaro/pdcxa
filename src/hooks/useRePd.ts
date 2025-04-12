@@ -15,11 +15,6 @@ export const useRePd = (pdId: string) => {
       const pds = await fetchRePds(pdId);
       return pds;
     },
-    staleTime: 60 * 1000,
-    gcTime: 5 * 60 * 1000,
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
-    refetchOnReconnect: false,
   });
 
   const { mutate: createNewRePd } = useMutation({

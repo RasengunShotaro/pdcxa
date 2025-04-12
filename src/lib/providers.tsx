@@ -17,6 +17,7 @@ export function Providers({ children }: { children: ReactNode }) {
             gcTime: 1000 * 60 * 60 * 24, // persisterのデフォルトが24時間なので、それに合わせた
             staleTime: 60 * 1000,
             retry: 1,
+            refetchOnMount: false,
             refetchOnWindowFocus: false,
             refetchOnReconnect: false,
           },
