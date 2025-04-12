@@ -51,7 +51,7 @@ const PdItem: React.FC<PdItemProps> = ({ pd }) => {
                 className="hover:text-blue-500 space-x-1"
               >
                 <MessageCircle className="h-4 w-4" />
-                <span>{pd.rePds}</span>
+                <span>{0}</span>
               </Button>
             </Link>
           </div>
