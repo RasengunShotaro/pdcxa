@@ -1,11 +1,7 @@
 "use client";
 
-import {
-  PD_QUERY_KEY,
-  createPd,
-  getPds,
-  updatePdCache,
-} from "@/feature/pd/api/pd";
+import { createPd } from "@/feature/pd/api/create-pd";
+import { fetchPds } from "@/feature/pd/api/fetch-pds";
 import { useUser } from "@clerk/nextjs";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
@@ -14,8 +10,8 @@ export const usePd = (pdIds?: string[]) => {
   const { user } = useUser();
 
   const { data: pds = [], error } = useQuery({
-    queryKey: [...PD_QUERY_KEY, pdIds],
-    queryFn: async () => getPds({ pdIds }),
+    queryKey: ["PD詳細", pdIds],
+    queryFn: async () => fetchPds(pdIds),
     staleTime: 60 * 1000,
     gcTime: 5 * 60 * 1000,
     refetchOnMount: false,
@@ -25,9 +21,8 @@ export const usePd = (pdIds?: string[]) => {
 
   const { mutate: createNewPd } = useMutation({
     mutationFn: (pd: string) => createPd(pd, user?.id ?? ""),
-    onSuccess: (newPd) => {
-      updatePdCache(queryClient, newPd);
-      queryClient.invalidateQueries({ queryKey: PD_QUERY_KEY });
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["PD詳細"] });
     },
   });
 
