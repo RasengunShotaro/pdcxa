@@ -1,3 +1,4 @@
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import type { Pd } from "@/feature/pd/types";
@@ -5,7 +6,6 @@ import { usePdLike } from "@/hooks/usePdLike";
 import { useRePd } from "@/hooks/useRePd";
 import { useUserDetail } from "@/hooks/useUserDetail";
 import { Heart, MessageCircle, MoreHorizontal } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 import { formatDateTime } from "../../utils/format-datetime";
 interface PdItemProps {
@@ -30,16 +30,14 @@ const PdItem: React.FC<PdItemProps> = ({ pd }) => {
       <CardHeader className="p-4 space-y-2">
         <div className="flex justify-between items-start">
           <div className="flex items-center space-x-3">
-            <div className="relative h-10 w-10 rounded-full overflow-hidden">
-              {userDetail?.image_url ? (
-                <Image
-                  src={userDetail.image_url}
-                  alt={userFullName}
-                  fill
-                  className="object-cover"
-                />
-              ) : undefined}
-            </div>
+            <Avatar className="h-10 w-10">
+              {userDetail?.image_url && (
+                <AvatarImage src={userDetail.image_url} alt={userFullName} />
+              )}
+              <AvatarFallback>
+                {userFullName.charAt(0).toUpperCase()}
+              </AvatarFallback>
+            </Avatar>
             <div>
               <CardTitle className="text-base font-bold">
                 {userFullName}
