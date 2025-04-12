@@ -4,6 +4,7 @@ import type { Pd } from "@/feature/pd/types";
 import { useUserDetail } from "@/hooks/useUserDetail";
 import { Heart, MessageCircle, MoreHorizontal } from "lucide-react";
 import Link from "next/link";
+import { formatDateTime } from "../../utils/format-datetime";
 interface PdItemProps {
   pd: Pd;
 }
@@ -33,7 +34,7 @@ const PdItem: React.FC<PdItemProps> = ({ pd }) => {
         <p className="text-gray-900">{pd.content}</p>
         <div className="flex items-center justify-between pt-2">
           <span className="text-sm text-gray-500">
-            {formatTimeAgo(pd.createdAt)}
+            {formatDateTime(pd.createdAt)}
           </span>
           <div className="flex items-center space-x-4">
             <Button
@@ -60,14 +61,5 @@ const PdItem: React.FC<PdItemProps> = ({ pd }) => {
     </Card>
   );
 };
-
-function formatTimeAgo(date: Date): string {
-  const seconds = Math.floor((new Date().getTime() - date.getTime()) / 1000);
-
-  if (seconds < 60) return `${seconds}秒前`;
-  if (seconds < 3600) return `${Math.floor(seconds / 60)}分前`;
-  if (seconds < 86400) return `${Math.floor(seconds / 3600)}時間前`;
-  return `${Math.floor(seconds / 86400)}日前`;
-}
 
 export default PdItem;
