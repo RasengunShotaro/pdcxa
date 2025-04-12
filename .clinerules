@@ -16,7 +16,7 @@
 - Shadcn UI
 - Biome
 
-## デプロイ環境(採用予定)
+## デプロイ環境
 - Neon(無料プラン)
 - Vercel(無料プラン)
 
@@ -28,6 +28,7 @@
 - 基本的にはBiomeのルールに従う
 - letを使わずconstを使う(厳守)
 - shadcn-ui@latestは非推奨のため、shadcn@latestを使用すること
+- 優先してshadcn-uiのコンポーネントを使用すること
 
 ## テスト
 - Vitestを採用
