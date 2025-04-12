@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import type { Pd } from "@/feature/pd/types";
+import { usePdLike } from "@/hooks/usePdLike";
 import { useRePd } from "@/hooks/useRePd";
 import { useUserDetail } from "@/hooks/useUserDetail";
 import { Heart, MessageCircle, MoreHorizontal } from "lucide-react";
@@ -16,6 +17,7 @@ const PdItem: React.FC<PdItemProps> = ({ pd }) => {
     userDetail?.last_name ?? ""
   }`; // 一瞬undefinedと表示されるより、何も表示されない方が良いため
   const { rePds } = useRePd(pd.id);
+  const { pdLike, mutatePdLike } = usePdLike(pd.id);
 
   return (
     <Card key={pd.id} className="border-b">
@@ -43,9 +45,10 @@ const PdItem: React.FC<PdItemProps> = ({ pd }) => {
               variant="ghost"
               size="sm"
               className="hover:text-red-500 space-x-1"
+              onClick={() => mutatePdLike()}
             >
               <Heart className="h-4 w-4" />
-              <span>{0}</span>
+              <span>{pdLike.length}</span>
             </Button>
             <Link href={`/pd/${pd.id}`}>
               <Button
