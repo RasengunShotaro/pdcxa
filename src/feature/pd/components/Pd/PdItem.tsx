@@ -5,6 +5,7 @@ import { usePdLike } from "@/hooks/usePdLike";
 import { useRePd } from "@/hooks/useRePd";
 import { useUserDetail } from "@/hooks/useUserDetail";
 import { Heart, MessageCircle, MoreHorizontal } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { formatDateTime } from "../../utils/format-datetime";
 interface PdItemProps {
@@ -16,6 +17,7 @@ const PdItem: React.FC<PdItemProps> = ({ pd }) => {
   const userFullName = `${userDetail?.first_name ?? ""} ${
     userDetail?.last_name ?? ""
   }`; // 一瞬undefinedと表示されるより、何も表示されない方が良いため
+
   const { rePds } = useRePd(pd.id);
   const { pdLike, mutatePdLike } = usePdLike(pd.id);
 
@@ -23,13 +25,25 @@ const PdItem: React.FC<PdItemProps> = ({ pd }) => {
     <Card key={pd.id} className="border-b">
       <CardHeader className="p-4 space-y-2">
         <div className="flex justify-between items-start">
-          <div>
-            <CardTitle className="text-base font-bold">
-              {userFullName}
-            </CardTitle>
-            <p className="text-sm text-gray-500">{`@${
-              userDetail?.username ?? ""
-            }`}</p>
+          <div className="flex items-center space-x-3">
+            <div className="relative h-10 w-10 rounded-full overflow-hidden">
+              {userDetail?.image_url ? (
+                <Image
+                  src={userDetail.image_url}
+                  alt={userFullName}
+                  fill
+                  className="object-cover"
+                />
+              ) : undefined}
+            </div>
+            <div>
+              <CardTitle className="text-base font-bold">
+                {userFullName}
+              </CardTitle>
+              <p className="text-sm text-gray-500">{`@${
+                userDetail?.username ?? ""
+              }`}</p>
+            </div>
           </div>
           <Button variant="ghost" size="icon" className="h-8 w-8">
             <MoreHorizontal className="h-4 w-4" />
