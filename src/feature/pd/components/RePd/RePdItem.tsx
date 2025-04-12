@@ -17,6 +17,10 @@ const RePdItem: React.FC<PdItemProps> = ({ rePd }) => {
   }`; // 一瞬undefinedと表示されるより、何も表示されない方が良いため
   const { rePdLike, mutateRePdLike } = useRePdLike(rePd.id);
 
+  const isContainsMyLike = rePdLike.some(
+    (like) => like.userId === userDetail?.id
+  );
+
   return (
     <Card key={rePd.id} className="border-b">
       <CardHeader className="p-4 space-y-2">
@@ -54,7 +58,9 @@ const RePdItem: React.FC<PdItemProps> = ({ rePd }) => {
             <Button
               variant="ghost"
               size="sm"
-              className="hover:text-red-500 space-x-1"
+              className={`hover:text-red-500 space-x-1 ${
+                isContainsMyLike ? "text-red-500" : ""
+              }`}
               onClick={() => mutateRePdLike()}
             >
               <Heart className="h-4 w-4" />
