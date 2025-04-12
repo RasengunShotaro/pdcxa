@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import type { RePd } from "@/feature/pd/types";
+import { useRePdLike } from "@/hooks/useRePdLike";
 import { useUserDetail } from "@/hooks/useUserDetail";
 import { Heart, MoreHorizontal } from "lucide-react";
 import { formatDateTime } from "../../utils/format-datetime";
@@ -13,6 +14,7 @@ const RePdItem: React.FC<PdItemProps> = ({ rePd }) => {
   const userFullName = `${userDetail?.first_name ?? ""} ${
     userDetail?.last_name ?? ""
   }`; // 一瞬undefinedと表示されるより、何も表示されない方が良いため
+  const { rePdLike, mutateRePdLike } = useRePdLike(rePd.id);
 
   return (
     <Card key={rePd.id} className="border-b">
@@ -40,9 +42,10 @@ const RePdItem: React.FC<PdItemProps> = ({ rePd }) => {
               variant="ghost"
               size="sm"
               className="hover:text-red-500 space-x-1"
+              onClick={() => mutateRePdLike()}
             >
               <Heart className="h-4 w-4" />
-              <span>{0}</span>
+              <span>{rePdLike.length}</span>
             </Button>
           </div>
         </div>
