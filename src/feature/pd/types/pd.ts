@@ -1,12 +1,12 @@
 export type Pd = {
-  id: number;
+  id: string;
   content: string;
   createdAt: Date;
   userId: string;
 };
 
 export type RePd = {
-  id: number;
+  id: string;
   pdId: string;
   content: string;
   createdAt: Date;

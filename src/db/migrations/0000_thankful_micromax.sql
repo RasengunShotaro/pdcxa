@@ -1,23 +1,23 @@
 CREATE TABLE "pd_likes" (
-	"target_pd_id" integer PRIMARY KEY NOT NULL,
+	"target_pd_id" uuid PRIMARY KEY NOT NULL,
 	"user_id" varchar NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "pds" (
-	"id" integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY (sequence name "pds_id_seq" INCREMENT BY 1 MINVALUE 1 MAXVALUE 2147483647 START WITH 1 CACHE 1),
+	"id" uuid PRIMARY KEY NOT NULL,
 	"content" varchar NOT NULL,
 	"created_at" timestamp NOT NULL,
 	"user_id" varchar NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "repd_likes" (
-	"target_repd_id" integer PRIMARY KEY NOT NULL,
+	"target_repd_id" uuid PRIMARY KEY NOT NULL,
 	"user_id" varchar NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "repds" (
-	"id" integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY (sequence name "repds_id_seq" INCREMENT BY 1 MINVALUE 1 MAXVALUE 2147483647 START WITH 1 CACHE 1),
-	"pd_id" integer NOT NULL,
+	"id" uuid PRIMARY KEY NOT NULL,
+	"pd_id" uuid NOT NULL,
 	"content" varchar NOT NULL,
 	"created_at" timestamp NOT NULL,
 	"user_id" varchar NOT NULL
