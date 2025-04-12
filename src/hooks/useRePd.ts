@@ -1,12 +1,7 @@
 "use client";
 
-import {
-  PD_QUERY_KEY,
-  REPD_QUERY_KEY,
-  createRePd,
-  getRePds,
-  updateRePdCache,
-} from "@/feature/pd/api/pd";
+import { createRePd } from "@/feature/pd/api/create-repd";
+import { fetchRePds } from "@/feature/pd/api/fetch-repds";
 import { useUser } from "@clerk/nextjs";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
@@ -15,9 +10,9 @@ export const useRePd = (pdId: string) => {
   const { user } = useUser();
 
   const { data: rePds = [], error } = useQuery({
-    queryKey: [...REPD_QUERY_KEY, pdId],
+    queryKey: ["RePD詳細", pdId],
     queryFn: async () => {
-      const pds = await getRePds(pdId);
+      const pds = await fetchRePds(pdId);
       return pds;
     },
     staleTime: 60 * 1000,
@@ -30,17 +25,16 @@ export const useRePd = (pdId: string) => {
   const { mutate: createNewRePd } = useMutation({
     mutationFn: (pd: string) => createRePd(pdId, pd, user?.id ?? ""),
     onSuccess: () => {
-      updateRePdCache(queryClient, pdId);
       queryClient.invalidateQueries({
-        queryKey: [...PD_QUERY_KEY, null],
+        queryKey: ["RePD詳細", null],
         exact: true,
         refetchType: "all",
       });
       queryClient.invalidateQueries({
-        queryKey: [...PD_QUERY_KEY, [pdId]],
+        queryKey: ["RePD詳細", [pdId]],
         exact: true,
       });
-      queryClient.invalidateQueries({ queryKey: [...REPD_QUERY_KEY, pdId] });
+      queryClient.invalidateQueries({ queryKey: ["RePD詳細", pdId] });
     },
   });
 
