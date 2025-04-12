@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form, FormField } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -42,12 +43,12 @@ export default function Page() {
                 name="mail"
                 render={({ field }) => (
                   <div>
-                    <label
+                    <Label
                       htmlFor="email"
                       className="block text-sm font-medium mb-1"
                     >
                       メールアドレス
-                    </label>
+                    </Label>
                     <Input
                       id="email"
                       {...field}
