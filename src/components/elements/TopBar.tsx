@@ -1,6 +1,4 @@
-import { Button } from "@/components/ui/button";
 import { UserButton } from "@clerk/nextjs";
-import { Bell } from "lucide-react";
 import Link from "next/link";
 
 export function Header() {
@@ -12,9 +10,6 @@ export function Header() {
         </Link>
       </div>
       <div className="flex items-center space-x-2">
-        <Button variant="ghost" size="icon" aria-label="通知">
-          <Bell className="h-5 w-5" />
-        </Button>
         <UserButton />
       </div>
     </header>
