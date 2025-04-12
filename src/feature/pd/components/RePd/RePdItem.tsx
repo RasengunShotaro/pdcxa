@@ -3,6 +3,7 @@ import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import type { RePd } from "@/feature/pd/types";
 import { useUserDetail } from "@/hooks/useUserDetail";
 import { Heart, MoreHorizontal } from "lucide-react";
+import { formatDateTime } from "../../utils/format-datetime";
 interface PdItemProps {
   rePd: RePd;
 }
@@ -32,7 +33,7 @@ const RePdItem: React.FC<PdItemProps> = ({ rePd }) => {
         <p className="text-gray-900">{rePd.content}</p>
         <div className="flex items-center justify-between pt-2">
           <span className="text-sm text-gray-500">
-            {formatTimeAgo(rePd.createdAt)}
+            {formatDateTime(rePd.createdAt)}
           </span>
           <div className="flex items-center space-x-4">
             <Button
@@ -49,14 +50,5 @@ const RePdItem: React.FC<PdItemProps> = ({ rePd }) => {
     </Card>
   );
 };
-
-function formatTimeAgo(date: Date): string {
-  const seconds = Math.floor((new Date().getTime() - date.getTime()) / 1000);
-
-  if (seconds < 60) return `${seconds}秒前`;
-  if (seconds < 3600) return `${Math.floor(seconds / 60)}分前`;
-  if (seconds < 86400) return `${Math.floor(seconds / 3600)}時間前`;
-  return `${Math.floor(seconds / 86400)}日前`;
-}
 
 export default RePdItem;
