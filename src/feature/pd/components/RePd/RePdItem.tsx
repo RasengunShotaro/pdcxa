@@ -41,7 +41,7 @@ const RePdItem: React.FC<PdItemProps> = ({ rePd }) => {
               className="hover:text-red-500 space-x-1"
             >
               <Heart className="h-4 w-4" />
-              <span>{rePd.likes.length}</span>
+              <span>{0}</span>
             </Button>
           </div>
         </div>
