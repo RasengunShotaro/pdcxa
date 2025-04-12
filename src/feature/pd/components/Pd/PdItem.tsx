@@ -21,6 +21,10 @@ const PdItem: React.FC<PdItemProps> = ({ pd }) => {
   const { rePds } = useRePd(pd.id);
   const { pdLike, mutatePdLike } = usePdLike(pd.id);
 
+  const isContainsMyLike = pdLike.some(
+    (like) => like.userId === userDetail?.id
+  );
+
   return (
     <Card key={pd.id} className="border-b">
       <CardHeader className="p-4 space-y-2">
@@ -58,7 +62,9 @@ const PdItem: React.FC<PdItemProps> = ({ pd }) => {
             <Button
               variant="ghost"
               size="sm"
-              className="hover:text-red-500 space-x-1"
+              className={`hover:text-red-500 space-x-1 ${
+                isContainsMyLike ? "text-red-500" : ""
+              }`}
               onClick={() => mutatePdLike()}
             >
               <Heart className="h-4 w-4" />
