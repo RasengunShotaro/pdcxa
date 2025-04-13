@@ -8,6 +8,7 @@ import {
 } from "@tanstack/react-query";
 import type { Metadata } from "next";
 import "./globals.css";
+import { TimeLineRefetchButton } from "@/components/elements/refetch";
 
 export const runtime = "edge";
 
@@ -31,7 +32,9 @@ export default async function RootLayout({
           <HydrationBoundary state={dehydratedState}>
             <div className="h-screen bg-gray-100 overflow-hidden">
               <div className="fixed top-0 left-0 right-0 z-50">
-                <Header />
+                <Header>
+                  <TimeLineRefetchButton />
+                </Header>
               </div>
               <div className="flex pt-16">
                 <aside className="w-64 flex-none">
