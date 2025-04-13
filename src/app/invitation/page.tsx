@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { createInvitation } from "@/feature/invitation/create-invitation";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -30,10 +31,19 @@ export default function Page() {
       mail: "",
     },
   });
+  const [success, setSuccess] = useState(false);
 
   const onSubmit = async (value: InvitationFormSchema) => {
-    form.reset();
-    await createInvitation(value.mail);
+    try {
+      form.reset();
+      await createInvitation(value.mail);
+      setSuccess(true);
+    } catch (error) {
+      setSuccess(false);
+      form.setError("mail", {
+        message: `招待の送信に失敗しました。 ${error}`,
+      });
+    }
   };
 
   return (
@@ -63,7 +73,9 @@ export default function Page() {
                         placeholder="abcde@example.com"
                       />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage>
+                      {success && "招待を送信しました！"}
+                    </FormMessage>
                   </div>
                 )}
               />
