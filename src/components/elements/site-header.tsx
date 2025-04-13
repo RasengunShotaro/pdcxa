@@ -3,10 +3,12 @@
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useSidebar } from "@/components/ui/sidebar";
+import { UserButton } from "@clerk/nextjs";
 import { SidebarIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import pdcxa from "../../../static/pdcxa.svg";
+import { TimeLineRefetchButton } from "./refetch";
 
 export function SiteHeader() {
   const { toggleSidebar } = useSidebar();
@@ -26,6 +28,10 @@ export function SiteHeader() {
         <Link href="/">
           <Image src={pdcxa} alt="Logo" className="h-7 w-auto" quality={100} />
         </Link>
+        <div className="ml-auto flex items-center">
+          <TimeLineRefetchButton />
+          <UserButton />
+        </div>
       </div>
     </header>
   );
