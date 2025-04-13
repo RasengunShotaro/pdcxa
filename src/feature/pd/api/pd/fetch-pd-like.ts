@@ -3,7 +3,7 @@
 import { pdLikes } from "@/db/schema";
 import { db } from "@/lib/db";
 import { eq } from "drizzle-orm";
-import type { Like } from "../types";
+import type { Like } from "../../types";
 
 export const fetchPdLike = async (pdId: string): Promise<Like[]> => {
   try {

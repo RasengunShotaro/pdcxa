@@ -3,7 +3,7 @@
 import { rePdLikes } from "@/db/schema";
 import { db } from "@/lib/db";
 import { and, eq } from "drizzle-orm";
-import type { Like } from "../types";
+import type { Like } from "../../types";
 
 export const mutateRePdLike = async (
   userId: string,

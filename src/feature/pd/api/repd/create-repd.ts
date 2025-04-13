@@ -2,7 +2,7 @@
 
 import { rePds } from "@/db/schema";
 import { db } from "@/lib/db";
-import type { Pd } from "../types";
+import type { Pd } from "../../types";
 
 export const createRePd = async (
   pdId: string,

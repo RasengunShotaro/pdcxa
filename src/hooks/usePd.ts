@@ -1,7 +1,7 @@
 "use client";
 
-import { createPd } from "@/feature/pd/api/create-pd";
-import { fetchPds } from "@/feature/pd/api/fetch-pds";
+import { createPd } from "@/feature/pd/api/pd/create-pd";
+import { fetchPds } from "@/feature/pd/api/pd/fetch-pds";
 import { useUser } from "@clerk/nextjs";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 

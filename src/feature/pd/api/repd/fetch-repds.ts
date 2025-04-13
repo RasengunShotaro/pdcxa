@@ -3,7 +3,7 @@
 import { rePds } from "@/db/schema";
 import { db } from "@/lib/db";
 import { eq } from "drizzle-orm";
-import type { RePd } from "../types";
+import type { RePd } from "../../types";
 
 export const fetchRePds = async (pdId: string): Promise<RePd[]> => {
   try {

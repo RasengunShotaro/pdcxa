@@ -3,7 +3,7 @@
 import { pds } from "@/db/schema";
 import { db } from "@/lib/db";
 import { desc, inArray } from "drizzle-orm";
-import type { Pd } from "../types";
+import type { Pd } from "../../types";
 
 export const fetchPds = async (pdIds?: string[]): Promise<Pd[]> => {
   try {

@@ -1,6 +1,7 @@
 "use client";
-import { fetchRePdLike } from "@/feature/pd/api/fetch-repd-like";
-import { mutateRePdLike } from "@/feature/pd/api/mutate-repd-like";
+
+import { fetchRePdLike } from "@/feature/pd/api/repd/fetch-repd-like";
+import { mutateRePdLike } from "@/feature/pd/api/repd/mutate-repd-like";
 import { useUser } from "@clerk/nextjs";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
