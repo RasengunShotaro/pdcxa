@@ -5,6 +5,7 @@ import type { Pd } from "@/feature/pd/types";
 import { usePdLike } from "@/hooks/usePdLike";
 import { useRePd } from "@/hooks/useRePd";
 import { useUserDetail } from "@/hooks/useUserDetail";
+import { useQueryClient } from "@tanstack/react-query";
 import { Heart, MessageCircle, MoreHorizontal } from "lucide-react";
 import Link from "next/link";
 import { formatDateTime } from "../../utils/format-datetime";
@@ -17,6 +18,7 @@ const PdItem: React.FC<PdItemProps> = ({ pd }) => {
   const userFullName = `${userDetail?.first_name ?? ""} ${
     userDetail?.last_name ?? ""
   }`; // 一瞬undefinedと表示されるより、何も表示されない方が良いため
+  const queryClient = useQueryClient();
 
   const { rePds } = useRePd(pd.id);
   const { pdLike, mutatePdLike } = usePdLike(pd.id);
@@ -24,6 +26,20 @@ const PdItem: React.FC<PdItemProps> = ({ pd }) => {
   const isContainsMyLike = pdLike.some(
     (like) => like.userId === userDetail?.id
   );
+  const refetchPd = (pdId: string) => {
+    queryClient.invalidateQueries({
+      queryKey: ["PD詳細", pdId],
+      exact: true,
+    });
+    queryClient.invalidateQueries({
+      queryKey: ["RePD詳細", pdId],
+      exact: true,
+    });
+    queryClient.invalidateQueries({
+      queryKey: ["PDいいね", pdId],
+      exact: true,
+    });
+  };
 
   return (
     <Card key={pd.id} className="border-b">
@@ -73,6 +89,7 @@ const PdItem: React.FC<PdItemProps> = ({ pd }) => {
                 variant="ghost"
                 size="sm"
                 className="hover:text-blue-500 space-x-1"
+                onClick={() => refetchPd(pd.id)}
               >
                 <MessageCircle className="h-4 w-4" />
                 <span>{rePds.length}</span>
