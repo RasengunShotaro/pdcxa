@@ -4,6 +4,9 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useSidebar } from "@/components/ui/sidebar";
 import { SidebarIcon } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import pdcxa from "../../../static/pdcxa.svg";
 
 export function SiteHeader() {
   const { toggleSidebar } = useSidebar();
@@ -19,7 +22,10 @@ export function SiteHeader() {
         >
           <SidebarIcon />
         </Button>
-        <Separator orientation="vertical" className="mr-2 h-4" />
+        <Separator orientation="vertical" className="mr-1 h-4" />
+        <Link href="/">
+          <Image src={pdcxa} alt="Logo" className="h-7 w-auto" quality={100} />
+        </Link>
       </div>
     </header>
   );
