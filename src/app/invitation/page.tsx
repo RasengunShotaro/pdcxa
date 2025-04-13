@@ -2,9 +2,15 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Form, FormField } from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { createInvitation } from "@/feature/invitation/create-invitation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -25,8 +31,9 @@ export default function Page() {
     },
   });
 
-  const onSubmit = () => {
+  const onSubmit = async (value: InvitationFormSchema) => {
     form.reset();
+    await createInvitation(value.mail);
   };
 
   return (
@@ -49,11 +56,14 @@ export default function Page() {
                     >
                       メールアドレス
                     </Label>
-                    <Input
-                      id="email"
-                      {...field}
-                      placeholder="abcde@example.com"
-                    />
+                    <FormControl>
+                      <Input
+                        id="email"
+                        {...field}
+                        placeholder="abcde@example.com"
+                      />
+                    </FormControl>
+                    <FormMessage />
                   </div>
                 )}
               />
