@@ -11,7 +11,7 @@ import pdcxa from "../../../static/pdcxa.svg";
 import { TimeLineRefetchButton } from "./refetch";
 
 export function SiteHeader() {
-  const { toggleSidebar } = useSidebar();
+  const { isMobile, toggleSidebar } = useSidebar();
 
   return (
     <header className="flex sticky top-0 z-50 w-full items-center border-b bg-background">
@@ -25,9 +25,16 @@ export function SiteHeader() {
           <SidebarIcon />
         </Button>
         <Separator orientation="vertical" className="mr-1 h-4" />
-        <Link href="/">
-          <Image src={pdcxa} alt="Logo" className="h-7 w-auto" quality={100} />
-        </Link>
+        {isMobile ? (
+          <Link href="/">
+            <Image
+              src={pdcxa}
+              alt="Logo"
+              className="h-7 w-auto"
+              quality={100}
+            />
+          </Link>
+        ) : null}
         <div className="ml-auto flex items-center">
           <TimeLineRefetchButton />
           <UserButton />
