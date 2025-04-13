@@ -1,23 +1,15 @@
 "use server";
 
-import { 拡張fetch } from "@/utils/fetch";
-
-type UserFetch結果 = {
-  first_name: string;
-  last_name: string;
-  image_url: string;
-  username: string;
-};
+import { clerkClient } from "@/lib/clerk";
 
 export const fetchUserDetail = async (userId: string) => {
-  const response = await 拡張fetch<UserFetch結果>(
-    `https://api.clerk.com/v1/users/${userId}`,
-    {
-      headers: {
-        Authorization: `Bearer ${process.env.CLERK_SECRET_KEY}`,
-        "Content-Type": "application/json",
-      },
-    }
-  );
-  return response;
+  const result = (await clerkClient.users.getUser(userId)).raw;
+
+  return {
+    id: result?.id,
+    first_name: result?.first_name,
+    last_name: result?.last_name,
+    image_url: result?.image_url,
+    username: result?.username,
+  };
 };
