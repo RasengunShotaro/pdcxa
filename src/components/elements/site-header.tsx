@@ -8,6 +8,7 @@ import { SidebarIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import pdcxa from "../../../static/pdcxa.svg";
+import { NavBreadcrumb } from "./nav-breadcrumb";
 import { TimeLineRefetchButton } from "./refetch";
 
 export function SiteHeader() {
@@ -26,15 +27,19 @@ export function SiteHeader() {
         </Button>
         <Separator orientation="vertical" className="mr-1 h-4" />
         {isMobile ? (
-          <Link href="/">
-            <Image
-              src={pdcxa}
-              alt="Logo"
-              className="h-7 w-auto"
-              quality={100}
-            />
-          </Link>
-        ) : null}
+          <>
+            <Link href="/">
+              <Image
+                src={pdcxa}
+                alt="Logo"
+                className="h-7 w-auto"
+                quality={100}
+              />
+            </Link>
+          </>
+        ) : (
+          <NavBreadcrumb />
+        )}
         <div className="ml-auto flex items-center">
           <TimeLineRefetchButton />
           <UserButton />
