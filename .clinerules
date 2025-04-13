@@ -18,7 +18,7 @@
 
 ## デプロイ環境
 - Neon(無料プラン)
-- Vercel(無料プラン)
+- Cloudflare(無料プラン)
 
 # ディレクトリ構成
 - 基本的にはbulletproof-reactのディレクトリ構成に従う
