@@ -1,7 +1,7 @@
 "use client";
 
-import { createRePd } from "@/feature/pd/api/create-repd";
-import { fetchRePds } from "@/feature/pd/api/fetch-repds";
+import { createRePd } from "@/feature/pd/api/repd/create-repd";
+import { fetchRePds } from "@/feature/pd/api/repd/fetch-repds";
 import { useUser } from "@clerk/nextjs";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 

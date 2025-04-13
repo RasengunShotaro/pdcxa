@@ -1,7 +1,7 @@
 "use client";
 
-import { fetchPdLike } from "@/feature/pd/api/fetch-pd-like";
-import { mutatePdLike } from "@/feature/pd/api/mutate-pd-like";
+import { fetchPdLike } from "@/feature/pd/api/pd/fetch-pd-like";
+import { mutatePdLike } from "@/feature/pd/api/pd/mutate-pd-like";
 import { useUser } from "@clerk/nextjs";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
