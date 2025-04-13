@@ -1,5 +1,4 @@
-import { AppSidebar as Sidebar } from "@/components/elements/Sidebar";
-import { Header } from "@/components/elements/TopBar";
+import { AppSidebar } from "@/components/elements/app-sidebar";
 import { Providers } from "@/lib/providers";
 import {
   HydrationBoundary,
@@ -8,7 +7,8 @@ import {
 } from "@tanstack/react-query";
 import type { Metadata } from "next";
 import "./globals.css";
-import { TimeLineRefetchButton } from "@/components/elements/refetch";
+import { SiteHeader } from "@/components/elements/site-header";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 
 export const runtime = "edge";
 
@@ -27,19 +27,21 @@ export default async function RootLayout({
 
   return (
     <html lang="ja">
-      <body className="bg-gray-100 min-h-screen">
+      <body>
         <Providers>
           <HydrationBoundary state={dehydratedState}>
-            <div className="h-screen bg-gray-100 ">
-              <Header>
-                <TimeLineRefetchButton />
-              </Header>
-              <div className="flex">
-                <Sidebar />
-                <div className="flex-1">
-                  <div className="p-6">{children}</div>
+            <div className="[--header-height:calc(theme(spacing.14))]">
+              <SidebarProvider className="flex flex-col">
+                <SiteHeader />
+                <div className="flex flex-1">
+                  <AppSidebar />
+                  <SidebarInset>
+                    <div className="flex flex-1 flex-col gap-4 p-4">
+                      {children}
+                    </div>
+                  </SidebarInset>
                 </div>
-              </div>
+              </SidebarProvider>
             </div>
           </HydrationBoundary>
         </Providers>
