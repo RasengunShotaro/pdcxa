@@ -1,4 +1,5 @@
 "use client";
+import { SidebarProvider } from "@/components/ui/sidebar";
 import { jaJP } from "@clerk/localizations";
 import { ClerkProvider } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
@@ -43,7 +44,7 @@ export function Providers({ children }: { children: ReactNode }) {
         client={queryClient}
         persistOptions={{ persister }}
       >
-        {children}
+        <SidebarProvider>{children}</SidebarProvider>
         <ReactQueryDevtools initialIsOpen={false} />
       </PersistQueryClientProvider>
     </ClerkProvider>
