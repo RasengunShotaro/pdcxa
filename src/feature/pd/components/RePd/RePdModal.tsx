@@ -74,7 +74,7 @@ export const RePdModal: React.FC<RePdModalProps> = ({
               )}
             />
             <DialogFooter>
-              <Button variant="outline" onClick={onClose}>
+              <Button type="button" variant="outline" onClick={onClose}>
                 キャンセル
               </Button>
               <Button type="submit">

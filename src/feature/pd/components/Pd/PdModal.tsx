@@ -67,7 +67,7 @@ export const PdModal: React.FC<PdModalProps> = ({ isOpen, onClose }) => {
               )}
             />
             <DialogFooter>
-              <Button variant="outline" onClick={onClose}>
+              <Button type="button" variant="outline" onClick={onClose}>
                 キャンセル
               </Button>
               <Button type="submit">
