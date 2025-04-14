@@ -4,6 +4,7 @@ import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import type { RePd } from "@/feature/pd/types";
 import { useRePdLike } from "@/hooks/useRePdLike";
 import { useUserDetail } from "@/hooks/useUserDetail";
+import { useUser } from "@clerk/nextjs";
 import { Heart, MoreHorizontal } from "lucide-react";
 import { formatDateTime } from "../../utils/format-datetime";
 interface PdItemProps {
@@ -15,11 +16,10 @@ const RePdItem: React.FC<PdItemProps> = ({ rePd }) => {
   const userFullName = `${userDetail?.first_name ?? ""} ${
     userDetail?.last_name ?? ""
   }`; // 一瞬undefinedと表示されるより、何も表示されない方が良いため
+  const { user: myUser } = useUser();
   const { rePdLike, mutateRePdLike } = useRePdLike(rePd.id);
 
-  const isContainsMyLike = rePdLike.some(
-    (like) => like.userId === userDetail?.id
-  );
+  const isContainsMyLike = rePdLike.some((like) => like.userId === myUser?.id);
 
   return (
     <Card key={rePd.id} className="border-b">

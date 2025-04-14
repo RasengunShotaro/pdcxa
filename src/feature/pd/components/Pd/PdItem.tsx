@@ -5,10 +5,12 @@ import type { Pd } from "@/feature/pd/types";
 import { usePdLike } from "@/hooks/usePdLike";
 import { useRePd } from "@/hooks/useRePd";
 import { useUserDetail } from "@/hooks/useUserDetail";
+import { useUser } from "@clerk/nextjs";
 import { useQueryClient } from "@tanstack/react-query";
 import { Heart, MessageCircle, MoreHorizontal } from "lucide-react";
 import Link from "next/link";
 import { formatDateTime } from "../../utils/format-datetime";
+
 interface PdItemProps {
   pd: Pd;
 }
@@ -19,13 +21,11 @@ const PdItem: React.FC<PdItemProps> = ({ pd }) => {
     userDetail?.last_name ?? ""
   }`; // 一瞬undefinedと表示されるより、何も表示されない方が良いため
   const queryClient = useQueryClient();
-
+  const { user: myUser } = useUser();
   const { rePds } = useRePd(pd.id);
   const { pdLike, mutatePdLike } = usePdLike(pd.id);
 
-  const isContainsMyLike = pdLike.some(
-    (like) => like.userId === userDetail?.id
-  );
+  const isContainsMyLike = pdLike.some((like) => like.userId === myUser?.id);
   const refetchPd = (pdId: string) => {
     queryClient.invalidateQueries({
       queryKey: ["PD詳細", pdId],
