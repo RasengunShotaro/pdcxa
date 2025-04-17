@@ -1,4 +1,4 @@
-import { pgTable, timestamp, uuid, varchar } from "drizzle-orm/pg-core";
+import { pgTable, primaryKey, timestamp, uuid, varchar } from "drizzle-orm/pg-core";
 import { uuidv7 } from "uuidv7";
 
 export const pds = pgTable("pds", {
@@ -21,15 +21,17 @@ export const rePds = pgTable("repds", {
 export const pdLikes = pgTable("pd_likes", {
   targetPdId: uuid("target_pd_id")
     .notNull()
-    .references(() => pds.id)
-    .primaryKey(),
+    .references(() => pds.id),
   userId: varchar("user_id").notNull(),
-});
+}, (table) => [
+  primaryKey({ columns: [table.targetPdId, table.userId] })
+]);
 
 export const rePdLikes = pgTable("repd_likes", {
   targetRePdId: uuid("target_repd_id")
     .notNull()
-    .references(() => rePds.id)
-    .primaryKey(),
+    .references(() => rePds.id),
   userId: varchar("user_id").notNull(),
-});
+}, (table) => [
+  primaryKey({ columns: [table.targetRePdId, table.userId] })
+]);
