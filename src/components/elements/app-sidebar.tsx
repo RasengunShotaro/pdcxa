@@ -39,7 +39,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 />
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-semibold">Web Version</span>
-                  <span className="truncate text-xs">V0.0.2</span>
+                  <span className="truncate text-xs">respect to K.S.</span>
                 </div>
               </Link>
             </SidebarMenuButton>
