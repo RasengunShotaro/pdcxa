@@ -10,6 +10,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { Heart, MessageCircle, MoreHorizontal } from "lucide-react";
 import Link from "next/link";
 import { formatDateTime } from "../../utils/format-datetime";
+import { PopOverLike } from "./pop-over-like";
 
 interface PdItemProps {
   pd: Pd;
@@ -72,18 +73,21 @@ const PdItem: React.FC<PdItemProps> = ({ pd }) => {
           <span className="text-sm text-gray-500">
             {formatDateTime(pd.createdAt)}
           </span>
-          <div className="flex items-center space-x-4">
-            <Button
-              variant="ghost"
-              size="sm"
-              className={`hover:text-red-500 space-x-1 ${
-                isContainsMyLike ? "text-red-500" : ""
-              }`}
-              onClick={() => mutatePdLike()}
-            >
-              <Heart className="h-4 w-4" />
-              <span>{pdLike.length}</span>
-            </Button>
+          <div className="flex items-center">
+            <div className="flex mr-2">
+              <PopOverLike userIds={pdLike.map((like) => like.userId)} />
+              <Button
+                variant="ghost"
+                size="sm"
+                className={`hover:text-red-500 space-x-1 ${
+                  isContainsMyLike ? "text-red-500" : ""
+                }`}
+                onClick={() => mutatePdLike()}
+              >
+                <Heart className="h-4 w-4" />
+                <span>{pdLike.length}</span>
+              </Button>
+            </div>
             <Link href={`/pd/${pd.id}`}>
               <Button
                 variant="ghost"
