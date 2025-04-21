@@ -3,14 +3,15 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { useUserDetail } from "@/hooks/useUserDetail";
+import { useUserDetails } from "@/hooks/useUserDetails";
 
 type PopOverLikeProps = {
   userIds: string[];
 };
 
 export const PopOverLike = ({ userIds }: PopOverLikeProps) => {
-  const userDetails = userIds.map((userId) => useUserDetail(userId));
+  const userDetails = useUserDetails(userIds);
+  
   const userFullNames = userDetails.map((userDetail) => {
     return `${userDetail?.first_name ?? ""} ${userDetail?.last_name ?? ""}`;
   });
