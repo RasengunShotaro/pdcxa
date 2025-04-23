@@ -46,7 +46,7 @@ const PdItem: React.FC<PdItemProps> = ({ pd }) => {
             <MoreHorizontal className="h-4 w-4" />
           </Button>
         </div>
-        <p className="text-gray-900">{pd.content}</p>
+        <p className="text-gray-900 whitespace-pre-wrap">{pd.content}</p>
         <div className="flex items-center justify-between pt-2">
           <span className="text-sm text-gray-500">
             {formatDateTime(pd.createdAt)}
