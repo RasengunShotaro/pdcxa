@@ -2,7 +2,7 @@
 
 import PdItem from "@/feature/pd/components/Pd/pd-item";
 import { PostRePdButton } from "@/feature/pd/components/RePd/post-repd-button";
-import { RePds } from "@/feature/pd/components/RePd/repds";
+import { RePdList } from "@/feature/pd/components/RePd/repd-list";
 import { usePd } from "@/hooks/use-pd";
 import { useRePd } from "@/hooks/use-repd";
 import { use } from "react";
@@ -32,7 +32,7 @@ export default function PdDetail({ params }: PdDetailProps) {
     <div className="max-w-2xl mx-auto">
       <PdItem pd={pd} />
       <div className="mt-4 space-y-4">
-        <RePds rePds={rePds} />
+        <RePdList rePds={rePds} />
       </div>
       <PostRePdButton pdId={pd.id} />
     </div>
