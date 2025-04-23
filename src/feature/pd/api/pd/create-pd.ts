@@ -2,12 +2,8 @@
 
 import { pds } from "@/db/schema";
 import { db } from "@/lib/db";
-import type { Pd } from "../../types";
 
-export const createPd = async (
-  content: string,
-  userId: string
-): Promise<Pd> => {
+export const createPd = async (content: string, userId: string) => {
   const newPd = {
     content,
     createdAt: new Date(),
@@ -15,14 +11,9 @@ export const createPd = async (
   };
 
   try {
-    const [insertedPd] = await db.insert(pds).values(newPd).returning({
-      id: pds.id,
-      content: pds.content,
-      createdAt: pds.createdAt,
-      userId: pds.userId,
-    });
+    await db.insert(pds).values(newPd);
 
-    return insertedPd;
+    return;
   } catch (error) {
     console.error("PDの保存に失敗しました:", error);
     throw error;
