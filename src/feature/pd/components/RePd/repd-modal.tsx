@@ -16,7 +16,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
-import { useRePd } from "@/hooks/useRePd";
+import { useRePd } from "@/hooks/use-repd";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { MessageCircle } from "lucide-react";
 import { useForm } from "react-hook-form";

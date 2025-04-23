@@ -1,10 +1,10 @@
 "use client";
 
 import PdItem from "@/feature/pd/components/Pd/pd-item";
-import { PostRePdButton } from "@/feature/pd/components/RePd/PostRePdButton";
-import { RePds } from "@/feature/pd/components/RePd/RePDs";
+import { PostRePdButton } from "@/feature/pd/components/RePd/post-repd-button";
+import { RePds } from "@/feature/pd/components/RePd/repds";
 import { usePd } from "@/hooks/use-pd";
-import { useRePd } from "@/hooks/useRePd";
+import { useRePd } from "@/hooks/use-repd";
 import { use } from "react";
 
 interface PdDetailProps {

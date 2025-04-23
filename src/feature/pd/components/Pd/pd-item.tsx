@@ -2,7 +2,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { usePdLike } from "@/hooks/use-pd-like";
-import { useUserDetail } from "@/hooks/useUserDetail";
+import { useUserDetail } from "@/hooks/use-user-detail";
 import { Heart, MessageCircle, MoreHorizontal } from "lucide-react";
 import Link from "next/link";
 import type { Pd } from "../../types";

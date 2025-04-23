@@ -14,4 +14,6 @@ export type RePd = {
   content: string;
   createdAt: Date;
   userId: string;
+  likeCount: number;
+  likes: { userId: string }[];
 };
