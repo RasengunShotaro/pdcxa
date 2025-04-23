@@ -20,6 +20,7 @@ export const metadata: Metadata = {
 
 const bizUdpGothic = BIZ_UDPGothic({
   weight: ["400", "700"],
+  preload: false,
 });
 
 export default async function RootLayout({
