@@ -59,8 +59,17 @@ export const fetchPds = async (pdIds?: string[]): Promise<Pd[]> => {
         likes: (row.likes ?? []).map((userId: string) => ({ userId })),
       }));
 
-    const fetchSpecificPds = async () =>
-      formatPdRows(await query.where(sql`${pds.id} = ANY(${pdIds})`));
+    const fetchSpecificPds = async () => {
+      if (pdIds && pdIds.length === 1) {
+        return formatPdRows(await query.where(eq(pds.id, pdIds[0])));
+      }
+      if (pdIds && pdIds.length > 1) {
+        return formatPdRows(
+          await query.where(sql`${pds.id} IN (${sql.join(pdIds, sql`, `)})`)
+        );
+      }
+      return [];
+    };
 
     const fetchLatestPds = async () =>
       formatPdRows(await query.orderBy(desc(pds.createdAt)).limit(500));

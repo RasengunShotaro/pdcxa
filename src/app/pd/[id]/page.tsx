@@ -1,9 +1,9 @@
 "use client";
 
-import PdItem from "@/feature/pd/components/Pd/PdItem";
+import PdItem from "@/feature/pd/components/Pd/pd-item";
 import { PostRePdButton } from "@/feature/pd/components/RePd/PostRePdButton";
 import { RePds } from "@/feature/pd/components/RePd/RePDs";
-import { usePd } from "@/hooks/usePd";
+import { usePd } from "@/hooks/use-pd";
 import { useRePd } from "@/hooks/useRePd";
 import { use } from "react";
 
