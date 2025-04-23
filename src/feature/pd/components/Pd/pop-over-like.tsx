@@ -22,7 +22,9 @@ export const PopOverLike = ({ userIds }: PopOverLikeProps) => {
       <PopoverContent className="flex-col border-2 w-fit">
         <div className="text-lg font-bold">いいねしたユーザー</div>
         {userFullNames.map((userFullName) => (
-          <div key={userFullName}>・ {userFullName}</div>
+          <div key={userFullName} className="text-muted-foreground font-light">
+            ・ {userFullName}
+          </div>
         ))}
       </PopoverContent>
     </Popover>
