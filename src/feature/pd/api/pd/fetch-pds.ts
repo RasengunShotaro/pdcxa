@@ -49,28 +49,25 @@ export const fetchPds = async (pdIds?: string[]): Promise<Pd[]> => {
       .leftJoin(repliesCountSubquery, eq(pds.id, repliesCountSubquery.pdId))
       .leftJoin(likesDetailsSubquery, eq(pds.id, likesDetailsSubquery.pdId));
 
-    if (pdIds && pdIds.length > 0) {
-      return await query.where(sql`${pds.id} = ANY(${pdIds})`).then((rows) =>
-        rows.map((row) => ({
-          ...row,
-          likeCount: row.likeCount ?? 0,
-          replyCount: row.replyCount ?? 0,
-          likes: (row.likes ?? []).map((userId) => ({ userId })),
-        }))
-      );
-    }
+    type QueryResult = Awaited<typeof query>;
 
-    return await query
-      .orderBy(desc(pds.createdAt))
-      .limit(500)
-      .then((rows) =>
-        rows.map((row) => ({
-          ...row,
-          likeCount: row.likeCount ?? 0,
-          replyCount: row.replyCount ?? 0,
-          likes: (row.likes ?? []).map((userId) => ({ userId })),
-        }))
-      );
+    const formatPdRows = (rows: QueryResult) =>
+      rows.map((row) => ({
+        ...row,
+        likeCount: row.likeCount ?? 0,
+        replyCount: row.replyCount ?? 0,
+        likes: (row.likes ?? []).map((userId: string) => ({ userId })),
+      }));
+
+    const fetchSpecificPds = async () =>
+      formatPdRows(await query.where(sql`${pds.id} = ANY(${pdIds})`));
+
+    const fetchLatestPds = async () =>
+      formatPdRows(await query.orderBy(desc(pds.createdAt)).limit(500));
+
+    return pdIds && pdIds.length > 0
+      ? await fetchSpecificPds()
+      : await fetchLatestPds();
   } catch (error) {
     console.error("PDの取得に失敗しました:", error);
     throw error;
