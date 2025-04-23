@@ -1,8 +1,8 @@
 "use client";
 
-import PdItem from "@/feature/pd/components/Pd/PdItem";
-import { PostPdButton } from "@/feature/pd/components/Pd/PostPdButton";
-import { usePd } from "@/hooks/usePd";
+import PdItem from "@/feature/pd/components/Pd/pd-item";
+import { PostPdButton } from "@/feature/pd/components/Pd/post-pd-button";
+import { usePd } from "@/hooks/use-pd";
 
 export function PdTimeLine() {
   const { pds } = usePd();

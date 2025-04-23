@@ -16,33 +16,28 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
-import { useRePd } from "@/hooks/useRePd";
+import { usePd } from "@/hooks/use-pd";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { MessageCircle } from "lucide-react";
+import { MessageSquare } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { type PdFormSchema, pdFormSchema } from "../../types";
 
-interface RePdModalProps {
-  pdId: string;
+interface PdModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-export const RePdModal: React.FC<RePdModalProps> = ({
-  pdId,
-  isOpen,
-  onClose,
-}) => {
+export const PdModal: React.FC<PdModalProps> = ({ isOpen, onClose }) => {
   const form = useForm<PdFormSchema>({
     resolver: zodResolver(pdFormSchema),
     defaultValues: {
       pd: "",
     },
   });
-  const { createRePd } = useRePd(pdId);
+  const { createPd } = usePd();
 
   const onSubmit = (values: PdFormSchema) => {
-    createRePd(values.pd);
+    createPd(values.pd);
     form.reset();
     onClose();
   };
@@ -51,10 +46,8 @@ export const RePdModal: React.FC<RePdModalProps> = ({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>RePD</DialogTitle>
-          <DialogDescription>
-            自分が感じたことを伝えてみましょう
-          </DialogDescription>
+          <DialogTitle>新規PD</DialogTitle>
+          <DialogDescription>今の気持ちをPDしましょう</DialogDescription>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -65,7 +58,7 @@ export const RePdModal: React.FC<RePdModalProps> = ({
                 <div className="grid gap-4 py-4">
                   <FormControl>
                     <Textarea
-                      placeholder="RePDを入力してください..."
+                      placeholder="PDを入力してください..."
                       {...field}
                     />
                   </FormControl>
@@ -78,8 +71,8 @@ export const RePdModal: React.FC<RePdModalProps> = ({
                 キャンセル
               </Button>
               <Button type="submit">
-                <MessageCircle className="h-3 w-3" />
-                RePDする
+                <MessageSquare className="h-3 w-3" />
+                PDする
               </Button>
             </DialogFooter>
           </form>

@@ -1,7 +1,7 @@
 import type { RePd } from "../../types";
-import RePdItem from "./RePdItem";
+import RePdItem from "./repd-item";
 
-export const RePds = ({ rePds }: { rePds: RePd[] }) => {
+export const RePdList = ({ rePds }: { rePds: RePd[] }) => {
   return (
     <>
       <h2 className="font-bold text-xl">RePD一覧</h2>

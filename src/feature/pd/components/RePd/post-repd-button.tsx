@@ -1,9 +1,14 @@
 import { Button } from "@/components/ui/button";
 import { MessageCircle } from "lucide-react";
 import { useState } from "react";
-import { PdModal } from "./PdModal";
+import { RePdModal } from "./repd-modal";
 
-export function PostPdButton() {
+type PostRePdButtonProps = {
+  pdId: string;
+};
+
+// PostPdButtonとほぼ一緒なので、あとでDRYするかも
+export function PostRePdButton({ pdId }: PostRePdButtonProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
@@ -15,7 +20,11 @@ export function PostPdButton() {
       >
         <MessageCircle className="h-4 w-4" />
       </Button>
-      <PdModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      <RePdModal
+        pdId={pdId}
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
     </>
   );
 }
