@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { MessageCircle } from "lucide-react";
 import { useState } from "react";
-import { PdModal } from "./PdModal";
+import { PdModal } from "./pd-modal";
 
 export function PostPdButton() {
   const [isModalOpen, setIsModalOpen] = useState(false);
