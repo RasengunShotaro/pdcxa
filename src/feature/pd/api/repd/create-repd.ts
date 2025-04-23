@@ -2,13 +2,12 @@
 
 import { rePds } from "@/db/schema";
 import { db } from "@/lib/db";
-import type { Pd } from "../../types";
 
 export const createRePd = async (
   pdId: string,
   content: string,
   userId: string
-): Promise<Pd> => {
+) => {
   const newRePd = {
     pdId,
     content,
@@ -17,15 +16,9 @@ export const createRePd = async (
   };
 
   try {
-    const [insertedRePd] = await db.insert(rePds).values(newRePd).returning({
-      id: rePds.id,
-      pdId: rePds.pdId,
-      content: rePds.content,
-      createdAt: rePds.createdAt,
-      userId: rePds.userId,
-    });
+    await db.insert(rePds).values(newRePd);
 
-    return insertedRePd;
+    return;
   } catch (error) {
     console.error("RePDの保存に失敗しました:", error);
     throw error;
