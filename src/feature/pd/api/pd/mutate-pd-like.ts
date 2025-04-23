@@ -3,44 +3,29 @@
 import { pdLikes } from "@/db/schema";
 import { db } from "@/lib/db";
 import { and, eq } from "drizzle-orm";
-import type { Like } from "../../types";
 
-export const mutatePdLike = async (
-  userId: string,
-  pdId: string
-): Promise<Like | null> => {
+export const mutatePdLike = async (userId: string, pdId: string) => {
   try {
     const existingLike = await db
       .select()
       .from(pdLikes)
-      .where(and(eq(pdLikes.targetPdId, pdId), eq(pdLikes.userId, userId)));
+      .where(and(eq(pdLikes.userId, userId), eq(pdLikes.targetPdId, pdId)))
+      .limit(1);
 
     if (existingLike.length > 0) {
       await db
         .delete(pdLikes)
-        .where(and(eq(pdLikes.targetPdId, pdId), eq(pdLikes.userId, userId)));
-      return null;
+        .where(and(eq(pdLikes.userId, userId), eq(pdLikes.targetPdId, pdId)));
+    } else {
+      await db.insert(pdLikes).values({
+        userId,
+        targetPdId: pdId,
+      });
     }
 
-    const newPdLike = {
-      targetPdId: pdId,
-      userId: `${userId}`,
-    };
-
-    const [insertedPdLike] = await db
-      .insert(pdLikes)
-      .values(newPdLike)
-      .returning({
-        userId: pdLikes.userId,
-        pdId: pdLikes.targetPdId,
-      });
-
-    return {
-      userId: insertedPdLike.userId,
-      pdId: insertedPdLike.pdId,
-    };
+    return;
   } catch (error) {
-    console.error("PDLikeの操作に失敗しました:", error);
+    console.error("いいねの更新に失敗しました:", error);
     throw error;
   }
 };

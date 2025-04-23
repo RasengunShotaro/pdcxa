@@ -3,6 +3,9 @@ export type Pd = {
   content: string;
   createdAt: Date;
   userId: string;
+  likeCount: number;
+  replyCount: number;
+  likes: { userId: string }[];
 };
 
 export type RePd = {
