@@ -20,11 +20,13 @@ export const TimeLineRefetchButton = () => {
   const queryClient = useQueryClient();
   const refetchTimeLine = () => {
     queryClient.invalidateQueries({
-      queryKey: ["PD詳細", null],
-      exact: true,
+      queryKey: ["PD詳細"],
     });
     queryClient.invalidateQueries({
       queryKey: ["ユーザー詳細情報"],
+    });
+    queryClient.invalidateQueries({
+      queryKey: ["RePD詳細"],
     });
   };
 

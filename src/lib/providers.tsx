@@ -14,10 +14,10 @@ export function Providers({ children }: { children: ReactNode }) {
       new QueryClient({
         defaultOptions: {
           queries: {
-            gcTime: 1000 * 60 * 60 * 24, // persisterのデフォルトが24時間なので、それに合わせた
-            staleTime: 60 * 1000,
+            gcTime: 1000 * 60 * 60 * 5,
+            staleTime: 1000 * 60 * 5,
             retry: 1,
-            refetchOnMount: false,
+            refetchOnMount: true,
             refetchOnWindowFocus: false,
             refetchOnReconnect: false,
           },
@@ -41,7 +41,7 @@ export function Providers({ children }: { children: ReactNode }) {
     >
       <PersistQueryClientProvider
         client={queryClient}
-        persistOptions={{ persister, maxAge: 1000 * 60 * 3 }}
+        persistOptions={{ persister, maxAge: 1000 * 60 * 60 * 5 }}
       >
         {children}
         <ReactQueryDevtools initialIsOpen={false} />
