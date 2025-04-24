@@ -20,12 +20,23 @@ export const PopOverLike = ({ userIds }: PopOverLikeProps) => {
     <Popover>
       <PopoverTrigger className="text-sm">いいね</PopoverTrigger>
       <PopoverContent className="flex-col border-2 w-fit">
-        <div className="text-lg font-bold">いいねしたユーザー</div>
-        {userFullNames.map((userFullName) => (
-          <div key={userFullName} className="text-muted-foreground font-light">
-            ・ {userFullName}
+        {userDetails.length > 0 ? (
+          <>
+            <div className="text-lg font-bold">いいねしたユーザー</div>
+            {userFullNames.map((userFullName) => (
+              <div
+                key={userFullName}
+                className="text-muted-foreground font-light"
+              >
+                {userFullName}
+              </div>
+            ))}
+          </>
+        ) : (
+          <div className="text-muted-foreground font-light">
+            いいねしたユーザーはまだいません
           </div>
-        ))}
+        )}
       </PopoverContent>
     </Popover>
   );
