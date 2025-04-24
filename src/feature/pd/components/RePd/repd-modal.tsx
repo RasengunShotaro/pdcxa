@@ -20,6 +20,7 @@ import { useRePd } from "@/hooks/use-repd";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { MessageCircle } from "lucide-react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { type PdFormSchema, pdFormSchema } from "../../types";
 
 interface RePdModalProps {
@@ -39,10 +40,15 @@ export const RePdModal: React.FC<RePdModalProps> = ({
       pd: "",
     },
   });
-  const { createRePd } = useRePd(pdId);
+  const { createRePd, error } = useRePd(pdId);
 
   const onSubmit = (values: PdFormSchema) => {
     createRePd(values.pd);
+    if (error) {
+      toast.error("RePDに失敗しました");
+    } else {
+      toast.success("RePDしました!");
+    }
     form.reset();
     onClose();
   };

@@ -20,6 +20,7 @@ import { usePd } from "@/hooks/use-pd";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { MessageSquare } from "lucide-react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { type PdFormSchema, pdFormSchema } from "../../types";
 
 interface PdModalProps {
@@ -34,10 +35,15 @@ export const PdModal: React.FC<PdModalProps> = ({ isOpen, onClose }) => {
       pd: "",
     },
   });
-  const { createPd } = usePd();
+  const { createPd, error } = usePd();
 
   const onSubmit = (values: PdFormSchema) => {
     createPd(values.pd);
+    if (error) {
+      toast.error("PDに失敗しました");
+    } else {
+      toast.success("PDしました!");
+    }
     form.reset();
     onClose();
   };
