@@ -1,4 +1,5 @@
 "use client";
+import { Toaster } from "@/components/ui/sonner";
 import { jaJP } from "@clerk/localizations";
 import { ClerkProvider } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
@@ -42,6 +43,7 @@ export function Providers({ children }: { children: ReactNode }) {
         client={queryClient}
         persistOptions={{ persister, maxAge: 1000 * 60 * 3 }}
       >
+        <Toaster position="top-center" />
         {children}
         <ReactQueryDevtools initialIsOpen={false} />
       </PersistQueryClientProvider>
