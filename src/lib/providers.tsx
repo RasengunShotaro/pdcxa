@@ -20,6 +20,7 @@ export function Providers({ children }: { children: ReactNode }) {
             refetchOnMount: false,
             refetchOnWindowFocus: false,
             refetchOnReconnect: false,
+            retry: false,
           },
         },
       })
