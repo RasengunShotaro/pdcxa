@@ -29,7 +29,7 @@ export default function PdDetail({ params }: PdDetailProps) {
   }
 
   return (
-    <div className="max-w-2xl mx-auto">
+    <div className="flex-auto max-w-2xl">
       <PdItem pd={pd} />
       <div className="mt-4 space-y-4">
         <RePdList rePds={rePds} />

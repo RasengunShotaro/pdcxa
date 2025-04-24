@@ -47,7 +47,7 @@ export default function Page() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto">
+    <div className="flex-auto max-w-2xl">
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle>招待を送信</CardTitle>

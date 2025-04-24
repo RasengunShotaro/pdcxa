@@ -112,13 +112,13 @@ export default function Page() {
   if (!user) return null;
 
   return (
-    <div className="w-fit mx-auto">
-      <Card className="w-full max-w-md">
+    <div className="w-fit flex-auto max-w-md">
+      <Card className="w-full">
         <CardHeader>
           <CardTitle className="text-xl font-bold">プロフィール設定</CardTitle>
         </CardHeader>
         <CardContent>
-        <div className="flex flex-col mt-4 border-t pt-4 mb-4">
+          <div className="flex flex-col mt-4 border-t pt-4 mb-4">
             <h3 className="text-lg font-semibold">プロフィール画像</h3>
             <p className="text-sm font-normal text-muted-foreground">
               画像の比率が1:1でない場合、プレビューが実際と乖離します。

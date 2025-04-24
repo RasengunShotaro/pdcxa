@@ -8,7 +8,7 @@ export function PdTimeLine() {
   const { pds } = usePd();
 
   return (
-    <div className="max-w-2xl mx-auto">
+    <div className="flex-auto max-w-2xl">
       <div className="space-y-4">
         {pds.map((post) => (
           <PdItem key={post.id} pd={post} />
