@@ -1,6 +1,7 @@
 "use client";
 
 import PdItem from "@/feature/pd/components/Pd/pd-item";
+import { PdItemSkeleton } from "@/feature/pd/components/Pd/pd-item-skeleton";
 import { PostRePdButton } from "@/feature/pd/components/RePd/post-repd-button";
 import { RePdList } from "@/feature/pd/components/RePd/repd-list";
 import { usePd } from "@/hooks/use-pd";
@@ -16,13 +17,17 @@ interface PdDetailProps {
 export default function PdDetail({ params }: PdDetailProps) {
   const unwrapParams = use(params);
 
-  const { pds } = usePd([unwrapParams.id]);
+  const { pds, isPending, error } = usePd([unwrapParams.id]);
   const pd = pds[0];
   const { rePds } = useRePd(unwrapParams.id);
 
-  if (!pd) {
+  if (isPending) {
+    return <PdItemSkeleton PD数={1} />;
+  }
+
+  if (error) {
     return (
-      <div className="max-w-2xl mx-auto">
+      <div className="flex-auto max-w-2xl">
         ご指定のPDが見つかりませんでした。
       </div>
     );

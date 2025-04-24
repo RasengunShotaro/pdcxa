@@ -1,11 +1,16 @@
 "use client";
 
 import PdItem from "@/feature/pd/components/Pd/pd-item";
+import { PdItemSkeleton } from "@/feature/pd/components/Pd/pd-item-skeleton";
 import { PostPdButton } from "@/feature/pd/components/Pd/post-pd-button";
 import { usePd } from "@/hooks/use-pd";
 
 export function PdTimeLine() {
-  const { pds } = usePd();
+  const { pds, isPending } = usePd();
+
+  if (isPending) {
+    return <PdItemSkeleton PD数={4} />;
+  }
 
   return (
     <div className="flex-auto max-w-2xl">
