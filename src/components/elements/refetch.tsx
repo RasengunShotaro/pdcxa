@@ -2,6 +2,7 @@
 
 import { useQueryClient } from "@tanstack/react-query";
 import { RefreshCcw } from "lucide-react";
+import { toast } from "sonner";
 import { Button } from "../ui/button";
 
 type RefetchButtonProps = {
@@ -28,6 +29,7 @@ export const TimeLineRefetchButton = () => {
     queryClient.invalidateQueries({
       queryKey: ["RePD詳細"],
     });
+    toast.success("タイムラインを更新しました！");
   };
 
   return <RefetchButton onClick={refetchTimeLine} />;
