@@ -8,7 +8,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { Bell, Home, MessageSquare, User } from "lucide-react";
+import { Home, Mail, User } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import pdcxa from "../../../static/pdcxa.svg";
@@ -16,9 +16,8 @@ import pdcxa from "../../../static/pdcxa.svg";
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const menuItems = [
     { href: "/", label: "ホーム", icon: Home },
-    { href: "/messages", label: "メッセージ", icon: MessageSquare },
-    { href: "/notifications", label: "通知", icon: Bell },
     { href: "/profile", label: "プロフィール", icon: User },
+    { href: "/invitation", label: "招待", icon: Mail },
   ];
 
   return (
