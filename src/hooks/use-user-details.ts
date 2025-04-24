@@ -6,7 +6,7 @@ export const useUserDetails = (userIds: string[]) => {
     queries: userIds.map((userId) => ({
       queryKey: ["ユーザー詳細情報", userId],
       queryFn: async () => fetchUserDetail(userId),
-      staleTime: 1000 * 60 * 60,
+      staleTime: 1000 * 60 * 15,
     })),
   });
 
