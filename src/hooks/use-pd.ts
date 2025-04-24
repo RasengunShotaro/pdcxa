@@ -9,7 +9,11 @@ export const usePd = (pdIds?: string[]) => {
   const queryClient = useQueryClient();
   const { user } = useUser();
 
-  const { data: pds = [], error } = useQuery({
+  const {
+    data: pds = [],
+    isPending,
+    error,
+  } = useQuery({
     queryKey: ["PD詳細", pdIds],
     queryFn: async () => fetchPds(pdIds),
   });
@@ -23,6 +27,7 @@ export const usePd = (pdIds?: string[]) => {
 
   return {
     pds,
+    isPending,
     error,
     createPd: createNewPd,
   };

@@ -9,7 +9,11 @@ export const useRePd = (pdId: string) => {
   const queryClient = useQueryClient();
   const { user } = useUser();
 
-  const { data: rePds = [], error } = useQuery({
+  const {
+    data: rePds = [],
+    isPending,
+    error,
+  } = useQuery({
     queryKey: ["RePD詳細", pdId],
     queryFn: async () => {
       const pds = await fetchRePds(pdId);
@@ -32,6 +36,7 @@ export const useRePd = (pdId: string) => {
 
   return {
     rePds,
+    isPending,
     error,
     createRePd: createNewRePd,
   };
