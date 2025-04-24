@@ -1,10 +1,17 @@
-"use client"
+"use client";
 
-import { useTheme } from "next-themes"
-import { Toaster as Sonner, ToasterProps } from "sonner"
+import {
+  AlertTriangle,
+  CheckCircle,
+  Info,
+  Loader,
+  XCircle,
+} from "lucide-react";
+import { useTheme } from "next-themes";
+import { Toaster as Sonner, type ToasterProps } from "sonner";
 
 const Toaster = ({ ...props }: ToasterProps) => {
-  const { theme = "system" } = useTheme()
+  const { theme = "system" } = useTheme();
 
   return (
     <Sonner
@@ -17,9 +24,21 @@ const Toaster = ({ ...props }: ToasterProps) => {
           "--normal-border": "var(--border)",
         } as React.CSSProperties
       }
+      toastOptions={{
+        classNames: {
+          default: "!bg-white !text-xl !justify-center !w-fit !items-center",
+        },
+      }}
+      icons={{
+        success: <CheckCircle className="h-5 w-5 text-green-500" />,
+        info: <Info className="h-5 w-5 text-blue-500" />,
+        warning: <AlertTriangle className="h-5 w-5 text-amber-500" />,
+        error: <XCircle className="h-5 w-5 text-red-500" />,
+        loading: <Loader className="h-5 w-5 text-gray-500 animate-spin" />,
+      }}
       {...props}
     />
-  )
-}
+  );
+};
 
-export { Toaster }
+export { Toaster };
