@@ -21,7 +21,7 @@ const PdItem: React.FC<PdItemProps> = ({ pd }) => {
   const { isLiked, toggleLike } = usePdLike(pd);
 
   return (
-    <Card key={pd.id} className="border-b">
+    <Card key={pd.id}>
       <CardHeader className="p-4 space-y-2">
         <div className="flex justify-between items-start">
           <div className="flex items-center space-x-3">
