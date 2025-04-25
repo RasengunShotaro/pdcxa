@@ -8,6 +8,7 @@ import { SidebarIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import pdcxa from "../../../static/pdcxa.svg";
+import { ColorModeSwitcher } from "./color-mode-switcher";
 import { NavBreadcrumb } from "./nav-breadcrumb";
 import { TimeLineRefetchButton } from "./refetch";
 
@@ -42,6 +43,8 @@ export function SiteHeader() {
         )}
         <div className="ml-auto flex items-center">
           <TimeLineRefetchButton />
+          <ColorModeSwitcher />
+          <div className="mx-1" />
           <UserButton />
         </div>
       </div>
