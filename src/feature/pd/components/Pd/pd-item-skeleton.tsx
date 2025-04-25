@@ -7,7 +7,7 @@ export const PdItemSkeleton = ({ PD数 }: { PD数: number }) => {
       <div className="space-y-4">
         {Array.from({ length: PD数 }, (_, i) => i).map((要素) => (
           <div key={`skeleton-${要素}`}>
-            <Card className="border-b">
+            <Card >
               <CardHeader className="p-4 space-y-2">
                 <div className="flex justify-between items-start">
                   <div className="flex items-center space-x-3">
