@@ -33,7 +33,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 <Image
                   src={pdcxa}
                   alt="Logo"
-                  className="h-7 w-auto"
+                  className="h-7 w-auto dark:invert"
                   quality={100}
                 />
                 <div className="grid flex-1 text-left text-sm leading-tight">
