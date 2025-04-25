@@ -16,6 +16,7 @@ import { useUser } from "@clerk/nextjs";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024;
@@ -86,6 +87,7 @@ export default function Page() {
         lastName: value.lastName,
       });
       setSuccess(true);
+      toast.success("名前を変更しました！");
     } catch (error) {
       setSuccess(false);
       form.setError("firstName", {
@@ -102,6 +104,7 @@ export default function Page() {
     if (!user || !data.image[0]) return;
     try {
       await user.setProfileImage({ file: data.image[0] });
+      toast.success("画像を変更しました！");
     } catch (error) {
       imageForm.setError("image", {
         message: `画像のアップロードに失敗しました。 ${error}`,
@@ -223,6 +226,7 @@ export default function Page() {
                 />
                 <Button type="submit">変更</Button>
               </div>
+              <div className="mb-2" />
               <FormField
                 control={form.control}
                 name="firstName"
@@ -233,7 +237,6 @@ export default function Page() {
                 name="lastName"
                 render={() => <FormMessage />}
               />
-              <FormMessage>{success && "名前を変更しました！"}</FormMessage>
             </form>
           </Form>
         </CardContent>
