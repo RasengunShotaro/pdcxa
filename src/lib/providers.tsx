@@ -3,10 +3,8 @@ import { Toaster } from "@/components/ui/sonner";
 import { jaJP } from "@clerk/localizations";
 import { ClerkProvider } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
-import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persister";
-import { QueryClient } from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import { ThemeProvider } from "next-themes";
 import { type ReactNode, useState } from "react";
 
@@ -16,8 +14,8 @@ export function Providers({ children }: { children: ReactNode }) {
       new QueryClient({
         defaultOptions: {
           queries: {
-            gcTime: 1000 * 60 * 3,
-            staleTime: 1000 * 60 * 3,
+            gcTime: 1000 * 60 * 5,
+            staleTime: 1000 * 60 * 5,
             refetchOnMount: false,
             refetchOnWindowFocus: false,
             refetchOnReconnect: false,
@@ -27,13 +25,6 @@ export function Providers({ children }: { children: ReactNode }) {
       })
   );
 
-  const [persister] = useState(() =>
-    createSyncStoragePersister({
-      storage: typeof window !== "undefined" ? window.localStorage : undefined,
-      key: "react-query",
-    })
-  );
-
   return (
     <ClerkProvider
       localization={jaJP}
@@ -41,10 +32,7 @@ export function Providers({ children }: { children: ReactNode }) {
         baseTheme: dark,
       }}
     >
-      <PersistQueryClientProvider
-        client={queryClient}
-        persistOptions={{ persister, maxAge: 1000 * 60 * 3 }}
-      >
+      <QueryClientProvider client={queryClient}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
@@ -55,7 +43,7 @@ export function Providers({ children }: { children: ReactNode }) {
           {children}
         </ThemeProvider>
         <ReactQueryDevtools initialIsOpen={false} />
-      </PersistQueryClientProvider>
+      </QueryClientProvider>
     </ClerkProvider>
   );
 }
