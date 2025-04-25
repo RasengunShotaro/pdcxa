@@ -9,7 +9,9 @@ export const RePdList = ({ rePds }: { rePds: RePd[] }) => {
         <RePdItem key={rePd.id} rePd={rePd} />
       ))}
       {!rePds?.length && (
-        <p className="text-gray-500">まだRePDはありません。RePDしてみよう!</p>
+        <p className="text-muted-foreground">
+          まだRePDはありません。RePDしてみよう!
+        </p>
       )}
     </>
   );

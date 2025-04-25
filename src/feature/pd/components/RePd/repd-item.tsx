@@ -36,7 +36,7 @@ const RePdItem: React.FC<PdItemProps> = ({ rePd }) => {
               <CardTitle className="text-base font-bold">
                 {userFullName}
               </CardTitle>
-              <p className="text-sm text-gray-500">{`@${
+              <p className="text-sm text-muted-foreground">{`@${
                 userDetail?.username ?? ""
               }`}</p>
             </div>
@@ -45,9 +45,9 @@ const RePdItem: React.FC<PdItemProps> = ({ rePd }) => {
             <MoreHorizontal className="h-4 w-4" />
           </Button>
         </div>
-        <p className="text-gray-900 whitespace-pre-wrap">{rePd.content}</p>
+        <p className="whitespace-pre-wrap">{rePd.content}</p>
         <div className="flex items-center justify-between pt-2">
-          <span className="text-sm text-gray-500">
+          <span className="text-sm text-muted-foreground">
             {formatDateTime(rePd.createdAt)}
           </span>
           <div className="flex items-center">
