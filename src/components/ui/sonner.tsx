@@ -26,7 +26,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
       }
       toastOptions={{
         classNames: {
-          default: "!bg-white !text-xl !justify-center !w-fit !items-center",
+          default: "!text-xl justify-center !w-fit",
         },
       }}
       icons={{
@@ -34,7 +34,9 @@ const Toaster = ({ ...props }: ToasterProps) => {
         info: <Info className="h-5 w-5 text-blue-500" />,
         warning: <AlertTriangle className="h-5 w-5 text-amber-500" />,
         error: <XCircle className="h-5 w-5 text-red-500" />,
-        loading: <Loader className="h-5 w-5 text-gray-500 animate-spin" />,
+        loading: (
+          <Loader className="h-5 w-5 text-muted-foreground animate-spin" />
+        ),
       }}
       {...props}
     />
