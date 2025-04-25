@@ -12,7 +12,7 @@ type RefetchButtonProps = {
 const RefetchButton = ({ onClick }: RefetchButtonProps) => {
   return (
     <Button variant="ghost" onClick={onClick}>
-      <RefreshCcw className="h-4 w-4" />
+      <RefreshCcw />
     </Button>
   );
 };
