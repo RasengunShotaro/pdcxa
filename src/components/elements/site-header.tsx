@@ -33,7 +33,7 @@ export function SiteHeader() {
               <Image
                 src={pdcxa}
                 alt="Logo"
-                className="h-7 w-auto"
+                className="h-7 w-auto dark:invert"
                 quality={100}
               />
             </Link>
