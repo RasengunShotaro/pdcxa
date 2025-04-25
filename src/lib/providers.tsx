@@ -7,6 +7,7 @@ import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persist
 import { QueryClient } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
+import { ThemeProvider } from "next-themes";
 import { type ReactNode, useState } from "react";
 
 export function Providers({ children }: { children: ReactNode }) {
@@ -44,8 +45,15 @@ export function Providers({ children }: { children: ReactNode }) {
         client={queryClient}
         persistOptions={{ persister, maxAge: 1000 * 60 * 3 }}
       >
-        <Toaster position="top-center" />
-        {children}
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <Toaster position="top-center" />
+          {children}
+        </ThemeProvider>
         <ReactQueryDevtools initialIsOpen={false} />
       </PersistQueryClientProvider>
     </ClerkProvider>

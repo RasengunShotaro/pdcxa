@@ -32,7 +32,7 @@ export default async function RootLayout({
   const dehydratedState = dehydrate(queryClient);
 
   return (
-    <html lang="ja" className={bizUdpGothic.className}>
+    <html lang="ja" className={bizUdpGothic.className} suppressHydrationWarning>
       <body>
         <Providers>
           <HydrationBoundary state={dehydratedState}>
