@@ -10,7 +10,7 @@ export default function NotFound() {
 お探しのページは存在しないか、現在準備中です。`;
 
   return (
-    <div className="flex justify-center px-4">
+    <div className="flex-auto max-w-2xl">
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle className="text-center text-4xl font-bold">404</CardTitle>
