@@ -14,7 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useUser } from "@clerk/nextjs";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -61,7 +61,6 @@ type NameFormSchema = z.infer<typeof nameFormSchema>;
 
 export default function Page() {
   const { user } = useUser();
-  const [success, setSuccess] = useState(false);
 
   const form = useForm<NameFormSchema>({
     resolver: zodResolver(nameFormSchema),
@@ -86,10 +85,8 @@ export default function Page() {
         firstName: value.firstName,
         lastName: value.lastName,
       });
-      setSuccess(true);
       toast.success("名前を変更しました！");
     } catch (error) {
-      setSuccess(false);
       form.setError("firstName", {
         message: `名前の変更に失敗しました。 ${error}`,
       });
