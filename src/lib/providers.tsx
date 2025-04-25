@@ -16,8 +16,8 @@ export function Providers({ children }: { children: ReactNode }) {
       new QueryClient({
         defaultOptions: {
           queries: {
-            gcTime: 1000 * 60 * 60 * 24, // persisterのデフォルトが24時間なので、それに合わせた
-            staleTime: 60 * 1000 * 3,
+            gcTime: 1000 * 60 * 3,
+            staleTime: 1000 * 60 * 3,
             refetchOnMount: false,
             refetchOnWindowFocus: false,
             refetchOnReconnect: false,
