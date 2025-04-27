@@ -11,7 +11,7 @@ export default function Page() {
   if (!user) return null;
 
   return (
-    <div className="w-fit flex-auto max-w-md">
+    <div className="flex-auto max-w-md">
       <Card className="w-full">
         <CardHeader>
           <CardTitle className="text-xl font-bold">プロフィール設定</CardTitle>
