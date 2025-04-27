@@ -26,7 +26,7 @@ export function SiteHeader() {
         >
           <SidebarIcon />
         </Button>
-        <Separator orientation="vertical" className="mr-1 h-4" />
+        <Separator orientation="vertical" className="mr-1 !h-4" />
         {isMobile ? (
           <>
             <Link href="/">
