@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { generateBreadcrumbs } from "../generate-bread-crumbs";
+import { generateBreadcrumbs } from "./generate-bread-crumbs";
 
 describe("パンくずリストの生成", () => {
   it("静的パスのページにアクセスした場合、対象ページに至るパンくずリストが返ってくる", () => {
