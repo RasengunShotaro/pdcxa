@@ -10,7 +10,8 @@
     "drizzle:generate": "drizzle-kit generate --config=./drizzle/drizzle.config.ts",
     "drizzle:push": "drizzle-kit push --config=./drizzle/drizzle.config.ts",
     "drizzle:introspect": "drizzle-kit introspect --config=./drizzle/drizzle.config.ts",
-    "test": "vitest"
+    "test": "vitest",
+    "compile": "tsc"
   },
   "dependencies": {
     "@clerk/backend": "^1.30.0",
