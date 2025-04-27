@@ -1,6 +1,12 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Card, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { usePdLike } from "@/hooks/use-pd-like";
 import { useUserDetail } from "@/hooks/use-user-detail";
 import { Heart, MessageCircle, MoreHorizontal } from "lucide-react";
@@ -18,11 +24,15 @@ const PdItem: React.FC<PdItemProps> = ({ pd }) => {
   const userFullName = `${userDetail?.first_name ?? ""} ${
     userDetail?.last_name ?? ""
   }`;
-  const { isLiked, toggleLike } = usePdLike(pd);
+  const { isLiked, toggleLike: originalToggleLike } = usePdLike(pd);
+  const toggleLike: React.MouseEventHandler<HTMLButtonElement> = (e) => {
+    e.preventDefault();
+    originalToggleLike();
+  };
 
   return (
     <Card key={pd.id}>
-      <CardHeader className="p-4 space-y-2">
+      <CardHeader className="p-4">
         <div className="flex justify-between items-start">
           <div className="flex items-center space-x-3">
             <Avatar className="h-10 w-10">
@@ -46,39 +56,35 @@ const PdItem: React.FC<PdItemProps> = ({ pd }) => {
             <MoreHorizontal className="h-4 w-4" />
           </Button>
         </div>
+      </CardHeader>
+      <CardContent className="p-4 pt-0">
         <p className="whitespace-pre-wrap">{pd.content}</p>
-        <div className="flex items-center justify-between pt-2">
+      </CardContent>
+      <CardFooter className="p-4 pt-0 pb-3">
+        <div className="flex items-center justify-between w-full">
           <span className="text-sm text-muted-foreground">
             {formatDateTime(pd.createdAt)}
           </span>
-          <div className="flex items-center">
-            <div className="flex mr-2">
-              <PopOverLike userIds={pd.likes.map((like) => like.userId)} />
-              <Button
-                variant="ghost"
-                size="sm"
-                className={`hover:text-red-500 space-x-1 ${
-                  isLiked ? "text-red-500" : ""
-                }`}
-                onClick={() => toggleLike()}
-              >
-                <Heart className="h-4 w-4" />
-                <span>{pd.likeCount}</span>
-              </Button>
-            </div>
+          <div className="flex items-center space-x-0.5">
+            <PopOverLike userIds={pd.likes.map((like) => like.userId)} />
+            <Button
+              variant="ghost"
+              size="sm"
+              className={`space-x-1 ${isLiked ? "text-red-500" : ""}`}
+              onClick={toggleLike}
+            >
+              <Heart className="h-4 w-4" />
+              <span>{pd.likeCount}</span>
+            </Button>
             <Link href={`/pd/${pd.id}`}>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="hover:text-blue-500 space-x-1"
-              >
+              <Button variant="ghost" size="sm" className="space-x-1">
                 <MessageCircle className="h-4 w-4" />
                 <span>{pd.replyCount}</span>
               </Button>
             </Link>
           </div>
         </div>
-      </CardHeader>
+      </CardFooter>
     </Card>
   );
 };
