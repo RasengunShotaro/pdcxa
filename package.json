@@ -29,7 +29,7 @@
     "@radix-ui/react-slot": "^1.2.0",
     "@radix-ui/react-tooltip": "^1.2.4",
     "@tanstack/query-sync-storage-persister": "^5.73.1",
-    "@tanstack/react-query": "^5.71.0",
+    "@tanstack/react-query": "^5.74.4",
     "@tanstack/react-query-devtools": "^5.71.0",
     "@tanstack/react-query-persist-client": "^5.74.0",
     "class-variance-authority": "^0.7.1",
