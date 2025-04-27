@@ -70,7 +70,7 @@ const PdItem: React.FC<PdItemProps> = ({ pd }) => {
             <Button
               variant="ghost"
               size="sm"
-              className={`space-x-1 ${isLiked ? "text-red-500" : ""}`}
+              className={`space-x-1 ${isLiked ? "!text-red-500" : ""}`}
               onClick={toggleLike}
             >
               <Heart className="h-4 w-4" />
