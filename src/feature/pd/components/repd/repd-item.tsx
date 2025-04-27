@@ -12,7 +12,7 @@ import { useRePdLike } from "@/hooks/use-repd-like";
 import { useUserDetail } from "@/hooks/use-user-detail";
 import { Heart, MoreHorizontal } from "lucide-react";
 import { formatDateTime } from "../../utils/format-datetime";
-import { PopOverLike } from "../Pd/pop-over-like";
+import { PopOverLike } from "../pd/pop-over-like";
 
 interface PdItemProps {
   rePd: RePd;

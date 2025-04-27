@@ -1,4 +1,4 @@
-import { PdTimeLine } from "@/feature/pd/components/Pd/pd-timeline";
+import { PdTimeLine } from "@/feature/pd/components/pd/pd-timeline";
 export const runtime = "edge";
 
 export default function Page() {
