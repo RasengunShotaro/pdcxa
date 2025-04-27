@@ -32,7 +32,7 @@ const PdItem: React.FC<PdItemProps> = ({ pd }) => {
 
   return (
     <Card key={pd.id}>
-      <CardHeader className="p-4">
+      <CardHeader className="p-4 pt-0 pb-0">
         <div className="flex justify-between items-start">
           <div className="flex items-center space-x-3">
             <Avatar className="h-10 w-10">
@@ -57,10 +57,10 @@ const PdItem: React.FC<PdItemProps> = ({ pd }) => {
           </Button>
         </div>
       </CardHeader>
-      <CardContent className="p-4 pt-0">
+      <CardContent className="p-4 pt-2 pb-2">
         <p className="whitespace-pre-wrap">{pd.content}</p>
       </CardContent>
-      <CardFooter className="p-4 pt-0 pb-3">
+      <CardFooter className="p-4 pt-0 pb-0">
         <div className="flex items-center justify-between w-full">
           <span className="text-sm text-muted-foreground">
             {formatDateTime(pd.createdAt)}
