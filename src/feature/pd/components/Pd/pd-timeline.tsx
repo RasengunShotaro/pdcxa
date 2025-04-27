@@ -1,8 +1,8 @@
 "use client";
 
-import PdItem from "@/feature/pd/components/Pd/pd-item";
-import { PdItemSkeleton } from "@/feature/pd/components/Pd/pd-item-skeleton";
-import { PostPdButton } from "@/feature/pd/components/Pd/post-pd-button";
+import PdItem from "@/feature/pd/components/pd/pd-item";
+import { PdItemSkeleton } from "@/feature/pd/components/pd/pd-item-skeleton";
+import { PostPdButton } from "@/feature/pd/components/pd/post-pd-button";
 import { usePd } from "@/hooks/use-pd";
 
 export function PdTimeLine() {

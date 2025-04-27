@@ -1,9 +1,9 @@
 "use client";
 
-import PdItem from "@/feature/pd/components/Pd/pd-item";
-import { PdItemSkeleton } from "@/feature/pd/components/Pd/pd-item-skeleton";
-import { PostRePdButton } from "@/feature/pd/components/RePd/post-repd-button";
-import { RePdList } from "@/feature/pd/components/RePd/repd-list";
+import PdItem from "@/feature/pd/components/pd/pd-item";
+import { PdItemSkeleton } from "@/feature/pd/components/pd/pd-item-skeleton";
+import { PostRePdButton } from "@/feature/pd/components/repd/post-repd-button";
+import { RePdList } from "@/feature/pd/components/repd/repd-list";
 import { usePd } from "@/hooks/use-pd";
 import { useRePd } from "@/hooks/use-repd";
 import { use } from "react";
