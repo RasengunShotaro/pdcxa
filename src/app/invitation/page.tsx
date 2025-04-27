@@ -50,7 +50,7 @@ export default function Page() {
         <CardHeader>
           <CardTitle>招待を送信</CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="pt-4">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               <FormField
