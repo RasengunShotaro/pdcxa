@@ -1,6 +1,12 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Card, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import type { RePd } from "@/feature/pd/types";
 import { useRePdLike } from "@/hooks/use-repd-like";
 import { useUserDetail } from "@/hooks/use-user-detail";
@@ -21,7 +27,7 @@ const RePdItem: React.FC<PdItemProps> = ({ rePd }) => {
 
   return (
     <Card key={rePd.id}>
-      <CardHeader className="p-4 space-y-2">
+      <CardHeader className="p-4 pt-0 pb-0">
         <div className="flex justify-between items-start">
           <div className="flex items-center space-x-3">
             <Avatar className="h-10 w-10">
@@ -45,29 +51,32 @@ const RePdItem: React.FC<PdItemProps> = ({ rePd }) => {
             <MoreHorizontal className="h-4 w-4" />
           </Button>
         </div>
+      </CardHeader>
+      <CardContent className="p-4 pt-2 pb-2">
         <p className="whitespace-pre-wrap">{rePd.content}</p>
-        <div className="flex items-center justify-between pt-2">
+      </CardContent>
+      <CardFooter className="p-4 pt-0 pb-0">
+        <div className="flex items-center justify-between w-full">
           <span className="text-sm text-muted-foreground">
             {formatDateTime(rePd.createdAt)}
           </span>
-          <div className="flex items-center">
-            <div className="flex mr-2">
-              <PopOverLike userIds={rePd.likes.map((like) => like.userId)} />
-              <Button
-                variant="ghost"
-                size="sm"
-                className={`hover:text-red-500 space-x-1 ${
-                  isLiked ? "text-red-500" : ""
-                }`}
-                onClick={() => toggleLike()}
-              >
-                <Heart className="h-4 w-4" />
-                <span>{rePd.likeCount}</span>
-              </Button>
-            </div>
+          <div className="flex items-center space-x-0.5">
+            <PopOverLike userIds={rePd.likes.map((like) => like.userId)} />
+            <Button
+              variant="ghost"
+              size="sm"
+              className={`space-x-1 ${isLiked ? "text-red-500" : ""}`}
+              onClick={(e) => {
+                e.preventDefault();
+                toggleLike();
+              }}
+            >
+              <Heart className="h-4 w-4" />
+              <span>{rePd.likeCount}</span>
+            </Button>
           </div>
         </div>
-      </CardHeader>
+      </CardFooter>
     </Card>
   );
 };
