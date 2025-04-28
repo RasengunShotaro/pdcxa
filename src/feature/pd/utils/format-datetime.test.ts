@@ -7,6 +7,14 @@ describe("投稿の経過時間を計算する", () => {
     vi.setSystemTime(new Date("2020-01-01T12:00:00Z"));
   });
 
+  test("経過時間が負の数の投稿に対しては、0秒前と扱われる", () => {
+    const date = new Date("2020-01-01T12:00:01Z");
+
+    const result = formatDateTime(date);
+
+    expect(result).toBe("0秒前");
+  });
+
   test("経過時間が60秒未満の投稿に対しては、経過秒数が返ってくる", () => {
     const date = new Date("2020-01-01T11:59:01Z");
 

@@ -5,6 +5,7 @@ export const formatDateTime = (date: Date): string => {
     (new Date().getTime() - typeSafeDate.getTime()) / 1000
   );
 
+  if (seconds < 0) return "0秒前"; // サーバー側との時間差で、投稿直後に負の数となる場合があるため
   if (seconds < 60) return `${seconds}秒前`;
   if (seconds < 3600) return `${Math.floor(seconds / 60)}分前`;
   if (seconds < 86400) return `${Math.floor(seconds / 3600)}時間前`;
