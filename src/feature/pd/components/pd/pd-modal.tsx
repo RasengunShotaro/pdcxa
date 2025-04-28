@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
 import { usePd } from "@/hooks/use-pd";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { valibotResolver } from "@hookform/resolvers/valibot";
 import { MessageCircle } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -30,7 +30,7 @@ interface PdModalProps {
 
 export const PdModal: React.FC<PdModalProps> = ({ isOpen, onClose }) => {
   const form = useForm<PdFormSchema>({
-    resolver: zodResolver(pdFormSchema),
+    resolver: valibotResolver(pdFormSchema),
     defaultValues: {
       pd: "",
     },
