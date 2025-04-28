@@ -6,7 +6,7 @@ import { PostPdButton } from "@/feature/pd/components/pd/post-pd-button";
 import { usePd } from "@/hooks/use-pd";
 
 export function PdTimeLine() {
-  const { pds, isPending } = usePd();
+  const { pds, isPending } = usePd({});
 
   if (isPending) {
     return <PdItemSkeleton PD数={5} />;

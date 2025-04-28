@@ -35,7 +35,7 @@ export const PdModal: React.FC<PdModalProps> = ({ isOpen, onClose }) => {
       pd: "",
     },
   });
-  const { createPd, error } = usePd();
+  const { createPd, error } = usePd({});
 
   const onSubmit = (values: PdFormSchema) => {
     createPd(values.pd);
