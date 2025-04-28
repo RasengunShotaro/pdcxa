@@ -1,4 +1,3 @@
-import { AppSidebar } from "@/components/elements/app-sidebar";
 import { Providers } from "@/lib/providers";
 import {
   HydrationBoundary,
@@ -7,8 +6,6 @@ import {
 } from "@tanstack/react-query";
 import type { Metadata } from "next";
 import "./globals.css";
-import { SiteHeader } from "@/components/elements/site-header";
-import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { BIZ_UDPGothic } from "next/font/google";
 
 export const runtime = "edge";
@@ -36,19 +33,7 @@ export default async function RootLayout({
       <body>
         <Providers>
           <HydrationBoundary state={dehydratedState}>
-            <div className="[--header-height:calc(--spacing(14))]">
-              <SidebarProvider className="flex flex-col">
-                <SiteHeader />
-                <div className="flex flex-1">
-                  <AppSidebar />
-                  <SidebarInset>
-                    <div className="flex-1 p-4 flex justify-center">
-                      {children}
-                    </div>
-                  </SidebarInset>
-                </div>
-              </SidebarProvider>
-            </div>
+            {children}
           </HydrationBoundary>
         </Providers>
       </body>
