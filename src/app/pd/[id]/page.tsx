@@ -17,7 +17,7 @@ interface PdDetailProps {
 export default function PdDetail({ params }: PdDetailProps) {
   const unwrapParams = use(params);
 
-  const { pds, isPending, error } = usePd([unwrapParams.id]);
+  const { pds, isPending, error } = usePd(unwrapParams.id);
   const pd = pds[0];
   const { rePds } = useRePd(unwrapParams.id);
 
