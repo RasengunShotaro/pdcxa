@@ -9,7 +9,7 @@ export function PdTimeLine() {
   const { pds, isPending } = usePd();
 
   if (isPending) {
-    return <PdItemSkeleton PD数={4} />;
+    return <PdItemSkeleton PD数={5} />;
   }
 
   return (
