@@ -10,28 +10,17 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useUser } from "@clerk/nextjs";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { valibotResolver } from "@hookform/resolvers/valibot";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { z } from "zod";
-
-const nameFormSchema = z.object({
-  firstName: z.string().min(1, {
-    message: "FirstNameを1文字以上入力してください",
-  }),
-  lastName: z.string().min(1, {
-    message: "LastNameを1文字以上入力してください",
-  }),
-});
-
-type NameFormSchema = z.infer<typeof nameFormSchema>;
+import { type NameFormSchema, nameFormSchema } from "./types";
 
 export function ProfileName() {
   const { user } = useUser();
 
   const form = useForm<NameFormSchema>({
-    resolver: zodResolver(nameFormSchema),
+    resolver: valibotResolver(nameFormSchema),
     defaultValues: {
       firstName: "",
       lastName: "",
@@ -68,7 +57,7 @@ export function ProfileName() {
       <div className="flex flex-col mb-4">
         <h3 className="text-lg font-semibold">表示名</h3>
         <p className="text-sm font-normal text-muted-foreground">
-          First Name、Last Nameは1文字以上入力してください。
+          First Name、Last Nameを1～10文字で入力してください。
         </p>
       </div>
       <Form {...form}>
