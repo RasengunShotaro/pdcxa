@@ -26,14 +26,14 @@ export const PdItemSkeleton = ({ PD数 }: { PD数: number }) => {
                 </div>
               </CardHeader>
               <CardContent className="p-4 pt-2 pb-2">
-                <Skeleton className="h-20 w-full" />
+                <Skeleton className="h-15 w-full" />
               </CardContent>
               <CardFooter className="p-4 pt-0 pb-0">
                 <div className="flex items-center justify-between w-full">
-                  <Skeleton className="h-4 w-24" />
-                  <div className="flex items-center space-x-0.5">
-                    <Skeleton className="h-8 w-16 rounded-md" />
-                    <Skeleton className="h-8 w-16 rounded-md" />
+                  <Skeleton className="h-6 w-24" />
+                  <div className="flex items-center space-x-2">
+                    <Skeleton className="h-6 w-16 rounded-md" />
+                    <Skeleton className="h-6 w-16 rounded-md" />
                   </div>
                 </div>
               </CardFooter>
