@@ -16,7 +16,7 @@ import { useCallback, useEffect, useRef } from "react";
  * ```
  */
 export const useSwipe = (setIsVisible: (state: boolean) => void) => {
-  const threshold = 30;
+  const threshold = 10;
   const startYRef = useRef<number | null>(null);
 
   const handleTouchStart = useCallback((event: TouchEvent) => {
