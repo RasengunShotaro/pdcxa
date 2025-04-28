@@ -11,22 +11,17 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { createInvitation } from "@/feature/invitation/create-invitation";
-import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  type InvitationFormSchema,
+  invitationFormSchema,
+} from "@/feature/invitation/types";
+import { valibotResolver } from "@hookform/resolvers/valibot";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { z } from "zod";
-
-const invitationFormSchema = z.object({
-  mail: z.string().email({
-    message: "メールアドレスの形式が正しくありません",
-  }),
-});
-
-type InvitationFormSchema = z.infer<typeof invitationFormSchema>;
 
 export default function Page() {
   const form = useForm<InvitationFormSchema>({
-    resolver: zodResolver(invitationFormSchema),
+    resolver: valibotResolver(invitationFormSchema),
     defaultValues: {
       mail: "",
     },
@@ -35,7 +30,7 @@ export default function Page() {
   const onSubmit = async (value: InvitationFormSchema) => {
     try {
       form.reset();
-      await createInvitation(value.mail);
+      await createInvitation({ mail: value.mail });
       toast.success("招待を送信しました！");
     } catch (error) {
       form.setError("mail", {

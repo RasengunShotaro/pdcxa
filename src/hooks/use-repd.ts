@@ -22,7 +22,8 @@ export const useRePd = (pdId: string) => {
   });
 
   const { mutate: createNewRePd } = useMutation({
-    mutationFn: (pd: string) => createRePd(pdId, pd, user?.id ?? ""),
+    mutationFn: (pd: string) =>
+      createRePd({ pdId, content: pd, userId: user?.id ?? "" }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["RePD詳細", pdId] });
       queryClient.invalidateQueries({ queryKey: ["PD詳細", [pdId]] });
