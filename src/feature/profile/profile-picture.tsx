@@ -8,52 +8,22 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { useUser } from "@clerk/nextjs";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { valibotResolver } from "@hookform/resolvers/valibot";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { z } from "zod";
-
-const MAX_FILE_SIZE = 10 * 1024 * 1024;
-
-const imageFormSchema = z.object({
-  image: z
-    .custom<FileList>()
-    .refine((files) => files?.length > 0, {
-      message: "画像を選択してください",
-    })
-    .refine(
-      (files) => {
-        const file = files?.[0];
-        return file?.type?.startsWith("image/");
-      },
-      {
-        message: "画像ファイルを選択してください",
-      }
-    )
-    .refine(
-      (files) => {
-        const file = files?.[0];
-        return file?.size <= MAX_FILE_SIZE;
-      },
-      {
-        message: "ファイルサイズは10MB以下にしてください",
-      }
-    ),
-});
-
-type ImageFormSchema = z.infer<typeof imageFormSchema>;
+import { type ImageFormSchema, imageFormSchema } from "./types";
 
 export function ProfilePicture() {
   const { user } = useUser();
 
   const imageForm = useForm<ImageFormSchema>({
-    resolver: zodResolver(imageFormSchema),
+    resolver: valibotResolver(imageFormSchema),
   });
 
   const onSubmit = async (data: ImageFormSchema) => {
-    if (!user || !data.image[0]) return;
+    if (!user || !data.image) return;
     try {
-      await user.setProfileImage({ file: data.image[0] });
+      await user.setProfileImage({ file: data.image });
       toast.success("画像を変更しました！");
     } catch (error) {
       imageForm.setError("image", {
@@ -99,8 +69,9 @@ export function ProfilePicture() {
                     accept="image/*"
                     className="hidden"
                     onChange={(e) => {
-                      onChange(e.target.files);
-                      if (e.target.files?.[0]) {
+                      const file = e.target.files?.[0] || null;
+                      onChange(file);
+                      if (file) {
                         imageForm.handleSubmit(onSubmit)();
                       }
                     }}
