@@ -18,7 +18,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { usePd } from "@/hooks/use-pd";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { MessageSquare } from "lucide-react";
+import { MessageCircle } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { type PdFormSchema, pdFormSchema } from "../../types";
@@ -77,7 +77,7 @@ export const PdModal: React.FC<PdModalProps> = ({ isOpen, onClose }) => {
                 キャンセル
               </Button>
               <Button type="submit">
-                <MessageSquare className="h-3 w-3" />
+                <MessageCircle className="h-3 w-3" />
                 PDする
               </Button>
             </DialogFooter>

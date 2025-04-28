@@ -1,31 +1,48 @@
 import { RouteMap } from "./route-map";
 
 type RouteKey = keyof typeof RouteMap;
+type Breadcrumb = { href: string; label: string };
 
 // このコードはひどい。負債になるので、後でリファクタリングしっかりしたい
+export const generateBreadcrumbs = (path: string): Breadcrumb[] => {
+  const segments = path.split("/").filter(Boolean);
+  const breadcrumbs: Breadcrumb[] = [];
 
-export const generateBreadcrumbs = (path: string) => {
-  const paths = path.split("/").filter((segment) => segment !== "");
-  const breadcrumbs = [];
+  // ルートパスを追加
+  breadcrumbs.push({ href: "/", label: RouteMap["/"] });
+
+  if (segments.length === 0) {
+    return breadcrumbs;
+  }
 
   let currentPath = "";
-  breadcrumbs.push({ href: "/" as RouteKey, label: RouteMap["/"] });
 
-  for (let i = 0; i < paths.length; i++) {
-    const segment = paths[i];
+  for (let i = 0; i < segments.length; i++) {
+    const segment = segments[i];
     currentPath += `/${segment}`;
 
-    if (segment === "pd" && i + 1 < paths.length) {
-      const dynamicPath = "/pd/[id]" as RouteKey;
-      currentPath += `/${paths[i + 1]}`;
-      breadcrumbs.push({ href: currentPath, label: RouteMap[dynamicPath] });
-      i++; // 次のセグメントは処理済みなのでスキップ
+    if (segment === "pd" && i + 1 < segments.length) {
+      const nextSegment = segments[i + 1];
+      const dynamicRoutePath = "/pd/[id]";
+      const fullPath = `/${segment}/${nextSegment}`;
+
+      breadcrumbs.push({
+        href: fullPath,
+        label: RouteMap[dynamicRoutePath],
+      });
+
+      i++; // 次のセグメントは処理済み
+      currentPath = fullPath;
       continue;
     }
 
-    const routePath = currentPath as RouteKey;
-    const label = RouteMap[routePath] || segment;
-    breadcrumbs.push({ href: currentPath, label });
+    const routeKey = currentPath as RouteKey;
+    const label = RouteMap[routeKey] || segment;
+
+    breadcrumbs.push({
+      href: currentPath,
+      label,
+    });
   }
 
   return breadcrumbs;
