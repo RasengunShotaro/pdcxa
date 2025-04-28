@@ -7,10 +7,12 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Linkify } from "@/components/ui/linkify";
 import type { RePd } from "@/feature/pd/types";
 import { useRePdLike } from "@/hooks/use-repd-like";
 import { useUserDetail } from "@/hooks/use-user-detail";
 import { Heart, MoreHorizontal } from "lucide-react";
+import Link from "next/link";
 import { formatDateTime } from "../../utils/format-datetime";
 import { PopOverLike } from "../pd/pop-over-like";
 
@@ -29,31 +31,35 @@ const RePdItem: React.FC<PdItemProps> = ({ rePd }) => {
     <Card key={rePd.id}>
       <CardHeader className="p-4 pt-0 pb-0">
         <div className="flex justify-between items-start">
-          <div className="flex items-center space-x-3">
-            <Avatar className="h-10 w-10">
-              {userDetail?.image_url && (
-                <AvatarImage src={userDetail.image_url} alt={userFullName} />
-              )}
-              <AvatarFallback>
-                {userFullName.charAt(0).toUpperCase()}
-              </AvatarFallback>
-            </Avatar>
-            <div>
-              <CardTitle className="text-base font-bold">
-                {userFullName}
-              </CardTitle>
-              <p className="text-sm text-muted-foreground">{`@${
-                userDetail?.username ?? ""
-              }`}</p>
+          <Link href={`/user/${userDetail?.id}`}>
+            <div className="flex items-center space-x-3 hover:bg-accent rounded-lg -m-1 p-1">
+              <Avatar className="h-10 w-10">
+                {userDetail?.image_url && (
+                  <AvatarImage src={userDetail.image_url} alt={userFullName} />
+                )}
+                <AvatarFallback>
+                  {userFullName.charAt(0).toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+              <div>
+                <CardTitle className="text-base font-bold">
+                  {userFullName}
+                </CardTitle>
+                <p className="text-sm text-muted-foreground">{`@${
+                  userDetail?.username ?? ""
+                }`}</p>
+              </div>
             </div>
-          </div>
+          </Link>
           <Button variant="ghost" size="icon" className="h-8 w-8">
             <MoreHorizontal className="h-4 w-4" />
           </Button>
         </div>
       </CardHeader>
       <CardContent className="p-4 pt-2 pb-2">
-        <p className="whitespace-pre-wrap">{rePd.content}</p>
+        <Linkify>
+          <p className="whitespace-pre-wrap">{rePd.content}</p>
+        </Linkify>
       </CardContent>
       <CardFooter className="p-4 pt-0 pb-0">
         <div className="flex items-center justify-between w-full">
