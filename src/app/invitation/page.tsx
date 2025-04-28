@@ -15,13 +15,13 @@ import {
   type InvitationFormSchema,
   invitationFormSchema,
 } from "@/feature/invitation/types";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { valibotResolver } from "@hookform/resolvers/valibot";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 export default function Page() {
   const form = useForm<InvitationFormSchema>({
-    resolver: zodResolver(invitationFormSchema),
+    resolver: valibotResolver(invitationFormSchema),
     defaultValues: {
       mail: "",
     },

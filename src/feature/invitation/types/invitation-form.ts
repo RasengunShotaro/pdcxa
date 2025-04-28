@@ -1,9 +1,7 @@
-import { z } from "zod";
+import * as v from "valibot";
 
-export const invitationFormSchema = z.object({
-  mail: z.string().email({
-    message: "メールアドレスの形式が正しくありません",
-  }),
+export const invitationFormSchema = v.object({
+  mail: v.pipe(v.string(), v.email("メールアドレスの形式が正しくありません")),
 });
 
-export type InvitationFormSchema = z.infer<typeof invitationFormSchema>;
+export type InvitationFormSchema = v.InferOutput<typeof invitationFormSchema>;
