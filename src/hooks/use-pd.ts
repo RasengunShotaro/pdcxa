@@ -5,7 +5,7 @@ import { fetchPds } from "@/feature/pd/api/pd/fetch-pds";
 import { useUser } from "@clerk/nextjs";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-export const usePd = (pdId?: string) => {
+export const usePd = ({ pdId, userId }: { pdId?: string; userId?: string }) => {
   const queryClient = useQueryClient();
   const { user } = useUser();
 
@@ -14,8 +14,8 @@ export const usePd = (pdId?: string) => {
     isPending,
     error,
   } = useQuery({
-    queryKey: ["PD詳細", pdId],
-    queryFn: async () => fetchPds(pdId),
+    queryKey: ["PD詳細", pdId, userId],
+    queryFn: async () => fetchPds({ pdId, userId }),
   });
 
   const { mutate: createNewPd } = useMutation({
