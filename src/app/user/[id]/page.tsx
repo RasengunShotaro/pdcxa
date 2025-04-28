@@ -2,11 +2,19 @@
 
 import PdItem from "@/feature/pd/components/pd/pd-item";
 import { PdItemSkeleton } from "@/feature/pd/components/pd/pd-item-skeleton";
-import { PostPdButton } from "@/feature/pd/components/pd/post-pd-button";
 import { usePd } from "@/hooks/use-pd";
+import { use } from "react";
 
-export function PdTimeLine() {
-  const { pds, isPending } = usePd({});
+interface UserPageProps {
+  params: Promise<{
+    id: string;
+  }>;
+}
+
+export default function UserPage({ params }: UserPageProps) {
+  const unwrapParams = use(params);
+
+  const { pds, isPending } = usePd({ userId: unwrapParams.id });
 
   if (isPending) {
     return <PdItemSkeleton PD数={5} />;
@@ -19,7 +27,6 @@ export function PdTimeLine() {
           <PdItem key={post.id} pd={post} />
         ))}
       </div>
-      <PostPdButton />
     </div>
   );
 }

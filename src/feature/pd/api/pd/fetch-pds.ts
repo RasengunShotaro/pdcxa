@@ -5,7 +5,13 @@ import { db } from "@/lib/db";
 import { desc, eq, sql } from "drizzle-orm";
 import type { Pd } from "../../types";
 
-export const fetchPds = async (pdIds?: string[]): Promise<Pd[]> => {
+export const fetchPds = async ({
+  pdId,
+  userId,
+}: {
+  pdId?: string;
+  userId?: string;
+}): Promise<Pd[]> => {
   try {
     const likesCountSubquery = db
       .select({
@@ -59,24 +65,19 @@ export const fetchPds = async (pdIds?: string[]): Promise<Pd[]> => {
         likes: (row.likes ?? []).map((userId: string) => ({ userId })),
       }));
 
-    const fetchSpecificPds = async () => {
-      if (pdIds && pdIds.length === 1) {
-        return formatPdRows(await query.where(eq(pds.id, pdIds[0])));
-      }
-      if (pdIds && pdIds.length > 1) {
-        return formatPdRows(
-          await query.where(sql`${pds.id} IN (${sql.join(pdIds, sql`, `)})`)
-        );
-      }
-      return [];
+    const fetchSpecificPd = async (pdId: string) => {
+      return formatPdRows(await query.where(eq(pds.id, pdId)));
     };
 
-    const fetchLatestPds = async () =>
-      formatPdRows(await query.orderBy(desc(pds.createdAt)).limit(500));
+    const fetchLatestPds = async (userId?: string) => {
+      const baseQuery = userId ? query.where(eq(pds.userId, userId)) : query;
 
-    return pdIds && pdIds.length > 0
-      ? await fetchSpecificPds()
-      : await fetchLatestPds();
+      return formatPdRows(
+        await baseQuery.orderBy(desc(pds.createdAt)).limit(500)
+      );
+    };
+
+    return pdId ? await fetchSpecificPd(pdId) : await fetchLatestPds(userId);
   } catch (error) {
     console.error("PDの取得に失敗しました:", error);
     throw error;

@@ -27,7 +27,7 @@ export const useRePd = (pdId: string) => {
       queryClient.invalidateQueries({ queryKey: ["RePD詳細", pdId] });
       queryClient.invalidateQueries({ queryKey: ["PD詳細", [pdId]] });
       queryClient.refetchQueries({
-        queryKey: ["PD詳細", null],
+        queryKey: ["PD詳細", null, null],
         exact: true,
         type: "all",
       });
