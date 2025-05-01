@@ -2,9 +2,16 @@
 
 import { pdLikes } from "@/db/schema";
 import { db } from "@/lib/db";
+import { currentUser } from "@clerk/nextjs/server";
 import { and, eq } from "drizzle-orm";
 
-export const mutatePdLike = async (userId: string, pdId: string) => {
+export const mutatePdLike = async (pdId: string) => {
+  const user = await currentUser();
+  if (!user) {
+    throw new Error("ユーザーが認証されていません。");
+  }
+  const userId = user.id;
+
   try {
     const existingLike = await db
       .select()

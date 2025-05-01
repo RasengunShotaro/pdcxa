@@ -1,13 +1,9 @@
-"use client";
-
 import { createPd } from "@/feature/pd/api/pd/create-pd";
 import { fetchPds } from "@/feature/pd/api/pd/fetch-pds";
-import { useUser } from "@clerk/nextjs";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export const usePd = ({ pdId, userId }: { pdId?: string; userId?: string }) => {
   const queryClient = useQueryClient();
-  const { user } = useUser();
 
   const {
     data: pds = [],
@@ -19,8 +15,7 @@ export const usePd = ({ pdId, userId }: { pdId?: string; userId?: string }) => {
   });
 
   const { mutate: createNewPd } = useMutation({
-    mutationFn: (content: string) =>
-      createPd({ content, userId: user?.id ?? "" }),
+    mutationFn: (content: string) => createPd({ content }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["PD詳細"] });
     },

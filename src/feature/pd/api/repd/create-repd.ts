@@ -3,6 +3,7 @@
 import { rePds } from "@/db/schema";
 import { db } from "@/lib/db";
 import { actionClient } from "@/lib/safe-action";
+import { currentUser } from "@clerk/nextjs/server";
 import * as v from "valibot";
 
 const createRePdSchema = v.object({
@@ -12,12 +13,17 @@ const createRePdSchema = v.object({
     v.maxLength(200, "RePDが長すぎます。200文字以内で入力してください"),
     v.minLength(1, "RePDを入力してください")
   ),
-  userId: v.string(),
 });
 
 export const createRePd = actionClient
   .schema(createRePdSchema)
-  .action(async ({ parsedInput: { pdId, content, userId } }) => {
+  .action(async ({ parsedInput: { pdId, content } }) => {
+    const user = await currentUser();
+    if (!user) {
+      throw new Error("ユーザーが認証されていません。");
+    }
+    const userId = user.id;
+
     const newRePd = {
       pdId,
       content,

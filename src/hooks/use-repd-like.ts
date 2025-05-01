@@ -11,7 +11,7 @@ export const useRePdLike = (rePd: RePd) => {
   const userId = user?.id ?? "";
 
   const { mutate: toggleLike } = useMutation({
-    mutationFn: () => mutateRePdLike(userId, rePd.id),
+    mutationFn: () => mutateRePdLike(rePd.id),
     onMutate: async () => {
       const previousRePds = queryClient.getQueryData<RePd[]>([
         "RePD詳細",
