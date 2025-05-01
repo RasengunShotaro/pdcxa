@@ -26,7 +26,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
       }
       toastOptions={{
         classNames: {
-          default: "!text-xl justify-center !w-fit",
+          default: "!text-xl justify-center !w-fit whitespace-pre-wrap",
         },
       }}
       icons={{
