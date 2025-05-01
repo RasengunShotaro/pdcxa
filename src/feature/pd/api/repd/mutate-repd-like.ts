@@ -2,13 +2,16 @@
 
 import { rePdLikes } from "@/db/schema";
 import { db } from "@/lib/db";
+import { currentUser } from "@clerk/nextjs/server";
 import { and, eq } from "drizzle-orm";
-import type { Like } from "../../types";
 
-export const mutateRePdLike = async (
-  userId: string,
-  rePdId: string
-): Promise<Like | null> => {
+export const mutateRePdLike = async (rePdId: string) => {
+  const user = await currentUser();
+  if (!user) {
+    throw new Error("ユーザーが認証されていません。");
+  }
+  const userId = user.id;
+
   try {
     const existingLike = await db
       .select()
@@ -23,7 +26,7 @@ export const mutateRePdLike = async (
         .where(
           and(eq(rePdLikes.targetRePdId, rePdId), eq(rePdLikes.userId, userId))
         );
-      return null;
+      return;
     }
 
     const newRePdLike = {
@@ -31,18 +34,9 @@ export const mutateRePdLike = async (
       userId: `${userId}`,
     };
 
-    const [insertedRePdLike] = await db
-      .insert(rePdLikes)
-      .values(newRePdLike)
-      .returning({
-        userId: rePdLikes.userId,
-        pdId: rePdLikes.targetRePdId,
-      });
+    await db.insert(rePdLikes).values(newRePdLike);
 
-    return {
-      userId: insertedRePdLike.userId,
-      pdId: insertedRePdLike.pdId,
-    };
+    return;
   } catch (error) {
     console.error("RePDLikeの操作に失敗しました:", error);
     throw error;

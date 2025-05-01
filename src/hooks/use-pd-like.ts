@@ -11,7 +11,7 @@ export const usePdLike = (pd: Pd) => {
   const userId = user?.id ?? "";
 
   const { mutate: toggleLike } = useMutation({
-    mutationFn: () => mutatePdLike(userId, pd.id),
+    mutationFn: () => mutatePdLike(pd.id),
     onMutate: async () => {
       const previousPds = queryClient.getQueryData<Pd[]>(["PD詳細"]);
       queryClient.setQueryData<Pd[]>(["PD詳細"], (oldPds) => {

@@ -3,6 +3,7 @@
 import { pds } from "@/db/schema";
 import { db } from "@/lib/db";
 import { actionClient } from "@/lib/safe-action";
+import { currentUser } from "@clerk/nextjs/server";
 import * as v from "valibot";
 
 const createPdSchema = v.object({
@@ -11,16 +12,20 @@ const createPdSchema = v.object({
     v.maxLength(200, "PDが長すぎます。200文字以内で入力してください"),
     v.minLength(1, "PDを入力してください")
   ),
-  userId: v.string(),
 });
 
 export const createPd = actionClient
   .schema(createPdSchema)
-  .action(async ({ parsedInput: { content, userId } }) => {
+  .action(async ({ parsedInput: { content } }) => {
+    const user = await currentUser();
+    if (!user) {
+      throw new Error("ユーザーが認証されていません。");
+    }
+
     const newPd = {
       content,
       createdAt: new Date(),
-      userId: `${userId}`,
+      userId: `${user.id}`,
     };
 
     try {
@@ -28,7 +33,6 @@ export const createPd = actionClient
 
       return;
     } catch (error) {
-      console.error("PDの保存に失敗しました:", error);
-      throw error;
+      throw new Error(`PDの作成に失敗しました。 ${error}`);
     }
   });
