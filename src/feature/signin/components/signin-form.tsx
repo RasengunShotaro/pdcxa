@@ -19,7 +19,7 @@ import { valibotResolver } from "@hookform/resolvers/valibot";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { PasswordInput } from "./password-input";
+import { PasswordInput } from "../../../components/elements/password-input";
 
 export function SignInForm() {
   const { isLoaded, signIn, setActive } = useSignIn();
