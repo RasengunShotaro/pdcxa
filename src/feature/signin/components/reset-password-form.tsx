@@ -41,9 +41,7 @@ export function ResetPasswordForm() {
         router.push("/signin/reset-password/step2");
       }
     } catch {
-      toast.error(
-        "申し訳ありませんが、何か問題が発生しました。再度お試しください。"
-      );
+      toast.error("問題が発生しました。再度お試しください。");
     }
   };
 
