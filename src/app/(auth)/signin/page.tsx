@@ -19,8 +19,8 @@ export default async function SignInPage() {
 
   return (
     <Card>
-      <CardHeader className="space-y-1">
-        <CardTitle className="text-2xl mb-2">ログイン</CardTitle>
+      <CardHeader>
+        <CardTitle className="text-2xl">ログイン</CardTitle>
         <CardDescription>
           メールアドレスとパスワードを入力してください。
         </CardDescription>
