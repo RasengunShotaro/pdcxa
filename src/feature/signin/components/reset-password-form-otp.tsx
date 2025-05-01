@@ -56,7 +56,9 @@ export function ResetPasswordOtpForm() {
         toast.success("パスワードが正常にリセットされました。");
       }
     } catch {
-      toast.error("問題が発生しました。再度お試しください。");
+      toast.error(
+        "問題が発生しました。\n認証コードが正しいか確認してください。"
+      );
     }
   };
 
