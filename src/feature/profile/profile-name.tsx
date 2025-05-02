@@ -11,13 +11,15 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useUser } from "@clerk/nextjs";
 import { valibotResolver } from "@hookform/resolvers/valibot";
-import { useEffect } from "react";
+import { Loader } from "lucide-react";
+import { useEffect, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { type NameFormSchema, nameFormSchema } from "./types";
 
 export function ProfileName() {
   const { user } = useUser();
+  const [isPending, startTransition] = useTransition();
 
   const form = useForm<NameFormSchema>({
     resolver: valibotResolver(nameFormSchema),
@@ -37,17 +39,19 @@ export function ProfileName() {
   }, [user, form]);
 
   const onNameSubmit = async (value: NameFormSchema) => {
-    try {
-      await user?.update({
-        firstName: value.firstName,
-        lastName: value.lastName,
-      });
-      toast.success("名前を変更しました！");
-    } catch (error) {
-      form.setError("firstName", {
-        message: `名前の変更に失敗しました。 ${error}`,
-      });
-    }
+    startTransition(async () => {
+      try {
+        await user?.update({
+          firstName: value.firstName,
+          lastName: value.lastName,
+        });
+        toast.success("名前を変更しました！");
+      } catch (error) {
+        form.setError("firstName", {
+          message: `名前の変更に失敗しました。 ${error}`,
+        });
+      }
+    });
   };
 
   if (!user) return null;
@@ -101,7 +105,10 @@ export function ProfileName() {
                 </div>
               )}
             />
-            <Button type="submit">変更</Button>
+            <Button type="submit" disabled={isPending}>
+              {isPending && <Loader className="animate-spin" />}
+              変更
+            </Button>
           </div>
           <div className="mb-2" />
           <FormField

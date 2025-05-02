@@ -16,10 +16,14 @@ import {
   invitationFormSchema,
 } from "@/feature/invitation/types";
 import { valibotResolver } from "@hookform/resolvers/valibot";
+import { Loader } from "lucide-react";
+import { useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 export default function Page() {
+  const [isPending, startTransition] = useTransition();
+
   const form = useForm<InvitationFormSchema>({
     resolver: valibotResolver(invitationFormSchema),
     defaultValues: {
@@ -28,15 +32,17 @@ export default function Page() {
   });
 
   const onSubmit = async (value: InvitationFormSchema) => {
-    try {
-      form.reset();
-      await createInvitation({ mail: value.mail });
-      toast.success("招待を送信しました！");
-    } catch (error) {
-      form.setError("mail", {
-        message: `招待の送信に失敗しました。 ${error}`,
-      });
-    }
+    startTransition(async () => {
+      try {
+        form.reset();
+        await createInvitation({ mail: value.mail });
+        toast.success("招待を送信しました！");
+      } catch (error) {
+        form.setError("mail", {
+          message: `招待の送信に失敗しました。 ${error}`,
+        });
+      }
+    });
   };
 
   return (
@@ -70,7 +76,8 @@ export default function Page() {
                   </div>
                 )}
               />
-              <Button type="submit" className="w-full">
+              <Button type="submit" className="w-full" disabled={isPending}>
+                {isPending && <Loader className="animate-spin" />}
                 PDCXAの世界に招待
               </Button>
             </form>
