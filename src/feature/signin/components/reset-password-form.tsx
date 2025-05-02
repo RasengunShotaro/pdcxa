@@ -12,7 +12,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { useSignIn } from "@clerk/nextjs";
 import { valibotResolver } from "@hookform/resolvers/valibot";
+import { Loader } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { type CheckEmailFormSchema, checkEmailFormSchema } from "../types";
@@ -20,6 +22,7 @@ import { type CheckEmailFormSchema, checkEmailFormSchema } from "../types";
 export function ResetPasswordForm() {
   const router = useRouter();
   const { isLoaded, signIn } = useSignIn();
+  const [isPending, startTransition] = useTransition();
 
   const form = useForm<CheckEmailFormSchema>({
     resolver: valibotResolver(checkEmailFormSchema),
@@ -31,20 +34,22 @@ export function ResetPasswordForm() {
   const onSubmit = async (values: CheckEmailFormSchema) => {
     if (!isLoaded) return;
 
-    try {
-      const firstFactor = await signIn.create({
-        strategy: "reset_password_email_code",
-        identifier: values.email,
-      });
+    startTransition(async () => {
+      try {
+        const firstFactor = await signIn.create({
+          strategy: "reset_password_email_code",
+          identifier: values.email,
+        });
 
-      if (firstFactor.status === "needs_first_factor") {
-        router.push("/signin/reset-password/step2");
+        if (firstFactor.status === "needs_first_factor") {
+          router.push("/signin/reset-password/step2");
+        }
+      } catch {
+        toast.error("問題が発生しました", {
+          description: "再度お試しください",
+        });
       }
-    } catch {
-      toast.error("問題が発生しました", {
-        description: "再度お試しください",
-      });
-    }
+    });
   };
 
   return (
@@ -63,7 +68,8 @@ export function ResetPasswordForm() {
             </FormItem>
           )}
         />
-        <Button>
+        <Button disabled={isPending}>
+          {isPending && <Loader className="animate-spin" />}
           再設定メールを送信
           <span className="sr-only">
             パスワードのリセット確認を続けてください

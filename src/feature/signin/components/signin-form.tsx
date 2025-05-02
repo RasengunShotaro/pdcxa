@@ -16,13 +16,16 @@ import {
 } from "@/feature/signin/types";
 import { useSignIn } from "@clerk/nextjs";
 import { valibotResolver } from "@hookform/resolvers/valibot";
+import { Loader } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { PasswordInput } from "../../../components/elements/password-input";
 
 export function SignInForm() {
   const { isLoaded, signIn, setActive } = useSignIn();
+  const [isPending, startTransition] = useTransition();
   const router = useRouter();
 
   const form = useForm<SigninFormSchema>({
@@ -36,22 +39,24 @@ export function SignInForm() {
   const onSubmit = async (values: SigninFormSchema) => {
     if (!isLoaded) return;
 
-    try {
-      const result = await signIn.create({
-        identifier: values.email,
-        password: values.password,
-      });
+    startTransition(async () => {
+      try {
+        const result = await signIn.create({
+          identifier: values.email,
+          password: values.password,
+        });
 
-      if (result.status === "complete") {
-        await setActive({ session: result.createdSessionId });
-        toast.success("ログインしました!");
-        router.push(`${window.location.origin}/`);
+        if (result.status === "complete") {
+          await setActive({ session: result.createdSessionId });
+          toast.success("ログインしました!");
+          router.push(`${window.location.origin}/`);
+        }
+      } catch {
+        toast.error("ログインに失敗しました", {
+          description: "メールアドレスまたはパスワードが正しいか確認して下さい",
+        });
       }
-    } catch {
-      toast.error("ログインに失敗しました", {
-        description: "メールアドレスまたはパスワードが正しいか確認して下さい",
-      });
-    }
+    });
   };
 
   return (
@@ -83,7 +88,8 @@ export function SignInForm() {
             </FormItem>
           )}
         />
-        <Button>
+        <Button disabled={isPending}>
+          {isPending && <Loader className="animate-spin" />}
           ログイン
           <span className="sr-only">ログイン</span>
         </Button>
