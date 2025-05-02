@@ -1,4 +1,3 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -10,6 +9,7 @@ import {
 import { Linkify } from "@/components/ui/linkify";
 import { useUserDetail } from "@/hooks/use-user-detail";
 import { MessageCircle, MoreHorizontal } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import type { Pd } from "../../types";
 import { formatDateTime } from "../../utils/format-datetime";
@@ -32,14 +32,15 @@ const PdItem: React.FC<PdItemProps> = ({ pd }) => {
         <div className="flex justify-between items-start">
           <Link href={`/user/${userDetail?.id}`}>
             <div className="flex items-center space-x-3 hover:bg-accent rounded-lg -m-1 p-1">
-              <Avatar className="h-10 w-10">
-                {userDetail?.image_url && (
-                  <AvatarImage src={userDetail.image_url} alt={userFullName} />
-                )}
-                <AvatarFallback>
-                  {userFullName.charAt(0).toUpperCase()}
-                </AvatarFallback>
-              </Avatar>
+              {userDetail?.image_url && (
+                <Image
+                  src={userDetail.image_url}
+                  alt={userFullName}
+                  width={40}
+                  height={40}
+                  className="rounded-full"
+                />
+              )}
               <div>
                 <CardTitle className="text-base font-bold">
                   {userFullName}

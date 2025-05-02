@@ -1,4 +1,4 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {} from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -11,6 +11,7 @@ import { Linkify } from "@/components/ui/linkify";
 import type { RePd } from "@/feature/pd/types";
 import { useUserDetail } from "@/hooks/use-user-detail";
 import { MoreHorizontal } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { formatDateTime } from "../../utils/format-datetime";
 import { PopOverLike } from "../pd/pop-over-like";
@@ -32,14 +33,15 @@ const RePdItem: React.FC<PdItemProps> = ({ rePd }) => {
         <div className="flex justify-between items-start">
           <Link href={`/user/${userDetail?.id}`}>
             <div className="flex items-center space-x-3 hover:bg-accent rounded-lg -m-1 p-1">
-              <Avatar className="h-10 w-10">
-                {userDetail?.image_url && (
-                  <AvatarImage src={userDetail.image_url} alt={userFullName} />
-                )}
-                <AvatarFallback>
-                  {userFullName.charAt(0).toUpperCase()}
-                </AvatarFallback>
-              </Avatar>
+              {userDetail?.image_url && (
+                <Image
+                  src={userDetail.image_url}
+                  alt={userFullName}
+                  width={40}
+                  height={40}
+                  className="rounded-full"
+                />
+              )}
               <div>
                 <CardTitle className="text-base font-bold">
                   {userFullName}
