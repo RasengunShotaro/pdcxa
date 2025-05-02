@@ -30,6 +30,10 @@ CLERK_SECRET_KEY=your_secret_key
 
 # データベース
 DATABASE_URL=your_neon_database_url
+
+# ログインページのカスタムエンドポイント、リダイレクト先
+NEXT_PUBLIC_CLERK_SIGN_IN_URL=/signin
+NEXT_PUBLIC_CLERK_SIGN_IN_FORCE_REDIRECT_URL=/
 ```
 
 ### 4. データベースのマイグレーション
