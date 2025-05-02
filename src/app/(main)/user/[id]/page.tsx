@@ -1,9 +1,12 @@
-"use client";
-
-import PdItem from "@/feature/pd/components/pd/pd-item";
-import { PdItemSkeleton } from "@/feature/pd/components/pd/pd-item-skeleton";
-import { usePd } from "@/hooks/use-pd";
+import { fetchPds } from "@/feature/pd/api/pd/fetch-pds";
+import { UserPdTimeLine } from "@/feature/pd/components/pd/user-pd-timeline";
+import {
+  HydrationBoundary,
+  QueryClient,
+  dehydrate,
+} from "@tanstack/react-query";
 import { use } from "react";
+export const runtime = "edge";
 
 interface UserPageProps {
   params: Promise<{
@@ -13,20 +16,18 @@ interface UserPageProps {
 
 export default function UserPage({ params }: UserPageProps) {
   const unwrapParams = use(params);
+  const queryClient = new QueryClient();
 
-  const { pds, isPending } = usePd({ userId: unwrapParams.id });
-
-  if (isPending) {
-    return <PdItemSkeleton PD数={5} />;
-  }
+  use(
+    queryClient.prefetchQuery({
+      queryKey: ["PD詳細", null, unwrapParams.id],
+      queryFn: async () => fetchPds({ userId: unwrapParams.id }),
+    })
+  );
 
   return (
-    <div className="flex-auto max-w-2xl">
-      <div className="space-y-4">
-        {pds.map((post) => (
-          <PdItem key={post.id} pd={post} />
-        ))}
-      </div>
-    </div>
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <UserPdTimeLine userId={unwrapParams.id} />
+    </HydrationBoundary>
   );
 }

@@ -1,12 +1,13 @@
-"use client";
-
-import PdItem from "@/feature/pd/components/pd/pd-item";
-import { PdItemSkeleton } from "@/feature/pd/components/pd/pd-item-skeleton";
-import { PostRePdButton } from "@/feature/pd/components/repd/post-repd-button";
-import { RePdList } from "@/feature/pd/components/repd/repd-list";
-import { usePd } from "@/hooks/use-pd";
-import { useRePd } from "@/hooks/use-repd";
+import { fetchPds } from "@/feature/pd/api/pd/fetch-pds";
+import { fetchRePds } from "@/feature/pd/api/repd/fetch-repds";
+import { PdDetail } from "@/feature/pd/components/pd/pd-detail";
+import {
+  HydrationBoundary,
+  QueryClient,
+  dehydrate,
+} from "@tanstack/react-query";
 import { use } from "react";
+export const runtime = "edge";
 
 interface PdDetailProps {
   params: Promise<{
@@ -14,32 +15,27 @@ interface PdDetailProps {
   }>;
 }
 
-export default function PdDetail({ params }: PdDetailProps) {
+export default function PdDetailPage({ params }: PdDetailProps) {
   const unwrapParams = use(params);
+  const queryClient = new QueryClient();
 
-  const { pds, isPending, error } = usePd({ pdId: unwrapParams.id });
-  const pd = pds[0];
-  const { rePds } = useRePd(unwrapParams.id);
+  use(
+    queryClient.prefetchQuery({
+      queryKey: ["PD詳細", unwrapParams.id, null],
+      queryFn: async () => fetchPds({ pdId: unwrapParams.id }),
+    })
+  );
 
-  if (isPending) {
-    return <PdItemSkeleton PD数={1} />;
-  }
-
-  if (error) {
-    return (
-      <div className="flex-auto max-w-2xl">
-        ご指定のPDが見つかりませんでした。
-      </div>
-    );
-  }
+  use(
+    queryClient.prefetchQuery({
+      queryKey: ["RePD詳細", unwrapParams.id],
+      queryFn: async () => fetchRePds(unwrapParams.id),
+    })
+  );
 
   return (
-    <div className="flex-auto max-w-2xl">
-      <PdItem pd={pd} />
-      <div className="mt-4 space-y-4">
-        <RePdList rePds={rePds} />
-      </div>
-      <PostRePdButton pdId={pd.id} />
-    </div>
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <PdDetail pdId={unwrapParams.id} />
+    </HydrationBoundary>
   );
 }
