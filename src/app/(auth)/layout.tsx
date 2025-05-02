@@ -1,3 +1,4 @@
+import { ColorModeSwitcher } from "@/components/elements/color-mode-switcher";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -21,6 +22,9 @@ export default function AuthLayout({
   const backgroundImage = getRandomBackground();
   return (
     <div className="min-h-screen grid lg:grid-cols-2 relative">
+      <div className="fixed top-8 right-8 z-10">
+        <ColorModeSwitcher />
+      </div>
       <Link href="/" className="fixed top-8 left-8 z-10 pointer-events-auto">
         <Image
           src="/static/pdcxa.svg"
