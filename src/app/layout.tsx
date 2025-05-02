@@ -1,9 +1,5 @@
 import { Providers } from "@/lib/providers";
-import {
-  HydrationBoundary,
-  QueryClient,
-  dehydrate,
-} from "@tanstack/react-query";
+import {} from "@tanstack/react-query";
 import type { Metadata } from "next";
 import "./globals.css";
 import { BIZ_UDPGothic } from "next/font/google";
@@ -25,17 +21,10 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const queryClient = new QueryClient();
-  const dehydratedState = dehydrate(queryClient);
-
   return (
     <html lang="ja" className={bizUdpGothic.className} suppressHydrationWarning>
       <body>
-        <Providers>
-          <HydrationBoundary state={dehydratedState}>
-            {children}
-          </HydrationBoundary>
-        </Providers>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );
