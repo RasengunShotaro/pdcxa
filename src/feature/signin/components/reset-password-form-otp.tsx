@@ -17,7 +17,9 @@ import {
 } from "@/components/ui/input-otp";
 import { useSignIn } from "@clerk/nextjs";
 import { valibotResolver } from "@hookform/resolvers/valibot";
+import { Loader } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import {
@@ -27,6 +29,7 @@ import {
 
 export function ResetPasswordOtpForm() {
   const router = useRouter();
+  const [isPending, startTransition] = useTransition();
   const { isLoaded, signIn, setActive } = useSignIn();
 
   const form = useForm<ResetPasswordFormSchema>({
@@ -41,25 +44,27 @@ export function ResetPasswordOtpForm() {
   const onSubmit = async (values: ResetPasswordFormSchema) => {
     if (!isLoaded) return;
 
-    try {
-      const attemptFirstFactor = await signIn.attemptFirstFactor({
-        strategy: "reset_password_email_code",
-        code: values.code,
-        password: values.password,
-      });
-
-      if (attemptFirstFactor.status === "complete") {
-        await setActive({
-          session: attemptFirstFactor.createdSessionId,
+    startTransition(async () => {
+      try {
+        const attemptFirstFactor = await signIn.attemptFirstFactor({
+          strategy: "reset_password_email_code",
+          code: values.code,
+          password: values.password,
         });
-        router.push(`${window.location.origin}/`);
-        toast.success("パスワードが正常にリセットされました。");
+
+        if (attemptFirstFactor.status === "complete") {
+          await setActive({
+            session: attemptFirstFactor.createdSessionId,
+          });
+          router.push(`${window.location.origin}/`);
+          toast.success("パスワードが正常にリセットされました。");
+        }
+      } catch {
+        toast.error("問題が発生しました", {
+          description: "再度お試しください",
+        });
       }
-    } catch {
-      toast.error("問題が発生しました", {
-        description: "再度お試しください",
-      });
-    }
+    });
   };
 
   return (
@@ -113,7 +118,8 @@ export function ResetPasswordOtpForm() {
             </FormItem>
           )}
         />
-        <Button>
+        <Button disabled={isPending}>
+          {isPending && <Loader className="animate-spin" />}
           パスワードをリセット
           <span className="sr-only">パスワードをリセット</span>
         </Button>
