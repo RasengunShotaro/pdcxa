@@ -34,8 +34,8 @@ export const useRePdLike = (rePd: RePd) => {
             ...oldRePd,
             likes: updatedLikes,
             likeCount: isCurrentlyLiked
-              ? oldRePd.likeCount - 1
-              : oldRePd.likeCount + 1,
+              ? Number(oldRePd.likeCount) - 1
+              : Number(oldRePd.likeCount) + 1,
           };
         });
       });
