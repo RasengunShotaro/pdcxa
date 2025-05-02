@@ -9,12 +9,12 @@ import {
 } from "@/components/ui/card";
 import { Linkify } from "@/components/ui/linkify";
 import type { RePd } from "@/feature/pd/types";
-import { useRePdLike } from "@/hooks/use-repd-like";
 import { useUserDetail } from "@/hooks/use-user-detail";
-import { Heart, MoreHorizontal } from "lucide-react";
+import { MoreHorizontal } from "lucide-react";
 import Link from "next/link";
 import { formatDateTime } from "../../utils/format-datetime";
 import { PopOverLike } from "../pd/pop-over-like";
+import { Like } from "./repd-like";
 
 interface PdItemProps {
   rePd: RePd;
@@ -25,7 +25,6 @@ const RePdItem: React.FC<PdItemProps> = ({ rePd }) => {
   const userFullName = `${userDetail?.first_name ?? ""} ${
     userDetail?.last_name ?? ""
   }`; // 一瞬undefinedと表示されるより、何も表示されない方が良いため
-  const { isLiked, toggleLike } = useRePdLike(rePd);
 
   return (
     <Card key={rePd.id}>
@@ -68,18 +67,7 @@ const RePdItem: React.FC<PdItemProps> = ({ rePd }) => {
           </span>
           <div className="flex items-center space-x-0.5">
             <PopOverLike userIds={rePd.likes.map((like) => like.userId)} />
-            <Button
-              variant="ghost"
-              size="sm"
-              className={`space-x-1 ${isLiked ? "text-red-500" : ""}`}
-              onClick={(e) => {
-                e.preventDefault();
-                toggleLike();
-              }}
-            >
-              <Heart className="h-4 w-4" />
-              <span>{rePd.likeCount}</span>
-            </Button>
+            <Like rePd={rePd} />
           </div>
         </div>
       </CardFooter>
