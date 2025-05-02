@@ -48,9 +48,9 @@ export function SignInForm() {
         router.push(`${window.location.origin}/`);
       }
     } catch {
-      toast.error(
-        "ログインに失敗しました。\nメールアドレスまたはパスワードが正しいか確認してください。"
-      );
+      toast.error("ログインに失敗しました", {
+        description: "メールアドレスまたはパスワードが正しいか確認して下さい",
+      });
     }
   };
 
