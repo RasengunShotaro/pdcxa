@@ -13,8 +13,12 @@ export const usePdLike = (pd: Pd) => {
   const { mutate: toggleLike } = useMutation({
     mutationFn: () => mutatePdLike(pd.id),
     onMutate: async () => {
-      const previousPds = queryClient.getQueryData<Pd[]>(["PD詳細"]);
-      queryClient.setQueryData<Pd[]>(["PD詳細"], (oldPds) => {
+      const previousPds = queryClient.getQueryData<Pd[]>([
+        "PD詳細",
+        null,
+        null,
+      ]);
+      queryClient.setQueryData<Pd[]>(["PD詳細", null, null], (oldPds) => {
         if (!oldPds) return oldPds;
 
         return oldPds.map((oldPd) => {
@@ -31,8 +35,8 @@ export const usePdLike = (pd: Pd) => {
             ...oldPd,
             likes: updatedLikes,
             likeCount: isCurrentlyLiked
-              ? oldPd.likeCount - 1
-              : oldPd.likeCount + 1,
+              ? Number(oldPd.likeCount) - 1
+              : Number(oldPd.likeCount) + 1,
           };
         });
       });
