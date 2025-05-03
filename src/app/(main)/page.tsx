@@ -12,9 +12,10 @@ export const runtime = "edge";
 export default async function Page() {
   const queryClient = new QueryClient();
 
-  const pdData = await fetchPds({});
-
-  queryClient.setQueryData(["PD詳細", null, null], pdData);
+  await queryClient.prefetchQuery({
+    queryKey: ["PD詳細", null, null],
+    queryFn: () => fetchPds({}),
+  });
 
   return (
     <Suspense fallback={<PdItemSkeleton PD数={5} />}>

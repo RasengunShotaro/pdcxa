@@ -20,11 +20,15 @@ export default async function PdDetailPage({ params }: PdDetailProps) {
   const unwrapParams = await params;
   const queryClient = new QueryClient();
 
-  const pdData = await fetchPds({ pdId: unwrapParams.id });
-  const rePdData = await fetchRePds(unwrapParams.id);
+  await queryClient.prefetchQuery({
+    queryKey: ["PD詳細", unwrapParams.id, null],
+    queryFn: () => fetchPds({ pdId: unwrapParams.id }),
+  });
 
-  queryClient.setQueryData(["PD詳細", unwrapParams.id, null], pdData);
-  queryClient.setQueryData(["RePD詳細", unwrapParams.id], rePdData);
+  await queryClient.prefetchQuery({
+    queryKey: ["RePD詳細", unwrapParams.id],
+    queryFn: () => fetchRePds(unwrapParams.id),
+  });
 
   return (
     <Suspense fallback={<PdItemSkeleton PD数={1} />}>
