@@ -1,5 +1,4 @@
 import { Providers } from "@/lib/providers";
-import {} from "@tanstack/react-query";
 import type { Metadata } from "next";
 import "./globals.css";
 import { BIZ_UDPGothic } from "next/font/google";
