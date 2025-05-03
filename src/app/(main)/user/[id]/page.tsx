@@ -19,8 +19,10 @@ export default async function UserPage({ params }: UserPageProps) {
   const unwrapParams = await params;
   const queryClient = new QueryClient();
 
-  const pdData = await fetchPds({ userId: unwrapParams.id });
-  queryClient.setQueryData(["PD詳細", null, unwrapParams.id], pdData);
+  await queryClient.prefetchQuery({
+    queryKey: ["PD詳細", null, unwrapParams.id],
+    queryFn: () => fetchPds({ userId: unwrapParams.id }),
+  });
 
   return (
     <Suspense fallback={<PdItemSkeleton PD数={5} />}>
