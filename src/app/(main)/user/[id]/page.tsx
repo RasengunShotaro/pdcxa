@@ -5,7 +5,6 @@ import {
   QueryClient,
   dehydrate,
 } from "@tanstack/react-query";
-import { use } from "react";
 export const runtime = "edge";
 
 interface UserPageProps {
@@ -14,16 +13,12 @@ interface UserPageProps {
   }>;
 }
 
-export default function UserPage({ params }: UserPageProps) {
-  const unwrapParams = use(params);
+export default async function UserPage({ params }: UserPageProps) {
+  const unwrapParams = await params;
   const queryClient = new QueryClient();
 
-  use(
-    queryClient.prefetchQuery({
-      queryKey: ["PD詳細", null, unwrapParams.id],
-      queryFn: async () => fetchPds({ userId: unwrapParams.id }),
-    })
-  );
+  const pdData = await fetchPds({ userId: unwrapParams.id });
+  queryClient.setQueryData(["PD詳細", null, unwrapParams.id], pdData);
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>

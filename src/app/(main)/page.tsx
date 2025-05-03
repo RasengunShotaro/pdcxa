@@ -5,18 +5,14 @@ import {
   QueryClient,
   dehydrate,
 } from "@tanstack/react-query";
-import { use } from "react";
 export const runtime = "edge";
 
-export default function Page() {
+export default async function Page() {
   const queryClient = new QueryClient();
 
-  use(
-    queryClient.prefetchQuery({
-      queryKey: ["PD詳細", null, null],
-      queryFn: async () => fetchPds({}),
-    })
-  );
+  const pdData = await fetchPds({});
+
+  queryClient.setQueryData(["PD詳細", null, null], pdData);
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
