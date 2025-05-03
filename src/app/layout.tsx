@@ -1,5 +1,4 @@
 import { Providers } from "@/lib/providers";
-import {} from "@tanstack/react-query";
 import type { Metadata } from "next";
 import "./globals.css";
 import { BIZ_UDPGothic } from "next/font/google";
@@ -14,6 +13,7 @@ export const metadata: Metadata = {
 const bizUdpGothic = BIZ_UDPGothic({
   weight: ["400", "700"],
   preload: false,
+  display: "swap",
 });
 
 export default async function RootLayout({
