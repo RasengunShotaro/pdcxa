@@ -3,27 +3,42 @@ import { Toaster } from "@/components/ui/sonner";
 import { jaJP } from "@clerk/localizations";
 import { ClerkProvider } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import {
+  QueryClient,
+  QueryClientProvider,
+  isServer,
+} from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { ThemeProvider } from "next-themes";
-import { type ReactNode, useState } from "react";
+import type { ReactNode } from "react";
+
+const makeQueryClient = () => {
+  return new QueryClient({
+    defaultOptions: {
+      queries: {
+        gcTime: 1000 * 60 * 5,
+        staleTime: 1000 * 60 * 5,
+        refetchOnMount: false,
+        refetchOnWindowFocus: false,
+        refetchOnReconnect: false,
+        retry: false,
+      },
+    },
+  });
+};
+
+let browserQueryClient: QueryClient | undefined = undefined;
+
+const getQueryClient = () => {
+  if (isServer) {
+    return makeQueryClient();
+  }
+  if (!browserQueryClient) browserQueryClient = makeQueryClient();
+  return browserQueryClient;
+};
 
 export function Providers({ children }: { children: ReactNode }) {
-  const [queryClient] = useState(
-    () =>
-      new QueryClient({
-        defaultOptions: {
-          queries: {
-            gcTime: 1000 * 60 * 5,
-            staleTime: 1000 * 60 * 5,
-            refetchOnMount: false,
-            refetchOnWindowFocus: false,
-            refetchOnReconnect: false,
-            retry: false,
-          },
-        },
-      })
-  );
+  const queryClient = getQueryClient();
 
   return (
     <ClerkProvider
