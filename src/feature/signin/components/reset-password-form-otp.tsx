@@ -1,6 +1,5 @@
 "use client";
 
-import { PasswordInput } from "@/components/elements/password-input";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -15,6 +14,7 @@ import {
   InputOTPGroup,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
+import { PasswordInput } from "@/components/ui/password-input";
 import { useSignIn } from "@clerk/nextjs";
 import { valibotResolver } from "@hookform/resolvers/valibot";
 import { Loader } from "lucide-react";

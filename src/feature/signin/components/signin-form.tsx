@@ -10,6 +10,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
 import {
   type SigninFormSchema,
   signinFormSchema,
@@ -21,7 +22,6 @@ import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { PasswordInput } from "../../../components/elements/password-input";
 
 export function SignInForm() {
   const { isLoaded, signIn, setActive } = useSignIn();
