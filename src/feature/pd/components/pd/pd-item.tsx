@@ -27,7 +27,7 @@ const PdItem: React.FC<PdItemProps> = ({ pd }) => {
   }`;
 
   return (
-    <Card key={pd.id}>
+    <Card>
       <CardHeader className="p-4 pt-0 pb-0">
         <div className="flex justify-between items-start">
           <Link href={`/user/${userDetail?.id}`}>

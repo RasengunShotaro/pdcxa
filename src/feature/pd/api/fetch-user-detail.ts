@@ -1,8 +1,9 @@
 "use server";
 
 import { clerkClient } from "@/lib/clerk";
+import { cache } from "react";
 
-export const fetchUserDetail = async (userId: string) => {
+export const fetchUserDetail = cache(async (userId: string) => {
   const result = (await clerkClient.users.getUser(userId)).raw;
 
   return {
@@ -12,4 +13,4 @@ export const fetchUserDetail = async (userId: string) => {
     image_url: result?.image_url,
     username: result?.username,
   };
-};
+});
