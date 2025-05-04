@@ -52,4 +52,4 @@ npm run dev
 
 ## 開発ガイドライン
 
-- [Cline Rules](.clinerules/)に配置
+- [Roo Rules](.roo/rules)に配置
