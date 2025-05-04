@@ -1,7 +1,7 @@
 import BaseLinkify from "linkify-react";
 
 const linkifyOptions = {
-  className: "text-blue-400 hover:text-blue-500",
+  className: "text-primary hover:underline",
 };
 
 export const Linkify = (props: React.ComponentProps<typeof BaseLinkify>) => {
