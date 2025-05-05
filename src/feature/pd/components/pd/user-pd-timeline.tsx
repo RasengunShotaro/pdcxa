@@ -3,6 +3,7 @@
 import PdItem from "@/feature/pd/components/pd/pd-item";
 import { PdItemSkeleton } from "@/feature/pd/components/pd/pd-item-skeleton";
 import { usePd } from "@/hooks/use-pd";
+import { Like } from "./pd-like";
 
 interface UserPageProps {
   userId: string;
@@ -18,8 +19,8 @@ export function UserPdTimeLine({ userId }: UserPageProps) {
   return (
     <div className="flex-auto max-w-2xl">
       <div className="space-y-4">
-        {pds.map((post) => (
-          <PdItem key={post.id} pd={post} />
+        {pds.map((pd) => (
+          <PdItem key={pd.id} pd={pd} like={<Like pd={pd} userId={userId} />} />
         ))}
       </div>
     </div>

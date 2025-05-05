@@ -4,6 +4,7 @@ import PdItem from "@/feature/pd/components/pd/pd-item";
 import { PdItemSkeleton } from "@/feature/pd/components/pd/pd-item-skeleton";
 import { PostPdButton } from "@/feature/pd/components/pd/post-pd-button";
 import { usePd } from "@/hooks/use-pd";
+import { Like } from "./pd-like";
 
 export function PdTimeLine() {
   const { pds, isPending } = usePd({});
@@ -15,8 +16,8 @@ export function PdTimeLine() {
   return (
     <div className="flex-auto max-w-2xl">
       <div className="space-y-4">
-        {pds.map((post) => (
-          <PdItem key={post.id} pd={post} />
+        {pds.map((pd) => (
+          <PdItem key={pd.id} pd={pd} like={<Like pd={pd} />} />
         ))}
       </div>
       <PostPdButton />
