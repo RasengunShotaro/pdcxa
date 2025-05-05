@@ -1,15 +1,15 @@
-import bg1 from "@/../public/bg-1.jpg";
-import bg2 from "@/../public/bg-2.png";
-import bg3 from "@/../public/bg-3.jpg";
-import bg4 from "@/../public/bg-4.jpg";
-import pdcxa from "@/../public/pdcxa.svg";
 import { ColorModeSwitcher } from "@/components/elements/color-mode-switcher";
-import Image, { type StaticImageData } from "next/image";
+import Image from "next/image";
 import Link from "next/link";
 
-const backgroundImages = [bg1, bg2, bg3, bg4] as const;
+const backgroundImages = [
+  "/bg-1.jpg",
+  "/bg-2.png",
+  "/bg-3.jpg",
+  "/bg-4.jpg",
+] as const;
 
-const getRandomBackground = (): StaticImageData => {
+const getRandomBackground = (): string => {
   const randomIndex = Math.floor(Math.random() * backgroundImages.length);
   return backgroundImages[randomIndex];
 };
@@ -27,7 +27,7 @@ export default function AuthLayout({
       </div>
       <Link href="/" className="fixed top-8 left-8 z-10 pointer-events-auto">
         <Image
-          src={pdcxa}
+          src="/pdcxa.svg"
           alt="PDCXA"
           width={170}
           height={40}
