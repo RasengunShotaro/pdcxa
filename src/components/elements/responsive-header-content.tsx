@@ -3,7 +3,7 @@
 import { useSidebar } from "@/components/ui/sidebar";
 import Image from "next/image";
 import Link from "next/link";
-import pdcxa from "../../../static/pdcxa.svg";
+import pdcxa from "../../../public/pdcxa.svg";
 import { NavBreadcrumb } from "./nav-breadcrumb";
 
 export const ResponsiveHeaderContent = () => {
