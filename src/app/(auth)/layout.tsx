@@ -3,10 +3,10 @@ import Image from "next/image";
 import Link from "next/link";
 
 const backgroundImages = [
-  "/bg-1.jpg",
-  "/bg-2.png",
-  "/bg-3.jpg",
-  "/bg-4.jpg",
+  "/bg-1.webp",
+  "/bg-2.webp",
+  "/bg-3.webp",
+  "/bg-4.webp",
 ] as const;
 
 const getRandomBackground = (): string => {
