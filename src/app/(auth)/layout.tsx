@@ -1,11 +1,11 @@
+import bg1 from "@/../public/bg-1.jpg";
+import bg2 from "@/../public/bg-2.png";
+import bg3 from "@/../public/bg-3.jpg";
+import bg4 from "@/../public/bg-4.jpg";
+import pdcxa from "@/../public/pdcxa.svg";
 import { ColorModeSwitcher } from "@/components/elements/color-mode-switcher";
 import Image, { type StaticImageData } from "next/image";
 import Link from "next/link";
-import bg1 from "../../../public/bg-1.jpg";
-import bg2 from "../../../public/bg-2.png";
-import bg3 from "../../../public/bg-3.jpg";
-import bg4 from "../../../public/bg-4.jpg";
-import pdcxa from "../../../public/pdcxa.svg";
 
 const backgroundImages = [bg1, bg2, bg3, bg4] as const;
 
