@@ -3,7 +3,6 @@
 import { useSidebar } from "@/components/ui/sidebar";
 import Image from "next/image";
 import Link from "next/link";
-import pdcxa from "../../../static/pdcxa.svg";
 import { NavBreadcrumb } from "./nav-breadcrumb";
 
 export const ResponsiveHeaderContent = () => {
@@ -12,7 +11,7 @@ export const ResponsiveHeaderContent = () => {
   return isMobile ? (
     <Link href="/">
       <Image
-        src={pdcxa}
+        src="/pdcxa.svg"
         alt="Logo"
         className="h-7 w-auto dark:invert"
         quality={100}

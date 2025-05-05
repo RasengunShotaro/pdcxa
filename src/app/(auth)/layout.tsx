@@ -3,10 +3,10 @@ import Image from "next/image";
 import Link from "next/link";
 
 const backgroundImages = [
-  "/static/bg-1.jpg",
-  "/static/bg-2.png",
-  "/static/bg-3.jpg",
-  "/static/bg-4.jpg",
+  "/bg-1.jpg",
+  "/bg-2.png",
+  "/bg-3.jpg",
+  "/bg-4.jpg",
 ] as const;
 
 const getRandomBackground = (): string => {
@@ -27,7 +27,7 @@ export default function AuthLayout({
       </div>
       <Link href="/" className="fixed top-8 left-8 z-10 pointer-events-auto">
         <Image
-          src="/static/pdcxa.svg"
+          src="/pdcxa.svg"
           alt="PDCXA"
           width={170}
           height={40}

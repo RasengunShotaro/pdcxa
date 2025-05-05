@@ -11,7 +11,6 @@ import {
 import { Home, Mail, User } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import pdcxa from "../../../static/pdcxa.svg";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const menuItems = [
@@ -31,7 +30,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             <SidebarMenuButton size="lg" asChild>
               <Link href="/">
                 <Image
-                  src={pdcxa}
+                  src="/pdcxa.svg"
                   alt="Logo"
                   className="h-7 w-auto dark:invert"
                   quality={100}
