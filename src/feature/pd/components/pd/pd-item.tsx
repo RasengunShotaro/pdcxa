@@ -11,16 +11,17 @@ import { Linkify } from "@/components/ui/linkify";
 import { useUserDetail } from "@/hooks/use-user-detail";
 import { MessageCircle, MoreHorizontal } from "lucide-react";
 import Link from "next/link";
+import type { ReactNode } from "react";
 import type { Pd } from "../../types";
 import { formatDateTime } from "../../utils/format-datetime";
-import { Like } from "./pd-like";
 import { PopOverLike } from "./pop-over-like";
 
 interface PdItemProps {
   pd: Pd;
+  like: ReactNode;
 }
 
-const PdItem: React.FC<PdItemProps> = ({ pd }) => {
+const PdItem: React.FC<PdItemProps> = ({ pd, like }) => {
   const userDetail = useUserDetail(pd.userId);
   const userFullName = `${userDetail?.first_name ?? ""} ${
     userDetail?.last_name ?? ""
@@ -67,7 +68,7 @@ const PdItem: React.FC<PdItemProps> = ({ pd }) => {
           </span>
           <div className="flex items-center space-x-0.5">
             <PopOverLike userIds={pd.likes.map((like) => like.userId)} />
-            <Like pd={pd} />
+            {like}
             <Link href={`/pd/${pd.id}`}>
               <Button variant="ghost" size="sm" className="space-x-1">
                 <MessageCircle className="h-4 w-4" />

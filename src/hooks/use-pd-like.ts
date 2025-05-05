@@ -2,58 +2,44 @@
 
 import { mutatePdLike } from "@/feature/pd/api/pd/mutate-pd-like";
 import type { Pd } from "@/feature/pd/types";
+import { optimisticUpdateLike } from "@/feature/pd/utils/optimistic-update-like";
 import { useUser } from "@clerk/nextjs";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-export const usePdLike = (pd: Pd) => {
+export const usePdLike = ({
+  pd,
+  pdId,
+  userId,
+}: {
+  pd: Pd;
+  pdId?: string;
+  userId?: string;
+}) => {
   const queryClient = useQueryClient();
   const { user } = useUser();
-  const userId = user?.id ?? "";
+  const myUserId = user?.id ?? "";
+
+  const queryKey = pdId
+    ? ["PD詳細", pdId, null]
+    : userId
+    ? ["PD詳細", null, userId]
+    : ["PD詳細", null, null];
 
   const { mutate: toggleLike } = useMutation({
     mutationFn: () => mutatePdLike(pd.id),
-    onMutate: async () => {
-      const previousPds = queryClient.getQueryData<Pd[]>([
-        "PD詳細",
-        null,
-        null,
-      ]);
-      queryClient.setQueryData<Pd[]>(["PD詳細", null, null], (oldPds) => {
-        if (!oldPds) return oldPds;
-
-        return oldPds.map((oldPd) => {
-          if (oldPd.id !== pd.id) return oldPd;
-
-          const isCurrentlyLiked = oldPd.likes.some(
-            (like) => like.userId === userId
-          );
-          const updatedLikes = isCurrentlyLiked
-            ? oldPd.likes.filter((like) => like.userId !== userId)
-            : [...oldPd.likes, { userId }];
-
-          return {
-            ...oldPd,
-            likes: updatedLikes,
-            likeCount: isCurrentlyLiked
-              ? Number(oldPd.likeCount) - 1
-              : Number(oldPd.likeCount) + 1,
-          };
-        });
-      });
-
-      return { previousPds };
-    },
+    onMutate: () =>
+      optimisticUpdateLike({ pd, queryKey, queryClient, myUserId }),
     onError: (_, __, context) => {
       if (context?.previousPds) {
-        queryClient.setQueryData(["PD詳細"], context.previousPds);
+        queryClient.setQueryData(queryKey, context.previousPds);
       }
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["PD詳細"] });
+      queryClient.invalidateQueries({ queryKey: queryKey });
     },
   });
 
-  const isLiked = pd.likes.some((like) => like.userId === userId);
+  const isLiked = pd.likes.some((like) => like.userId === myUserId);
 
   return {
     isLiked,

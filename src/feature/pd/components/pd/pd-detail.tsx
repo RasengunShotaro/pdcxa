@@ -6,12 +6,13 @@ import { PostRePdButton } from "@/feature/pd/components/repd/post-repd-button";
 import { RePdList } from "@/feature/pd/components/repd/repd-list";
 import { usePd } from "@/hooks/use-pd";
 import { useRePd } from "@/hooks/use-repd";
+import { Like } from "./pd-like";
 
 interface PdDetailProps {
   pdId: string;
 }
 
-export function PdDetail({ pdId }: PdDetailProps) {
+export const PdDetail = ({ pdId }: PdDetailProps) => {
   const { pds, isPending, error } = usePd({ pdId });
   const pd = pds[0];
   const { rePds } = useRePd(pdId);
@@ -30,11 +31,11 @@ export function PdDetail({ pdId }: PdDetailProps) {
 
   return (
     <div className="flex-auto max-w-2xl">
-      <PdItem pd={pd} />
+      <PdItem pd={pd} like={<Like pd={pd} pdId={pdId} />} />
       <div className="mt-4 space-y-4">
         <RePdList rePds={rePds} />
       </div>
       <PostRePdButton pdId={pd.id} />
     </div>
   );
-}
+};
