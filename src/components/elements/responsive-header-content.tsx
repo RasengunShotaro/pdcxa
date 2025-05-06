@@ -15,6 +15,8 @@ export const ResponsiveHeaderContent = () => {
         alt="Logo"
         className="h-7 w-auto dark:invert"
         quality={100}
+        width={140}
+        height={40}
       />
     </Link>
   ) : (

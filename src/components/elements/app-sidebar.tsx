@@ -34,6 +34,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   alt="Logo"
                   className="h-7 w-auto dark:invert"
                   quality={100}
+                  width={140}
+                  height={40}
                 />
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-semibold">Web Version</span>
