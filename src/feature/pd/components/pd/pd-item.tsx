@@ -7,10 +7,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Link } from "@/components/ui/link";
 import { Linkify } from "@/components/ui/linkify";
 import { useUserDetail } from "@/hooks/use-user-detail";
 import { MessageCircle, MoreHorizontal } from "lucide-react";
-import Link from "next/link";
 import type { ReactNode } from "react";
 import type { Pd } from "../../types";
 import { formatDateTime } from "../../utils/format-datetime";

@@ -1,3 +1,4 @@
+import { Link } from "@/components/ui/link";
 import {
   Sidebar,
   SidebarContent,
@@ -10,7 +11,6 @@ import {
 } from "@/components/ui/sidebar";
 import { Home, Mail, User } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const menuItems = [
@@ -28,7 +28,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
-              <Link href="/">
+              <Link href="/" loader={null}>
                 <Image
                   src="/pdcxa.svg"
                   alt="Logo"

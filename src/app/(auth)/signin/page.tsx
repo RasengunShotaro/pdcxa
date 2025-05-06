@@ -1,5 +1,4 @@
 import { currentUser } from "@clerk/nextjs/server";
-import Link from "next/link";
 import { redirect } from "next/navigation";
 
 import {
@@ -10,6 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Link } from "@/components/ui/link";
 import { SignInForm } from "@/feature/signin/components/signin-form";
 
 export default async function SignInPage() {
