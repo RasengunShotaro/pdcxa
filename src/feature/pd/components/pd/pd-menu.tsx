@@ -12,7 +12,7 @@ export const PdMenu = ({ pd }: { pd: Pd | RePd }) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <MoreHorizontal className="h-4 w-4 m-1" />
+        <MoreHorizontal className="h-4 w-4 m-1 cursor-pointer" />
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuItem onSelect={handleCopy(pd.content)}>
