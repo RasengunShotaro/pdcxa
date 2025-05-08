@@ -1,4 +1,5 @@
 import { ColorModeSwitcher } from "@/components/elements/color-mode-switcher";
+import { TextAnimate } from "@/components/ui/text-animate";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -25,19 +26,26 @@ export default function AuthLayout({
       <div className="fixed top-8 right-8 z-10">
         <ColorModeSwitcher />
       </div>
-      <Link href="/" className="fixed top-8 left-8 z-10 pointer-events-auto">
-        <Image
-          src="/pdcxa.svg"
-          alt="PDCXA"
-          width={170}
-          height={40}
-          className="invert"
-          priority
-        />
-      </Link>
-      <p className="fixed top-20 left-8 z-10 text-white/80 text-sm font-light tracking-wider pointer-events-none">
-        New PD, New World.
-      </p>
+      <div className="fixed top-8 left-8 z-10">
+        <Link href="/" className=" pointer-events-auto">
+          <Image
+            src="/pdcxa.svg"
+            alt="PDCXA"
+            width={170}
+            height={40}
+            className="invert"
+            priority
+          />
+        </Link>
+        <TextAnimate
+          animation="blurInUp"
+          by="character"
+          duration={1}
+          className="pl-1 text-white/80 text-sm font-light tracking-wider pointer-events-none"
+        >
+          New PD, New World.
+        </TextAnimate>
+      </div>
       <div className="fixed inset-0 lg:hidden">
         <Image
           src={backgroundImage}
