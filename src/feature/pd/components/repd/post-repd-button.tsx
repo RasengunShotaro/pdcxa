@@ -19,14 +19,14 @@ export function PostRePdButton({ pdId }: PostRePdButtonProps) {
     <>
       <Button
         onClick={() => setIsModalOpen(true)}
-        className={`fixed bottom-6 right-6 w-14 h-14 rounded-full p-0 shadow-lg transition-all duration-300 ${
+        className={`fixed bottom-6 right-6 w-14 h-14 rounded-full p-0 shadow-lg transition-all duration-300 group ${
           isVisible
             ? "translate-y-0 opacity-100"
             : "translate-y-20 opacity-0 pointer-events-none"
         }`}
         size="icon"
       >
-        <MessageCircle className="h-4 w-4" />
+        <MessageCircle className="h-4 w-4 transition-transform duration-100 group-hover:scale-125" />
       </Button>
       <RePdModal
         pdId={pdId}
