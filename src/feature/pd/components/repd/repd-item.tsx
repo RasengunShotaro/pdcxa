@@ -1,5 +1,4 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -10,9 +9,9 @@ import {
 import { Linkify } from "@/components/ui/linkify";
 import type { RePd } from "@/feature/pd/types";
 import { useUserDetail } from "@/hooks/use-user-detail";
-import { MoreHorizontal } from "lucide-react";
 import Link from "next/link";
 import { formatDateTime } from "../../utils/format-datetime";
+import { PdMenu } from "../pd/pd-menu";
 import { PopOverLike } from "../pd/pop-over-like";
 import { Like } from "./repd-like";
 
@@ -50,9 +49,7 @@ const RePdItem: React.FC<PdItemProps> = ({ rePd }) => {
               </div>
             </div>
           </Link>
-          <Button variant="ghost" size="icon" className="h-8 w-8">
-            <MoreHorizontal className="h-4 w-4" />
-          </Button>
+          <PdMenu pd={rePd} />
         </div>
       </CardHeader>
       <CardContent className="p-4 pt-2 pb-2">

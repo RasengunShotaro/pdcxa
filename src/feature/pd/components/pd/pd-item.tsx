@@ -9,11 +9,12 @@ import {
 } from "@/components/ui/card";
 import { Linkify } from "@/components/ui/linkify";
 import { useUserDetail } from "@/hooks/use-user-detail";
-import { MessageCircle, MoreHorizontal } from "lucide-react";
+import { MessageCircle } from "lucide-react";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import type { Pd } from "../../types";
 import { formatDateTime } from "../../utils/format-datetime";
+import { PdMenu } from "./pd-menu";
 import { PopOverLike } from "./pop-over-like";
 
 interface PdItemProps {
@@ -51,9 +52,7 @@ const PdItem: React.FC<PdItemProps> = ({ pd, like }) => {
               </div>
             </div>
           </Link>
-          <Button variant="ghost" size="icon" className="h-8 w-8">
-            <MoreHorizontal className="h-4 w-4" />
-          </Button>
+          <PdMenu pd={pd} />
         </div>
       </CardHeader>
       <CardContent className="p-4 pt-2 pb-2">
