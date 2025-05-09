@@ -12,33 +12,28 @@ export const mutateRePdLike = async (rePdId: string) => {
   }
   const userId = user.id;
 
-  try {
-    const existingLike = await db
-      .select()
-      .from(rePdLikes)
+  const existingLike = await db
+    .select()
+    .from(rePdLikes)
+    .where(
+      and(eq(rePdLikes.targetRePdId, rePdId), eq(rePdLikes.userId, userId))
+    );
+
+  if (existingLike.length > 0) {
+    await db
+      .delete(rePdLikes)
       .where(
         and(eq(rePdLikes.targetRePdId, rePdId), eq(rePdLikes.userId, userId))
       );
-
-    if (existingLike.length > 0) {
-      await db
-        .delete(rePdLikes)
-        .where(
-          and(eq(rePdLikes.targetRePdId, rePdId), eq(rePdLikes.userId, userId))
-        );
-      return;
-    }
-
-    const newRePdLike = {
-      targetRePdId: rePdId,
-      userId: `${userId}`,
-    };
-
-    await db.insert(rePdLikes).values(newRePdLike);
-
     return;
-  } catch (error) {
-    console.error("RePDLikeの操作に失敗しました:", error);
-    throw error;
   }
+
+  const newRePdLike = {
+    targetRePdId: rePdId,
+    userId: `${userId}`,
+  };
+
+  await db.insert(rePdLikes).values(newRePdLike);
+
+  return;
 };

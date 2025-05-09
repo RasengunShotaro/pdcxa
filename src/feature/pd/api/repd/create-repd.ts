@@ -31,12 +31,7 @@ export const createRePd = actionClient
       userId: `${userId}`,
     };
 
-    try {
-      await db.insert(rePds).values(newRePd);
+    await db.insert(rePds).values(newRePd);
 
-      return;
-    } catch (error) {
-      console.error("RePDの保存に失敗しました:", error);
-      throw error;
-    }
+    return;
   });
