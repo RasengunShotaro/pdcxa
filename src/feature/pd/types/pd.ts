@@ -6,6 +6,7 @@ export type Pd = {
   likeCount: number;
   replyCount: number;
   likes: { userId: string }[];
+  isMyPd: boolean;
 };
 
 export type RePd = {
@@ -16,4 +17,5 @@ export type RePd = {
   userId: string;
   likeCount: number;
   likes: { userId: string }[];
+  isMyRePd: boolean;
 };

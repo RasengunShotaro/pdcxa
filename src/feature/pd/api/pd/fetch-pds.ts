@@ -1,7 +1,8 @@
 "use server";
 
-import { pdLikes, pds, rePds } from "@/db/schema";
+import { pdLikes, pds as pdsSchema, rePds } from "@/db/schema";
 import { db } from "@/lib/db";
+import { currentUser } from "@clerk/nextjs/server";
 import { desc, eq, sql } from "drizzle-orm";
 import type { Pd } from "../../types";
 
@@ -12,74 +13,84 @@ export const fetchPds = async ({
   pdId?: string;
   userId?: string;
 }): Promise<Pd[]> => {
-  try {
-    const likesCountSubquery = db
-      .select({
-        pdId: pdLikes.targetPdId,
-        count: sql<number>`count(*)`.as("like_count"),
-      })
-      .from(pdLikes)
-      .groupBy(pdLikes.targetPdId)
-      .as("likes_count");
+  const likesCountSubquery = db
+    .select({
+      pdId: pdLikes.targetPdId,
+      count: sql<number>`count(*)`.as("like_count"),
+    })
+    .from(pdLikes)
+    .groupBy(pdLikes.targetPdId)
+    .as("likes_count");
 
-    const repliesCountSubquery = db
-      .select({
-        pdId: rePds.pdId,
-        count: sql<number>`count(*)`.as("reply_count"),
-      })
-      .from(rePds)
-      .groupBy(rePds.pdId)
-      .as("replies_count");
+  const repliesCountSubquery = db
+    .select({
+      pdId: rePds.pdId,
+      count: sql<number>`count(*)`.as("reply_count"),
+    })
+    .from(rePds)
+    .groupBy(rePds.pdId)
+    .as("replies_count");
 
-    const likesDetailsSubquery = db
-      .select({
-        pdId: pdLikes.targetPdId,
-        userIds: sql<string[]>`array_agg(${pdLikes.userId})`.as("user_ids"),
-      })
-      .from(pdLikes)
-      .groupBy(pdLikes.targetPdId)
-      .as("likes_details");
+  const likesDetailsSubquery = db
+    .select({
+      pdId: pdLikes.targetPdId,
+      userIds: sql<string[]>`array_agg(${pdLikes.userId})`.as("user_ids"),
+    })
+    .from(pdLikes)
+    .groupBy(pdLikes.targetPdId)
+    .as("likes_details");
 
-    const query = db
-      .select({
-        id: pds.id,
-        content: pds.content,
-        createdAt: pds.createdAt,
-        userId: pds.userId,
-        likeCount: likesCountSubquery.count,
-        replyCount: repliesCountSubquery.count,
-        likes: likesDetailsSubquery.userIds,
-      })
-      .from(pds)
-      .leftJoin(likesCountSubquery, eq(pds.id, likesCountSubquery.pdId))
-      .leftJoin(repliesCountSubquery, eq(pds.id, repliesCountSubquery.pdId))
-      .leftJoin(likesDetailsSubquery, eq(pds.id, likesDetailsSubquery.pdId));
+  const query = db
+    .select({
+      id: pdsSchema.id,
+      content: pdsSchema.content,
+      createdAt: pdsSchema.createdAt,
+      userId: pdsSchema.userId,
+      likeCount: likesCountSubquery.count,
+      replyCount: repliesCountSubquery.count,
+      likes: likesDetailsSubquery.userIds,
+    })
+    .from(pdsSchema)
+    .leftJoin(likesCountSubquery, eq(pdsSchema.id, likesCountSubquery.pdId))
+    .leftJoin(repliesCountSubquery, eq(pdsSchema.id, repliesCountSubquery.pdId))
+    .leftJoin(
+      likesDetailsSubquery,
+      eq(pdsSchema.id, likesDetailsSubquery.pdId)
+    );
 
-    type QueryResult = Awaited<typeof query>;
+  type QueryResult = Awaited<typeof query>;
 
-    const formatPdRows = (rows: QueryResult) =>
-      rows.map((row) => ({
-        ...row,
-        likeCount: row.likeCount ?? 0,
-        replyCount: row.replyCount ?? 0,
-        likes: (row.likes ?? []).map((userId: string) => ({ userId })),
-      }));
+  const formatPdRows = (rows: QueryResult) =>
+    rows.map((row) => ({
+      ...row,
+      likeCount: row.likeCount ?? 0,
+      replyCount: row.replyCount ?? 0,
+      likes: (row.likes ?? []).map((userId: string) => ({ userId })),
+    }));
 
-    const fetchSpecificPd = async (pdId: string) => {
-      return formatPdRows(await query.where(eq(pds.id, pdId)));
-    };
+  const fetchSpecificPd = async (pdId: string) => {
+    return formatPdRows(await query.where(eq(pdsSchema.id, pdId)));
+  };
 
-    const fetchLatestPds = async (userId?: string) => {
-      const baseQuery = userId ? query.where(eq(pds.userId, userId)) : query;
+  const fetchLatestPds = async (userId?: string) => {
+    const baseQuery = userId
+      ? query.where(eq(pdsSchema.userId, userId))
+      : query;
 
-      return formatPdRows(
-        await baseQuery.orderBy(desc(pds.createdAt)).limit(500)
-      );
-    };
+    return formatPdRows(
+      await baseQuery.orderBy(desc(pdsSchema.createdAt)).limit(500)
+    );
+  };
 
-    return pdId ? await fetchSpecificPd(pdId) : await fetchLatestPds(userId);
-  } catch (error) {
-    console.error("PDの取得に失敗しました:", error);
-    throw error;
-  }
+  const fetchedPds = pdId
+    ? await fetchSpecificPd(pdId)
+    : await fetchLatestPds(userId);
+
+  const currentUserId = (await currentUser())?.id;
+  const pds = fetchedPds.map((fetchedPd) => ({
+    ...fetchedPd,
+    isMyPd: fetchedPd.userId === currentUserId,
+  }));
+
+  return pds;
 };

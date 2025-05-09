@@ -1,61 +1,65 @@
 "use server";
 
-import { rePdLikes, rePds } from "@/db/schema";
+import { rePdLikes, rePds as rePdsSchema } from "@/db/schema";
 import { db } from "@/lib/db";
+import { currentUser } from "@clerk/nextjs/server";
 import { eq, sql } from "drizzle-orm";
 import type { RePd } from "../../types";
 
 export const fetchRePds = async (pdId: string): Promise<RePd[]> => {
-  try {
-    const likesCountSubquery = db
-      .select({
-        rePdId: rePdLikes.targetRePdId,
-        count: sql<number>`count(*)`.as("like_count"),
-      })
-      .from(rePdLikes)
-      .groupBy(rePdLikes.targetRePdId)
-      .as("likes_count");
+  const likesCountSubquery = db
+    .select({
+      rePdId: rePdLikes.targetRePdId,
+      count: sql<number>`count(*)`.as("like_count"),
+    })
+    .from(rePdLikes)
+    .groupBy(rePdLikes.targetRePdId)
+    .as("likes_count");
 
-    const likesDetailsSubquery = db
-      .select({
-        rePdId: rePdLikes.targetRePdId,
-        userIds: sql<string[]>`array_agg(${rePdLikes.userId})`.as("user_ids"),
-      })
-      .from(rePdLikes)
-      .groupBy(rePdLikes.targetRePdId)
-      .as("likes_details");
+  const likesDetailsSubquery = db
+    .select({
+      rePdId: rePdLikes.targetRePdId,
+      userIds: sql<string[]>`array_agg(${rePdLikes.userId})`.as("user_ids"),
+    })
+    .from(rePdLikes)
+    .groupBy(rePdLikes.targetRePdId)
+    .as("likes_details");
 
-    const query = db
-      .select({
-        id: rePds.id,
-        content: rePds.content,
-        createdAt: rePds.createdAt,
-        userId: rePds.userId,
-        pdId: rePds.pdId,
-        likeCount: likesCountSubquery.count,
-        likes: likesDetailsSubquery.userIds,
-      })
-      .from(rePds)
-      .leftJoin(likesCountSubquery, eq(rePds.id, likesCountSubquery.rePdId))
-      .leftJoin(
-        likesDetailsSubquery,
-        eq(rePds.id, likesDetailsSubquery.rePdId)
-      );
-
-    type QueryResult = Awaited<typeof query>;
-
-    const formatRePdRows = (rows: QueryResult) =>
-      rows.map((row) => ({
-        ...row,
-        likeCount: row.likeCount ?? 0,
-        likes: (row.likes ?? []).map((userId: string) => ({ userId })),
-      }));
-
-    return formatRePdRows(
-      await query.where(eq(rePds.pdId, pdId)).orderBy(rePds.createdAt)
+  const query = db
+    .select({
+      id: rePdsSchema.id,
+      content: rePdsSchema.content,
+      createdAt: rePdsSchema.createdAt,
+      userId: rePdsSchema.userId,
+      pdId: rePdsSchema.pdId,
+      likeCount: likesCountSubquery.count,
+      likes: likesDetailsSubquery.userIds,
+    })
+    .from(rePdsSchema)
+    .leftJoin(likesCountSubquery, eq(rePdsSchema.id, likesCountSubquery.rePdId))
+    .leftJoin(
+      likesDetailsSubquery,
+      eq(rePdsSchema.id, likesDetailsSubquery.rePdId)
     );
-  } catch (error) {
-    console.error("RePDの取得に失敗しました:", error);
-    throw error;
-  }
+
+  type QueryResult = Awaited<typeof query>;
+
+  const formatRePdRows = (rows: QueryResult) =>
+    rows.map((row) => ({
+      ...row,
+      likeCount: row.likeCount ?? 0,
+      likes: (row.likes ?? []).map((userId: string) => ({ userId })),
+    }));
+
+  const fetchedRePds = formatRePdRows(
+    await query.where(eq(rePdsSchema.pdId, pdId)).orderBy(rePdsSchema.createdAt)
+  );
+
+  const currentUserId = (await currentUser())?.id;
+  const rePds = fetchedRePds.map((rePd) => ({
+    ...rePd,
+    isMyRePd: rePd.userId === currentUserId,
+  }));
+
+  return rePds;
 };
