@@ -16,6 +16,7 @@ export const Like = ({ rePd }: { rePd: RePd }) => {
       size="sm"
       className={`space-x-1 ${isLiked ? "!text-red-500" : ""}`}
       onClick={handleClick}
+      disabled={rePd.isMyRePd}
     >
       <Heart className="h-4 w-4" />
       <span>{rePd.likeCount}</span>
