@@ -28,11 +28,7 @@ export const createPd = actionClient
       userId: `${user.id}`,
     };
 
-    try {
-      await db.insert(pds).values(newPd);
+    await db.insert(pds).values(newPd);
 
-      return;
-    } catch (error) {
-      throw new Error(`PDの作成に失敗しました。 ${error}`);
-    }
+    return;
   });

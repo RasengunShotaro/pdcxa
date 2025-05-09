@@ -12,27 +12,22 @@ export const mutatePdLike = async (pdId: string) => {
   }
   const userId = user.id;
 
-  try {
-    const existingLike = await db
-      .select()
-      .from(pdLikes)
-      .where(and(eq(pdLikes.userId, userId), eq(pdLikes.targetPdId, pdId)))
-      .limit(1);
+  const existingLike = await db
+    .select()
+    .from(pdLikes)
+    .where(and(eq(pdLikes.userId, userId), eq(pdLikes.targetPdId, pdId)))
+    .limit(1);
 
-    if (existingLike.length > 0) {
-      await db
-        .delete(pdLikes)
-        .where(and(eq(pdLikes.userId, userId), eq(pdLikes.targetPdId, pdId)));
-    } else {
-      await db.insert(pdLikes).values({
-        userId,
-        targetPdId: pdId,
-      });
-    }
-
-    return;
-  } catch (error) {
-    console.error("いいねの更新に失敗しました:", error);
-    throw error;
+  if (existingLike.length > 0) {
+    await db
+      .delete(pdLikes)
+      .where(and(eq(pdLikes.userId, userId), eq(pdLikes.targetPdId, pdId)));
+  } else {
+    await db.insert(pdLikes).values({
+      userId,
+      targetPdId: pdId,
+    });
   }
+
+  return;
 };

@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { usePdLike } from "@/hooks/use-pd-like";
 import { Heart } from "lucide-react";
+import { toast } from "sonner";
 import type { Pd } from "../../types";
 
 export const Like = ({
@@ -19,7 +20,11 @@ export const Like = ({
   });
 
   const handleClick = () => {
-    toggleLike();
+    try {
+      toggleLike();
+    } catch {
+      toast.error("いいねに失敗しました。");
+    }
   };
 
   return (
