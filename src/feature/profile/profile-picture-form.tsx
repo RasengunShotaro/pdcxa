@@ -29,9 +29,9 @@ export function ProfilePictureForm() {
       try {
         await user.setProfileImage({ file: data.image });
         toast.success("画像を変更しました！");
-      } catch (error) {
+      } catch {
         imageForm.setError("image", {
-          message: `画像のアップロードに失敗しました。 ${error}`,
+          message: "画像のアップロードに失敗しました。",
         });
       }
     });
