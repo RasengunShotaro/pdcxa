@@ -16,7 +16,6 @@ import { useEffect, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { type NameFormSchema, nameFormSchema } from "./types";
-
 export function ProfileNameForm() {
   const { user } = useUser();
   const [isPending, startTransition] = useTransition();
@@ -46,9 +45,9 @@ export function ProfileNameForm() {
           lastName: value.lastName,
         });
         toast.success("名前を変更しました！");
-      } catch (error) {
+      } catch {
         form.setError("firstName", {
-          message: `名前の変更に失敗しました。 ${error}`,
+          message: "名前の変更に失敗しました。",
         });
       }
     });
