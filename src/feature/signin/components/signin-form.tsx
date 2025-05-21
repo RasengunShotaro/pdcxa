@@ -17,7 +17,7 @@ import {
 } from "@/feature/signin/types";
 import { useSignIn } from "@clerk/nextjs";
 import { valibotResolver } from "@hookform/resolvers/valibot";
-import { Loader } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 import { useForm } from "react-hook-form";
@@ -89,7 +89,7 @@ export function SignInForm() {
           )}
         />
         <Button disabled={isPending}>
-          {isPending && <Loader className="animate-spin" />}
+          {isPending && <Loader2 className="animate-spin" />}
           ログイン
           <span className="sr-only">ログイン</span>
         </Button>

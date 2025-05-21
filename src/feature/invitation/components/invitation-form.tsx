@@ -15,7 +15,7 @@ import {
   invitationFormSchema,
 } from "@/feature/invitation/types";
 import { valibotResolver } from "@hookform/resolvers/valibot";
-import { Loader } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -63,7 +63,7 @@ export const InvitationForm = () => {
           )}
         />
         <Button type="submit" className="w-full" disabled={isPending}>
-          {isPending && <Loader className="animate-spin" />}
+          {isPending && <Loader2 className="animate-spin" />}
           PDCXAの世界に招待
         </Button>
       </form>

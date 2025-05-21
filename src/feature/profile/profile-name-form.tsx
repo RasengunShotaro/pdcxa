@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useUser } from "@clerk/nextjs";
 import { valibotResolver } from "@hookform/resolvers/valibot";
-import { Loader } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { useEffect, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -94,7 +94,7 @@ export function ProfileNameForm() {
             )}
           />
           <Button type="submit" disabled={isPending}>
-            {isPending && <Loader className="animate-spin" />}
+            {isPending && <Loader2 className="animate-spin" />}
             変更
           </Button>
         </div>
