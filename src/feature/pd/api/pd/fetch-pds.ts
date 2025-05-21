@@ -3,16 +3,26 @@
 import { pdLikes, pds as pdsSchema, rePds } from "@/db/schema";
 import { db } from "@/lib/db";
 import { currentUser } from "@clerk/nextjs/server";
-import { desc, eq, sql } from "drizzle-orm";
+import { and, desc, eq, sql } from "drizzle-orm";
 import type { Pd } from "../../types";
+
+const PAGE_SIZE = 20;
+
+export type PdsResponse = {
+  items: Pd[];
+  nextCursor?: string;
+  prevCursor?: string;
+};
 
 export const fetchPds = async ({
   pdId,
   userId,
+  cursor,
 }: {
   pdId?: string;
   userId?: string;
-}): Promise<Pd[]> => {
+  cursor?: string;
+}): Promise<PdsResponse> => {
   const likesCountSubquery = db
     .select({
       pdId: pdLikes.targetPdId,
@@ -40,7 +50,7 @@ export const fetchPds = async ({
     .groupBy(pdLikes.targetPdId)
     .as("likes_details");
 
-  const query = db
+  const baseQuery = db
     .select({
       id: pdsSchema.id,
       content: pdsSchema.content,
@@ -58,7 +68,7 @@ export const fetchPds = async ({
       eq(pdsSchema.id, likesDetailsSubquery.pdId)
     );
 
-  type QueryResult = Awaited<typeof query>;
+  type QueryResult = Awaited<typeof baseQuery>;
 
   const formatPdRows = (rows: QueryResult) =>
     rows.map((row) => ({
@@ -69,28 +79,54 @@ export const fetchPds = async ({
     }));
 
   const fetchSpecificPd = async (pdId: string) => {
-    return formatPdRows(await query.where(eq(pdsSchema.id, pdId)));
+    const results = formatPdRows(await baseQuery.where(eq(pdsSchema.id, pdId)));
+    return {
+      items: results,
+      prevCursor: undefined,
+      nextCursor: undefined,
+    };
   };
 
-  const fetchLatestPds = async (userId?: string) => {
-    const baseQuery = userId
-      ? query.where(eq(pdsSchema.userId, userId))
-      : query;
+  const fetchLatestPds = async (userId?: string, cursor?: string) => {
+    const conditions = [
+      ...(userId ? [eq(pdsSchema.userId, userId)] : []),
+      ...(cursor
+        ? [
+            sql`${pdsSchema.createdAt} < (SELECT created_at FROM pds WHERE id = ${cursor})`,
+          ]
+        : []),
+    ];
 
-    return formatPdRows(
-      await baseQuery.orderBy(desc(pdsSchema.createdAt)).limit(500)
-    );
+    const query =
+      conditions.length > 0 ? baseQuery.where(and(...conditions)) : baseQuery;
+
+    const results = await query
+      .orderBy(desc(pdsSchema.createdAt))
+      .limit(PAGE_SIZE + 1);
+
+    const hasNextPage = results.length > PAGE_SIZE;
+    const items = results.slice(0, PAGE_SIZE);
+    const formattedItems = formatPdRows(items);
+
+    return {
+      items: formattedItems,
+      prevCursor: cursor,
+      nextCursor: hasNextPage ? items[items.length - 1].id : undefined,
+    };
   };
 
   const fetchedPds = pdId
     ? await fetchSpecificPd(pdId)
-    : await fetchLatestPds(userId);
+    : await fetchLatestPds(userId, cursor);
 
   const currentUserId = (await currentUser())?.id;
-  const pds = fetchedPds.map((fetchedPd) => ({
-    ...fetchedPd,
-    isMyPd: fetchedPd.userId === currentUserId,
-  }));
+  const pds: PdsResponse = {
+    ...fetchedPds,
+    items: fetchedPds.items.map((fetchedPd) => ({
+      ...fetchedPd,
+      isMyPd: fetchedPd.userId === currentUserId,
+    })),
+  };
 
   return pds;
 };
