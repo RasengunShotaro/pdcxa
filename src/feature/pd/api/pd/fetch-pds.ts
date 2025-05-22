@@ -11,7 +11,6 @@ const PAGE_SIZE = 20;
 export type PdsResponse = {
   items: Pd[];
   nextCursor?: string;
-  prevCursor?: string;
 };
 
 export const fetchPds = async ({
@@ -82,7 +81,6 @@ export const fetchPds = async ({
     const results = formatPdRows(await baseQuery.where(eq(pdsSchema.id, pdId)));
     return {
       items: results,
-      prevCursor: undefined,
       nextCursor: undefined,
     };
   };
@@ -116,7 +114,6 @@ export const fetchPds = async ({
 
     return {
       items: formattedItems,
-      prevCursor: cursor,
       nextCursor: hasNextPage ? items[items.length - 1].id : undefined,
     };
   };
