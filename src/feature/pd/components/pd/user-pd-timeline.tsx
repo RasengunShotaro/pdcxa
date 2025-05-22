@@ -1,5 +1,6 @@
 "use client";
 
+import { CursorPagination } from "@/components/ui/cursor-pagination";
 import PdItem from "@/feature/pd/components/pd/pd-item";
 import { PdItemSkeleton } from "@/feature/pd/components/pd/pd-item-skeleton";
 import { usePd } from "@/hooks/use-pd";
@@ -10,7 +11,8 @@ interface UserPageProps {
 }
 
 export function UserPdTimeLine({ userId }: UserPageProps) {
-  const { pds, isPending } = usePd({ userId });
+  const { pds, isPending, isFetchingNextPage, hasNextPage, fetchNextPage } =
+    usePd({ userId });
 
   if (isPending) {
     return <PdItemSkeleton PD数={5} />;
@@ -22,6 +24,13 @@ export function UserPdTimeLine({ userId }: UserPageProps) {
         {pds.map((pd) => (
           <PdItem key={pd.id} pd={pd} like={<Like pd={pd} userId={userId} />} />
         ))}
+      </div>
+      <div className="mt-4 flex justify-center">
+        <CursorPagination
+          hasNextPage={hasNextPage}
+          isLoading={isFetchingNextPage}
+          onNextPage={() => fetchNextPage()}
+        />
       </div>
     </div>
   );
