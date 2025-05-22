@@ -21,7 +21,7 @@ export const fetchPds = async ({
 }: {
   pdId?: string;
   userId?: string;
-  cursor?: string;
+  cursor: string;
 }): Promise<PdsResponse> => {
   const likesCountSubquery = db
     .select({
@@ -87,10 +87,16 @@ export const fetchPds = async ({
     };
   };
 
-  const fetchLatestPds = async (userId?: string, cursor?: string) => {
+  const fetchLatestPds = async ({
+    userId,
+    cursor,
+  }: {
+    userId?: string;
+    cursor: string;
+  }) => {
     const conditions = [
       ...(userId ? [eq(pdsSchema.userId, userId)] : []),
-      ...(cursor
+      ...(cursor !== ""
         ? [
             sql`${pdsSchema.createdAt} < (SELECT created_at FROM pds WHERE id = ${cursor})`,
           ]
@@ -117,7 +123,7 @@ export const fetchPds = async ({
 
   const fetchedPds = pdId
     ? await fetchSpecificPd(pdId)
-    : await fetchLatestPds(userId, cursor);
+    : await fetchLatestPds({ userId, cursor });
 
   const currentUserId = (await currentUser())?.id;
   const pds: PdsResponse = {

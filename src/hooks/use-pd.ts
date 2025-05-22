@@ -21,10 +21,8 @@ export const usePd = ({ pdId, userId }: { pdId?: string; userId?: string }) => {
     error,
   } = useInfiniteQuery({
     queryKey: ["PD詳細", pdId, userId],
-    queryFn: ({ pageParam }) => {
-      return fetchPds({ pdId, userId, cursor: pageParam });
-    },
-    initialPageParam: undefined as string | undefined,
+    queryFn: ({ pageParam: cursor }) => fetchPds({ pdId, userId, cursor }),
+    initialPageParam: "",
     getNextPageParam: (lastPage) => lastPage.nextCursor,
     getPreviousPageParam: (firstPage) => firstPage.prevCursor,
   });
