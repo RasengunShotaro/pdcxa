@@ -8,14 +8,8 @@ import { usePd } from "@/hooks/use-pd";
 import { Like } from "./pd-like";
 
 export function PdTimeLine() {
-  const {
-    pds,
-    isPending,
-    hasNextPage,
-    hasPreviousPage,
-    fetchNextPage,
-    fetchPreviousPage,
-  } = usePd({});
+  const { pds, isPending, isFetchingNextPage, hasNextPage, fetchNextPage } =
+    usePd({});
 
   if (isPending) {
     return <PdItemSkeleton PD数={5} />;
@@ -28,13 +22,11 @@ export function PdTimeLine() {
           <PdItem key={pd.id} pd={pd} like={<Like pd={pd} />} />
         ))}
       </div>
-      <div className="mt-4">
+      <div className="mt-4 flex justify-center">
         <CursorPagination
           hasNextPage={hasNextPage}
-          hasPreviousPage={hasPreviousPage}
-          isLoading={isPending}
+          isLoading={isFetchingNextPage}
           onNextPage={() => fetchNextPage()}
-          onPreviousPage={() => fetchPreviousPage()}
         />
       </div>
       <PostPdButton />

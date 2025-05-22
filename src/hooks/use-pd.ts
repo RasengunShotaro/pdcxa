@@ -14,17 +14,15 @@ export const usePd = ({ pdId, userId }: { pdId?: string; userId?: string }) => {
   const {
     data,
     fetchNextPage,
-    fetchPreviousPage,
     hasNextPage,
-    hasPreviousPage,
     isPending,
+    isFetchingNextPage,
     error,
   } = useInfiniteQuery({
     queryKey: ["PD詳細", pdId, userId],
     queryFn: ({ pageParam: cursor }) => fetchPds({ pdId, userId, cursor }),
     initialPageParam: undefined as string | undefined,
     getNextPageParam: (lastPage) => lastPage.nextCursor,
-    getPreviousPageParam: (firstPage) => firstPage.prevCursor,
   });
 
   const { mutate: createNewPd } = useMutation({
@@ -43,8 +41,7 @@ export const usePd = ({ pdId, userId }: { pdId?: string; userId?: string }) => {
     error,
     createPd: createNewPd,
     hasNextPage,
-    hasPreviousPage,
     fetchNextPage,
-    fetchPreviousPage,
+    isFetchingNextPage,
   };
 };
