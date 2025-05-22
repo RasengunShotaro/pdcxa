@@ -1,30 +1,48 @@
 import { createPd } from "@/feature/pd/api/pd/create-pd";
 import { fetchPds } from "@/feature/pd/api/pd/fetch-pds";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import type { PdsResponse } from "@/feature/pd/api/pd/fetch-pds";
+import type { Pd } from "@/feature/pd/types";
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
 
 export const usePd = ({ pdId, userId }: { pdId?: string; userId?: string }) => {
   const queryClient = useQueryClient();
 
   const {
-    data: pds = [],
+    data,
+    fetchNextPage,
+    hasNextPage,
     isPending,
-    error,
-  } = useQuery({
+    isFetchingNextPage,
+    isError,
+  } = useInfiniteQuery({
     queryKey: ["PD詳細", pdId, userId],
-    queryFn: async () => fetchPds({ pdId, userId }),
+    queryFn: ({ pageParam: cursor }) => fetchPds({ pdId, userId, cursor }),
+    initialPageParam: undefined as string | undefined,
+    getNextPageParam: (lastPage) => lastPage.nextCursor,
   });
 
-  const { mutate: createNewPd } = useMutation({
+  const { mutate: createNewPd, isError: isMutationError } = useMutation({
     mutationFn: (content: string) => createPd({ content }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["PD詳細"] });
     },
   });
 
+  const pds: Pd[] =
+    data?.pages.flatMap((page: PdsResponse) => page.items) ?? [];
+
   return {
     pds,
     isPending,
-    error,
+    isError,
     createPd: createNewPd,
+    isMutationError,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
   };
 };

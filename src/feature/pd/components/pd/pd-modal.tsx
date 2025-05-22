@@ -41,11 +41,11 @@ export const PdModal: React.FC<PdModalProps> = ({ isOpen, onClose }) => {
       image: undefined,
     },
   });
-  const { createPd, error } = usePd({});
+  const { createPd, isMutationError } = usePd({});
 
   const onSubmit = (values: PdFormSchema) => {
     createPd(values.pd);
-    if (error) {
+    if (isMutationError) {
       toast.error("PDに失敗しました");
     } else {
       toast.success("PDしました!");

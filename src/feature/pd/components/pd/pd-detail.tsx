@@ -13,7 +13,7 @@ interface PdDetailProps {
 }
 
 export const PdDetail = ({ pdId }: PdDetailProps) => {
-  const { pds, isPending, error } = usePd({ pdId });
+  const { pds, isPending, isError } = usePd({ pdId });
   const pd = pds[0];
   const { rePds } = useRePd(pdId);
 
@@ -21,7 +21,7 @@ export const PdDetail = ({ pdId }: PdDetailProps) => {
     return <PdItemSkeleton PD数={1} />;
   }
 
-  if (error) {
+  if (isError) {
     return (
       <div className="flex-auto max-w-2xl">
         ご指定のPDが見つかりませんでした。
