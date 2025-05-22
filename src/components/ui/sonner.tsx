@@ -4,7 +4,7 @@ import {
   AlertTriangle,
   CheckCircle,
   Info,
-  Loader,
+  Loader2,
   XCircle,
 } from "lucide-react";
 import { useTheme } from "next-themes";
@@ -36,7 +36,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
         warning: <AlertTriangle className="h-5 w-5 text-amber-500" />,
         error: <XCircle className="h-5 w-5 text-red-500" />,
         loading: (
-          <Loader className="h-5 w-5 text-muted-foreground animate-spin" />
+          <Loader2 className="h-5 w-5 text-muted-foreground animate-spin" />
         ),
       }}
       {...props}

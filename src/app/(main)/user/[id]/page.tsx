@@ -19,9 +19,10 @@ export default async function UserPage({ params }: UserPageProps) {
   const unwrapParams = await params;
   const queryClient = new QueryClient();
 
-  await queryClient.prefetchQuery({
+  await queryClient.prefetchInfiniteQuery({
     queryKey: ["PD詳細", null, unwrapParams.id],
     queryFn: () => fetchPds({ userId: unwrapParams.id }),
+    initialPageParam: undefined as string | undefined,
   });
 
   return (

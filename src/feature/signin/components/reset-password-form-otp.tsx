@@ -17,7 +17,7 @@ import {
 import { PasswordInput } from "@/components/ui/password-input";
 import { useSignIn } from "@clerk/nextjs";
 import { valibotResolver } from "@hookform/resolvers/valibot";
-import { Loader } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 import { useForm } from "react-hook-form";
@@ -119,7 +119,7 @@ export function ResetPasswordOtpForm() {
           )}
         />
         <Button disabled={isPending}>
-          {isPending && <Loader className="animate-spin" />}
+          {isPending && <Loader2 className="animate-spin" />}
           パスワードをリセット
           <span className="sr-only">パスワードをリセット</span>
         </Button>

@@ -12,9 +12,10 @@ export const runtime = "edge";
 export default async function Page() {
   const queryClient = new QueryClient();
 
-  await queryClient.prefetchQuery({
+  await queryClient.prefetchInfiniteQuery({
     queryKey: ["PD詳細", null, null],
     queryFn: () => fetchPds({}),
+    initialPageParam: undefined as string | undefined,
   });
 
   return (
