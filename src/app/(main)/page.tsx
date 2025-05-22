@@ -14,9 +14,8 @@ export default async function Page() {
 
   await queryClient.prefetchInfiniteQuery({
     queryKey: ["PD詳細", null, null],
-    queryFn: ({ pageParam: cursor }) =>
-      cursor !== "" ? fetchPds({ cursor }) : fetchPds({}),
-    initialPageParam: "",
+    queryFn: () => fetchPds({}),
+    initialPageParam: undefined as string | undefined,
   });
 
   return (
