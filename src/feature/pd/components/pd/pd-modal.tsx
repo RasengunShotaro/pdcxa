@@ -37,14 +37,14 @@ export const PdModal: React.FC<PdModalProps> = ({ isOpen, onClose }) => {
   const form = useForm<PdFormSchema>({
     resolver: valibotResolver(pdFormSchema),
     defaultValues: {
-      pd: "",
+      content: "",
       image: undefined,
     },
   });
   const { createPd, isMutationError } = usePd({});
 
   const onSubmit = (values: PdFormSchema) => {
-    createPd(values.pd);
+    createPd({ content: values.content, image: values.image });
     if (isMutationError) {
       toast.error("PDに失敗しました");
     } else {
@@ -66,7 +66,7 @@ export const PdModal: React.FC<PdModalProps> = ({ isOpen, onClose }) => {
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             <FormField
               control={form.control}
-              name="pd"
+              name="content"
               render={({ field }) => (
                 <div className="grid gap-4 py-4">
                   <FormControl>

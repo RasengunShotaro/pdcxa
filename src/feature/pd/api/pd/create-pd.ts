@@ -4,28 +4,27 @@ import { pds } from "@/db/schema";
 import { db } from "@/lib/db";
 import { actionClient } from "@/lib/safe-action";
 import { currentUser } from "@clerk/nextjs/server";
-import * as v from "valibot";
-
-const createPdSchema = v.object({
-  content: v.pipe(
-    v.string(),
-    v.maxLength(200, "PDが長すぎます。200文字以内で入力してください"),
-    v.minLength(1, "PDを入力してください")
-  ),
-});
+import { pdFormSchema } from "../../types";
+import { uploadPicture } from "./upload-picture";
 
 export const createPd = actionClient
-  .schema(createPdSchema)
-  .action(async ({ parsedInput: { content } }) => {
+  .schema(pdFormSchema)
+  .action(async ({ parsedInput: { content, image } }) => {
     const user = await currentUser();
     if (!user) {
       throw new Error("ユーザーが認証されていません。");
     }
 
+    const imageUrl = await uploadPicture({
+      blob: image,
+      fileName: `${user.id}-${Date.now()}`,
+    });
+
     const newPd = {
       content,
       createdAt: new Date(),
       userId: `${user.id}`,
+      imageUrl: imageUrl,
     };
 
     await db.insert(pds).values(newPd);
