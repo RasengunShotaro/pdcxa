@@ -25,7 +25,7 @@ export const usePd = ({ pdId, userId }: { pdId?: string; userId?: string }) => {
     getNextPageParam: (lastPage) => lastPage.nextCursor,
   });
 
-  const { mutate: createNewPd } = useMutation({
+  const { mutate: createNewPd, isError: isMutationError } = useMutation({
     mutationFn: (content: string) => createPd({ content }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["PD詳細"] });
@@ -40,6 +40,7 @@ export const usePd = ({ pdId, userId }: { pdId?: string; userId?: string }) => {
     isPending,
     isError,
     createPd: createNewPd,
+    isMutationError,
     hasNextPage,
     fetchNextPage,
     isFetchingNextPage,
