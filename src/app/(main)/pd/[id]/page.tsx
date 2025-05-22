@@ -22,7 +22,7 @@ export default async function PdDetailPage({ params }: PdDetailProps) {
 
   await queryClient.prefetchQuery({
     queryKey: ["PD詳細", unwrapParams.id, null],
-    queryFn: () => fetchPds({ pdId: unwrapParams.id }),
+    queryFn: () => fetchPds({ pdId: unwrapParams.id, cursor: "" }),
   });
 
   await queryClient.prefetchQuery({
