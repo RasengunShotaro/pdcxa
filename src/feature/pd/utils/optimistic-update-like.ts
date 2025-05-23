@@ -1,4 +1,5 @@
-import type { QueryClient } from "@tanstack/react-query";
+import type { InfiniteData, QueryClient } from "@tanstack/react-query";
+import type { PdsResponse } from "../api/pd/fetch-pds";
 import type { Pd } from "../types";
 
 export const optimisticUpdateLike = async ({
@@ -12,30 +13,39 @@ export const optimisticUpdateLike = async ({
   queryClient: QueryClient;
   myUserId: string;
 }) => {
-  const previousPds = queryClient.getQueryData<Pd[]>(queryKey);
+  const previousPages =
+    queryClient.getQueryData<InfiniteData<PdsResponse>>(queryKey);
 
-  queryClient.setQueryData<Pd[]>(queryKey, (oldPds) => {
-    if (!oldPds) return oldPds;
+  queryClient.setQueryData<InfiniteData<PdsResponse>>(queryKey, (oldPages) => {
+    if (!oldPages) return oldPages;
 
-    return oldPds.map((oldPd) => {
-      if (oldPd.id !== pd.id) return oldPd;
+    return {
+      ...oldPages,
+      pages: oldPages.pages.map((oldPage) => {
+        return {
+          ...oldPage,
+          items: oldPage.items.map((oldPd) => {
+            if (oldPd.id !== pd.id) return oldPd;
 
-      const isCurrentlyLiked = oldPd.likes.some(
-        (like) => like.userId === myUserId
-      );
-      const updatedLikes = isCurrentlyLiked
-        ? oldPd.likes.filter((like) => like.userId !== myUserId)
-        : [...oldPd.likes, { userId: myUserId }];
+            const isCurrentlyLiked = oldPd.likes.some(
+              (like) => like.userId === myUserId
+            );
+            const updatedLikes = isCurrentlyLiked
+              ? oldPd.likes.filter((like) => like.userId !== myUserId)
+              : [...oldPd.likes, { userId: myUserId }];
 
-      return {
-        ...oldPd,
-        likes: updatedLikes,
-        likeCount: isCurrentlyLiked
-          ? Number(oldPd.likeCount) - 1
-          : Number(oldPd.likeCount) + 1,
-      };
-    });
+            return {
+              ...oldPd,
+              likes: updatedLikes,
+              likeCount: isCurrentlyLiked
+                ? Number(oldPd.likeCount) - 1
+                : Number(oldPd.likeCount) + 1,
+            };
+          }),
+        };
+      }),
+    };
   });
 
-  return { previousPds };
+  return { previousPages };
 };
