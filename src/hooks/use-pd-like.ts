@@ -30,8 +30,8 @@ export const usePdLike = ({
     onMutate: () =>
       optimisticUpdateLike({ pd, queryKey, queryClient, myUserId }),
     onError: (_, __, context) => {
-      if (context?.previousPds) {
-        queryClient.setQueryData(queryKey, context.previousPds);
+      if (context?.previousPages) {
+        queryClient.setQueryData(queryKey, context.previousPages);
       }
     },
     onSettled: () => {
