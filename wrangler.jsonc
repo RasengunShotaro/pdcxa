@@ -1,0 +1,9 @@
+{
+  "name": "pdcxa",
+  "services": [
+    {
+      "binding": "BFF",
+      "service": "bff"
+    }
+  ]
+}

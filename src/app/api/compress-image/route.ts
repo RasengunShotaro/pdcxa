@@ -1,4 +1,3 @@
-import { compressImage } from "@/utils/compress-image";
 import { vValidator } from "@hono/valibot-validator";
 import { Hono } from "hono";
 import { handle } from "hono/vercel";
@@ -11,34 +10,28 @@ const compressImageSchema = v.object({
   ),
 });
 
-// 別ファイルに切り出したいが、app.route()を使うとRPCの型補完が効かないので、ベタ書き
-// Cloudflareのせいで動的ルーティングも使えないので、パスを2度書きしている
-const app = new Hono()
+type Bindings = {
+  BFF: Fetcher;
+};
+
+const app = new Hono<{ Bindings: Bindings }>()
   .basePath("/api")
   .post(
     "/compress-image",
     vValidator("form", compressImageSchema),
     async (c) => {
-      const data = c.req.valid("form");
-      // const auth = getAuth(c);
-
-      // if (!auth?.userId) {
-      //   return c.json(
-      //     {
-      //       message: "認証されていません",
-      //     },
-      //     400
-      //   );
-      // }
-
-      const image = data.image;
-
       try {
-        const compressedImageBuffer = await compressImage({ input: image });
+        const res = await c.env.BFF.fetch(c.req.raw);
+
+        if (!res.ok) {
+          throw new Error("画像の圧縮に失敗しました");
+        }
+
+        const compressedImageBuffer = await res.arrayBuffer();
 
         return c.body(compressedImageBuffer, 200, {
           "Content-Type": "image/webp",
-          "Content-Length": compressedImageBuffer.length.toString(),
+          "Content-Length": compressedImageBuffer.byteLength.toString(),
         });
       } catch (error) {
         return c.json(
@@ -50,10 +43,7 @@ const app = new Hono()
         );
       }
     }
-  )
-  .get("/", (c) => {
-    return c.json({ message: "API is running" });
-  });
+  );
 
 export type AppType = typeof app;
 
