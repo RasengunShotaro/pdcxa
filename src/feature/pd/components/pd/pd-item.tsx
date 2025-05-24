@@ -57,7 +57,7 @@ const PdItem: React.FC<PdItemProps> = ({ pd, like }) => {
       </CardHeader>
       <CardContent className="p-4 pt-2 pb-2">
         <Linkify>
-          <p className="whitespace-pre-wrap">{pd.content}</p>
+          <p className="whitespace-pre-wrap break-all">{pd.content}</p>
         </Linkify>
       </CardContent>
       <CardFooter className="p-4 pt-0 pb-0">

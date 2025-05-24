@@ -54,7 +54,7 @@ const RePdItem: React.FC<PdItemProps> = ({ rePd }) => {
       </CardHeader>
       <CardContent className="p-4 pt-2 pb-2">
         <Linkify>
-          <p className="whitespace-pre-wrap">{rePd.content}</p>
+          <p className="whitespace-pre-wrap break-all">{rePd.content}</p>
         </Linkify>
       </CardContent>
       <CardFooter className="p-4 pt-0 pb-0">
