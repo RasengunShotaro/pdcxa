@@ -1,0 +1,17 @@
+{
+  "name": "bff",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy --minify",
+    "cf-typegen": "wrangler types --env-interface CloudflareBindings"
+  },
+  "dependencies": {
+    "@hono/valibot-validator": "^0.5.2",
+    "hono": "^4.7.10",
+    "wasm-image-optimization": "^1.2.30"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250524.0",
+    "wrangler": "^4.4.0"
+  }
+}
