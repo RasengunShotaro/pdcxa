@@ -9,41 +9,38 @@ if (!accessKey || !secretAccessKey || !endpoint || !bucketName) {
   throw new Error("S3の環境変数が設定されていません");
 }
 
-const getS3Client = () => {
-  return new S3Client({
-    region: "auto",
-    endpoint,
-    credentials: {
-      accessKeyId: accessKey,
-      secretAccessKey: secretAccessKey,
-    },
-  });
-};
+const s3 = new S3Client({
+  region: "auto",
+  endpoint,
+  credentials: {
+    accessKeyId: accessKey,
+    secretAccessKey: secretAccessKey,
+  },
+  requestChecksumCalculation: "WHEN_REQUIRED",
+});
 
-export const uploadBufferToS3 = async ({
-  buffer,
+export const uploadToS3 = async ({
+  body,
   fileName,
   contentType,
   extension,
 }: {
-  buffer: Buffer;
+  body: Blob;
   fileName: string;
   contentType: string;
   extension: string;
 }) => {
-  const s3Client = getS3Client();
-
   const fullFileName = `${fileName}.${extension}`;
 
   const command = new PutObjectCommand({
     Bucket: bucketName,
     Key: fullFileName,
-    Body: buffer,
+    Body: body,
     ContentType: contentType,
   });
 
-  await s3Client.send(command);
+  await s3.send(command);
 
   const baseUrl = endpoint.replace("https://", "");
-  return `https://${bucketName}.${baseUrl}/${fileName}`;
+  return `https://${bucketName}.${baseUrl}/${fullFileName}`;
 };
