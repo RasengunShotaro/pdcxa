@@ -1,32 +1,26 @@
-import sharp from "sharp";
+import { optimizeImage } from "wasm-image-optimization/next-api";
 
 export const compressImage = async ({
   input,
-  maxSizeKB,
+  maxSizeKB = 150,
 }: {
-  input: Buffer;
-  maxSizeKB: number;
-}): Promise<Buffer> => {
+  input: Blob;
+  maxSizeKB?: number;
+}) => {
+  const image = await input.arrayBuffer();
   const initialQuality = 100;
   const maxSizeBytes = maxSizeKB * 1024;
 
-  if (input.length <= maxSizeBytes) {
-    return input;
-  }
-
-  const imageProcess = sharp(input);
-
   let quality = initialQuality;
-  let outputBuffer: Buffer;
+  let outputBuffer: Uint8Array;
   let currentSize: number;
 
   do {
-    outputBuffer = await imageProcess
-      .webp({
-        quality,
-        effort: 6,
-      })
-      .toBuffer();
+    outputBuffer = (await optimizeImage({
+      image: image,
+      format: "webp",
+      quality: quality,
+    })) as Uint8Array;
 
     currentSize = outputBuffer.length;
 
