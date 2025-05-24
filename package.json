@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
+    "dev:prod": "next",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
@@ -14,11 +15,13 @@
     "compile": "tsc"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.815.0",
+    "@aws-sdk/client-s3": "3.726.1",
     "@clerk/backend": "^1.32.3",
     "@clerk/localizations": "^3.16.1",
     "@clerk/nextjs": "^6.19.5",
     "@clerk/themes": "^2.2.46",
+    "@hono/clerk-auth": "^2.0.0",
+    "@hono/valibot-validator": "^0.5.2",
     "@hookform/resolvers": "^5.0.1",
     "@neondatabase/serverless": "^1.0.0",
     "@radix-ui/react-avatar": "^1.1.10",
@@ -39,6 +42,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "drizzle-orm": "^0.43.1",
+    "hono": "^4.7.10",
     "input-otp": "^1.4.2",
     "linkify-react": "^4.3.1",
     "linkifyjs": "^4.3.1",
@@ -55,7 +59,8 @@
     "tailwind-merge": "^3.3.0",
     "tailwindcss-animate": "^1.0.7",
     "uuidv7": "^1.0.2",
-    "valibot": "^1.1.0"
+    "valibot": "^1.1.0",
+    "wasm-image-optimization": "^1.2.30"
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
