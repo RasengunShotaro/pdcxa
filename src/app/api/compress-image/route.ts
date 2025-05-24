@@ -3,6 +3,8 @@ import { Hono } from "hono";
 import { handle } from "hono/vercel";
 import * as v from "valibot";
 
+export const runtime = "edge";
+
 const compressImageSchema = v.object({
   image: v.pipe(
     v.file("画像ファイルを選択してください"),
