@@ -8,7 +8,7 @@ export const pdFormSchema = v.object({
   ),
   image: v.optional(
     v.pipe(
-      v.blob("画像ファイルを選択してください"),
+      v.file("画像ファイルを選択してください"),
       v.maxSize(5 * 1024 * 1024, "ファイルサイズは5MB以下にしてください")
     )
   ),

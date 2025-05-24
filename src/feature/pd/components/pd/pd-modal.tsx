@@ -23,6 +23,7 @@ import NextImage from "next/image";
 import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { compressImageApi } from "../../api/pd/compress-image-api";
 import { type PdFormSchema, pdFormSchema } from "../../types";
 
 interface PdModalProps {
@@ -41,18 +42,26 @@ export const PdModal: React.FC<PdModalProps> = ({ isOpen, onClose }) => {
       image: undefined,
     },
   });
-  const { createPd, isMutationError } = usePd({});
+  const { createPd } = usePd({});
 
-  const onSubmit = (values: PdFormSchema) => {
-    createPd({ content: values.content, image: values.image });
-    if (isMutationError) {
-      toast.error("PDに失敗しました");
-    } else {
+  const onSubmit = async (values: PdFormSchema) => {
+    try {
+      const image = values.image
+        ? await compressImageApi({ image: values.image })
+        : undefined;
+
+      createPd({ content: values.content, image });
       toast.success("PDしました!");
+
+      form.reset();
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+      setPreviewUrl(null);
+      onClose();
+    } catch {
+      toast.error("PDに失敗しました");
     }
-    form.reset();
-    console.log(values.image?.size);
-    onClose();
   };
 
   return (
