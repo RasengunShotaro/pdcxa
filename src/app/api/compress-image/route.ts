@@ -12,6 +12,7 @@ const compressImageSchema = v.object({
 });
 
 // 別ファイルに切り出したいが、app.route()を使うとRPCの型補完が効かないので、ベタ書き
+// Cloudflareのせいで動的ルーティングも使えないので、パスを2度書きしている
 const app = new Hono()
   .basePath("/api")
   .post(
@@ -49,7 +50,10 @@ const app = new Hono()
         );
       }
     }
-  );
+  )
+  .get("/", (c) => {
+    return c.json({ message: "API is running" });
+  });
 
 export type AppType = typeof app;
 
