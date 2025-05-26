@@ -1,12 +1,16 @@
 import { WorkerEntrypoint } from "cloudflare:workers";
+import { compressImage } from "./compress-image";
 
 export class RpcService extends WorkerEntrypoint {
   async fetch(request: Request): Promise<Response> {
-    return new Response("Hello Rpc Service Worker!");
+    return new Response("直リンク禁止", {
+      status: 403,
+      statusText: "Forbidden",
+    });
   }
 
-  add(a: number, b: number): number {
-    return a + b;
+  async compress(image: ArrayBuffer): Promise<Uint8Array> {
+    return await compressImage({ image });
   }
 }
 
