@@ -1,28 +1,26 @@
 import { Hono } from "hono";
+import { env } from "hono/adapter";
 import { handle } from "hono/vercel";
 
 export const runtime = "edge";
 
-type Bindings = {
-  BFF: Fetcher;
-};
+const app = new Hono().basePath("/api").get("/", async (c) => {
+  try {
+    const { BFF } = env<{
+      BFF: Fetcher;
+    }>(c);
+    const res = await BFF.fetch(c.req.raw);
 
-const app = new Hono<{ Bindings: Bindings }>()
-  .basePath("/api")
-  .get("/", async (c) => {
-    try {
-      const res = await c.env.BFF.fetch(c.req.raw);
-
-      return c.body(await res.text(), 200);
-    } catch (error) {
-      return c.json(
-        {
-          message: error instanceof Error ? error.message : "不明なエラー",
-        },
-        500
-      );
-    }
-  });
+    return c.body(await res.text(), 200);
+  } catch (error) {
+    return c.json(
+      {
+        message: error instanceof Error ? error.message : "不明なエラー",
+      },
+      500
+    );
+  }
+});
 
 export type AppType = typeof app;
 
