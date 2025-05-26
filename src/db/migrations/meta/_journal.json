@@ -15,6 +15,13 @@
       "when": 1744887098224,
       "tag": "0001_smiling_susan_delgado",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1747928199044,
+      "tag": "0002_lonely_bill_hollister",
+      "breakpoints": true
     }
   ]
 }
