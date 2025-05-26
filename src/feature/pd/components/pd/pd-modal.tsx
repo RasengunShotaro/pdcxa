@@ -17,6 +17,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { usePd } from "@/hooks/use-pd";
+import { getRequestContext } from "@cloudflare/next-on-pages";
 import { valibotResolver } from "@hookform/resolvers/valibot";
 import { Image, MessageCircle, X } from "lucide-react";
 import NextImage from "next/image";
@@ -45,6 +46,11 @@ export const PdModal: React.FC<PdModalProps> = ({ isOpen, onClose }) => {
 
   const onSubmit = async (values: PdFormSchema) => {
     try {
+      const bff = getRequestContext().env.BFF;
+      const compressedImage = values.image
+        ? await bff.compress(await values.image.arrayBuffer())
+        : null;
+      console.log("compressedImage", compressedImage);
       createPd({ content: values.content, image: values.image });
       toast.success("PDしました!");
 
