@@ -26,7 +26,8 @@ export const usePd = ({ pdId, userId }: { pdId?: string; userId?: string }) => {
   });
 
   const { mutate: createNewPd, isError: isMutationError } = useMutation({
-    mutationFn: (content: string) => createPd({ content }),
+    mutationFn: ({ content, image }: { content: string; image?: Blob }) =>
+      createPd({ content, image }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["PD詳細"] });
     },
