@@ -9,12 +9,8 @@ export class RpcService extends WorkerEntrypoint {
     });
   }
 
-  async compress(image: ArrayBuffer): Promise<Uint8Array> {
-    return await compressImage({ image });
-  }
-
-  async example(): Promise<string> {
-    return "返ってきてるよ";
+  async compress(image: ArrayBuffer, quality: number): Promise<Uint8Array> {
+    return await compressImage({ image, quality });
   }
 }
 

@@ -4,8 +4,10 @@ import { pds } from "@/db/schema";
 import { db } from "@/lib/db";
 import { actionClient } from "@/lib/safe-action";
 import { currentUser } from "@clerk/nextjs/server";
-import { getRequestContext } from "@cloudflare/next-on-pages";
 import * as v from "valibot";
+import { compressImage } from "./compress-image";
+import { uploadToS3 } from "./upload-to-s3";
+
 const createPdSchema = v.object({
   content: v.pipe(
     v.string(),
@@ -23,25 +25,22 @@ const createPdSchema = v.object({
 export const createPd = actionClient
   .schema(createPdSchema)
   .action(async ({ parsedInput: { content, image } }) => {
-    const bff = getRequestContext().env.BFF;
     const user = await currentUser();
     if (!user) {
       throw new Error("ユーザーが認証されていません。");
     }
 
-    // const compressedImage = image
-    //   ? await bff.compress(await image.arrayBuffer())
-    //   : null;
-    // const imageUrl = compressedImage
-    //   ? await uploadToS3({
-    //       body: compressedImage,
-    //       fileName: `${user.id}-${Date.now()}`,
-    //       contentType: "image/webp",
-    //       extension: "webp",
-    //     })
-    //   : null;
-
-    const imageUrl = await bff.example();
+    const compressedImage = image
+      ? await compressImage({ image: await image.arrayBuffer() })
+      : null;
+    const imageUrl = compressedImage
+      ? await uploadToS3({
+          body: compressedImage,
+          fileName: `${user.id}-${Date.now()}`,
+          contentType: "image/webp",
+          extension: "webp",
+        })
+      : null;
 
     const newPd = {
       content,

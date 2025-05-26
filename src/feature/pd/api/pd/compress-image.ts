@@ -1,32 +1,22 @@
-import sharp from "sharp";
+import { getRequestContext } from "@cloudflare/next-on-pages";
 
 export const compressImage = async ({
-  input,
-  maxSizeKB,
+  image,
+  maxSizeKB = 150,
 }: {
-  input: Buffer;
-  maxSizeKB: number;
-}): Promise<Buffer> => {
+  image: ArrayBuffer;
+  maxSizeKB?: number;
+}) => {
+  const bff = getRequestContext().env.BFF;
   const initialQuality = 100;
   const maxSizeBytes = maxSizeKB * 1024;
 
-  if (input.length <= maxSizeBytes) {
-    return input;
-  }
-
-  const imageProcess = sharp(input);
-
   let quality = initialQuality;
-  let outputBuffer: Buffer;
+  let outputBuffer: Uint8Array;
   let currentSize: number;
 
   do {
-    outputBuffer = await imageProcess
-      .webp({
-        quality,
-        effort: 6,
-      })
-      .toBuffer();
+    outputBuffer = await bff.compress(image, quality);
 
     currentSize = outputBuffer.length;
 

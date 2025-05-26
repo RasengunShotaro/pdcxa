@@ -1,6 +1,6 @@
 interface CloudflareEnv {
   BFF: {
-    compress: (image: ArrayBuffer) => Promise<Uint8Array>;
+    compress: (image: ArrayBuffer, quality: number) => Promise<Uint8Array>;
     example: () => Promise<string>;
   };
 }
