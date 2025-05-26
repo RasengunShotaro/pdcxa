@@ -6,8 +6,6 @@ import { actionClient } from "@/lib/safe-action";
 import { currentUser } from "@clerk/nextjs/server";
 import { getRequestContext } from "@cloudflare/next-on-pages";
 import * as v from "valibot";
-import { uploadToS3 } from "./upload-to-s3";
-
 const createPdSchema = v.object({
   content: v.pipe(
     v.string(),
@@ -31,17 +29,19 @@ export const createPd = actionClient
       throw new Error("ユーザーが認証されていません。");
     }
 
-    const compressedImage = image
-      ? await bff.compress(await image.arrayBuffer())
-      : null;
-    const imageUrl = compressedImage
-      ? await uploadToS3({
-          body: compressedImage,
-          fileName: `${user.id}-${Date.now()}`,
-          contentType: "image/webp",
-          extension: "webp",
-        })
-      : null;
+    // const compressedImage = image
+    //   ? await bff.compress(await image.arrayBuffer())
+    //   : null;
+    // const imageUrl = compressedImage
+    //   ? await uploadToS3({
+    //       body: compressedImage,
+    //       fileName: `${user.id}-${Date.now()}`,
+    //       contentType: "image/webp",
+    //       extension: "webp",
+    //     })
+    //   : null;
+
+    const imageUrl = await bff.example();
 
     const newPd = {
       content,
