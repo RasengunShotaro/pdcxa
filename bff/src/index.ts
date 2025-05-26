@@ -1,5 +1,5 @@
 import { WorkerEntrypoint } from "cloudflare:workers";
-import { compressImage } from "./compress-image";
+import { optimizeImage } from "wasm-image-optimization";
 
 export class RpcService extends WorkerEntrypoint {
   async fetch(request: Request): Promise<Response> {
@@ -10,7 +10,12 @@ export class RpcService extends WorkerEntrypoint {
   }
 
   async compress(image: ArrayBuffer, quality: number): Promise<Uint8Array> {
-    return await compressImage({ image, quality });
+    return (await optimizeImage({
+      image: image,
+      format: "avif",
+      quality: quality,
+      speed: 10,
+    })) as Uint8Array;
   }
 }
 
