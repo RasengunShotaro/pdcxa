@@ -1,9 +1,13 @@
-import { Hono } from 'hono'
+import { WorkerEntrypoint } from "cloudflare:workers";
 
-const app = new Hono()
+export class RpcService extends WorkerEntrypoint {
+  async fetch(request: Request): Promise<Response> {
+    return new Response("Hello Rpc Service Worker!");
+  }
 
-app.get('/', (c) => {
-  return c.text('Hello Hono!')
-})
+  add(a: number, b: number): number {
+    return a + b;
+  }
+}
 
-export default app
+export default RpcService;
