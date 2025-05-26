@@ -9,7 +9,7 @@ export const compressImage = async ({
 }) =>
   (await optimizeImage({
     image: image,
-    format: "webp",
+    format: "avif",
     quality: quality,
     speed: 10,
   })) as Uint8Array;

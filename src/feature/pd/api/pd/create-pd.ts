@@ -37,8 +37,8 @@ export const createPd = actionClient
       ? await uploadToS3({
           body: compressedImage,
           fileName: `${user.id}-${Date.now()}`,
-          contentType: "image/webp",
-          extension: "webp",
+          contentType: "image/avif",
+          extension: "avif",
         })
       : null;
 
