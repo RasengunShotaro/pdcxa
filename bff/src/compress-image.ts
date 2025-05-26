@@ -11,4 +11,5 @@ export const compressImage = async ({
     image: image,
     format: "webp",
     quality: quality,
+    speed: 10,
   })) as Uint8Array;
