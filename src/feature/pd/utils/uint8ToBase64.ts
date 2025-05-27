@@ -1,2 +1,4 @@
-export const Uint8ArrayToBase64Image = (image: Uint8Array) =>
-  `data:image/jpeg;base64,${btoa(String.fromCharCode(...image))}`;
+export const Uint8ArrayToBase64Image = (image: Uint8Array) => {
+  const blob = new Blob([image], { type: "image/jpeg" });
+  return URL.createObjectURL(blob);
+};
