@@ -8,12 +8,12 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Linkify } from "@/components/ui/linkify";
+import { useS3Image } from "@/hooks/use-s3-image";
 import { useUserDetail } from "@/hooks/use-user-detail";
 import { MessageCircle } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { getFromS3 } from "../../api/pd/s3-utils";
 import type { Pd } from "../../types";
 import { formatDateTime } from "../../utils/format-datetime";
 import { Uint8ArrayToBase64Image } from "../../utils/uint8ToBase64";
@@ -25,11 +25,12 @@ interface PdItemProps {
   like: ReactNode;
 }
 
-const PdItem: React.FC<PdItemProps> = async ({ pd, like }) => {
+const PdItem: React.FC<PdItemProps> = ({ pd, like }) => {
   const userDetail = useUserDetail(pd.userId);
   const userFullName = `${userDetail?.first_name ?? ""} ${
     userDetail?.last_name ?? ""
   }`;
+  const { data: pdImage } = useS3Image(pd.imageFileName);
 
   return (
     <Card>
@@ -62,9 +63,9 @@ const PdItem: React.FC<PdItemProps> = async ({ pd, like }) => {
         <Linkify>
           <p className="whitespace-pre-wrap break-all">{pd.content}</p>
         </Linkify>
-        {pd.imageFileName && (
+        {pdImage && (
           <Image
-            src={Uint8ArrayToBase64Image(await getFromS3(pd.imageFileName))}
+            src={Uint8ArrayToBase64Image(pdImage)}
             alt="PD Image"
             width={275}
             height={275}
