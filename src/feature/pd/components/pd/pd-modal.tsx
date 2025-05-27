@@ -5,7 +5,6 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
@@ -15,10 +14,13 @@ import {
   FormField,
   FormMessage,
 } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { usePd } from "@/hooks/use-pd";
 import { valibotResolver } from "@hookform/resolvers/valibot";
-import { MessageCircle } from "lucide-react";
+import { Image, Loader2, MessageCircle, X } from "lucide-react";
+import NextImage from "next/image";
+import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { type PdFormSchema, pdFormSchema } from "../../types";
@@ -29,23 +31,32 @@ interface PdModalProps {
 }
 
 export const PdModal: React.FC<PdModalProps> = ({ isOpen, onClose }) => {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+
   const form = useForm<PdFormSchema>({
     resolver: valibotResolver(pdFormSchema),
     defaultValues: {
-      pd: "",
+      content: "",
+      image: undefined,
     },
   });
-  const { createPd, isMutationError } = usePd({});
+  const { createPd, isMutationPending } = usePd({});
 
-  const onSubmit = (values: PdFormSchema) => {
-    createPd(values.pd);
-    if (isMutationError) {
-      toast.error("PDに失敗しました");
-    } else {
+  const onSubmit = async (values: PdFormSchema) => {
+    try {
+      await createPd({ content: values.content, image: values.image });
       toast.success("PDしました!");
+
+      form.reset();
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+      setPreviewUrl(null);
+      onClose();
+    } catch {
+      toast.error("PDに失敗しました");
     }
-    form.reset();
-    onClose();
   };
 
   return (
@@ -59,7 +70,7 @@ export const PdModal: React.FC<PdModalProps> = ({ isOpen, onClose }) => {
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             <FormField
               control={form.control}
-              name="pd"
+              name="content"
               render={({ field }) => (
                 <div className="grid gap-4 py-4">
                   <FormControl>
@@ -72,15 +83,88 @@ export const PdModal: React.FC<PdModalProps> = ({ isOpen, onClose }) => {
                 </div>
               )}
             />
-            <DialogFooter>
-              <Button type="button" variant="outline" onClick={onClose}>
-                キャンセル
-              </Button>
-              <Button type="submit">
-                <MessageCircle className="h-3 w-3" />
-                PDする
-              </Button>
-            </DialogFooter>
+            <FormField
+              control={form.control}
+              name="image"
+              render={({ field: { onChange } }) => {
+                return (
+                  <>
+                    <FormControl>
+                      <Input
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        ref={fileInputRef}
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            onChange(file);
+                            const url = URL.createObjectURL(file);
+                            setPreviewUrl(url);
+                          }
+                        }}
+                      />
+                    </FormControl>
+                    {previewUrl && (
+                      <div className="relative w-fit mx-auto">
+                        <div className="relative">
+                          <NextImage
+                            src={previewUrl}
+                            alt="プレビュー"
+                            className="rounded-md"
+                            width={150}
+                            height={150}
+                            style={{
+                              maxHeight: "150px",
+                              width: "auto",
+                              height: "auto",
+                            }}
+                          />
+                          <div className="absolute top-1 right-1">
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              className="h-6 w-6 p-1 bg-black/50 rounded-full text-white hover:bg-black/70"
+                              onClick={() => {
+                                onChange(undefined);
+                                if (previewUrl) {
+                                  URL.revokeObjectURL(previewUrl);
+                                  setPreviewUrl(null);
+                                }
+                                if (fileInputRef.current) {
+                                  fileInputRef.current.value = "";
+                                }
+                              }}
+                            >
+                              <X />
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                    <FormMessage />
+                  </>
+                );
+              }}
+            />
+            <div className="flex justify-between items-center w-full mt-4">
+              <div>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => fileInputRef.current?.click()}
+                >
+                  <Image />
+                </Button>
+              </div>
+              <div>
+                <Button type="submit">
+                  {isMutationPending && <Loader2 className="animate-spin" />}
+                  <MessageCircle className="h-3 w-3 mr-1" />
+                  PDする
+                </Button>
+              </div>
+            </div>
           </form>
         </Form>
       </DialogContent>

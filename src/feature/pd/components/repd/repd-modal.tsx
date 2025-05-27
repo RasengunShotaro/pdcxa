@@ -37,13 +37,13 @@ export const RePdModal: React.FC<RePdModalProps> = ({
   const form = useForm<PdFormSchema>({
     resolver: valibotResolver(pdFormSchema),
     defaultValues: {
-      pd: "",
+      content: "",
     },
   });
   const { createRePd, error } = useRePd(pdId);
 
   const onSubmit = (values: PdFormSchema) => {
-    createRePd(values.pd);
+    createRePd(values.content);
     if (error) {
       toast.error("RePDに失敗しました");
     } else {
@@ -66,7 +66,7 @@ export const RePdModal: React.FC<RePdModalProps> = ({
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             <FormField
               control={form.control}
-              name="pd"
+              name="content"
               render={({ field }) => (
                 <div className="grid gap-4 py-4">
                   <FormControl>
