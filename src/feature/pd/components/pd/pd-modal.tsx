@@ -18,7 +18,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { usePd } from "@/hooks/use-pd";
 import { valibotResolver } from "@hookform/resolvers/valibot";
-import { Image, MessageCircle, X } from "lucide-react";
+import { Image, Loader2, MessageCircle, X } from "lucide-react";
 import NextImage from "next/image";
 import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -41,11 +41,11 @@ export const PdModal: React.FC<PdModalProps> = ({ isOpen, onClose }) => {
       image: undefined,
     },
   });
-  const { createPd } = usePd({});
+  const { createPd, isMutationPending } = usePd({});
 
   const onSubmit = async (values: PdFormSchema) => {
     try {
-      createPd({ content: values.content, image: values.image });
+      await createPd({ content: values.content, image: values.image });
       toast.success("PDしました!");
 
       form.reset();
@@ -159,6 +159,7 @@ export const PdModal: React.FC<PdModalProps> = ({ isOpen, onClose }) => {
               </div>
               <div>
                 <Button type="submit">
+                  {isMutationPending && <Loader2 className="animate-spin" />}
                   <MessageCircle className="h-3 w-3 mr-1" />
                   PDする
                 </Button>

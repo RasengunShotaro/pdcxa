@@ -25,7 +25,11 @@ export const usePd = ({ pdId, userId }: { pdId?: string; userId?: string }) => {
     getNextPageParam: (lastPage) => lastPage.nextCursor,
   });
 
-  const { mutate: createNewPd, isError: isMutationError } = useMutation({
+  const {
+    mutateAsync: createNewPd,
+    isPending: isMutationPending,
+    isError: isMutationError,
+  } = useMutation({
     mutationFn: ({ content, image }: { content: string; image?: Blob }) =>
       createPd({ content, image }),
     onSuccess: () => {
@@ -41,6 +45,7 @@ export const usePd = ({ pdId, userId }: { pdId?: string; userId?: string }) => {
     isPending,
     isError,
     createPd: createNewPd,
+    isMutationPending,
     isMutationError,
     hasNextPage,
     fetchNextPage,
