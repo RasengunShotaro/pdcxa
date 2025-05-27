@@ -16,7 +16,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import type { Pd } from "../../types";
 import { formatDateTime } from "../../utils/format-datetime";
-import { Uint8ArrayToBase64Image } from "../../utils/uint8ToBase64";
+import { Uint8ArrayToUrl } from "../../utils/uint8ToBase64";
 import { PdMenu } from "./pd-menu";
 import { PopOverLike } from "./pop-over-like";
 
@@ -67,7 +67,7 @@ const PdItem: React.FC<PdItemProps> = ({ pd, like }) => {
           <div className="flex justify-center mt-4">
             <div className="rounded-lg overflow-hidden">
               <Image
-                src={Uint8ArrayToBase64Image(pdImage)}
+                src={Uint8ArrayToUrl(pdImage)}
                 alt="PD Image"
                 width={500}
                 height={500}
