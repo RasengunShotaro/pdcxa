@@ -48,7 +48,7 @@ export const uploadToS3 = async ({
   return fullFileName;
 };
 
-export const getFromS3 = async ({ fullFileName }: { fullFileName: string }) => {
+export const getFromS3 = async (fullFileName: string) => {
   const command = new GetObjectCommand({
     Bucket: bucketName,
     Key: fullFileName,
@@ -56,6 +56,10 @@ export const getFromS3 = async ({ fullFileName }: { fullFileName: string }) => {
   const response = await s3.send(command);
 
   const data = await response.Body?.transformToByteArray();
+
+  if (!data) {
+    throw new Error("画像データ取得に失敗しました");
+  }
 
   return data;
 };

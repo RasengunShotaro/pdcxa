@@ -13,8 +13,10 @@ import { MessageCircle } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { getFromS3 } from "../../api/pd/s3-utils";
 import type { Pd } from "../../types";
 import { formatDateTime } from "../../utils/format-datetime";
+import { Uint8ArrayToBase64Image } from "../../utils/uint8ToBase64";
 import { PdMenu } from "./pd-menu";
 import { PopOverLike } from "./pop-over-like";
 
@@ -23,7 +25,7 @@ interface PdItemProps {
   like: ReactNode;
 }
 
-const PdItem: React.FC<PdItemProps> = ({ pd, like }) => {
+const PdItem: React.FC<PdItemProps> = async ({ pd, like }) => {
   const userDetail = useUserDetail(pd.userId);
   const userFullName = `${userDetail?.first_name ?? ""} ${
     userDetail?.last_name ?? ""
@@ -62,7 +64,7 @@ const PdItem: React.FC<PdItemProps> = ({ pd, like }) => {
         </Linkify>
         {pd.imageFileName && (
           <Image
-            src={pd.imageFileName}
+            src={Uint8ArrayToBase64Image(await getFromS3(pd.imageFileName))}
             alt="PD Image"
             width={275}
             height={275}
