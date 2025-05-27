@@ -33,7 +33,7 @@ export const createPd = actionClient
     const compressedImage = image
       ? await compressImage({ image: await image.arrayBuffer() })
       : null;
-    const imageUrl = compressedImage
+    const imageFileName = compressedImage
       ? await uploadToS3({
           body: compressedImage,
           fileName: `${user.id}-${Date.now()}`,
@@ -46,7 +46,7 @@ export const createPd = actionClient
       content,
       createdAt: new Date(),
       userId: `${user.id}`,
-      imageUrl: imageUrl,
+      imageFileName: imageFileName,
     };
 
     await db.insert(pds).values(newPd);

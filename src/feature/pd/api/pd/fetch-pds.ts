@@ -55,7 +55,7 @@ export const fetchPds = async ({
       content: pdsSchema.content,
       createdAt: pdsSchema.createdAt,
       userId: pdsSchema.userId,
-      imageUrl: pdsSchema.imageUrl,
+      imageFileName: pdsSchema.imageFileName,
       likeCount: likesCountSubquery.count,
       replyCount: repliesCountSubquery.count,
       likes: likesDetailsSubquery.userIds,

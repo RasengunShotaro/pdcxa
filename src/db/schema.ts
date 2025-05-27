@@ -12,7 +12,7 @@ export const pds = pgTable("pds", {
   content: varchar("content").notNull(),
   createdAt: timestamp("created_at").notNull(),
   userId: varchar("user_id").notNull(),
-  imageUrl: varchar("image_url"),
+  imageFileName: varchar("image_file_name"),
 });
 
 export const rePds = pgTable("repds", {

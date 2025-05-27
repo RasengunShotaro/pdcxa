@@ -45,8 +45,7 @@ export const uploadToS3 = async ({
 
   await s3.send(command);
 
-  const baseUrl = endpoint.replace("https://", "");
-  return `https://${bucketName}.${baseUrl}/${fullFileName}`;
+  return fullFileName;
 };
 
 export const getFromS3 = async ({ fullFileName }: { fullFileName: string }) => {

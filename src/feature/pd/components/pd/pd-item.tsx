@@ -60,9 +60,9 @@ const PdItem: React.FC<PdItemProps> = ({ pd, like }) => {
         <Linkify>
           <p className="whitespace-pre-wrap break-all">{pd.content}</p>
         </Linkify>
-        {pd.imageUrl && (
+        {pd.imageFileName && (
           <Image
-            src={pd.imageUrl}
+            src={pd.imageFileName}
             alt="PD Image"
             width={275}
             height={275}
