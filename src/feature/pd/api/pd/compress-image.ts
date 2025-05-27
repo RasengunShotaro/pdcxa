@@ -2,7 +2,7 @@ import { getRequestContext } from "@cloudflare/next-on-pages";
 
 export const compressImage = async ({
   image,
-  maxSizeKB = 350,
+  maxSizeKB = 200,
 }: {
   image: ArrayBuffer;
   maxSizeKB?: number;
