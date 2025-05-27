@@ -6,7 +6,7 @@ import { actionClient } from "@/lib/safe-action";
 import { currentUser } from "@clerk/nextjs/server";
 import * as v from "valibot";
 import { compressImage } from "./compress-image";
-import { uploadToS3 } from "./upload-to-s3";
+import { uploadToS3 } from "./s3-utils";
 
 const createPdSchema = v.object({
   content: v.pipe(

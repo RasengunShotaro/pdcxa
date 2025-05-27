@@ -1,4 +1,8 @@
-import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import {
+  GetObjectCommand,
+  PutObjectCommand,
+  S3Client,
+} from "@aws-sdk/client-s3";
 
 const accessKey = process.env.S3_ACCESS_KEY;
 const secretAccessKey = process.env.S3_SECRET_ACCESS_KEY;
@@ -43,4 +47,16 @@ export const uploadToS3 = async ({
 
   const baseUrl = endpoint.replace("https://", "");
   return `https://${bucketName}.${baseUrl}/${fullFileName}`;
+};
+
+export const getFromS3 = async ({ fullFileName }: { fullFileName: string }) => {
+  const command = new GetObjectCommand({
+    Bucket: bucketName,
+    Key: fullFileName,
+  });
+  const response = await s3.send(command);
+
+  const data = await response.Body?.transformToByteArray();
+
+  return data;
 };
