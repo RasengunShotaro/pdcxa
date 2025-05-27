@@ -12,7 +12,7 @@ export class RpcService extends WorkerEntrypoint {
   async compress(image: ArrayBuffer, quality: number): Promise<Uint8Array> {
     return (await optimizeImage({
       image: image,
-      format: "webp",
+      format: "jpeg",
       quality: quality,
       speed: 10,
     })) as Uint8Array;
