@@ -10,6 +10,7 @@ import {
 import { Linkify } from "@/components/ui/linkify";
 import { useUserDetail } from "@/hooks/use-user-detail";
 import { MessageCircle } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import type { Pd } from "../../types";
@@ -59,6 +60,15 @@ const PdItem: React.FC<PdItemProps> = ({ pd, like }) => {
         <Linkify>
           <p className="whitespace-pre-wrap break-all">{pd.content}</p>
         </Linkify>
+        {pd.imageUrl && (
+          <Image
+            src={pd.imageUrl}
+            alt="PD Image"
+            width={275}
+            height={275}
+            className="rounded-lg mt-4 mx-auto"
+          />
+        )}
       </CardContent>
       <CardFooter className="p-4 pt-0 pb-0">
         <div className="flex items-center justify-between w-full">

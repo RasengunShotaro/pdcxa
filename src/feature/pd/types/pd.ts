@@ -7,6 +7,7 @@ export type Pd = {
   replyCount: number;
   likes: { userId: string }[];
   isMyPd: boolean;
+  imageUrl: string | null;
 };
 
 export type RePd = {
