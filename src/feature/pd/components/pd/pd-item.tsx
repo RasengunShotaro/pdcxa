@@ -64,13 +64,17 @@ const PdItem: React.FC<PdItemProps> = ({ pd, like }) => {
           <p className="whitespace-pre-wrap break-all">{pd.content}</p>
         </Linkify>
         {pdImage && (
-          <Image
-            src={Uint8ArrayToBase64Image(pdImage)}
-            alt="PD Image"
-            width={275}
-            height={275}
-            className="rounded-lg mt-4 mx-auto"
-          />
+          <div className="flex justify-center mt-4">
+            <div className="rounded-lg overflow-hidden">
+              <Image
+                src={Uint8ArrayToBase64Image(pdImage)}
+                alt="PD Image"
+                width={500}
+                height={500}
+                style={{ maxHeight: "350px", width: "auto", height: "auto" }}
+              />
+            </div>
+          </div>
         )}
       </CardContent>
       <CardFooter className="p-4 pt-0 pb-0">
