@@ -12,20 +12,31 @@ export const compressImage = async ({
   const maxSizeBytes = maxSizeKB * 1024;
 
   let quality = initialQuality;
-  let outputBuffer: Uint8Array;
-  let currentSize: number;
+  let outputBuffer: Uint8Array | undefined;
+  let currentSize: number = image.byteLength;
 
   do {
-    outputBuffer = await bff.compress(image, quality);
+    try {
+      outputBuffer = await bff.compress(image, quality);
+      currentSize = outputBuffer.length;
 
-    currentSize = outputBuffer.length;
-
-    if (currentSize > maxSizeBytes && quality > 10) {
-      quality -= 10;
-    } else {
-      break;
+      if (currentSize > maxSizeBytes && quality > 10) {
+        quality -= 10;
+      } else {
+        break;
+      }
+    } catch {
+      if (quality > 10) {
+        quality -= 10;
+      } else {
+        break;
+      }
     }
   } while (currentSize > maxSizeBytes);
+
+  if (!outputBuffer) {
+    throw new Error("画像の圧縮に失敗しました");
+  }
 
   if (currentSize > maxSizeBytes) {
     throw new Error(
