@@ -5,6 +5,7 @@ import { db } from "@/lib/db";
 import { actionClient } from "@/lib/safe-action";
 import { currentUser } from "@clerk/nextjs/server";
 import * as v from "valibot";
+import { resizeImage } from "../../utils/resize-image";
 import { compressImage } from "./compress-image";
 import { uploadToS3 } from "./s3-utils";
 
@@ -31,7 +32,9 @@ export const createPd = actionClient
     }
 
     const compressedImage = image
-      ? await compressImage({ image: await image.arrayBuffer() })
+      ? await compressImage({
+          image: await resizeImage(await image.arrayBuffer()),
+        })
       : null;
     const imageFileName = compressedImage
       ? await uploadToS3({
