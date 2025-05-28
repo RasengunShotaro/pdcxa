@@ -1,6 +1,5 @@
 import { createPd } from "@/feature/pd/api/pd/create-pd";
-import { fetchPds } from "@/feature/pd/api/pd/fetch-pds";
-import type { PdsResponse } from "@/feature/pd/api/pd/fetch-pds";
+import { fetchDetailedPds } from "@/feature/pd/api/pd/fetch-detailed-pds";
 import type { Pd } from "@/feature/pd/types";
 import {
   useInfiniteQuery,
@@ -20,7 +19,8 @@ export const usePd = ({ pdId, userId }: { pdId?: string; userId?: string }) => {
     isError,
   } = useInfiniteQuery({
     queryKey: ["PD詳細", pdId, userId],
-    queryFn: ({ pageParam: cursor }) => fetchPds({ pdId, userId, cursor }),
+    queryFn: ({ pageParam: cursor }) =>
+      fetchDetailedPds({ pdId, userId, cursor }),
     initialPageParam: undefined as string | undefined,
     getNextPageParam: (lastPage) => lastPage.nextCursor,
   });
@@ -42,8 +42,7 @@ export const usePd = ({ pdId, userId }: { pdId?: string; userId?: string }) => {
     },
   });
 
-  const pds: Pd[] =
-    data?.pages.flatMap((page: PdsResponse) => page.items) ?? [];
+  const pds: Pd[] = data?.pages.flatMap((page) => page.items) ?? [];
 
   return {
     pds,

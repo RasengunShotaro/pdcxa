@@ -4,9 +4,8 @@ import { rePdLikes, rePds as rePdsSchema } from "@/db/schema";
 import { db } from "@/lib/db";
 import { currentUser } from "@clerk/nextjs/server";
 import { eq, sql } from "drizzle-orm";
-import type { RePd } from "../../types";
 
-export const fetchRePds = async (pdId: string): Promise<RePd[]> => {
+export const fetchRawRePds = async (pdId: string) => {
   const likesCountSubquery = db
     .select({
       rePdId: rePdLikes.targetRePdId,

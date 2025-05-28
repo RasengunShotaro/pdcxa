@@ -1,5 +1,5 @@
-import { fetchPds } from "@/feature/pd/api/pd/fetch-pds";
-import { fetchRePds } from "@/feature/pd/api/repd/fetch-repds";
+import { fetchDetailedPds } from "@/feature/pd/api/pd/fetch-detailed-pds";
+import { fetchDetailedRepds } from "@/feature/pd/api/repd/fetch-detailed-repds";
 import { PdDetail } from "@/feature/pd/components/pd/pd-detail";
 import { PdItemSkeleton } from "@/feature/pd/components/pd/pd-item-skeleton";
 import {
@@ -22,13 +22,13 @@ export default async function PdDetailPage({ params }: PdDetailProps) {
 
   await queryClient.prefetchInfiniteQuery({
     queryKey: ["PD詳細", unwrapParams.id, null],
-    queryFn: () => fetchPds({ pdId: unwrapParams.id }),
+    queryFn: () => fetchDetailedPds({ pdId: unwrapParams.id }),
     initialPageParam: undefined as string | undefined,
   });
 
   await queryClient.prefetchQuery({
     queryKey: ["RePD詳細", unwrapParams.id],
-    queryFn: () => fetchRePds(unwrapParams.id),
+    queryFn: () => fetchDetailedRepds(unwrapParams.id),
   });
 
   return (

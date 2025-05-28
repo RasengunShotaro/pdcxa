@@ -4,16 +4,22 @@ import { pdLikes, pds as pdsSchema, rePds } from "@/db/schema";
 import { db } from "@/lib/db";
 import { currentUser } from "@clerk/nextjs/server";
 import { and, desc, eq, sql } from "drizzle-orm";
-import type { Pd } from "../../types";
 
 const PAGE_SIZE = 20;
 
-export type PdsResponse = {
-  items: Pd[];
-  nextCursor?: string;
+type RawPd = {
+  id: string;
+  content: string;
+  createdAt: Date;
+  userId: string;
+  likeCount: number;
+  replyCount: number;
+  likes: { userId: string }[];
+  isMyPd: boolean;
+  imageFileName: string | null;
 };
 
-export const fetchPds = async ({
+export const fetchRawPds = async ({
   pdId,
   userId,
   cursor,
@@ -21,7 +27,7 @@ export const fetchPds = async ({
   pdId?: string;
   userId?: string;
   cursor?: string;
-}): Promise<PdsResponse> => {
+}) => {
   const likesCountSubquery = db
     .select({
       pdId: pdLikes.targetPdId,
@@ -124,7 +130,7 @@ export const fetchPds = async ({
     : await fetchLatestPds({ userId, cursor });
 
   const currentUserId = (await currentUser())?.id;
-  const pds: PdsResponse = {
+  const pds = {
     ...fetchedPds,
     items: fetchedPds.items.map((fetchedPd) => ({
       ...fetchedPd,
