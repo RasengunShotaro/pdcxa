@@ -4,8 +4,13 @@ import { clerkClient } from "@/lib/clerk";
 import { cache } from "react";
 
 export const fetchUserDetails = cache(async (userIds: string[]) => {
-  const result = (await clerkClient.users.getUserList({ userId: userIds }))
-    .data;
+  const limit = userIds.length < 500 ? userIds.length : 500;
+  const result = (
+    await clerkClient.users.getUserList({
+      userId: userIds,
+      limit,
+    })
+  ).data;
 
   const userDetails = result.map((user) => {
     return {
