@@ -30,8 +30,13 @@ export const usePd = ({ pdId, userId }: { pdId?: string; userId?: string }) => {
     isPending: isMutationPending,
     isError: isMutationError,
   } = useMutation({
-    mutationFn: ({ content, image }: { content: string; image?: Blob }) =>
-      createPd({ content, image }),
+    mutationFn: ({
+      content,
+      image,
+    }: {
+      content: string;
+      image?: ArrayBuffer;
+    }) => createPd({ content, image }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["PD詳細"] });
     },

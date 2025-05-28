@@ -24,6 +24,7 @@ import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { type PdFormSchema, pdFormSchema } from "../../types";
+import { resizeImage } from "../../utils/resize-image";
 
 interface PdModalProps {
   isOpen: boolean;
@@ -45,7 +46,10 @@ export const PdModal: React.FC<PdModalProps> = ({ isOpen, onClose }) => {
 
   const onSubmit = async (values: PdFormSchema) => {
     try {
-      await createPd({ content: values.content, image: values.image });
+      const image = values.image
+        ? await resizeImage(await values.image.arrayBuffer())
+        : undefined;
+      await createPd({ content: values.content, image });
       toast.success("PDしました!");
 
       form.reset();
