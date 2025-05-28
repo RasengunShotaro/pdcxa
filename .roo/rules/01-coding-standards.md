@@ -1,33 +1,49 @@
-# 全体の規約
-
-- 機密ファイル、環境変数、API キーなどの情報を含むファイルの読み取りや PUSH は禁止
-- 勝手なライブラリのアップデートは禁止
-- 開発していて問題だった箇所、全体プロンプトに追加したほうが良い箇所については、03-temporary.md に追記すること。(後で人間が適切に分別する)
-
-## 開発環境
-
-- Next.JS App Router
-- TypeScript
-- Tailwind CSS
-- Shadcn UI
-- Biome
-
-## デプロイ環境
-
-- Neon(無料プラン)
-- Cloudflare(無料プラン)
-
-# ディレクトリ構成
-
-- 基本的には bulletproof-react のディレクトリ構成に従う
-- 関数はヘキサゴナルアーキテクチャを採用。application, domain, infrastructure の 3 層に分ける
-
 ## コーディング規約
 
-- 基本的には Biome のルールに従う
-- let を使わず const を使う(厳守)
-- shadcn-ui@latest は非推奨のため、shadcn@latest を使用すること
+### 全体的
+
+- テストファーストでの設計
+
+### デザインルール
+
 - 優先して shadcn-ui のコンポーネントを使用すること
+  - shadcn-ui@latest は非推奨のため、shadcn@latest を使用すること
+- 既存のデザインに調和するように、Tailwind CSS のユーティリティクラスを使用すること
+
+### TypeScript
+
+- 基本的には Biome のルールに従う
+- let は使わないといけないときのみ。基本的には const を使う(厳守)
+- Try ~ Catch は下位レイヤーで使わないこと。
+  - 上位レイヤーでエラーをキャッチし、適切なエラーハンドリングを行うこと
+- 型定義はできるだけ詳細に行うこと
+- 各ファイルの冒頭にはコメントで仕様を記述する。
+  - 出力例
+
+```ts
+/**
+ * 2点間のユークリッド距離を計算する
+ **/
+type Point = { x: number; y: number };
+export function distance(a: Point, b: Point): number {
+  return Math.sqrt((a.x - b.x) ** 2 + (a.y - b.y) ** 2);
+}
+```
+
+- TypeScript で関数型ドメインモデリングを行う。class を使わず関数による実装を優先する。代数的データでドメインをモデリングする。
+  - 出力例
+
+```ts
+type FetchResult<T, E> =
+  | {
+      ok: true;
+      data: T;
+    }
+  | {
+      ok: false;
+      error: E;
+    };
+```
 
 ## テスト
 
