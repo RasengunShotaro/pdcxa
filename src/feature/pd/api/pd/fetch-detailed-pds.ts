@@ -1,4 +1,3 @@
-"use server";
 import { fetchUserDetail } from "../fetch-user-detail";
 import { fetchRawPds } from "./fetch-raw-pds";
 
