@@ -1,4 +1,4 @@
-import { fetchPds } from "@/feature/pd/api/pd/fetch-pds";
+import { fetchDetailedPds } from "@/feature/pd/api/pd/fetch-detailed-pds";
 import { PdItemSkeleton } from "@/feature/pd/components/pd/pd-item-skeleton";
 import { PdTimeLine } from "@/feature/pd/components/pd/pd-timeline";
 import {
@@ -14,7 +14,7 @@ export default async function Page() {
 
   await queryClient.prefetchInfiniteQuery({
     queryKey: ["PD詳細", null, null],
-    queryFn: () => fetchPds({}),
+    queryFn: () => fetchDetailedPds({}),
     initialPageParam: undefined as string | undefined,
   });
 

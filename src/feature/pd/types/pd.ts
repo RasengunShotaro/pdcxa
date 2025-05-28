@@ -8,6 +8,13 @@ export type Pd = {
   likes: { userId: string }[];
   isMyPd: boolean;
   imageFileName: string | null;
+  userDetail: {
+    id: string;
+    userFullName: string;
+    imageUrl: string;
+    userName: string;
+  };
+  likeUserNames: string[];
 };
 
 export type RePd = {
@@ -19,4 +26,11 @@ export type RePd = {
   likeCount: number;
   likes: { userId: string }[];
   isMyRePd: boolean;
+  userDetail: {
+    id: string;
+    userFullName: string;
+    imageUrl: string;
+    userName: string;
+  };
+  likeUserNames: string[];
 };

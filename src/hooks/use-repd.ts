@@ -1,7 +1,7 @@
 "use client";
 
 import { createRePd } from "@/feature/pd/api/repd/create-repd";
-import { fetchRePds } from "@/feature/pd/api/repd/fetch-repds";
+import { fetchDetailedRepds } from "@/feature/pd/api/repd/fetch-detailed-repds";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export const useRePd = (pdId: string) => {
@@ -13,10 +13,7 @@ export const useRePd = (pdId: string) => {
     error,
   } = useQuery({
     queryKey: ["RePD詳細", pdId],
-    queryFn: async () => {
-      const pds = await fetchRePds(pdId);
-      return pds;
-    },
+    queryFn: () => fetchDetailedRepds(pdId),
   });
 
   const { mutate: createNewRePd } = useMutation({

@@ -8,15 +8,12 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Linkify } from "@/components/ui/linkify";
-import { useS3Image } from "@/hooks/use-s3-image";
-import { useUserDetail } from "@/hooks/use-user-detail";
 import { MessageCircle } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import type { Pd } from "../../types";
 import { formatDateTime } from "../../utils/format-datetime";
-import { Uint8ArrayToUrl } from "../../utils/uint8ToBase64";
+import { PdImage } from "./pd-image";
 import { PdMenu } from "./pd-menu";
 import { PopOverLike } from "./pop-over-like";
 
@@ -26,11 +23,7 @@ interface PdItemProps {
 }
 
 const PdItem: React.FC<PdItemProps> = ({ pd, like }) => {
-  const userDetail = useUserDetail(pd.userId);
-  const userFullName = `${userDetail?.first_name ?? ""} ${
-    userDetail?.last_name ?? ""
-  }`;
-  const { data: pdImage } = useS3Image(pd.imageFileName);
+  const userDetail = pd.userDetail;
 
   return (
     <Card>
@@ -39,19 +32,22 @@ const PdItem: React.FC<PdItemProps> = ({ pd, like }) => {
           <Link href={`/user/${userDetail?.id}`}>
             <div className="flex items-center space-x-3 hover:bg-accent rounded-lg -m-1 p-1">
               <Avatar className="h-10 w-10">
-                {userDetail?.image_url && (
-                  <AvatarImage src={userDetail.image_url} alt={userFullName} />
+                {userDetail?.imageUrl && (
+                  <AvatarImage
+                    src={userDetail.imageUrl}
+                    alt={userDetail.userFullName}
+                  />
                 )}
                 <AvatarFallback>
-                  {userFullName.charAt(0).toUpperCase()}
+                  {userDetail.userFullName.charAt(0).toUpperCase()}
                 </AvatarFallback>
               </Avatar>
               <div>
                 <CardTitle className="text-base font-bold">
-                  {userFullName}
+                  {userDetail.userFullName}
                 </CardTitle>
                 <p className="text-sm text-muted-foreground">{`@${
-                  userDetail?.username ?? ""
+                  userDetail?.userName ?? ""
                 }`}</p>
               </div>
             </div>
@@ -63,19 +59,7 @@ const PdItem: React.FC<PdItemProps> = ({ pd, like }) => {
         <Linkify>
           <p className="whitespace-pre-wrap break-all">{pd.content}</p>
         </Linkify>
-        {pdImage && (
-          <div className="flex justify-center mt-4">
-            <div className="rounded-lg overflow-hidden">
-              <Image
-                src={Uint8ArrayToUrl(pdImage)}
-                alt="PD Image"
-                width={500}
-                height={500}
-                style={{ maxHeight: "350px", width: "auto", height: "auto" }}
-              />
-            </div>
-          </div>
-        )}
+        <PdImage imageFileName={pd.imageFileName} />
       </CardContent>
       <CardFooter className="p-4 pt-0 pb-0">
         <div className="flex items-center justify-between w-full">
@@ -83,7 +67,7 @@ const PdItem: React.FC<PdItemProps> = ({ pd, like }) => {
             {formatDateTime(pd.createdAt)}
           </span>
           <div className="flex items-center space-x-0.5">
-            <PopOverLike userIds={pd.likes.map((like) => like.userId)} />
+            <PopOverLike userNames={pd.likeUserNames} />
             {like}
             <Link href={`/pd/${pd.id}`}>
               <Button variant="ghost" size="sm" className="space-x-1">

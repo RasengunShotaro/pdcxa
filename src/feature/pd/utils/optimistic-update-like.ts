@@ -1,6 +1,10 @@
 import type { InfiniteData, QueryClient } from "@tanstack/react-query";
-import type { PdsResponse } from "../api/pd/fetch-pds";
 import type { Pd } from "../types";
+
+type InfinitePds = {
+  items: Pd[];
+  nextCursor?: string;
+};
 
 export const optimisticUpdateLike = async ({
   pd,
@@ -14,9 +18,9 @@ export const optimisticUpdateLike = async ({
   myUserId: string;
 }) => {
   const previousPages =
-    queryClient.getQueryData<InfiniteData<PdsResponse>>(queryKey);
+    queryClient.getQueryData<InfiniteData<InfinitePds>>(queryKey);
 
-  queryClient.setQueryData<InfiniteData<PdsResponse>>(queryKey, (oldPages) => {
+  queryClient.setQueryData<InfiniteData<InfinitePds>>(queryKey, (oldPages) => {
     if (!oldPages) return oldPages;
 
     return {
