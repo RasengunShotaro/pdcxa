@@ -1,5 +1,3 @@
-"use server";
-
 import { rePdLikes, rePds as rePdsSchema } from "@/db/schema";
 import { db } from "@/lib/db";
 import { currentUser } from "@clerk/nextjs/server";

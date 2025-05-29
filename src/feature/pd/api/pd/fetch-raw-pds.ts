@@ -1,23 +1,9 @@
-"use server";
-
 import { pdLikes, pds as pdsSchema, rePds } from "@/db/schema";
 import { db } from "@/lib/db";
 import { currentUser } from "@clerk/nextjs/server";
 import { and, desc, eq, sql } from "drizzle-orm";
 
 const PAGE_SIZE = 20;
-
-type RawPd = {
-  id: string;
-  content: string;
-  createdAt: Date;
-  userId: string;
-  likeCount: number;
-  replyCount: number;
-  likes: { userId: string }[];
-  isMyPd: boolean;
-  imageFileName: string | null;
-};
 
 export const fetchRawPds = async ({
   pdId,
