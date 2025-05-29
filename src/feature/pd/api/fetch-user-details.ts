@@ -1,5 +1,3 @@
-"use server";
-
 import { clerkClient } from "@/lib/clerk";
 import { cache } from "react";
 
