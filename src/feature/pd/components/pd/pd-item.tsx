@@ -16,6 +16,7 @@ import { formatDateTime } from "../../utils/format-datetime";
 import { PdImage } from "./pd-image";
 import { PdMenu } from "./pd-menu";
 import { PopOverLike } from "./pop-over-like";
+import { NextLinkLoader } from "@/components/elements/next-link-loader";
 
 interface PdItemProps {
   pd: Pd;
@@ -50,6 +51,7 @@ const PdItem: React.FC<PdItemProps> = ({ pd, like }) => {
                   userDetail?.userName ?? ""
                 }`}</p>
               </div>
+              <NextLinkLoader />
             </div>
           </Link>
           <PdMenu pd={pd} />
@@ -71,6 +73,7 @@ const PdItem: React.FC<PdItemProps> = ({ pd, like }) => {
             {like}
             <Link href={`/pd/${pd.id}`}>
               <Button variant="ghost" size="sm" className="space-x-1">
+                <NextLinkLoader />
                 <MessageCircle className="h-4 w-4" />
                 <span>{pd.replyCount}</span>
               </Button>
