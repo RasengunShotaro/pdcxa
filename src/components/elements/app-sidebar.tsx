@@ -11,6 +11,7 @@ import {
 import { Home, Mail, User } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { NextLinkLoader } from "./next-link-loader";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const menuItems = [
@@ -43,6 +44,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     respect to K.S.
                   </span>
                 </div>
+                <NextLinkLoader />
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
@@ -61,6 +63,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     <Link key={item.href} href={item.href}>
                       <item.icon />
                       <span className="text-base">{item.label}</span>
+                      <NextLinkLoader />
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>

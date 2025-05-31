@@ -4,33 +4,34 @@ import { useQueryClient } from "@tanstack/react-query";
 import { RefreshCcw } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "../ui/button";
-
-type RefetchButtonProps = {
-  onClick: () => void;
-};
-
-const RefetchButton = ({ onClick }: RefetchButtonProps) => {
-  return (
-    <Button variant="ghost" onClick={onClick}>
-      <RefreshCcw />
-    </Button>
-  );
-};
+import { useTransition } from "react";
 
 export const TimeLineRefetchButton = () => {
+  const [isPending, startTransition] = useTransition();
+
   const queryClient = useQueryClient();
   const refetchTimeLine = () => {
-    queryClient.invalidateQueries({
-      queryKey: ["PD詳細"],
+    startTransition(() => {
+      try {
+        queryClient.invalidateQueries({
+          queryKey: ["PD詳細"],
+        });
+        queryClient.invalidateQueries({
+          queryKey: ["ユーザー詳細情報"],
+        });
+        queryClient.invalidateQueries({
+          queryKey: ["RePD詳細"],
+        });
+        toast.success("タイムラインを更新しました！");
+      } catch {
+        toast.error("タイムラインの更新に失敗しました。");
+      }
     });
-    queryClient.invalidateQueries({
-      queryKey: ["ユーザー詳細情報"],
-    });
-    queryClient.invalidateQueries({
-      queryKey: ["RePD詳細"],
-    });
-    toast.success("タイムラインを更新しました！");
   };
 
-  return <RefetchButton onClick={refetchTimeLine} />;
+  return (
+    <Button variant="ghost" onClick={refetchTimeLine}>
+      <RefreshCcw className={`${isPending ? "animate-spin" : ""}`} />
+    </Button>
+  );
 };
