@@ -13,6 +13,7 @@ import { formatDateTime } from "../../utils/format-datetime";
 import { PdMenu } from "../pd/pd-menu";
 import { PopOverLike } from "../pd/pop-over-like";
 import { Like } from "./repd-like";
+import { NextLinkLoader } from "@/components/elements/next-link-loader";
 
 interface PdItemProps {
   rePd: RePd;
@@ -25,7 +26,7 @@ const RePdItem: React.FC<PdItemProps> = ({ rePd }) => {
     <Card key={rePd.id}>
       <CardHeader className="p-4 pt-0 pb-0">
         <div className="flex justify-between items-start">
-          <Link href={`/user/${userDetail?.id}`}>
+          <Link href={`/user/${userDetail?.userName}`}>
             <div className="flex items-center space-x-3 hover:bg-accent rounded-lg -m-1 p-1">
               <Avatar className="h-10 w-10">
                 {userDetail?.imageUrl && (
@@ -46,6 +47,7 @@ const RePdItem: React.FC<PdItemProps> = ({ rePd }) => {
                   userDetail?.userName ?? ""
                 }`}</p>
               </div>
+              <NextLinkLoader />
             </div>
           </Link>
           <PdMenu pd={rePd} />
