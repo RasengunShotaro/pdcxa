@@ -7,7 +7,13 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 
-export const usePd = ({ pdId, userId }: { pdId?: string; userId?: string }) => {
+export const usePd = ({
+  pdId,
+  userName,
+}: {
+  pdId?: string;
+  userName?: string;
+}) => {
   const queryClient = useQueryClient();
 
   const {
@@ -18,9 +24,9 @@ export const usePd = ({ pdId, userId }: { pdId?: string; userId?: string }) => {
     isFetchingNextPage,
     isError,
   } = useInfiniteQuery({
-    queryKey: ["PD詳細", pdId, userId],
+    queryKey: ["PD詳細", pdId, userName],
     queryFn: ({ pageParam: cursor }) =>
-      fetchDetailedPds({ pdId, userId, cursor }),
+      fetchDetailedPds({ pdId, userName, cursor }),
     initialPageParam: undefined as string | undefined,
     getNextPageParam: (lastPage) => lastPage.nextCursor,
   });

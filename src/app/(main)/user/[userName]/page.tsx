@@ -11,7 +11,7 @@ export const runtime = "edge";
 
 interface UserPageProps {
   params: Promise<{
-    id: string;
+    userName: string;
   }>;
 }
 
@@ -20,15 +20,15 @@ export default async function UserPage({ params }: UserPageProps) {
   const queryClient = new QueryClient();
 
   await queryClient.prefetchInfiniteQuery({
-    queryKey: ["PD詳細", null, unwrapParams.id],
-    queryFn: () => fetchDetailedPds({ userId: unwrapParams.id }),
+    queryKey: ["PD詳細", null, unwrapParams.userName],
+    queryFn: () => fetchDetailedPds({ userName: unwrapParams.userName }),
     initialPageParam: undefined as string | undefined,
   });
 
   return (
     <Suspense fallback={<PdItemSkeleton PD数={5} />}>
       <HydrationBoundary state={dehydrate(queryClient)}>
-        <UserPdTimeLine userId={unwrapParams.id} />
+        <UserPdTimeLine userId={unwrapParams.userName} />
       </HydrationBoundary>
     </Suspense>
   );

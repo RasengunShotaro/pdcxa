@@ -12,7 +12,7 @@ interface UserPageProps {
 
 export function UserPdTimeLine({ userId }: UserPageProps) {
   const { pds, isPending, isFetchingNextPage, hasNextPage, fetchNextPage } =
-    usePd({ userId });
+    usePd({ userName: userId });
 
   if (isPending) {
     return <PdItemSkeleton PD数={5} />;
