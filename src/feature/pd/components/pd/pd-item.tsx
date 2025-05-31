@@ -30,7 +30,7 @@ const PdItem: React.FC<PdItemProps> = ({ pd, like }) => {
     <Card>
       <CardHeader className="p-4 pt-0 pb-0">
         <div className="flex justify-between items-start">
-          <Link href={`/user/${userDetail?.id}`}>
+          <Link href={`/user/${userDetail?.userName}`}>
             <div className="flex items-center space-x-3 hover:bg-accent rounded-lg -m-1 p-1">
               <Avatar className="h-10 w-10">
                 {userDetail?.imageUrl && (

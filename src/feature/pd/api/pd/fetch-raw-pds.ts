@@ -2,16 +2,17 @@ import { pdLikes, pds as pdsSchema, rePds } from "@/db/schema";
 import { db } from "@/lib/db";
 import { currentUser } from "@clerk/nextjs/server";
 import { and, desc, eq, sql } from "drizzle-orm";
+import { userNameToId } from "../user-name-to-id";
 
 const PAGE_SIZE = 20;
 
 export const fetchRawPds = async ({
   pdId,
-  userId,
+  userName,
   cursor,
 }: {
   pdId?: string;
-  userId?: string;
+  userName?: string;
   cursor?: string;
 }) => {
   const likesCountSubquery = db
@@ -79,12 +80,13 @@ export const fetchRawPds = async ({
   };
 
   const fetchLatestPds = async ({
-    userId,
+    userName,
     cursor,
   }: {
-    userId?: string;
+    userName?: string;
     cursor?: string;
   }) => {
+    const userId = userName ? (await userNameToId(userName)).id : undefined;
     const conditions = [
       ...(userId ? [eq(pdsSchema.userId, userId)] : []),
       ...(cursor
@@ -113,7 +115,7 @@ export const fetchRawPds = async ({
 
   const fetchedPds = pdId
     ? await fetchSpecificPd(pdId)
-    : await fetchLatestPds({ userId, cursor });
+    : await fetchLatestPds({ userName, cursor });
 
   const currentUserId = (await currentUser())?.id;
   const pds = {

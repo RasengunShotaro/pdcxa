@@ -5,14 +5,14 @@ import { fetchRawPds } from "./fetch-raw-pds";
 
 export const fetchDetailedPds = async ({
   pdId,
-  userId,
+  userName,
   cursor,
 }: {
   pdId?: string;
-  userId?: string;
+  userName?: string;
   cursor?: string;
 }) => {
-  const fetchedPds = await fetchRawPds({ pdId, userId, cursor });
+  const fetchedPds = await fetchRawPds({ pdId, userName, cursor });
 
   const allUserIds = fetchedPds.items.flatMap((pd) => {
     const likeUserIds = pd.likes.map((like) => like.userId);
