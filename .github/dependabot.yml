@@ -1,7 +1,16 @@
 version: 2
+enable-beta-ecosystems: true
 updates:
   - package-ecosystem: "npm"
     directory: "/"
+    schedule:
+      interval: "daily"
+    groups:
+      dependencies:
+        patterns:
+          - "*"
+  - package-ecosystem: "npm"
+    directory: "bff"
     schedule:
       interval: "daily"
     groups:
