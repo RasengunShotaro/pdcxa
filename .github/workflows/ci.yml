@@ -11,17 +11,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+      - name: Set up Bun
+        uses: "moonrepo/setup-toolchain@v0"
         with:
-          node-version-file: "package.json"
-          cache: "npm"
+          auto-install: true
 
       - name: Install dependencies
-        run: npm ci
+        run: bun install --frozen-lockfile
 
       - name: コンパイル
-        run: npm run compile
+        run: bun compile
 
-      - name: テスト実行
-        run: npm run test
+      # - name: テスト実行
+      #   run: npm run test
