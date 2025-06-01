@@ -15,6 +15,7 @@
 - Drizzle
 - Vitest
 - React Query
+- Bun
 
 ## デプロイ環境
 

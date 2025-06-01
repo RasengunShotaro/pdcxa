@@ -47,11 +47,11 @@ type FetchResult<T, E> =
 
 ## テスト
 
-- Vitest を採用
+- Vitest を採用(一部のコマンドは bun:test を使用)
 - テスト名は振る舞いをベースとした言葉を使う。実装の詳細ではなく最終的に得られる結果であるべき。
 - AAA パターンを用いる
 - テストは{テスト対象ファイル名}.test.ts/tsx とし、テスト対象ファイルと同じディレクトリに配置。
 
 ```test command
-npm run test
+bun test
 ```
