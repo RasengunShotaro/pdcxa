@@ -1,10 +1,10 @@
-import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
+import { afterEach, beforeEach, describe } from "vitest";
+import { test, expect, setSystemTime } from "bun:test";
 import { formatDateTime } from "./format-datetime";
 
 describe("投稿の経過時間を計算する", () => {
   beforeEach(() => {
-    vi.useFakeTimers();
-    vi.setSystemTime(new Date("2020-01-01T12:00:00Z"));
+    setSystemTime(new Date("2020-01-01T12:00:00Z"));
   });
 
   test("経過時間が負の数の投稿に対しては、0秒前と扱われる", () => {
@@ -76,6 +76,6 @@ describe("投稿の経過時間を計算する", () => {
   });
 
   afterEach(() => {
-    vi.useRealTimers();
+    setSystemTime();
   });
 });
