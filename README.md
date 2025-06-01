@@ -4,7 +4,7 @@ PDCXA は、PD に関する投稿とフィードバックを共有するプラ�
 
 ## 開発環境のセットアップ
 
-Node の仮想環境管理は [Volta](https://volta.sh/) の利用を推奨([package.json](./package.json) にピン留め済み)
+Bun の仮想環境管理は [Proto](https://moonrepo.dev/proto) の利用を推奨([.prototools](./.prototools) にピン留め済み)
 
 ### 1. リポジトリのクローン
 
@@ -16,7 +16,7 @@ cd pdcxa
 ### 2. 依存関係のインストール
 
 ```bash
-npm install
+bun install
 ```
 
 ### 3. 環境変数の設定
@@ -44,13 +44,13 @@ S3_ENDPOINT=your_s3_endpoint
 ### 4. データベースのマイグレーション
 
 ```bash
-npm run db:push
+bun db:push
 ```
 
 ### 5. 開発サーバーの起動
 
 ```bash
-npm run dev
+bun dev
 ```
 
 開発サーバーは http://localhost:3000 で起動します。
