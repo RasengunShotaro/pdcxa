@@ -15,7 +15,8 @@
     "jsx": "preserve",
     "incremental": true,
     "types": [
-      "@cloudflare/workers-types"
+      "@cloudflare/workers-types",
+      "@types/bun"
     ],
     "plugins": [
       {

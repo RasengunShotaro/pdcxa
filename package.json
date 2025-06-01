@@ -10,7 +10,6 @@
     "drizzle:generate": "drizzle-kit generate --config=./drizzle/drizzle.config.ts",
     "drizzle:push": "drizzle-kit push --config=./drizzle/drizzle.config.ts",
     "drizzle:introspect": "drizzle-kit introspect --config=./drizzle/drizzle.config.ts",
-    "test": "vitest",
     "compile": "tsc"
   },
   "dependencies": {
@@ -59,6 +58,7 @@
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
     "@tailwindcss/postcss": "^4.1.8",
+    "@types/bun": "^1.2.15",
     "@types/node": "^22",
     "@types/react": "^19",
     "@types/react-dom": "^19",
@@ -72,8 +72,5 @@
   },
   "overrides": {
     "path-to-regexp": "6.3.0"
-  },
-  "volta": {
-    "node": "22.15.0"
   }
 }
