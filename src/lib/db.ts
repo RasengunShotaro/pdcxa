@@ -2,5 +2,9 @@ import * as schema from "@/db/schema";
 import { neon } from "@neondatabase/serverless";
 import { drizzle } from "drizzle-orm/neon-http";
 
-const sql = neon(process.env.DATABASE_URL || "");
+if (!process.env.DATABASE_URL) {
+  throw new Error("Neon環境変数が設定されていません。");
+}
+
+const sql = neon(process.env.DATABASE_URL);
 export const db = drizzle(sql, { schema });
