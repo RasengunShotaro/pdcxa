@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "next build",
+    "build-prod": "next build",
     "start": "next start",
     "lint": "next lint",
     "drizzle:generate": "drizzle-kit generate --config=./drizzle/drizzle.config.ts",
@@ -72,8 +72,5 @@
   },
   "overrides": {
     "path-to-regexp": "6.3.0"
-  },
-  "volta": {
-    "node": "22.15.0"
   }
 }
