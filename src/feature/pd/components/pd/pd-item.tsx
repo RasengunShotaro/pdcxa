@@ -1,4 +1,4 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { NextLinkLoader } from "@/components/elements/next-link-loader";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -16,7 +16,7 @@ import { formatDateTime } from "../../utils/format-datetime";
 import { PdImage } from "./pd-image";
 import { PdMenu } from "./pd-menu";
 import { PopOverLike } from "./pop-over-like";
-import { NextLinkLoader } from "@/components/elements/next-link-loader";
+import { UserAvatar } from "./user-avatar";
 
 interface PdItemProps {
   pd: Pd;
@@ -32,17 +32,10 @@ const PdItem: React.FC<PdItemProps> = ({ pd, like }) => {
         <div className="flex justify-between items-start">
           <Link href={`/user/${userDetail?.userName}`}>
             <div className="flex items-center space-x-3 hover:bg-accent rounded-lg -m-1 p-1">
-              <Avatar className="h-10 w-10">
-                {userDetail?.imageUrl && (
-                  <AvatarImage
-                    src={userDetail.imageUrl}
-                    alt={userDetail.userFullName}
-                  />
-                )}
-                <AvatarFallback>
-                  {userDetail.userFullName.charAt(0).toUpperCase()}
-                </AvatarFallback>
-              </Avatar>
+              <UserAvatar
+                imageUrl={userDetail.imageUrl}
+                userFullName={userDetail.userFullName}
+              />
               <div>
                 <CardTitle className="text-base font-bold">
                   {userDetail.userFullName}
