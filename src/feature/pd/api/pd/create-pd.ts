@@ -18,7 +18,7 @@ const createPdSchema = v.object({
 });
 
 export const createPd = actionClient
-  .schema(createPdSchema)
+  .inputSchema(createPdSchema)
   .action(async ({ parsedInput: { content, image } }) => {
     const user = await currentUser();
     if (!user) {
