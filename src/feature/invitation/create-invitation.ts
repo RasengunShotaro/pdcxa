@@ -5,7 +5,7 @@ import { actionClient } from "@/lib/safe-action";
 import { invitationFormSchema } from "./types";
 
 export const createInvitation = actionClient
-  .schema(invitationFormSchema)
+  .inputSchema(invitationFormSchema)
   .action(async ({ parsedInput: { mail } }) => {
     const result = await clerkClient.invitations.createInvitation({
       emailAddress: mail,

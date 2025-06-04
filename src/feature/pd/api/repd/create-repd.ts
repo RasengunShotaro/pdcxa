@@ -16,7 +16,7 @@ const createRePdSchema = v.object({
 });
 
 export const createRePd = actionClient
-  .schema(createRePdSchema)
+  .inputSchema(createRePdSchema)
   .action(async ({ parsedInput: { pdId, content } }) => {
     const user = await currentUser();
     if (!user) {
