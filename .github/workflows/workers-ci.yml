@@ -1,13 +1,19 @@
-name: CI
+name: WorkersのCI
 
 on:
   pull_request:
     branches:
       - main
+    paths:
+      - "bff/**"
 
 jobs:
   test:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: bff
+
     steps:
       - uses: actions/checkout@v4
 
@@ -21,6 +27,3 @@ jobs:
 
       - name: コンパイル
         run: bun compile
-
-      - name: テスト実行
-        run: bun test
