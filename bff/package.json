@@ -11,6 +11,6 @@
     "wasm-image-optimization": "^1.2.30"
   },
   "devDependencies": {
-    "wrangler": "^4.19.1"
+    "wrangler": "^4.19.2"
   }
 }
