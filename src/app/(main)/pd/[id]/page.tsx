@@ -8,8 +8,6 @@ import {
   dehydrate,
 } from "@tanstack/react-query";
 import { Suspense } from "react";
-export const runtime = "edge";
-
 interface PdDetailProps {
   params: Promise<{
     id: string;
