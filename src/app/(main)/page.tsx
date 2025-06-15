@@ -7,8 +7,6 @@ import {
   dehydrate,
 } from "@tanstack/react-query";
 import { Suspense } from "react";
-export const runtime = "edge";
-
 export default async function Page() {
   const queryClient = new QueryClient();
 

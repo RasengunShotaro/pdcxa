@@ -3,8 +3,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Home } from "lucide-react";
 import Link from "next/link";
 
-export const runtime = "edge";
-
 export default function NotFound() {
   const message = `申し訳ありません。
 お探しのページは存在しないか、現在準備中です。`;

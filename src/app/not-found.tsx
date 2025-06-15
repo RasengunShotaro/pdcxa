@@ -4,8 +4,6 @@ import { Home } from "lucide-react";
 import Link from "next/link";
 import MainLayout from "./(main)/layout";
 
-export const runtime = "edge";
-
 export default function NotFound() {
   const message = `申し訳ありません。
 お探しのページは存在しないか、現在準備中です。`;

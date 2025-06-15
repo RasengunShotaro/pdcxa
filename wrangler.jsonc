@@ -1,0 +1,26 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "main": ".open-next/worker.js",
+  "name": "pdcxa",
+  "compatibility_date": "2025-04-13",
+  "compatibility_flags": [
+    "nodejs_compat",
+    "global_fetch_strictly_public",
+  ],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS",
+  },
+  "services": [
+    {
+      "binding": "BFF",
+      "service": "bff",
+    },
+  ],
+    "r2_buckets": [
+    {
+      "binding": "R2",
+      "bucket_name": "prod"
+    }
+  ]
+}

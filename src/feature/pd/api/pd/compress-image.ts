@@ -1,4 +1,4 @@
-import { getRequestContext } from "@cloudflare/next-on-pages";
+import { getCloudflareContext } from "@opennextjs/cloudflare";
 
 export const compressImage = async ({
   image,
@@ -7,7 +7,7 @@ export const compressImage = async ({
   image: ArrayBuffer;
   maxSizeKB?: number;
 }) => {
-  const bff = getRequestContext().env.BFF;
+  const bff = getCloudflareContext().env.BFF;
   const initialQuality = 100;
   const maxSizeBytes = maxSizeKB * 1024;
 
