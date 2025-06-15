@@ -34,11 +34,6 @@ DATABASE_URL=your_neon_database_url
 # ログインページのカスタムエンドポイント、リダイレクト先
 NEXT_PUBLIC_CLERK_SIGN_IN_URL=/signin
 NEXT_PUBLIC_CLERK_SIGN_IN_FORCE_REDIRECT_URL=/
-
-# S3(互換)ストレージ
-S3_ACCESS_KEY=your_s3_access_key
-S3_SECRET_ACCESS_KEY=your_s3_secret_access_key
-S3_ENDPOINT=your_s3_endpoint
 ```
 
 ### 4. データベースのマイグレーション
