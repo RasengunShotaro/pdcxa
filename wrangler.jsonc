@@ -2,7 +2,7 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "main": ".open-next/worker.js",
   "name": "test",
-  "compatibility_date": "2025-06-14",
+  "compatibility_date": "2025-04-13",
   "compatibility_flags": [
     "nodejs_compat",
     "global_fetch_strictly_public",
@@ -16,5 +16,11 @@
       "binding": "BFF",
       "service": "bff",
     },
+  ],
+    "r2_buckets": [
+    {
+      "binding": "R2",
+      "bucket_name": "prod"
+    }
   ]
 }

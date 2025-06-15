@@ -8,6 +8,7 @@ node_modules
 !.yarn/releases
 !.yarn/versions
 .open-next
+.wrangler
 
 # testing
 /coverage
