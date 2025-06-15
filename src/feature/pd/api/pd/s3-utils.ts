@@ -1,29 +1,5 @@
 "use server";
-
-import {
-  GetObjectCommand,
-  PutObjectCommand,
-  S3Client,
-} from "@aws-sdk/client-s3";
-
-const accessKey = process.env.S3_ACCESS_KEY;
-const secretAccessKey = process.env.S3_SECRET_ACCESS_KEY;
-const endpoint = process.env.S3_ENDPOINT;
-const bucketName = process.env.S3_BUCKET_NAME;
-
-if (!accessKey || !secretAccessKey || !endpoint || !bucketName) {
-  throw new Error("S3の環境変数が設定されていません");
-}
-
-const s3 = new S3Client({
-  region: "auto",
-  endpoint,
-  credentials: {
-    accessKeyId: accessKey,
-    secretAccessKey: secretAccessKey,
-  },
-  requestChecksumCalculation: "WHEN_REQUIRED",
-});
+import { getCloudflareContext } from "@opennextjs/cloudflare";
 
 export const uploadToS3 = async ({
   body,
@@ -38,26 +14,21 @@ export const uploadToS3 = async ({
 }) => {
   const fullFileName = `${fileName}.${extension}`;
 
-  const command = new PutObjectCommand({
-    Bucket: bucketName,
-    Key: fullFileName,
-    Body: body,
-    ContentType: contentType,
+  const R2 = getCloudflareContext().env.R2;
+  await R2.put(fullFileName, body, {
+    httpMetadata: {
+      contentType,
+    },
   });
-
-  await s3.send(command);
 
   return fullFileName;
 };
 
 export const getFromS3 = async (fullFileName: string) => {
-  const command = new GetObjectCommand({
-    Bucket: bucketName,
-    Key: fullFileName,
-  });
-  const response = await s3.send(command);
+  const R2 = getCloudflareContext().env.R2;
+  const response = await R2.get(fullFileName);
 
-  const data = await response.Body?.transformToByteArray();
+  const data = await new Response(response?.body).arrayBuffer();
 
   if (!data) {
     throw new Error("画像データ取得に失敗しました");

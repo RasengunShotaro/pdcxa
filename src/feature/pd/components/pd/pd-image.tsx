@@ -1,4 +1,4 @@
-import { Uint8ArrayToUrl } from "@/feature/pd/utils/uint8ToBase64";
+import { ArrayBufferToUrl } from "@/feature/pd/utils/array-buffer-to-url";
 import { useS3Image } from "@/hooks/use-s3-image";
 import Image from "next/image";
 
@@ -15,7 +15,7 @@ export const PdImage = ({ imageFileName }: PdImageProps) => {
         <div className="flex justify-center mt-4">
           <div className="rounded-lg overflow-hidden">
             <Image
-              src={Uint8ArrayToUrl(pdImage)}
+              src={ArrayBufferToUrl(pdImage)}
               alt="PD Image"
               width={500}
               height={500}
