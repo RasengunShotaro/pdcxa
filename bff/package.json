@@ -7,7 +7,7 @@
     "compile": "tsc --noEmit"
   },
   "dependencies": {
-    "@cloudflare/workers-types": "^4.20250613.0",
+    "@cloudflare/workers-types": "^4.20250614.0",
     "wasm-image-optimization": "^1.2.30"
   },
   "devDependencies": {
