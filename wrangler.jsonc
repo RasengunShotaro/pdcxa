@@ -1,26 +1,43 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "main": ".open-next/worker.js",
-  "name": "pdcxa",
+  "assets": {
+    "binding": "ASSETS",
+    "directory": ".open-next/assets"
+  },
   "compatibility_date": "2025-04-13",
   "compatibility_flags": [
     "nodejs_compat",
-    "global_fetch_strictly_public",
+    "global_fetch_strictly_public"
   ],
-  "assets": {
-    "directory": ".open-next/assets",
-    "binding": "ASSETS",
+  "env": {
+    "dev": {
+      "name": "pdcxa-dev",
+      "r2_buckets": [
+        {
+          "binding": "R2",
+          "bucket_name": "dev"
+        }
+      ],
+      "services": [
+        {
+          "binding": "BFF",
+          "service": "bff"
+        }
+      ]
+    }
   },
-  "services": [
-    {
-      "binding": "BFF",
-      "service": "bff",
-    },
-  ],
-    "r2_buckets": [
+  "main": ".open-next/worker.js",
+  "name": "pdcxa",
+  "r2_buckets": [
     {
       "binding": "R2",
       "bucket_name": "prod"
+    }
+  ],
+  "services": [
+    {
+      "binding": "BFF",
+      "service": "bff"
     }
   ]
 }
