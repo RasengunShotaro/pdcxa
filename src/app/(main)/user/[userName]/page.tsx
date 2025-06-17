@@ -7,8 +7,6 @@ import {
   dehydrate,
 } from "@tanstack/react-query";
 import { Suspense } from "react";
-export const runtime = "edge";
-
 interface UserPageProps {
   params: Promise<{
     userName: string;

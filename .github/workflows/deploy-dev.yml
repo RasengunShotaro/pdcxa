@@ -1,0 +1,30 @@
+name: 自動デプロイ(Dev環境)
+
+on:
+  push:
+    branches-ignore:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: Dev
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Bun
+        uses: "moonrepo/setup-toolchain@v0"
+        with:
+          auto-install: true
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: デプロイ
+        run: bun run deploy:dev
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLERK_SECRET_KEY: ${{ secrets.CLERK_SECRET_KEY }}
+          NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
