@@ -1,9 +1,12 @@
 {
   "$schema": "https://biomejs.dev/schemas/2.0.0/schema.json",
   "assist": {
+    "enabled": true,
     "actions": {
       "source": {
-        "organizeImports": "on"
+        "organizeImports": "on",
+        "useSortedAttributes": "on",
+        "useSortedKeys": "on"
       }
     }
   },
@@ -26,10 +29,10 @@
         "useNumberNamespace": "error",
         "noInferrableTypes": "error",
         "noUselessElse": "error"
-      },
-      "domains": {
-        "next": "recommended"
       }
+    },
+    "domains": {
+      "next": "recommended"
     }
   },
   "formatter": {
@@ -45,16 +48,6 @@
   "javascript": {
     "formatter": {
       "quoteStyle": "double"
-    },
-    "assist": {
-      "enabled": true,
-      "actions": {
-        "source": {
-          "organizeImports": "on",
-          "useSortedAttributes": "on",
-          "useSortedKeys": "on"
-        }
-      }
     }
   },
   "json": {
