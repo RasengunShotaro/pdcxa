@@ -28,5 +28,5 @@
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "drizzle/drizzle.config.ts", "global.d.ts"],
-  "exclude": ["node_modules","bff"]
+  "exclude": ["node_modules","bff","backend"]
 }
