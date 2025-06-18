@@ -1,7 +1,5 @@
 import { auth } from "@clerk/nextjs/server";
 
-export const runtime = "edge";
-
 export default async function UserPage() {
   const token = await (await auth()).getToken();
 
