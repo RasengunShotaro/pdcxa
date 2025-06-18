@@ -1,7 +1,7 @@
-import { Button } from "@/components/ui/button";
-import { usePdLike } from "@/hooks/use-pd-like";
 import { Heart } from "lucide-react";
 import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import { usePdLike } from "@/hooks/use-pd-like";
 import type { Pd } from "../../types";
 
 export const Like = ({
@@ -29,11 +29,11 @@ export const Like = ({
 
   return (
     <Button
-      variant="ghost"
-      size="sm"
       className={`space-x-1 ${isLiked ? "!text-red-500" : ""}`}
-      onClick={handleClick}
       disabled={pd.isMyPd}
+      onClick={handleClick}
+      size="sm"
+      variant="ghost"
     >
       <Heart className="h-4 w-4" />
       <span>{pd.likeCount}</span>

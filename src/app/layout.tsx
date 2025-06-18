@@ -1,5 +1,5 @@
-import { Providers } from "@/lib/providers";
 import type { Metadata } from "next";
+import { Providers } from "@/lib/providers";
 import "./globals.css";
 import { BIZ_UDPGothic } from "next/font/google";
 
@@ -20,7 +20,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ja" className={bizUdpGothic.className} suppressHydrationWarning>
+    <html className={bizUdpGothic.className} lang="ja" suppressHydrationWarning>
       <body>
         <Providers>{children}</Providers>
       </body>

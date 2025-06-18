@@ -1,7 +1,7 @@
-import { ColorModeSwitcher } from "@/components/elements/color-mode-switcher";
-import { TextAnimate } from "@/components/ui/text-animate";
 import Image from "next/image";
 import Link from "next/link";
+import { ColorModeSwitcher } from "@/components/elements/color-mode-switcher";
+import { TextAnimate } from "@/components/ui/text-animate";
 
 const backgroundImages = [
   "/bg-1.webp",
@@ -27,42 +27,42 @@ export default function AuthLayout({
         <ColorModeSwitcher />
       </div>
       <div className="fixed top-8 left-8 z-10">
-        <Link href="/" className=" pointer-events-auto">
+        <Link className=" pointer-events-auto" href="/">
           <Image
-            src="/pdcxa.svg"
             alt="PDCXA"
-            width={170}
-            height={40}
             className="invert"
+            height={40}
             priority
+            src="/pdcxa.svg"
+            width={170}
           />
         </Link>
         <TextAnimate
           animation="blurInUp"
           by="character"
-          duration={1}
           className="pl-1 text-white/80 text-sm font-light tracking-wider pointer-events-none"
+          duration={1}
         >
           New PD, New World.
         </TextAnimate>
       </div>
       <div className="fixed inset-0 lg:hidden">
         <Image
-          src={backgroundImage}
           alt="スマホ背景"
-          fill
           className="object-cover"
+          fill
           priority
+          src={backgroundImage}
         />
         <div className="absolute inset-0 bg-black/40" />
       </div>
       <div className="relative hidden lg:block">
         <Image
-          src={backgroundImage}
           alt="PC背景"
-          fill
           className="object-cover"
+          fill
           priority
+          src={backgroundImage}
         />
         <div className="fixed inset-0 bg-gradient-to-t from-background/50 via-transparent to-transparent" />
       </div>

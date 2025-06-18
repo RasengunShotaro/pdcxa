@@ -31,7 +31,7 @@ export const PdDetail = ({ pdId }: PdDetailProps) => {
 
   return (
     <div className="flex-auto max-w-2xl">
-      <PdItem pd={pd} like={<Like pd={pd} pdId={pdId} />} />
+      <PdItem like={<Like pd={pd} pdId={pdId} />} pd={pd} />
       <div className="mt-4 space-y-4">
         <RePdList rePds={rePds} />
       </div>

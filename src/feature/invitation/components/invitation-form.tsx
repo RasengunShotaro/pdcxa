@@ -1,5 +1,10 @@
 "use client";
 
+import { valibotResolver } from "@hookform/resolvers/valibot";
+import { Loader2 } from "lucide-react";
+import { useTransition } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -14,11 +19,6 @@ import {
   type InvitationFormSchema,
   invitationFormSchema,
 } from "@/feature/invitation/types";
-import { valibotResolver } from "@hookform/resolvers/valibot";
-import { Loader2 } from "lucide-react";
-import { useTransition } from "react";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 
 export const InvitationForm = () => {
   const [isPending, startTransition] = useTransition();
@@ -46,13 +46,13 @@ export const InvitationForm = () => {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
         <FormField
           control={form.control}
           name="mail"
           render={({ field }) => (
             <div>
-              <Label htmlFor="email" className="block text-sm font-medium mb-1">
+              <Label className="block text-sm font-medium mb-1" htmlFor="email">
                 メールアドレス
               </Label>
               <FormControl>
@@ -62,7 +62,7 @@ export const InvitationForm = () => {
             </div>
           )}
         />
-        <Button type="submit" className="w-full" disabled={isPending}>
+        <Button className="w-full" disabled={isPending} type="submit">
           {isPending && <Loader2 className="animate-spin" />}
           PDCXAの世界に招待
         </Button>

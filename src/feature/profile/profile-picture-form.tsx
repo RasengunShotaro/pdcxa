@@ -1,5 +1,10 @@
 "use client";
 
+import { useUser } from "@clerk/nextjs";
+import { valibotResolver } from "@hookform/resolvers/valibot";
+import { useTransition } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import {
   Form,
@@ -7,11 +12,6 @@ import {
   FormField,
   FormMessage,
 } from "@/components/ui/form";
-import { useUser } from "@clerk/nextjs";
-import { valibotResolver } from "@hookform/resolvers/valibot";
-import { useTransition } from "react";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 import { type ImageFormSchema, imageFormSchema } from "./types";
 
 export function ProfilePictureForm() {
@@ -42,8 +42,8 @@ export function ProfilePictureForm() {
   return (
     <Form {...imageForm}>
       <form
-        onSubmit={imageForm.handleSubmit(onSubmit)}
         className="flex flex-col items-center justify-center p-6"
+        onSubmit={imageForm.handleSubmit(onSubmit)}
       >
         <FormField
           control={imageForm.control}
@@ -57,8 +57,8 @@ export function ProfilePictureForm() {
               >
                 <Avatar className="w-64 h-64">
                   <AvatarImage
-                    src={user.imageUrl}
                     alt={user.fullName || "プロフィール"}
+                    src={user.imageUrl}
                   />
                 </Avatar>
                 <div className="absolute inset-0 bg-black/50 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
@@ -67,7 +67,6 @@ export function ProfilePictureForm() {
                   </span>
                 </div>
                 <input
-                  type="file"
                   accept="image/*"
                   className="hidden"
                   disabled={isPending}
@@ -78,6 +77,7 @@ export function ProfilePictureForm() {
                       imageForm.handleSubmit(onSubmit)();
                     }
                   }}
+                  type="file"
                 />
               </label>
             </FormControl>
