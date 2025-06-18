@@ -1,9 +1,7 @@
 export const formatDateTime = (date: Date): string => {
   const typeSafeDate = date instanceof Date ? date : new Date(date); // 弾けないので、型ガードを入れる
 
-  const seconds = Math.floor(
-    (new Date().getTime() - typeSafeDate.getTime()) / 1000
-  );
+  const seconds = Math.floor((Date.now() - typeSafeDate.getTime()) / 1000);
 
   if (seconds < 0) return "0秒前"; // サーバー側との時間差で、投稿直後に負の数となる場合があるため
   if (seconds < 60) return `${seconds}秒前`;

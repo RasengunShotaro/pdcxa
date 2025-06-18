@@ -1,7 +1,7 @@
-import { Button } from "@/components/ui/button";
-import { useRePdLike } from "@/hooks/use-repd-like";
 import { Heart } from "lucide-react";
 import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import { useRePdLike } from "@/hooks/use-repd-like";
 import type { RePd } from "../../types";
 
 export const Like = ({ rePd }: { rePd: RePd }) => {
@@ -17,11 +17,11 @@ export const Like = ({ rePd }: { rePd: RePd }) => {
 
   return (
     <Button
-      variant="ghost"
-      size="sm"
       className={`space-x-1 ${isLiked ? "!text-red-500" : ""}`}
-      onClick={handleClick}
       disabled={rePd.isMyRePd}
+      onClick={handleClick}
+      size="sm"
+      variant="ghost"
     >
       <Heart className="h-4 w-4" />
       <span>{rePd.likeCount}</span>

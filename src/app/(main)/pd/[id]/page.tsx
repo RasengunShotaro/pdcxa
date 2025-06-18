@@ -1,13 +1,14 @@
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from "@tanstack/react-query";
+import { Suspense } from "react";
 import { fetchDetailedPds } from "@/feature/pd/api/pd/fetch-detailed-pds";
 import { fetchDetailedRepds } from "@/feature/pd/api/repd/fetch-detailed-repds";
 import { PdDetail } from "@/feature/pd/components/pd/pd-detail";
 import { PdItemSkeleton } from "@/feature/pd/components/pd/pd-item-skeleton";
-import {
-  HydrationBoundary,
-  QueryClient,
-  dehydrate,
-} from "@tanstack/react-query";
-import { Suspense } from "react";
+
 interface PdDetailProps {
   params: Promise<{
     id: string;

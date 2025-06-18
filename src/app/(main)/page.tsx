@@ -1,12 +1,13 @@
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from "@tanstack/react-query";
+import { Suspense } from "react";
 import { fetchDetailedPds } from "@/feature/pd/api/pd/fetch-detailed-pds";
 import { PdItemSkeleton } from "@/feature/pd/components/pd/pd-item-skeleton";
 import { PdTimeLine } from "@/feature/pd/components/pd/pd-timeline";
-import {
-  HydrationBoundary,
-  QueryClient,
-  dehydrate,
-} from "@tanstack/react-query";
-import { Suspense } from "react";
+
 export default async function Page() {
   const queryClient = new QueryClient();
 

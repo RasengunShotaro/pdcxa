@@ -1,5 +1,5 @@
+import { expect, setSystemTime, test } from "bun:test";
 import { afterEach, beforeEach, describe } from "vitest";
-import { test, expect, setSystemTime } from "bun:test";
 import { formatDateTime } from "./format-datetime";
 
 describe("投稿の経過時間を計算する", () => {

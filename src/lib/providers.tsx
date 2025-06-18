@@ -1,16 +1,16 @@
 "use client";
-import { Toaster } from "@/components/ui/sonner";
 import { jaJP } from "@clerk/localizations";
 import { ClerkProvider } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
 import {
+  isServer,
   QueryClient,
   QueryClientProvider,
-  isServer,
 } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { ThemeProvider } from "next-themes";
 import type { ReactNode } from "react";
+import { Toaster } from "@/components/ui/sonner";
 
 const makeQueryClient = () => {
   return new QueryClient({
@@ -27,7 +27,7 @@ const makeQueryClient = () => {
   });
 };
 
-let browserQueryClient: QueryClient | undefined = undefined;
+let browserQueryClient: QueryClient | undefined;
 
 const getQueryClient = () => {
   if (isServer) {
@@ -42,17 +42,17 @@ export function Providers({ children }: { children: ReactNode }) {
 
   return (
     <ClerkProvider
-      localization={jaJP}
       appearance={{
         baseTheme: dark,
       }}
+      localization={jaJP}
     >
       <QueryClientProvider client={queryClient}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
-          enableSystem
           disableTransitionOnChange
+          enableSystem
         >
           <Toaster position="top-center" />
           {children}

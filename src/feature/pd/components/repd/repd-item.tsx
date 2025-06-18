@@ -1,3 +1,5 @@
+import Link from "next/link";
+import { NextLinkLoader } from "@/components/elements/next-link-loader";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Card,
@@ -8,12 +10,10 @@ import {
 } from "@/components/ui/card";
 import { Linkify } from "@/components/ui/linkify";
 import type { RePd } from "@/feature/pd/types";
-import Link from "next/link";
 import { formatDateTime } from "../../utils/format-datetime";
 import { PdMenu } from "../pd/pd-menu";
 import { PopOverLike } from "../pd/pop-over-like";
 import { Like } from "./repd-like";
-import { NextLinkLoader } from "@/components/elements/next-link-loader";
 
 interface PdItemProps {
   rePd: RePd;
@@ -31,8 +31,8 @@ const RePdItem: React.FC<PdItemProps> = ({ rePd }) => {
               <Avatar className="h-10 w-10">
                 {userDetail?.imageUrl && (
                   <AvatarImage
-                    src={userDetail.imageUrl}
                     alt={userDetail.userFullName}
+                    src={userDetail.imageUrl}
                   />
                 )}
                 <AvatarFallback>

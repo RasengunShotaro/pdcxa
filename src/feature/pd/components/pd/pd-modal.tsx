@@ -1,5 +1,11 @@
 "use client";
 
+import { valibotResolver } from "@hookform/resolvers/valibot";
+import { Image, Loader2, MessageCircle, X } from "lucide-react";
+import NextImage from "next/image";
+import { useRef, useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -17,12 +23,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { usePd } from "@/hooks/use-pd";
-import { valibotResolver } from "@hookform/resolvers/valibot";
-import { Image, Loader2, MessageCircle, X } from "lucide-react";
-import NextImage from "next/image";
-import { useRef, useState } from "react";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 import { type PdFormSchema, pdFormSchema } from "../../types";
 import { resizeImage } from "../../utils/resize-image";
 
@@ -64,14 +64,14 @@ export const PdModal: React.FC<PdModalProps> = ({ isOpen, onClose }) => {
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
+    <Dialog onOpenChange={onClose} open={isOpen}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>新規PD</DialogTitle>
           <DialogDescription>今の気持ちをPDしましょう</DialogDescription>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+          <form className="space-y-8" onSubmit={form.handleSubmit(onSubmit)}>
             <FormField
               control={form.control}
               name="content"
@@ -95,10 +95,8 @@ export const PdModal: React.FC<PdModalProps> = ({ isOpen, onClose }) => {
                   <>
                     <FormControl>
                       <Input
-                        type="file"
                         accept="image/*"
                         className="hidden"
-                        ref={fileInputRef}
                         onChange={(e) => {
                           const file = e.target.files?.[0];
                           if (file) {
@@ -107,27 +105,27 @@ export const PdModal: React.FC<PdModalProps> = ({ isOpen, onClose }) => {
                             setPreviewUrl(url);
                           }
                         }}
+                        ref={fileInputRef}
+                        type="file"
                       />
                     </FormControl>
                     {previewUrl && (
                       <div className="relative w-fit mx-auto">
                         <div className="relative">
                           <NextImage
-                            src={previewUrl}
                             alt="プレビュー"
                             className="rounded-md"
-                            width={150}
                             height={150}
+                            src={previewUrl}
                             style={{
                               maxHeight: "150px",
                               width: "auto",
                               height: "auto",
                             }}
+                            width={150}
                           />
                           <div className="absolute top-1 right-1">
                             <Button
-                              type="button"
-                              variant="ghost"
                               className="h-6 w-6 p-1 bg-black/50 rounded-full text-white hover:bg-black/70"
                               onClick={() => {
                                 onChange(undefined);
@@ -139,6 +137,8 @@ export const PdModal: React.FC<PdModalProps> = ({ isOpen, onClose }) => {
                                   fileInputRef.current.value = "";
                                 }
                               }}
+                              type="button"
+                              variant="ghost"
                             >
                               <X />
                             </Button>
@@ -154,9 +154,9 @@ export const PdModal: React.FC<PdModalProps> = ({ isOpen, onClose }) => {
             <div className="flex justify-between items-center w-full mt-4">
               <div>
                 <Button
+                  onClick={() => fileInputRef.current?.click()}
                   type="button"
                   variant="outline"
-                  onClick={() => fileInputRef.current?.click()}
                 >
                   <Image />
                 </Button>

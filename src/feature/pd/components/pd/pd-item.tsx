@@ -1,3 +1,6 @@
+import { MessageCircle } from "lucide-react";
+import Link from "next/link";
+import type { ReactNode } from "react";
 import { NextLinkLoader } from "@/components/elements/next-link-loader";
 import { Button } from "@/components/ui/button";
 import {
@@ -8,9 +11,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Linkify } from "@/components/ui/linkify";
-import { MessageCircle } from "lucide-react";
-import Link from "next/link";
-import type { ReactNode } from "react";
 import type { Pd } from "../../types";
 import { formatDateTime } from "../../utils/format-datetime";
 import { PdImage } from "./pd-image";
@@ -65,7 +65,7 @@ const PdItem: React.FC<PdItemProps> = ({ pd, like }) => {
             <PopOverLike userNames={pd.likeUserNames} />
             {like}
             <Link href={`/pd/${pd.id}`}>
-              <Button variant="ghost" size="sm" className="space-x-1">
+              <Button className="space-x-1" size="sm" variant="ghost">
                 <NextLinkLoader />
                 <MessageCircle className="h-4 w-4" />
                 <span>{pd.replyCount}</span>

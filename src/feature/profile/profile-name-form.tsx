@@ -1,5 +1,11 @@
 "use client";
 
+import { useUser } from "@clerk/nextjs";
+import { valibotResolver } from "@hookform/resolvers/valibot";
+import { Loader2 } from "lucide-react";
+import { useEffect, useTransition } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -9,12 +15,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useUser } from "@clerk/nextjs";
-import { valibotResolver } from "@hookform/resolvers/valibot";
-import { Loader2 } from "lucide-react";
-import { useEffect, useTransition } from "react";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 import { type NameFormSchema, nameFormSchema } from "./types";
 export function ProfileNameForm() {
   const { user } = useUser();
@@ -57,7 +57,7 @@ export function ProfileNameForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onNameSubmit)} className="w-full">
+      <form className="w-full" onSubmit={form.handleSubmit(onNameSubmit)}>
         <div className="flex flex-auto gap-4 items-end">
           <FormField
             control={form.control}
@@ -65,8 +65,8 @@ export function ProfileNameForm() {
             render={({ field }) => (
               <div>
                 <Label
-                  htmlFor="firstName"
                   className="block text-sm font-medium mb-1"
+                  htmlFor="firstName"
                 >
                   First Name
                 </Label>
@@ -82,8 +82,8 @@ export function ProfileNameForm() {
             render={({ field }) => (
               <div>
                 <Label
-                  htmlFor="lastName"
                   className="block text-sm font-medium mb-1"
+                  htmlFor="lastName"
                 >
                   Last Name
                 </Label>
@@ -93,7 +93,7 @@ export function ProfileNameForm() {
               </div>
             )}
           />
-          <Button type="submit" disabled={isPending}>
+          <Button disabled={isPending} type="submit">
             {isPending && <Loader2 className="animate-spin" />}
             変更
           </Button>

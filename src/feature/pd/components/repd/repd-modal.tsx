@@ -1,5 +1,9 @@
 "use client";
 
+import { valibotResolver } from "@hookform/resolvers/valibot";
+import { MessageCircle } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -17,10 +21,6 @@ import {
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
 import { useRePd } from "@/hooks/use-repd";
-import { valibotResolver } from "@hookform/resolvers/valibot";
-import { MessageCircle } from "lucide-react";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 import { type PdFormSchema, pdFormSchema } from "../../types";
 
 interface RePdModalProps {
@@ -54,7 +54,7 @@ export const RePdModal: React.FC<RePdModalProps> = ({
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
+    <Dialog onOpenChange={onClose} open={isOpen}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>RePD</DialogTitle>
@@ -63,7 +63,7 @@ export const RePdModal: React.FC<RePdModalProps> = ({
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+          <form className="space-y-8" onSubmit={form.handleSubmit(onSubmit)}>
             <FormField
               control={form.control}
               name="content"
@@ -80,7 +80,7 @@ export const RePdModal: React.FC<RePdModalProps> = ({
               )}
             />
             <DialogFooter>
-              <Button type="button" variant="outline" onClick={onClose}>
+              <Button onClick={onClose} type="button" variant="outline">
                 キャンセル
               </Button>
               <Button type="submit">
