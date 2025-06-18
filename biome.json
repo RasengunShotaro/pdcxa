@@ -1,27 +1,88 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
-  "organizeImports": {
-    "enabled": true
-  },
-  "linter": {
-    "enabled": true,
-    "rules": {
-      "recommended": true,
-      "correctness": {
-        "noUnusedImports": "warn",
-        "noUnusedVariables": "warn"
+  "$schema": "https://biomejs.dev/schemas/2.0.0/schema.json",
+  "assist": {
+    "actions": {
+      "source": {
+        "organizeImports": "on",
+        "useSortedAttributes": "on"
       }
-    }
+    },
+    "enabled": true,
+    "includes": [
+      "**",
+      "!**/node_modules/**",
+      "!**/.next/**",
+      "!**/.wrangler/**",
+      "!**/.open-next/**"
+    ]
   },
   "formatter": {
     "enabled": true,
-    "ignore": [],
+    "includes": [
+      "**",
+      "!**/node_modules/**",
+      "!**/.next/**",
+      "!**/.open-next/**",
+      "!**/.wrangler/**"
+    ],
     "indentStyle": "space",
     "indentWidth": 2
   },
   "javascript": {
     "formatter": {
       "quoteStyle": "double"
+    }
+  },
+  "linter": {
+    "domains": {
+      "next": "recommended"
+    },
+    "enabled": true,
+    "includes": [
+      "**",
+      "!**/node_modules/**",
+      "!**/.next/**",
+      "!**/.open-next/**",
+      "!**/.wrangler/**"
+    ],
+    "rules": {
+      "complexity": {
+        "noForEach": "error"
+      },
+      "correctness": {
+        "noUnusedImports": {
+          "fix": "safe",
+          "level": "error"
+        },
+        "noUnusedVariables": {
+          "fix": "safe",
+          "level": "error",
+          "options": {}
+        }
+      },
+      "recommended": true,
+      "style": {
+        "noInferrableTypes": "error",
+        "noParameterAssign": "error",
+        "noUnusedTemplateLiteral": "error",
+        "noUselessElse": {
+          "fix": "safe",
+          "level": "error"
+        },
+        "useAsConstAssertion": "error",
+        "useDefaultParameterLast": "error",
+        "useEnumInitializers": "error",
+        "useNumberNamespace": "error",
+        "useSelfClosingElements": {
+          "fix": "safe",
+          "level": "error",
+          "options": {}
+        },
+        "useSingleVarDeclarator": {
+          "fix": "safe",
+          "level": "error"
+        }
+      }
     }
   }
 }
