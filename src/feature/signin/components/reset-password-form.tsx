@@ -1,5 +1,12 @@
 "use client";
 
+import { useSignIn } from "@clerk/nextjs";
+import { valibotResolver } from "@hookform/resolvers/valibot";
+import { Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useTransition } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -10,13 +17,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useSignIn } from "@clerk/nextjs";
-import { valibotResolver } from "@hookform/resolvers/valibot";
-import { Loader2 } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useTransition } from "react";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 import { type CheckEmailFormSchema, checkEmailFormSchema } from "../types";
 
 export function ResetPasswordForm() {

@@ -1,4 +1,4 @@
 export {
-  invitationFormSchema,
   type InvitationFormSchema,
+  invitationFormSchema,
 } from "./invitation-form";

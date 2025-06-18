@@ -17,7 +17,7 @@ export const PopOverLike = ({ userNames }: PopOverLikeProps) => {
           <>
             <div className="text-lg font-bold">いいねしたユーザー</div>
             {userNames.map((userName) => (
-              <div key={userName} className="text-muted-foreground font-light">
+              <div className="text-muted-foreground font-light" key={userName}>
                 {userName}
               </div>
             ))}

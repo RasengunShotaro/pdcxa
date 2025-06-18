@@ -1,10 +1,10 @@
+import { Copy, MoreHorizontal } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Copy, MoreHorizontal } from "lucide-react";
 import type { Pd, RePd } from "../../types";
 import { handleCopy } from "../../utils/clipboard-copy";
 

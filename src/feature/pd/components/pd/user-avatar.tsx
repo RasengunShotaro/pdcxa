@@ -17,7 +17,7 @@ export const UserAvatar = ({
 
   return (
     <Avatar className="h-10 w-10">
-      <AvatarImage src={imageSrc} alt={userFullName} />
+      <AvatarImage alt={userFullName} src={imageSrc} />
       <AvatarFallback>{userFullName.charAt(0).toUpperCase()}</AvatarFallback>
     </Avatar>
   );

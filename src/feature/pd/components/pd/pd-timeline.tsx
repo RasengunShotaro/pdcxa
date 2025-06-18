@@ -19,7 +19,7 @@ export function PdTimeLine() {
     <div className="flex-auto max-w-2xl">
       <div className="space-y-4">
         {pds.map((pd) => (
-          <PdItem key={pd.id} pd={pd} like={<Like pd={pd} />} />
+          <PdItem key={pd.id} like={<Like pd={pd} />} pd={pd} />
         ))}
       </div>
       <div className="mt-4 flex justify-center">
