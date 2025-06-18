@@ -35,7 +35,9 @@
   "formatter": {
     "enabled": true,
     "includes": [
-      "**"
+      "**",
+      "!**/node_modules/**",
+      "!**/.next/**"
     ],
     "indentStyle": "space",
     "indentWidth": 2
