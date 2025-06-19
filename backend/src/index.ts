@@ -4,33 +4,19 @@ import { Hono, type MiddlewareHandler } from "hono";
 import { cors } from "hono/cors";
 import * as v from "valibot";
 
+type ErrorResponse = {
+  message: string;
+};
+
 const schema = v.object({
   emailAddress: v.string(),
 });
-
-export const エラーレスポンスMiddleware: MiddlewareHandler = async (
-  _,
-  next
-) => {
-  try {
-    await next();
-  } catch (err) {
-    if (err instanceof Response) {
-      return err;
-    }
-  }
-};
 
 export const ログイン状態Middleware: MiddlewareHandler = async (c, next) => {
   const auth = getAuth(c);
   const userId = auth?.userId;
   if (!userId) {
-    throw c.json(
-      {
-        message: "ログインしていません。",
-      },
-      400
-    );
+    return c.json<ErrorResponse>({ message: "ログインしていないです" }, 401);
   }
   await next();
 };
@@ -43,8 +29,10 @@ app.use("*", async (c, next) => {
   });
   return corsMiddlewareHandler(c, next);
 });
-app.use("*", エラーレスポンスMiddleware);
 app.use("*", ログイン状態Middleware);
+app.onError((エラー, c) => {
+  return c.json<ErrorResponse>({ message: エラー.message }, 500);
+});
 
 const invitationApp = new Hono().post(
   "/create",
