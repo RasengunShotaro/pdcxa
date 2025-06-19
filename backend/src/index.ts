@@ -3,9 +3,7 @@ import { Hono } from "hono";
 import { cors } from "hono/cors";
 
 const app = new Hono();
-
 app.use("*", clerkMiddleware());
-
 app.use("*", async (c, next) => {
   const corsMiddlewareHandler = cors({
     origin: "*",
@@ -13,20 +11,37 @@ app.use("*", async (c, next) => {
   return corsMiddlewareHandler(c, next);
 });
 
-app.get("/", (c) => {
+const invitationApp = new Hono().post("/create", async (c) => {
+  const clerkClient = c.get("clerk");
   const auth = getAuth(c);
 
-  if (!auth?.userId) {
-    return c.json({
-      message: "You are not logged in.",
-    });
+  const userId = auth?.userId;
+  if (!userId) {
+    return c.json(
+      {
+        message: "ログインしていないです",
+      },
+      400
+    );
   }
 
-  return c.json({
-    message: "You are logged in!",
-    userId: auth.userId,
+  const body: { emailAddress: string } = await c.req.raw.json();
+  await clerkClient.invitations.createInvitation({
+    emailAddress: body.emailAddress,
+    ignoreExisting: true,
   });
+
+  return c.json(
+    {
+      message: "招待を作成しました",
+    },
+    200
+  );
 });
+
+const ルート = app.route("/invitation", invitationApp);
+
+export type AppType = typeof ルート;
 
 export default {
   port: 8787,
