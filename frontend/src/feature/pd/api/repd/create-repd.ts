@@ -1,10 +1,8 @@
 "use server";
 
-import { rePds } from "@/db/schema";
-import { db } from "@/lib/db";
-import { actionClient } from "@/lib/safe-action";
-import { currentUser } from "@clerk/nextjs/server";
 import * as v from "valibot";
+import { getClient } from "@/lib/hono";
+import { actionClient } from "@/lib/safe-action";
 
 const createRePdSchema = v.object({
   pdId: v.string(),
@@ -18,20 +16,13 @@ const createRePdSchema = v.object({
 export const createRePd = actionClient
   .inputSchema(createRePdSchema)
   .action(async ({ parsedInput: { pdId, content } }) => {
-    const user = await currentUser();
-    if (!user) {
-      throw new Error("ユーザーが認証されていません。");
-    }
-    const userId = user.id;
-
-    const newRePd = {
-      pdId,
-      content,
-      createdAt: new Date(),
-      userId: `${userId}`,
-    };
-
-    await db.insert(rePds).values(newRePd);
+    const client = await getClient();
+    await client.repd.create.$post({
+      json: {
+        pdId,
+        content,
+      },
+    });
 
     return;
   });

@@ -1,4 +1,4 @@
-export const formatDateTime = (date: Date): string => {
+export const formatDateTime = (date: Date | string): string => {
   const typeSafeDate = date instanceof Date ? date : new Date(date); // 弾けないので、型ガードを入れる
 
   const seconds = Math.floor((Date.now() - typeSafeDate.getTime()) / 1000);

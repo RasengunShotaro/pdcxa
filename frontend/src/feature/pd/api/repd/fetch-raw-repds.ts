@@ -1,62 +1,14 @@
-import { rePdLikes, rePds as rePdsSchema } from "@/db/schema";
-import { db } from "@/lib/db";
-import { currentUser } from "@clerk/nextjs/server";
-import { eq, sql } from "drizzle-orm";
+import { getClient } from "@/lib/hono";
 
 export const fetchRawRePds = async (pdId: string) => {
-  const likesCountSubquery = db
-    .select({
-      rePdId: rePdLikes.targetRePdId,
-      count: sql<number>`count(*)`.as("like_count"),
-    })
-    .from(rePdLikes)
-    .groupBy(rePdLikes.targetRePdId)
-    .as("likes_count");
+  const client = await getClient();
 
-  const likesDetailsSubquery = db
-    .select({
-      rePdId: rePdLikes.targetRePdId,
-      userIds: sql<string[]>`array_agg(${rePdLikes.userId})`.as("user_ids"),
-    })
-    .from(rePdLikes)
-    .groupBy(rePdLikes.targetRePdId)
-    .as("likes_details");
-
-  const query = db
-    .select({
-      id: rePdsSchema.id,
-      content: rePdsSchema.content,
-      createdAt: rePdsSchema.createdAt,
-      userId: rePdsSchema.userId,
-      pdId: rePdsSchema.pdId,
-      likeCount: likesCountSubquery.count,
-      likes: likesDetailsSubquery.userIds,
-    })
-    .from(rePdsSchema)
-    .leftJoin(likesCountSubquery, eq(rePdsSchema.id, likesCountSubquery.rePdId))
-    .leftJoin(
-      likesDetailsSubquery,
-      eq(rePdsSchema.id, likesDetailsSubquery.rePdId)
-    );
-
-  type QueryResult = Awaited<typeof query>;
-
-  const formatRePdRows = (rows: QueryResult) =>
-    rows.map((row) => ({
-      ...row,
-      likeCount: row.likeCount ?? 0,
-      likes: (row.likes ?? []).map((userId: string) => ({ userId })),
-    }));
-
-  const fetchedRePds = formatRePdRows(
-    await query.where(eq(rePdsSchema.pdId, pdId)).orderBy(rePdsSchema.createdAt)
-  );
-
-  const currentUserId = (await currentUser())?.id;
-  const rePds = fetchedRePds.map((rePd) => ({
-    ...rePd,
-    isMyRePd: rePd.userId === currentUserId,
-  }));
+  const response = await client.repd.$get({
+    query: {
+      pdId,
+    },
+  });
+  const rePds = await response.json();
 
   return rePds;
 };
