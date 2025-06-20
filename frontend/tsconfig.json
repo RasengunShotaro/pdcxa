@@ -16,7 +16,6 @@
     "incremental": true,
     "types": [
       "@cloudflare/workers-types",
-      "@types/bun"
     ],
     "plugins": [
       {
@@ -27,19 +26,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": [
-    "next-env.d.ts",
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    ".next/types/**/*.ts",
-    "drizzle/drizzle.config.ts",
-    "global.d.ts"
-  ],
-  "exclude": [
-    "node_modules",
-    "backend/**/*",
-    "bff/**/*",
-    ".next",
-    "out"
-  ]
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "drizzle/drizzle.config.ts", "global.d.ts"],
+  "exclude": ["node_modules","bff","backend"]
 }
