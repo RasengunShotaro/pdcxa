@@ -2,6 +2,7 @@ import { clerkMiddleware, getAuth } from "@hono/clerk-auth";
 import { Hono, type MiddlewareHandler } from "hono";
 import { cors } from "hono/cors";
 import { invitationApp } from "./route/invitation/app";
+import { pdApp } from "./route/pd/app";
 import { userApp } from "./route/user/app";
 
 type ErrorResponse = {
@@ -30,7 +31,10 @@ app.onError((エラー, c) => {
   return c.json<ErrorResponse>({ message: エラー.message }, 500);
 });
 
-const ルート = app.route("/invitation", invitationApp).route("/user", userApp);
+const ルート = app
+  .route("/invitation", invitationApp)
+  .route("/user", userApp)
+  .route("/pd", pdApp);
 
 export type AppType = typeof ルート;
 
