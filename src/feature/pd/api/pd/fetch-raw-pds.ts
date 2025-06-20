@@ -1,8 +1,8 @@
-import { pdLikes, pds as pdsSchema, rePds } from "@/db/schema";
-import { db } from "@/lib/db";
 import { currentUser } from "@clerk/nextjs/server";
 import { and, desc, eq, sql } from "drizzle-orm";
-import { userNameToId } from "../user-name-to-id";
+import { pdLikes, pds as pdsSchema, rePds } from "@/db/schema";
+import { db } from "@/lib/db";
+import { fetchUserDetail } from "../fetch-user-detail";
 
 const PAGE_SIZE = 20;
 
@@ -86,7 +86,7 @@ export const fetchRawPds = async ({
     userName?: string;
     cursor?: string;
   }) => {
-    const userId = userName ? (await userNameToId(userName)).id : undefined;
+    const userId = userName ? (await fetchUserDetail(userName)).id : undefined;
     const conditions = [
       ...(userId ? [eq(pdsSchema.userId, userId)] : []),
       ...(cursor
