@@ -3,6 +3,7 @@ import { Hono, type MiddlewareHandler } from "hono";
 import { cors } from "hono/cors";
 import { invitationApp } from "./route/invitation/app";
 import { pdApp } from "./route/pd/app";
+import { rePdApp } from "./route/repd/app";
 import { userApp } from "./route/user/app";
 import { ログイン中のユーザーを取得 } from "./utils/current-user";
 
@@ -35,7 +36,8 @@ app.onError((エラー, c) => {
 const ルート = app
   .route("/invitation", invitationApp)
   .route("/user", userApp)
-  .route("/pd", pdApp);
+  .route("/pd", pdApp)
+  .route("/repd", rePdApp);
 
 export type AppType = typeof ルート;
 
