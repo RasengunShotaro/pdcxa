@@ -24,14 +24,14 @@ export const fetchDetailedPds = async ({
 
   const detailedPds = fetchedPds.items.map((pd) => {
     const userDetail = userDetailsMap.get(pd.userId);
-    const userFullName = `${userDetail?.first_name ?? ""} ${
-      userDetail?.last_name ?? ""
+    const userFullName = `${userDetail?.firstName ?? ""} ${
+      userDetail?.lastName ?? ""
     }`;
 
     const likeUserNames = pd.likes.map((like) => {
       const likeUserDetail = userDetailsMap.get(like.userId);
-      return `${likeUserDetail?.first_name ?? ""} ${
-        likeUserDetail?.last_name ?? ""
+      return `${likeUserDetail?.firstName ?? ""} ${
+        likeUserDetail?.lastName ?? ""
       }`;
     });
 
@@ -40,8 +40,8 @@ export const fetchDetailedPds = async ({
       userDetail: {
         id: userDetail?.id ?? "",
         userFullName,
-        imageUrl: userDetail?.image_url ?? "",
-        userName: userDetail?.username ?? "",
+        imageUrl: userDetail?.imageUrl ?? "",
+        userName: userDetail?.userName ?? "",
       },
       likeUserNames,
     };
