@@ -6,6 +6,9 @@ import { fetchRawRePds } from "./fetch-raw-repds";
 
 export const fetchDetailedRepds = async (pdId: string): Promise<RePd[]> => {
   const fetchedRePds = await fetchRawRePds(pdId);
+  if (fetchedRePds.length === 0) {
+    return [];
+  }
 
   const allUserIds = fetchedRePds.flatMap((rePd) => {
     const likeUserIds = rePd.likes.map((like) => like.userId);
