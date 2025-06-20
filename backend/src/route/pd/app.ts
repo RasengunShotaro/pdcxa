@@ -2,6 +2,7 @@ import { vValidator } from "@hono/valibot-validator";
 import { Hono } from "hono";
 import * as v from "valibot";
 import type { Bindings } from "@/lib/bindings";
+import type { PD詳細 } from "./types/pd-detail";
 import { PDを作成する } from "./utils/create-pd";
 import { fetchRawPds } from "./utils/fetch-raw-pds";
 import { いいね状態を更新する } from "./utils/update-like";
@@ -30,7 +31,7 @@ export const pdApp = new Hono<Bindings>()
     const clerkClient = c.get("clerk");
     const { pdId, userName, cursor } = c.req.valid("query");
 
-    const PD詳細 = await fetchRawPds({
+    const PD詳細: PD詳細 = await fetchRawPds({
       pdId,
       userName,
       cursor,
