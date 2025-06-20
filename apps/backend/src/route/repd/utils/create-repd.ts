@@ -1,7 +1,7 @@
 import type { Context } from "hono";
-import { rePds } from "@/db/schema";
-import { db } from "@/lib/db";
-import { ログイン中のユーザーを取得 } from "@/utils/current-user";
+import { rePds } from "../../../db/schema";
+import { db } from "../../../lib/db";
+import { ログイン中のユーザーを取得 } from "../../../utils/current-user";
 
 export const RePDを作成する = async ({
   pdId,

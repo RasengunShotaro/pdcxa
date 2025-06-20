@@ -1,8 +1,8 @@
 import { eq, sql } from "drizzle-orm";
 import type { Context } from "hono";
-import { rePdLikes, rePds as rePdsSchema } from "@/db/schema";
-import { db } from "@/lib/db";
-import { ログイン中のユーザーを取得 } from "@/utils/current-user";
+import { rePdLikes, rePds as rePdsSchema } from "../../../db/schema";
+import { db } from "../../../lib/db";
+import { ログイン中のユーザーを取得 } from "../../../utils/current-user";
 
 export const fetchRawRePds = async ({
   pdId,

@@ -1,10 +1,10 @@
-import { Bindings } from "@/lib/bindings";
-import { ログイン中のユーザーを取得 } from "@/utils/current-user";
-import { Context } from "hono";
+import type { Context } from "hono";
+import { pds } from "../../../db/schema";
+import type { Bindings } from "../../../lib/bindings";
+import { db } from "../../../lib/db";
+import { ログイン中のユーザーを取得 } from "../../../utils/current-user";
 import { compressImage } from "./compress-image";
 import { R2に画像をアップロードする } from "./r2-utils";
-import { db } from "@/lib/db";
-import { pds } from "@/db/schema";
 
 export const PDを作成する = async ({
   content,

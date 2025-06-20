@@ -1,5 +1,5 @@
 import type { Context } from "hono";
-import type { Bindings } from "@/lib/bindings";
+import type { Bindings } from "../../../lib/bindings";
 
 export const compressImage = async ({
   image,

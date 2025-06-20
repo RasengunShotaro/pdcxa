@@ -1,5 +1,5 @@
 {
-  "name": "pdcxa",
+  "name": "frontend",
   "version": "0.0.3",
   "private": true,
   "scripts": {
@@ -12,7 +12,8 @@
     "deploy:dev": "opennextjs-cloudflare build && opennextjs-cloudflare deploy -- --env=dev",
     "upload": "opennextjs-cloudflare build && opennextjs-cloudflare upload",
     "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts",
-    "compile": "tsc"
+    "compile": "tsc",
+    "check-types": "tsc --noEmit"
   },
   "dependencies": {
     "@clerk/backend": "^2.1.0",
@@ -34,6 +35,7 @@
     "@tanstack/react-query": "^5.80.7",
     "@tanstack/react-query-devtools": "^5.80.7",
     "babel-plugin-react-compiler": "^19.1.0-rc.2",
+    "backend": "workspace:*",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "input-otp": "^1.4.2",

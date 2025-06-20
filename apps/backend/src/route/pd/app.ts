@@ -1,7 +1,7 @@
 import { vValidator } from "@hono/valibot-validator";
 import { Hono } from "hono";
 import * as v from "valibot";
-import type { Bindings } from "@/lib/bindings";
+import type { Bindings } from "../../lib/bindings";
 import type { PD詳細 } from "./types/pd-detail";
 import { PDを作成する } from "./utils/create-pd";
 import { fetchRawPds } from "./utils/fetch-raw-pds";

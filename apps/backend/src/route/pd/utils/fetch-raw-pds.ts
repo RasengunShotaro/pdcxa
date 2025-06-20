@@ -1,10 +1,10 @@
 import type { ClerkClient } from "@clerk/backend";
 import { and, desc, eq, sql } from "drizzle-orm";
 import type { Context } from "hono";
-import { pdLikes, pds as pdsSchema, rePds } from "@/db/schema";
-import { db } from "@/lib/db";
-import { ユーザー名に紐づくユーザー詳細を取得 } from "@/route/user/utils/fetch-user-detail";
-import { ログイン中のユーザーを取得 } from "@/utils/current-user";
+import { pdLikes, pds as pdsSchema, rePds } from "../../../db/schema";
+import { db } from "../../../lib/db";
+import { ユーザー名に紐づくユーザー詳細を取得 } from "../../../route/user/utils/fetch-user-detail";
+import { ログイン中のユーザーを取得 } from "../../../utils/current-user";
 
 export const fetchRawPds = async ({
   pdId,

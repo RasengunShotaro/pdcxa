@@ -1,8 +1,8 @@
 import { and, eq } from "drizzle-orm";
 import type { Context } from "hono";
-import { rePdLikes } from "@/db/schema";
-import { db } from "@/lib/db";
-import { ログイン中のユーザーを取得 } from "@/utils/current-user";
+import { rePdLikes } from "../../../db/schema";
+import { db } from "../../../lib/db";
+import { ログイン中のユーザーを取得 } from "../../../utils/current-user";
 
 export const RePdのいいね状態を更新する = async ({
   rePdId,
