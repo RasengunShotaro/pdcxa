@@ -8,7 +8,7 @@ const userDetailSchema = v.object({
   userName: v.string(),
 });
 const userDetailsSchema = v.object({
-  userIds: v.array(v.string()),
+  userIds: v.union([v.array(v.string()), v.string()]), // 配列の要素数が1のときは、arrayではなくstringとみなされるため
 });
 
 export const userApp = new Hono()
@@ -26,7 +26,10 @@ export const userApp = new Hono()
   .get("/details", vValidator("query", userDetailsSchema), async (c) => {
     const clerkClient = c.get("clerk");
 
-    const { userIds } = c.req.valid("query");
+    const query = c.req.valid("query");
+    const userIds =
+      typeof query.userIds === "string" ? [query.userIds] : query.userIds;
+
     const userDetails = await ユーザーIDに紐づくユーザー詳細一覧を取得({
       userIds,
       clerkClient,
