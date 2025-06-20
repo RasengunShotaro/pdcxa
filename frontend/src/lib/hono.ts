@@ -1,8 +1,7 @@
 "use server";
 
 import { auth } from "@clerk/nextjs/server";
-import { hc } from "hono/client";
-import type { AppType } from "@/../../backend/src";
+import { createClient } from "@/../../backend/src";
 
 type FetchArgs = Parameters<typeof fetch>;
 type エラー時のレスポンス = {
@@ -33,7 +32,7 @@ export const getClient = async () => {
     throw new Error("ログインしていません");
   }
 
-  return hc<AppType>(baseUrl, {
+  return createClient(baseUrl, {
     headers: {
       Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",
