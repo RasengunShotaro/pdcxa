@@ -17,7 +17,7 @@ export const createPd = actionClient
   .inputSchema(createPdSchema)
   .action(async ({ parsedInput: { content, image } }) => {
     const client = await getClient();
-    await client.pd.$post({
+    await client.pd.create.$post({
       json: {
         content,
         image,
