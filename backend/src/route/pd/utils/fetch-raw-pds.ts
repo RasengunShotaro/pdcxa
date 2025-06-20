@@ -20,7 +20,7 @@ export const fetchRawPds = async ({
   c: Context;
 }) => {
   const PAGE_SIZE = 20;
-  const user = ログイン中のユーザーを取得(c);
+  const userId = ログイン中のユーザーを取得(c).userId;
 
   const likesCountSubquery = db
     .select({
@@ -131,7 +131,7 @@ export const fetchRawPds = async ({
     ? await fetchSpecificPd(pdId)
     : await fetchLatestPds({ userName, cursor });
 
-  const currentUserId = user?.userId;
+  const currentUserId = userId;
   const pds = {
     ...fetchedPds,
     items: fetchedPds.items.map((fetchedPd) => ({

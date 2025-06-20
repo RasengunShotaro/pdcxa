@@ -5,7 +5,7 @@ import type { Bindings } from "@/lib/bindings";
 import type { PD詳細 } from "./types/pd-detail";
 import { PDを作成する } from "./utils/create-pd";
 import { fetchRawPds } from "./utils/fetch-raw-pds";
-import { いいね状態を更新する } from "./utils/update-like";
+import { PDのいいね状態を更新する } from "./utils/update-pd-like";
 
 const fetchPdSchema = v.object({
   pdId: v.optional(v.string()),
@@ -51,7 +51,7 @@ export const pdApp = new Hono<Bindings>()
   .put("/like", vValidator("json", mutatePdLikeSchema), async (c) => {
     const { pdId } = c.req.valid("json");
 
-    await いいね状態を更新する({ pdId, c });
+    await PDのいいね状態を更新する({ pdId, c });
 
     return c.json({ message: "いいね状態を更新しました" }, 201);
   });
