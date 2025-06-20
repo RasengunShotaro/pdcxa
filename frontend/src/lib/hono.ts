@@ -2,7 +2,7 @@
 
 import { auth } from "@clerk/nextjs/server";
 import { hc } from "hono/client";
-import type { AppType } from "@/../backend/src/index";
+import type { AppType } from "@/../../backend/src";
 
 type FetchArgs = Parameters<typeof fetch>;
 type エラー時のレスポンス = {
