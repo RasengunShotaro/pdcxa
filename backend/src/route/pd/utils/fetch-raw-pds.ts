@@ -1,22 +1,26 @@
 import type { ClerkClient } from "@clerk/backend";
-import { currentUser } from "@clerk/nextjs/server";
 import { and, desc, eq, sql } from "drizzle-orm";
+import type { Context } from "hono";
 import { pdLikes, pds as pdsSchema, rePds } from "@/db/schema";
 import { db } from "@/lib/db";
 import { ユーザー名に紐づくユーザー詳細を取得 } from "@/route/user/utils/fetch-user-detail";
+import { ログイン中のユーザーを取得 } from "@/utils/current-user";
 
 export const fetchRawPds = async ({
   pdId,
   userName,
   cursor,
   clerkClient,
+  c,
 }: {
   pdId?: string;
   userName?: string;
   cursor?: string;
   clerkClient: ClerkClient;
+  c: Context;
 }) => {
   const PAGE_SIZE = 20;
+  const user = ログイン中のユーザーを取得(c);
 
   const likesCountSubquery = db
     .select({
@@ -127,7 +131,7 @@ export const fetchRawPds = async ({
     ? await fetchSpecificPd(pdId)
     : await fetchLatestPds({ userName, cursor });
 
-  const currentUserId = (await currentUser())?.id;
+  const currentUserId = user?.userId;
   const pds = {
     ...fetchedPds,
     items: fetchedPds.items.map((fetchedPd) => ({

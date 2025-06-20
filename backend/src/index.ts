@@ -1,17 +1,18 @@
-import { clerkMiddleware, getAuth } from "@hono/clerk-auth";
+import { clerkMiddleware } from "@hono/clerk-auth";
 import { Hono, type MiddlewareHandler } from "hono";
 import { cors } from "hono/cors";
 import { invitationApp } from "./route/invitation/app";
 import { pdApp } from "./route/pd/app";
 import { userApp } from "./route/user/app";
+import { ログイン中のユーザーを取得 } from "./utils/current-user";
 
 type ErrorResponse = {
   message: string;
 };
 
 export const ログイン状態Middleware: MiddlewareHandler = async (c, next) => {
-  const auth = getAuth(c);
-  const userId = auth?.userId;
+  const user = ログイン中のユーザーを取得(c);
+  const userId = user?.userId;
   if (!userId) {
     return c.json<ErrorResponse>({ message: "ログインしていないです" }, 401);
   }
