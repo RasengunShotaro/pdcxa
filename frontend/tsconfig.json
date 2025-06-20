@@ -27,6 +27,19 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "drizzle/drizzle.config.ts", "global.d.ts"],
-  "exclude": ["node_modules","bff","backend"]
+  "include": [
+    "next-env.d.ts",
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    ".next/types/**/*.ts",
+    "drizzle/drizzle.config.ts",
+    "global.d.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "backend/**/*",
+    "bff/**/*",
+    ".next",
+    "out"
+  ]
 }
