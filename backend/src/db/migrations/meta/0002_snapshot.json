@@ -1,0 +1,213 @@
+{
+  "id": "7e77b2cd-de45-424b-856a-6786a8fa6a42",
+  "prevId": "c698bc10-6bae-4687-bddf-570d64e4ddfb",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.pd_likes": {
+      "name": "pd_likes",
+      "schema": "",
+      "columns": {
+        "target_pd_id": {
+          "name": "target_pd_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "pd_likes_target_pd_id_pds_id_fk": {
+          "name": "pd_likes_target_pd_id_pds_id_fk",
+          "tableFrom": "pd_likes",
+          "tableTo": "pds",
+          "columnsFrom": [
+            "target_pd_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "pd_likes_target_pd_id_user_id_pk": {
+          "name": "pd_likes_target_pd_id_user_id_pk",
+          "columns": [
+            "target_pd_id",
+            "user_id"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.pds": {
+      "name": "pds",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "content": {
+          "name": "content",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "image_url": {
+          "name": "image_url",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.repd_likes": {
+      "name": "repd_likes",
+      "schema": "",
+      "columns": {
+        "target_repd_id": {
+          "name": "target_repd_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "repd_likes_target_repd_id_repds_id_fk": {
+          "name": "repd_likes_target_repd_id_repds_id_fk",
+          "tableFrom": "repd_likes",
+          "tableTo": "repds",
+          "columnsFrom": [
+            "target_repd_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "repd_likes_target_repd_id_user_id_pk": {
+          "name": "repd_likes_target_repd_id_user_id_pk",
+          "columns": [
+            "target_repd_id",
+            "user_id"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.repds": {
+      "name": "repds",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "pd_id": {
+          "name": "pd_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "content": {
+          "name": "content",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "repds_pd_id_pds_id_fk": {
+          "name": "repds_pd_id_pds_id_fk",
+          "tableFrom": "repds",
+          "tableTo": "pds",
+          "columnsFrom": [
+            "pd_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {},
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

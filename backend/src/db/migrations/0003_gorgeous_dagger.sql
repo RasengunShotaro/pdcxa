@@ -1,0 +1,1 @@
+ALTER TABLE "pds" RENAME COLUMN "image_url" TO "image_file_name";
