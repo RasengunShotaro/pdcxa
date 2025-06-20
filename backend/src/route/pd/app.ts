@@ -1,13 +1,10 @@
 import { vValidator } from "@hono/valibot-validator";
 import { Hono } from "hono";
 import * as v from "valibot";
-import { pds } from "@/db/schema";
 import type { Bindings } from "@/lib/bindings";
-import { db } from "@/lib/db";
-import { ログイン中のユーザーを取得 } from "@/utils/current-user";
-import { compressImage } from "./utils/compress-image";
+import { PDを作成する } from "./utils/create-pd";
 import { fetchRawPds } from "./utils/fetch-raw-pds";
-import { R2に画像をアップロードする } from "./utils/r2-utils";
+import { いいね状態を更新する } from "./utils/update-like";
 
 const fetchPdSchema = v.object({
   pdId: v.optional(v.string()),
@@ -22,6 +19,10 @@ const createPdSchema = v.object({
     v.minLength(1, "PDを入力してください")
   ),
   image: v.optional(v.instance(ArrayBuffer)),
+});
+
+const mutatePdLikeSchema = v.object({
+  pdId: v.string(),
 });
 
 export const pdApp = new Hono<Bindings>()
@@ -39,28 +40,17 @@ export const pdApp = new Hono<Bindings>()
 
     return c.json(PD詳細, 200);
   })
-  .post("/", vValidator("json", createPdSchema), async (c) => {
-    const user = ログイン中のユーザーを取得(c);
+  .post("/create", vValidator("json", createPdSchema), async (c) => {
     const { content, image } = c.req.valid("json");
-    const compressedImage = image ? await compressImage({ image, c }) : null;
-    const imageFileName = compressedImage
-      ? await R2に画像をアップロードする({
-          body: compressedImage,
-          fileName: `${user.userId}-${Date.now()}`,
-          contentType: "image/jpeg",
-          extension: "jpeg",
-          c,
-        })
-      : null;
 
-    const newPd = {
-      content,
-      createdAt: new Date(),
-      userId: `${user.userId}`,
-      imageFileName: imageFileName,
-    };
-
-    await db.insert(pds).values(newPd);
+    await PDを作成する({ content, image, c });
 
     return c.json({ message: "PDが作成されました" }, 201);
+  })
+  .put("/like", vValidator("json", mutatePdLikeSchema), async (c) => {
+    const { pdId } = c.req.valid("json");
+
+    await いいね状態を更新する({ pdId, c });
+
+    return c.json({ message: "いいね状態を更新しました" }, 201);
   });

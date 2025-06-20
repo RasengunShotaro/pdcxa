@@ -1,33 +1,13 @@
 "use server";
 
-import { pdLikes } from "@/db/schema";
-import { db } from "@/lib/db";
-import { currentUser } from "@clerk/nextjs/server";
-import { and, eq } from "drizzle-orm";
+import { getClient } from "@/lib/hono";
 
 export const mutatePdLike = async (pdId: string) => {
-  const user = await currentUser();
-  if (!user) {
-    throw new Error("ユーザーが認証されていません。");
-  }
-  const userId = user.id;
+  const client = await getClient();
 
-  const existingLike = await db
-    .select()
-    .from(pdLikes)
-    .where(and(eq(pdLikes.userId, userId), eq(pdLikes.targetPdId, pdId)))
-    .limit(1);
-
-  if (existingLike.length > 0) {
-    await db
-      .delete(pdLikes)
-      .where(and(eq(pdLikes.userId, userId), eq(pdLikes.targetPdId, pdId)));
-  } else {
-    await db.insert(pdLikes).values({
-      userId,
-      targetPdId: pdId,
-    });
-  }
-
-  return;
+  await client.pd.like.$put({
+    json: {
+      pdId,
+    },
+  });
 };
