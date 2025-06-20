@@ -17,14 +17,14 @@ export const fetchDetailedRepds = async (pdId: string): Promise<RePd[]> => {
 
   const detailedRePds = fetchedRePds.map((rePd) => {
     const userDetail = userDetailsMap.get(rePd.userId);
-    const userFullName = `${userDetail?.first_name ?? ""} ${
-      userDetail?.last_name ?? ""
+    const userFullName = `${userDetail?.firstName ?? ""} ${
+      userDetail?.lastName ?? ""
     }`;
 
     const likeUserNames = rePd.likes.map((like) => {
       const likeUserDetail = userDetailsMap.get(like.userId);
-      return `${likeUserDetail?.first_name ?? ""} ${
-        likeUserDetail?.last_name ?? ""
+      return `${likeUserDetail?.firstName ?? ""} ${
+        likeUserDetail?.lastName ?? ""
       }`;
     });
 
@@ -33,8 +33,8 @@ export const fetchDetailedRepds = async (pdId: string): Promise<RePd[]> => {
       userDetail: {
         id: userDetail?.id ?? "",
         userFullName,
-        imageUrl: userDetail?.image_url ?? "",
-        userName: userDetail?.username ?? "",
+        imageUrl: userDetail?.imageUrl ?? "",
+        userName: userDetail?.userName ?? "",
       },
       likeUserNames,
     };
