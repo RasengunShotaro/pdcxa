@@ -8,10 +8,10 @@
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
-    "@cloudflare/workers-types": "^4.20250618.0",
+    "@cloudflare/workers-types": "^4.20250619.0",
     "wasm-image-optimization": "^1.2.30"
   },
   "devDependencies": {
-    "wrangler": "^4.20.2"
+    "wrangler": "^4.20.3"
   }
 }
