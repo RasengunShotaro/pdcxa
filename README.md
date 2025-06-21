@@ -21,11 +21,12 @@ bun install
 
 ### 3. 環境変数の設定
 
-`.env`ファイルをプロジェクトのルートに作成し、以下の環境変数を設定してください：
+以下の環境変数を設定してください：
 
 ```env
 # Clerk認証
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=your_publishable_key
+CLERK_PUBLISHABLE_KEY=your_publishable_key
 CLERK_SECRET_KEY=your_secret_key
 
 # データベース
@@ -34,11 +35,15 @@ DATABASE_URL=your_neon_database_url
 # ログインページのカスタムエンドポイント、リダイレクト先
 NEXT_PUBLIC_CLERK_SIGN_IN_URL=/signin
 NEXT_PUBLIC_CLERK_SIGN_IN_FORCE_REDIRECT_URL=/
+
+# バックエンドのURL
+BASE_URL=your_backend_url
 ```
 
 ### 4. データベースのマイグレーション
 
 ```bash
+cd apps/backend
 bun db:push
 ```
 
