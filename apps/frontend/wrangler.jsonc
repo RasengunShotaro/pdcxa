@@ -9,6 +9,12 @@
     "nodejs_compat",
     "global_fetch_strictly_public"
   ],
+  "routes": [
+    {
+      "pattern": "pdcxa.com",
+      "custom_domain": true
+    }
+  ],
   "env": {
     "dev": {
       "name": "pdcxa-dev",
