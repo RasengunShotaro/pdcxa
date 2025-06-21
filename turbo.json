@@ -25,15 +25,19 @@
       ],
       "cache": true
     },
-    "dev": {
-      "persistent": true,
-      "cache": false,
+    "deploy": {
+      "dependsOn": ["^deploy"],
       "env": [
         "CLERK_SECRET_KEY",
         "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY",
         "DATABASE_URL",
         "BASE_URL"
-      ]
+      ],
+      "cache": true
+    },
+    "dev": {
+      "persistent": true,
+      "cache": false
     }
   }
 }
