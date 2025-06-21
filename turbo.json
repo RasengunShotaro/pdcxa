@@ -2,18 +2,21 @@
   "$schema": "https://turborepo.com/schema.json",
   "tasks": {
     "build": {
-      "dependsOn": [
-        "^build"
-      ],
-      "outputs": [
-        ".next/**",
-        "!.next/cache/**"
-      ]
+      "dependsOn": ["^build"],
+      "outputs": [".next/**", "!.next/cache/**"],
+      "cache": true
     },
     "check-types": {
-      "dependsOn": [
-        "^check-types"
-      ]
+      "dependsOn": ["^check-types"],
+      "cache": true
+    },
+    "test": {
+      "dependsOn": ["^test"],
+      "cache": true
+    },
+    "deploy:dev": {
+      "dependsOn": ["^deploy:dev"],
+      "cache": true
     },
     "dev": {
       "persistent": true,

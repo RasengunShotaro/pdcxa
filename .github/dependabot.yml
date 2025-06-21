@@ -9,11 +9,3 @@ updates:
       dependencies:
         patterns:
           - "*"
-  - package-ecosystem: "npm"
-    directory: "bff"
-    schedule:
-      interval: "daily"
-    groups:
-      dependencies:
-        patterns:
-          - "*"
