@@ -1,0 +1,43 @@
+{
+  "$schema": "https://turborepo.com/schema.json",
+  "globalEnv": ["CLOUDFLARE_API_TOKEN"],
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": [".next/**", "!.next/cache/**"],
+      "cache": true
+    },
+    "check-types": {
+      "dependsOn": ["^check-types"],
+      "cache": true
+    },
+    "test": {
+      "dependsOn": ["^test"],
+      "cache": true
+    },
+    "deploy:dev": {
+      "dependsOn": ["^deploy:dev"],
+      "env": [
+        "CLERK_SECRET_KEY",
+        "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY",
+        "DATABASE_URL",
+        "BASE_URL"
+      ],
+      "cache": true
+    },
+    "deploy": {
+      "dependsOn": ["^deploy"],
+      "env": [
+        "CLERK_SECRET_KEY",
+        "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY",
+        "DATABASE_URL",
+        "BASE_URL"
+      ],
+      "cache": true
+    },
+    "dev": {
+      "persistent": true,
+      "cache": false
+    }
+  }
+}

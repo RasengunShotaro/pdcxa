@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "jsxImportSource": "hono/jsx",
+    "paths": {
+      "#/*": [
+        "./src/*"
+      ]
+    },
+    "strict": true,
+    "types": [
+      "@cloudflare/workers-types",
+    ],
+    "skipLibCheck": true,
+  },
+  "exclude": ["node_modules"]
+}

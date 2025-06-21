@@ -1,0 +1,38 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "backend",
+  "main": "src/index.ts",
+  "compatibility_date": "2025-05-26",
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
+  "env": {
+    "dev": {
+      "name": "backend-dev",
+      "r2_buckets": [
+        {
+          "binding": "R2",
+          "bucket_name": "dev"
+        }
+      ],
+      "services": [
+        {
+          "binding": "BFF",
+          "service": "bff"
+        }
+      ]
+    }
+  },
+  "r2_buckets": [
+    {
+      "binding": "R2",
+      "bucket_name": "prod"
+    }
+  ],
+  "services": [
+    {
+      "binding": "BFF",
+      "service": "bff"
+    }
+  ]
+}

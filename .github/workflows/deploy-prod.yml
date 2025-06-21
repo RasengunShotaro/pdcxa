@@ -1,15 +1,15 @@
-name: 自動デプロイ(Dev環境)
+name: 自動デプロイ(Prod環境)
 
 on:
   push:
-    branches-ignore:
+    branches:
       - main
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     environment:
-      name: Dev
+      name: Prod
     steps:
       - uses: actions/checkout@v4
 
@@ -21,8 +21,8 @@ jobs:
       - name: Install dependencies
         run: bun install --frozen-lockfile
 
-      - name: デプロイ
-        run: bun run deploy:dev
+      - name: フロントエンドのデプロイ
+        run: bun run deploy
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLERK_SECRET_KEY: ${{ secrets.CLERK_SECRET_KEY }}
