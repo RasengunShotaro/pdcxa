@@ -27,16 +27,6 @@
         "drizzle-kit": "^0.31.1",
       },
     },
-    "apps/bff": {
-      "name": "bff",
-      "dependencies": {
-        "@cloudflare/workers-types": "^4.20250619.0",
-        "wasm-image-optimization": "^1.2.30",
-      },
-      "devDependencies": {
-        "wrangler": "^4.20.3",
-      },
-    },
     "apps/frontend": {
       "name": "frontend",
       "version": "0.0.3",
@@ -770,8 +760,6 @@
     "backend": ["backend@workspace:apps/backend"],
 
     "balanced-match": ["balanced-match@1.0.2", "", {}, "sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw=="],
-
-    "bff": ["bff@workspace:apps/bff"],
 
     "blake3-wasm": ["blake3-wasm@2.1.5", "", {}, "sha512-F1+K8EbfOZE49dtoPtmxUQrpXaBIl3ICvasLh+nJta0xkz+9kF/7uet9fLnwKqhDrmj6g+6K3Tw9yQPUg2ka5g=="],
 
