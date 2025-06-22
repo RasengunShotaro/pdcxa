@@ -1,16 +1,24 @@
-import type { Context } from "hono";
-import type { Bindings } from "../../../lib/bindings";
+import { optimizeImage } from "wasm-image-optimization";
+
+const compress = async (
+  image: ArrayBuffer,
+  quality: number
+): Promise<Uint8Array> => {
+  return (await optimizeImage({
+    image: image,
+    format: "jpeg",
+    quality: quality,
+    speed: 10,
+  })) as Uint8Array;
+};
 
 export const compressImage = async ({
   image,
   maxSizeKB = 200,
-  c,
 }: {
   image: ArrayBuffer;
   maxSizeKB?: number;
-  c: Context<Bindings>;
 }) => {
-  const bff = c.env.BFF;
   const initialQuality = 100;
   const maxSizeBytes = maxSizeKB * 1024;
 
@@ -20,7 +28,7 @@ export const compressImage = async ({
 
   do {
     try {
-      outputBuffer = await bff.compress(image, quality);
+      outputBuffer = await compress(image, quality);
       currentSize = outputBuffer.length;
 
       if (currentSize > maxSizeBytes && quality > 10) {

@@ -1,7 +1,7 @@
 "use server";
 
 import { auth } from "@clerk/nextjs/server";
-import { createClient } from "backend/src";
+import { createClient } from "backend/hc";
 
 type FetchArgs = Parameters<typeof fetch>;
 type エラー時のレスポンス = {

@@ -1,6 +1,5 @@
 import { clerkMiddleware } from "@hono/clerk-auth";
 import { Hono, type MiddlewareHandler } from "hono";
-import { hc } from "hono/client";
 import { cors } from "hono/cors";
 import { invitationApp } from "./route/invitation/app";
 import { pdApp } from "./route/pd/app";
@@ -34,20 +33,11 @@ app.onError((エラー, c) => {
   return c.json<ErrorResponse>({ message: エラー.message }, 500);
 });
 
-const ルート = app
+export const ルート = app
   .route("/invitation", invitationApp)
   .route("/user", userApp)
   .route("/pd", pdApp)
   .route("/repd", rePdApp);
-
-type AppType = typeof ルート;
-type ClientType = typeof hc<AppType>;
-
-export const createClient = (
-  ...args: Parameters<ClientType>
-): ReturnType<ClientType> => {
-  return hc<AppType>(...args);
-};
 
 export default {
   port: 8787,
