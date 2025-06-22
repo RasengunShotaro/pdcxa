@@ -1,6 +1,7 @@
 import { clerkMiddleware } from "@hono/clerk-auth";
 import { Hono, type MiddlewareHandler } from "hono";
 import { cors } from "hono/cors";
+import { HTTPException } from "hono/http-exception";
 import { invitationApp } from "./route/invitation/app";
 import { pdApp } from "./route/pd/app";
 import { rePdApp } from "./route/repd/app";
@@ -29,8 +30,8 @@ app.use("*", async (c, next) => {
   return corsMiddlewareHandler(c, next);
 });
 app.use("*", ログイン状態Middleware);
-app.onError((エラー, c) => {
-  return c.json<ErrorResponse>({ message: エラー.message }, 500);
+app.onError((エラー) => {
+  throw new HTTPException(500, { message: エラー.message });
 });
 
 export const ルート = app

@@ -16,19 +16,20 @@ export const compressImage = async ({
   image,
   maxSizeKB = 200,
 }: {
-  image: ArrayBuffer;
+  image: File;
   maxSizeKB?: number;
 }) => {
+  const bufferImage = await image.arrayBuffer();
   const initialQuality = 100;
   const maxSizeBytes = maxSizeKB * 1024;
 
   let quality = initialQuality;
   let outputBuffer: Uint8Array | undefined;
-  let currentSize: number = image.byteLength;
+  let currentSize: number = bufferImage.byteLength;
 
   do {
     try {
-      outputBuffer = await compress(image, quality);
+      outputBuffer = await compress(bufferImage, quality);
       currentSize = outputBuffer.length;
 
       if (currentSize > maxSizeBytes && quality > 10) {

@@ -17,6 +17,7 @@ const fetcher = async (input: FetchArgs[0], init: FetchArgs[1]) => {
   const response = await fetch(input, init);
 
   if (!response.ok) {
+    console.log(JSON.stringify(await response.json()));
     const json = (await response.json()) as エラー時のレスポンス;
     const エラーメッセージ = json.message || "不明なエラー";
 
@@ -35,7 +36,6 @@ export const getClient = async () => {
   return createClient(baseUrl, {
     headers: {
       Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
     },
     fetch: fetcher,
   });

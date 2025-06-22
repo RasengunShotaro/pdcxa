@@ -19,7 +19,7 @@ const createPdSchema = v.object({
     v.maxLength(200, "PDが長すぎます。200文字以内で入力してください"),
     v.minLength(1, "PDを入力してください")
   ),
-  image: v.optional(v.instance(ArrayBuffer)),
+  image: v.optional(v.file()),
 });
 
 const mutatePdLikeSchema = v.object({
@@ -41,8 +41,8 @@ export const pdApp = new Hono<Bindings>()
 
     return c.json(PD詳細, 200);
   })
-  .post("/create", vValidator("json", createPdSchema), async (c) => {
-    const { content, image } = c.req.valid("json");
+  .post("/create", vValidator("form", createPdSchema), async (c) => {
+    const { content, image } = c.req.valid("form");
 
     await PDを作成する({ content, image, c });
 
