@@ -12,7 +12,7 @@ export const PDを作成する = async ({
   c,
 }: {
   content: string;
-  image?: ArrayBuffer;
+  image?: File;
   c: Context<Bindings>;
 }) => {
   const user = ログイン中のユーザーを取得(c);

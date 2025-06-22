@@ -1,11 +1,8 @@
-export const resizeImage = async (
-  imageBuffer: ArrayBuffer
-): Promise<ArrayBuffer> => {
+export const resizeImage = async (image: File): Promise<File> => {
   const maxWidth = 1920;
   const maxHeight = 1920;
-  const blob = new Blob([imageBuffer], { type: "image/jpeg" });
 
-  const imageBitmap = await createImageBitmap(blob);
+  const imageBitmap = await createImageBitmap(image);
   const originalWidth = imageBitmap.width;
   const originalHeight = imageBitmap.height;
 
@@ -35,5 +32,5 @@ export const resizeImage = async (
     type: "image/jpeg",
   });
 
-  return await resizedBlob.arrayBuffer();
+  return new File([resizedBlob], image.name);
 };

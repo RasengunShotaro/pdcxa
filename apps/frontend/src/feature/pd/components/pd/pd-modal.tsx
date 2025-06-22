@@ -47,7 +47,7 @@ export const PdModal: React.FC<PdModalProps> = ({ isOpen, onClose }) => {
   const onSubmit = async (values: PdFormSchema) => {
     try {
       const image = values.image
-        ? await resizeImage(await values.image.arrayBuffer())
+        ? await resizeImage(await values.image)
         : undefined;
       await createPd({ content: values.content, image });
       toast.success("PDしました!");
