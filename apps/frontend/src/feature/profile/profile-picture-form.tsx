@@ -1,7 +1,7 @@
 "use client";
 
 import { useUser } from "@clerk/nextjs";
-import { valibotResolver } from "@hookform/resolvers/valibot";
+import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -19,7 +19,7 @@ export function ProfilePictureForm() {
   const [isPending, startTransition] = useTransition();
 
   const imageForm = useForm<ImageFormSchema>({
-    resolver: valibotResolver(imageFormSchema),
+    resolver: standardSchemaResolver(imageFormSchema),
   });
 
   const onSubmit = async (data: ImageFormSchema) => {

@@ -1,4 +1,4 @@
-import { vValidator } from "@hono/valibot-validator";
+import { sValidator } from "@hono/standard-validator";
 import { Hono } from "hono";
 import * as v from "valibot";
 import type { Bindings } from "../../lib/bindings";
@@ -25,7 +25,7 @@ const mutateRePdLikeSchema = v.object({
 });
 
 export const rePdApp = new Hono<Bindings>()
-  .get("/", vValidator("query", fetchRePdSchema), async (c) => {
+  .get("/", sValidator("query", fetchRePdSchema), async (c) => {
     const { pdId } = c.req.valid("query");
 
     const RePD詳細: RePD詳細 = await fetchRawRePds({
@@ -35,14 +35,14 @@ export const rePdApp = new Hono<Bindings>()
 
     return c.json(RePD詳細, 200);
   })
-  .post("/create", vValidator("json", createRePdSchema), async (c) => {
+  .post("/create", sValidator("json", createRePdSchema), async (c) => {
     const { pdId, content } = c.req.valid("json");
 
     await RePDを作成する({ pdId, content, c });
 
     return c.json({ message: "RePDが作成されました" }, 201);
   })
-  .put("/like", vValidator("json", mutateRePdLikeSchema), async (c) => {
+  .put("/like", sValidator("json", mutateRePdLikeSchema), async (c) => {
     const { rePdId } = c.req.valid("json");
 
     await RePdのいいね状態を更新する({ rePdId, c });

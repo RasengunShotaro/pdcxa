@@ -1,4 +1,4 @@
-import { vValidator } from "@hono/valibot-validator";
+import { sValidator } from "@hono/standard-validator";
 import { Hono } from "hono";
 import * as v from "valibot";
 
@@ -8,7 +8,7 @@ const invitationAppSchema = v.object({
 
 export const invitationApp = new Hono().post(
   "/create",
-  vValidator("json", invitationAppSchema),
+  sValidator("json", invitationAppSchema),
   async (c) => {
     const clerkClient = c.get("clerk");
 

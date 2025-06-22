@@ -1,6 +1,6 @@
 "use client";
 
-import { valibotResolver } from "@hookform/resolvers/valibot";
+import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { MessageCircle } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -35,7 +35,7 @@ export const RePdModal: React.FC<RePdModalProps> = ({
   onClose,
 }) => {
   const form = useForm<PdFormSchema>({
-    resolver: valibotResolver(pdFormSchema),
+    resolver: standardSchemaResolver(pdFormSchema),
     defaultValues: {
       content: "",
     },
