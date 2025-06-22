@@ -1,5 +1,5 @@
 {
-  "name": "frontend",
+  "name": "@pdcxa/frontend",
   "version": "0.0.3",
   "private": true,
   "scripts": {
@@ -22,6 +22,7 @@
     "@clerk/themes": "^2.2.50",
     "@hookform/resolvers": "^5.1.1",
     "@opennextjs/cloudflare": "^1.3.0",
+    "@pdcxa/backend": "workspace:*",
     "@radix-ui/react-avatar": "^1.1.10",
     "@radix-ui/react-collapsible": "^1.1.11",
     "@radix-ui/react-dialog": "^1.1.14",
@@ -35,7 +36,6 @@
     "@tanstack/react-query": "^5.81.2",
     "@tanstack/react-query-devtools": "^5.81.2",
     "babel-plugin-react-compiler": "^19.1.0-rc.2",
-    "backend": "workspace:*",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "input-otp": "^1.4.2",
@@ -52,13 +52,11 @@
     "sonner": "^2.0.5",
     "tailwind-merge": "^3.3.1",
     "tailwindcss-animate": "^1.0.7",
-    "valibot": "^1.1.0",
-    "wrangler": "^4.20.1"
+    "valibot": "^1.1.0"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20250617.0",
+    "@pdcxa/common-dev-packages": "workspace:*",
     "@tailwindcss/postcss": "^4.1.10",
-    "@types/bun": "^1.2.16",
     "@types/node": "^24",
     "@types/react": "^19",
     "@types/react-dom": "^19",
