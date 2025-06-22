@@ -16,7 +16,7 @@ export const PDを作成する = async ({
   c: Context<Bindings>;
 }) => {
   const user = ログイン中のユーザーを取得(c);
-  const compressedImage = image ? await compressImage({ image, c }) : null;
+  const compressedImage = image ? await compressImage({ image }) : null;
   const imageFileName = compressedImage
     ? await R2に画像をアップロードする({
         body: compressedImage,
