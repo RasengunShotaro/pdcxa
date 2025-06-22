@@ -1,4 +1,4 @@
-import { vValidator } from "@hono/valibot-validator";
+import { sValidator } from "@hono/standard-validator";
 import { Hono } from "hono";
 import * as v from "valibot";
 import { ユーザー名に紐づくユーザー詳細を取得 } from "./utils/fetch-user-detail";
@@ -12,7 +12,7 @@ const userDetailsSchema = v.object({
 });
 
 export const userApp = new Hono()
-  .get("/detail", vValidator("query", userDetailSchema), async (c) => {
+  .get("/detail", sValidator("query", userDetailSchema), async (c) => {
     const clerkClient = c.get("clerk");
 
     const { userName } = c.req.valid("query");
@@ -23,7 +23,7 @@ export const userApp = new Hono()
 
     return c.json(ユーザー詳細, 200);
   })
-  .get("/details", vValidator("query", userDetailsSchema), async (c) => {
+  .get("/details", sValidator("query", userDetailsSchema), async (c) => {
     const clerkClient = c.get("clerk");
 
     const query = c.req.valid("query");

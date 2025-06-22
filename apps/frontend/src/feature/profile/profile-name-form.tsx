@@ -1,7 +1,7 @@
 "use client";
 
 import { useUser } from "@clerk/nextjs";
-import { valibotResolver } from "@hookform/resolvers/valibot";
+import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { Loader2 } from "lucide-react";
 import { useEffect, useTransition } from "react";
 import { useForm } from "react-hook-form";
@@ -21,7 +21,7 @@ export function ProfileNameForm() {
   const [isPending, startTransition] = useTransition();
 
   const form = useForm<NameFormSchema>({
-    resolver: valibotResolver(nameFormSchema),
+    resolver: standardSchemaResolver(nameFormSchema),
     defaultValues: {
       firstName: "",
       lastName: "",

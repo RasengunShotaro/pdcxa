@@ -1,4 +1,4 @@
-import { vValidator } from "@hono/valibot-validator";
+import { sValidator } from "@hono/standard-validator";
 import { Hono } from "hono";
 import * as v from "valibot";
 import type { Bindings } from "../../lib/bindings";
@@ -27,7 +27,7 @@ const mutatePdLikeSchema = v.object({
 });
 
 export const pdApp = new Hono<Bindings>()
-  .get("/", vValidator("query", fetchPdSchema), async (c) => {
+  .get("/", sValidator("query", fetchPdSchema), async (c) => {
     const clerkClient = c.get("clerk");
     const { pdId, userName, cursor } = c.req.valid("query");
 
@@ -41,14 +41,14 @@ export const pdApp = new Hono<Bindings>()
 
     return c.json(PD詳細, 200);
   })
-  .post("/create", vValidator("form", createPdSchema), async (c) => {
+  .post("/create", sValidator("form", createPdSchema), async (c) => {
     const { content, image } = c.req.valid("form");
 
     await PDを作成する({ content, image, c });
 
     return c.json({ message: "PDが作成されました" }, 201);
   })
-  .put("/like", vValidator("json", mutatePdLikeSchema), async (c) => {
+  .put("/like", sValidator("json", mutatePdLikeSchema), async (c) => {
     const { pdId } = c.req.valid("json");
 
     await PDのいいね状態を更新する({ pdId, c });

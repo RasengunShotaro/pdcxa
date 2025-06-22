@@ -1,7 +1,7 @@
 "use client";
 
 import { useSignIn } from "@clerk/nextjs";
-import { valibotResolver } from "@hookform/resolvers/valibot";
+import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
@@ -25,7 +25,7 @@ export function ResetPasswordForm() {
   const [isPending, startTransition] = useTransition();
 
   const form = useForm<CheckEmailFormSchema>({
-    resolver: valibotResolver(checkEmailFormSchema),
+    resolver: standardSchemaResolver(checkEmailFormSchema),
     defaultValues: {
       email: "",
     },

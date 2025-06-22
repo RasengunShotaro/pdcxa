@@ -1,7 +1,7 @@
 "use client";
 
 import { useSignIn } from "@clerk/nextjs";
-import { valibotResolver } from "@hookform/resolvers/valibot";
+import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
@@ -29,7 +29,7 @@ export function SignInForm() {
   const router = useRouter();
 
   const form = useForm<SigninFormSchema>({
-    resolver: valibotResolver(signinFormSchema),
+    resolver: standardSchemaResolver(signinFormSchema),
     defaultValues: {
       email: "",
       password: "",

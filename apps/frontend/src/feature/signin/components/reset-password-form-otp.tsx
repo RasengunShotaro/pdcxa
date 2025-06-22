@@ -1,7 +1,7 @@
 "use client";
 
 import { useSignIn } from "@clerk/nextjs";
-import { valibotResolver } from "@hookform/resolvers/valibot";
+import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
@@ -33,7 +33,7 @@ export function ResetPasswordOtpForm() {
   const { isLoaded, signIn, setActive } = useSignIn();
 
   const form = useForm<ResetPasswordFormSchema>({
-    resolver: valibotResolver(resetPasswordFormSchema),
+    resolver: standardSchemaResolver(resetPasswordFormSchema),
     defaultValues: {
       password: "",
       confirmPassword: "",

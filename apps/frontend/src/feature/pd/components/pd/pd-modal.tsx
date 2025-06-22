@@ -1,6 +1,6 @@
 "use client";
 
-import { valibotResolver } from "@hookform/resolvers/valibot";
+import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { Image, Loader2, MessageCircle, X } from "lucide-react";
 import NextImage from "next/image";
 import { useRef, useState } from "react";
@@ -36,7 +36,7 @@ export const PdModal: React.FC<PdModalProps> = ({ isOpen, onClose }) => {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   const form = useForm<PdFormSchema>({
-    resolver: valibotResolver(pdFormSchema),
+    resolver: standardSchemaResolver(pdFormSchema),
     defaultValues: {
       content: "",
       image: undefined,

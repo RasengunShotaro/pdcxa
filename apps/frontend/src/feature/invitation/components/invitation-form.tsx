@@ -1,6 +1,6 @@
 "use client";
 
-import { valibotResolver } from "@hookform/resolvers/valibot";
+import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { Loader2 } from "lucide-react";
 import { useTransition } from "react";
 import { useForm } from "react-hook-form";
@@ -24,7 +24,7 @@ export const InvitationForm = () => {
   const [isPending, startTransition] = useTransition();
 
   const form = useForm<InvitationFormSchema>({
-    resolver: valibotResolver(invitationFormSchema),
+    resolver: standardSchemaResolver(invitationFormSchema),
     defaultValues: {
       mail: "",
     },
