@@ -1,5 +1,13 @@
 {
   "name": "backend",
+  "exports": {
+    "./hc": {
+      "import": {
+        "default": "./dist/hc.js",
+        "types": "./dist/hc.d.ts"
+      }
+    }
+  },
   "scripts": {
     "dev": "bun run --hot src/index.ts",
     "drizzle:generate": "drizzle-kit generate --config=./drizzle/drizzle.config.ts",
