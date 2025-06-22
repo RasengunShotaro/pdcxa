@@ -1,4 +1,4 @@
-import { optimizeImage } from "wasm-image-optimization/*";
+import { optimizeImage } from "wasm-image-optimization";
 
 const compress = async (
   image: ArrayBuffer,
