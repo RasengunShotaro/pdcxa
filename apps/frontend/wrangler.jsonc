@@ -18,12 +18,6 @@
           "bucket_name": "dev"
         }
       ],
-      "services": [
-        {
-          "binding": "BFF",
-          "service": "bff"
-        }
-      ]
     }
   },
   "main": ".open-next/worker.js",
@@ -34,10 +28,4 @@
       "bucket_name": "prod"
     }
   ],
-  "services": [
-    {
-      "binding": "BFF",
-      "service": "bff"
-    }
-  ]
 }
