@@ -15,7 +15,8 @@
     "@biomejs/biome": "^2.0.4"
   },
   "workspaces": [
-    "apps/*"
+    "apps/*",
+    "packages/*"
   ],
   "packageManager": "bun@1.2.16"
 }

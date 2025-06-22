@@ -1,5 +1,5 @@
 {
-  "name": "backend",
+  "name": "@pdcxa/backend",
   "exports": {
     "./hc": {
       "import": {
@@ -20,18 +20,16 @@
   },
   "dependencies": {
     "@clerk/backend": "^2.1.0",
-    "@cloudflare/workers-types": "^4.20250620.0",
     "@hono/clerk-auth": "^3.0.0",
     "@hono/valibot-validator": "^0.5.2",
     "@neondatabase/serverless": "^1.0.1",
     "drizzle-orm": "^0.44.2",
     "hono": "^4.8.0",
     "uuidv7": "^1.0.2",
-    "wasm-image-optimization": "^1.2.30",
-    "wrangler": "^4.20.3"
+    "wasm-image-optimization": "^1.2.30"
   },
   "devDependencies": {
-    "@types/bun": "latest",
+    "@pdcxa/common-dev-packages": "workspace:*",
     "drizzle-kit": "^0.31.1"
   }
 }
