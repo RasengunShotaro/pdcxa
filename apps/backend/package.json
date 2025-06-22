@@ -18,6 +18,7 @@
     "drizzle-orm": "^0.44.2",
     "hono": "^4.8.0",
     "uuidv7": "^1.0.2",
+    "wasm-image-optimization": "^1.2.30",
     "wrangler": "^4.20.3"
   },
   "devDependencies": {
