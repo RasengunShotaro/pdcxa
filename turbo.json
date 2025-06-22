@@ -8,7 +8,7 @@
       "cache": true
     },
     "check-types": {
-      "dependsOn": ["^check-types"],
+      "dependsOn": ["backend#build"],
       "cache": true
     },
     "test": {
@@ -16,7 +16,7 @@
       "cache": true
     },
     "deploy:dev": {
-      "dependsOn": ["^deploy:dev"],
+      "dependsOn": ["backend#build"],
       "env": [
         "CLERK_SECRET_KEY",
         "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY",
@@ -26,7 +26,7 @@
       "cache": true
     },
     "deploy": {
-      "dependsOn": ["^deploy"],
+      "dependsOn": ["backend#build"],
       "env": [
         "CLERK_SECRET_KEY",
         "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY",
@@ -38,8 +38,9 @@
       "cache": true
     },
     "dev": {
+      "dependsOn": ["backend#build"],
       "persistent": true,
-      "cache": false
+      "cache": true
     }
   }
 }

@@ -15,7 +15,8 @@
     "drizzle:introspect": "drizzle-kit introspect --config=./drizzle/drizzle.config.ts",
     "deploy": "wrangler deploy --minify",
     "deploy:dev": "wrangler deploy --env=dev --minify",
-    "check-types": "tsc --noEmit"
+    "check-types": "tsc --noEmit",
+    "build": "tsc -p tsconfig.build.json"
   },
   "dependencies": {
     "@clerk/backend": "^2.1.0",
