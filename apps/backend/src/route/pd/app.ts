@@ -19,7 +19,12 @@ const createPdSchema = v.object({
     v.maxLength(200, "PDが長すぎます。200文字以内で入力してください"),
     v.minLength(1, "PDを入力してください")
   ),
-  image: v.optional(v.file()),
+  image: v.optional(
+    v.pipe(
+      v.union([v.file(), v.literal("undefined")]), // Formではundefinedではなく、文字列の"undefined"が送信されるため
+      v.transform((input) => (input === "undefined" ? undefined : input))
+    )
+  ),
 });
 
 const mutatePdLikeSchema = v.object({
