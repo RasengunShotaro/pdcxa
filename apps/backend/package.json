@@ -30,6 +30,6 @@
   },
   "devDependencies": {
     "@pdcxa/common-dev-packages": "workspace:*",
-    "drizzle-kit": "^0.31.1"
+    "drizzle-kit": "^0.31.2"
   }
 }
