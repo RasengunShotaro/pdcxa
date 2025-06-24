@@ -19,7 +19,7 @@
     "build": "tsc -p tsconfig.build.json"
   },
   "dependencies": {
-    "@clerk/backend": "^2.1.0",
+    "@clerk/backend": "^2.2.0",
     "@hono/clerk-auth": "^3.0.0",
     "@hono/standard-validator": "^0.1.2",
     "@neondatabase/serverless": "^1.0.1",
