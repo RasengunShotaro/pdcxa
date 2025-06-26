@@ -19,7 +19,7 @@
     "build": "tsc -p tsconfig.build.json"
   },
   "dependencies": {
-    "@clerk/backend": "^2.2.0",
+    "@clerk/backend": "^2.3.0",
     "@hono/clerk-auth": "^3.0.1",
     "@hono/standard-validator": "^0.1.2",
     "@neondatabase/serverless": "^1.0.1",
@@ -30,6 +30,6 @@
   },
   "devDependencies": {
     "@pdcxa/common-dev-packages": "workspace:*",
-    "drizzle-kit": "^0.31.2"
+    "drizzle-kit": "^0.31.3"
   }
 }
