@@ -19,12 +19,12 @@
     "build": "tsc -p tsconfig.build.json"
   },
   "dependencies": {
-    "@clerk/backend": "^2.3.0",
+    "@clerk/backend": "^2.4.0",
     "@hono/clerk-auth": "^3.0.1",
     "@hono/standard-validator": "^0.1.2",
     "@neondatabase/serverless": "^1.0.1",
     "drizzle-orm": "^0.44.2",
-    "hono": "^4.8.3",
+    "hono": "^4.8.4",
     "uuidv7": "^1.0.2",
     "wasm-image-optimization": "^1.2.30"
   },
