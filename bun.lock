@@ -10,7 +10,6 @@
     "apps/backend": {
       "name": "@pdcxa/backend",
       "dependencies": {
-        "@clerk/backend": "^2.4.0",
         "@hono/clerk-auth": "^3.0.1",
         "@hono/standard-validator": "^0.1.2",
         "@neondatabase/serverless": "^1.0.1",
@@ -28,7 +27,6 @@
       "name": "@pdcxa/frontend",
       "version": "0.0.3",
       "dependencies": {
-        "@clerk/backend": "^2.4.0",
         "@clerk/localizations": "^3.17.3",
         "@clerk/nextjs": "^6.23.3",
         "@clerk/themes": "^2.2.54",

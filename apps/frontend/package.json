@@ -16,7 +16,6 @@
     "test": "bun test"
   },
   "dependencies": {
-    "@clerk/backend": "^2.4.0",
     "@clerk/localizations": "^3.17.3",
     "@clerk/nextjs": "^6.23.3",
     "@clerk/themes": "^2.2.54",
