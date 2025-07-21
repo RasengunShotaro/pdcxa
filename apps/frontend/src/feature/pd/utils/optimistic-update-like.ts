@@ -32,7 +32,7 @@ export const optimisticUpdateLike = async ({
             if (oldPd.id !== pd.id) return oldPd;
 
             const isCurrentlyLiked = oldPd.likes.some(
-              (like) => like.userId === myUserId
+              (like) => like.userId === myUserId,
             );
             const updatedLikes = isCurrentlyLiked
               ? oldPd.likes.filter((like) => like.userId !== myUserId)

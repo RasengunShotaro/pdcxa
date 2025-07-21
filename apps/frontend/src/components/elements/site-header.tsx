@@ -1,5 +1,5 @@
-import { Separator } from "@/components/ui/separator";
 import { UserButton } from "@clerk/nextjs";
+import { Separator } from "@/components/ui/separator";
 import { ColorModeSwitcher } from "./color-mode-switcher";
 import { TimeLineRefetchButton } from "./refetch";
 import { ResponsiveHeaderContent } from "./responsive-header-content";
@@ -10,7 +10,7 @@ export function SiteHeader() {
     <header className="flex sticky top-0 z-50 w-full items-center border-b bg-background">
       <div className="flex h-(--header-height) w-full items-center gap-2 px-4">
         <ToggleSidebarButton />
-        <Separator orientation="vertical" className="mr-1 !h-4" />
+        <Separator className="mr-1 !h-4" orientation="vertical" />
         <ResponsiveHeaderContent />
         <div className="ml-auto flex items-center">
           <TimeLineRefetchButton />

@@ -23,7 +23,7 @@ export const resizeImage = async (image: File): Promise<File> => {
 
   if (!ctx) {
     throw new Error(
-      "画像リサイズに失敗しました: コンテキストが取得できませんでした"
+      "画像リサイズに失敗しました: コンテキストが取得できませんでした",
     );
   }
 

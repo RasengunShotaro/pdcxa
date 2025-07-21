@@ -9,9 +9,9 @@ export const ToggleSidebarButton = () => {
   return (
     <Button
       className="h-8 w-8"
-      variant="ghost"
-      size="icon"
       onClick={toggleSidebar}
+      size="icon"
+      variant="ghost"
     >
       <SidebarIcon />
     </Button>

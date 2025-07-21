@@ -5,10 +5,7 @@
     "directory": ".open-next/assets"
   },
   "compatibility_date": "2025-04-13",
-  "compatibility_flags": [
-    "nodejs_compat",
-    "global_fetch_strictly_public"
-  ],
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
   "env": {
     "dev": {
       "name": "pdcxa-dev",
@@ -17,7 +14,7 @@
           "binding": "R2",
           "bucket_name": "dev"
         }
-      ],
+      ]
     }
   },
   "main": ".open-next/worker.js",
@@ -27,5 +24,5 @@
       "binding": "R2",
       "bucket_name": "prod"
     }
-  ],
+  ]
 }

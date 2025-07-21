@@ -16,22 +16,22 @@ export const PasswordInput = ({
   return (
     <div className="relative">
       <Input
-        type={showPassword ? "text" : "password"}
         className={cn("pr-10", className)}
+        type={showPassword ? "text" : "password"}
         {...props}
       />
       <Button
+        className="absolute right-0 top-0 h-full px-3 py-1 hover:bg-transparent"
+        disabled={props.value === "" || props.disabled}
+        onClick={() => setShowPassword((prev) => !prev)}
+        size="sm"
         type="button"
         variant="ghost"
-        size="sm"
-        className="absolute right-0 top-0 h-full px-3 py-1 hover:bg-transparent"
-        onClick={() => setShowPassword((prev) => !prev)}
-        disabled={props.value === "" || props.disabled}
       >
         {showPassword ? (
-          <Eye className="size-4" aria-hidden="true" />
+          <Eye aria-hidden="true" className="size-4" />
         ) : (
-          <EyeOff className="size-4" aria-hidden="true" />
+          <EyeOff aria-hidden="true" className="size-4" />
         )}
         <span className="sr-only">
           {showPassword ? "Hide password" : "Show password"}

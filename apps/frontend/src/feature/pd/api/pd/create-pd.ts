@@ -8,7 +8,7 @@ const createPdSchema = v.object({
   content: v.pipe(
     v.string(),
     v.maxLength(200, "PDが長すぎます。200文字以内で入力してください"),
-    v.minLength(1, "PDを入力してください")
+    v.minLength(1, "PDを入力してください"),
   ),
   image: v.optional(v.file()),
 });

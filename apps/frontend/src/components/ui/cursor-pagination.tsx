@@ -1,6 +1,6 @@
-import { cn } from "@/lib/utils";
 import { ChevronDown, Loader2 } from "lucide-react";
 import type { ComponentProps } from "react";
+import { cn } from "@/lib/utils";
 import { Button } from "./button";
 
 type ButtonProps = ComponentProps<typeof Button>;
@@ -20,9 +20,9 @@ export function CursorPagination({
 }: CursorPaginationProps) {
   return (
     <Button
-      onClick={onNextPage}
-      disabled={isLoading}
       className={cn(`${hasNextPage ? "" : "invisible"}`, className)}
+      disabled={isLoading}
+      onClick={onNextPage}
       {...props}
     >
       {isLoading ? <Loader2 className="animate-spin" /> : <ChevronDown />}

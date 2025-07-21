@@ -1,8 +1,8 @@
 "use client";
 
-import { useSidebar } from "@/components/ui/sidebar";
 import Image from "next/image";
 import Link from "next/link";
+import { useSidebar } from "@/components/ui/sidebar";
 import { NavBreadcrumb } from "./nav-breadcrumb";
 
 export const ResponsiveHeaderContent = () => {
@@ -11,12 +11,12 @@ export const ResponsiveHeaderContent = () => {
   return isMobile ? (
     <Link href="/">
       <Image
-        src="/pdcxa.svg"
         alt="Logo"
         className="h-7 w-auto dark:invert"
-        quality={100}
-        width={140}
         height={40}
+        quality={100}
+        src="/pdcxa.svg"
+        width={140}
       />
     </Link>
   ) : (

@@ -22,8 +22,8 @@ export const usePdLike = ({
   const queryKey = pdId
     ? ["PD詳細", pdId, null]
     : userId
-    ? ["PD詳細", null, userId]
-    : ["PD詳細", null, null];
+      ? ["PD詳細", null, userId]
+      : ["PD詳細", null, null];
 
   const { mutate: toggleLike } = useMutation({
     mutationFn: () => mutatePdLike(pd.id),

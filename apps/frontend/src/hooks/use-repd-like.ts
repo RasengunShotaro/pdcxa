@@ -24,7 +24,7 @@ export const useRePdLike = (rePd: RePd) => {
           if (oldRePd.id !== rePd.id) return oldRePd;
 
           const isCurrentlyLiked = oldRePd.likes.some(
-            (like) => like.userId === userId
+            (like) => like.userId === userId,
           );
           const updatedLikes = isCurrentlyLiked
             ? oldRePd.likes.filter((like) => like.userId !== userId)
@@ -46,7 +46,7 @@ export const useRePdLike = (rePd: RePd) => {
       if (context?.previousRePds) {
         queryClient.setQueryData(
           ["RePD詳細", rePd.pdId],
-          context.previousRePds
+          context.previousRePds,
         );
       }
     },

@@ -2,9 +2,9 @@
 
 import { useQueryClient } from "@tanstack/react-query";
 import { RefreshCcw } from "lucide-react";
+import { useTransition } from "react";
 import { toast } from "sonner";
 import { Button } from "../ui/button";
-import { useTransition } from "react";
 
 export const TimeLineRefetchButton = () => {
   const [isPending, startTransition] = useTransition();
@@ -30,7 +30,7 @@ export const TimeLineRefetchButton = () => {
   };
 
   return (
-    <Button variant="ghost" onClick={refetchTimeLine}>
+    <Button onClick={refetchTimeLine} variant="ghost">
       <RefreshCcw className={`${isPending ? "animate-spin" : ""}`} />
     </Button>
   );

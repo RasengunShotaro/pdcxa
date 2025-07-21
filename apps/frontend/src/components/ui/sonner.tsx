@@ -15,21 +15,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
 
   return (
     <Sonner
-      theme={theme as ToasterProps["theme"]}
       className="toaster group"
-      style={
-        {
-          "--normal-bg": "var(--popover)",
-          "--normal-text": "var(--popover-foreground)",
-          "--normal-border": "var(--border)",
-        } as React.CSSProperties
-      }
-      toastOptions={{
-        classNames: {
-          default: "!text-xl justify-center !w-fit whitespace-pre-wrap",
-          description: "!text-sm !text-muted-foreground",
-        },
-      }}
       icons={{
         success: <CheckCircle className="h-5 w-5 text-green-500" />,
         info: <Info className="h-5 w-5 text-blue-500" />,
@@ -38,6 +24,20 @@ const Toaster = ({ ...props }: ToasterProps) => {
         loading: (
           <Loader2 className="h-5 w-5 text-muted-foreground animate-spin" />
         ),
+      }}
+      style={
+        {
+          "--normal-bg": "var(--popover)",
+          "--normal-text": "var(--popover-foreground)",
+          "--normal-border": "var(--border)",
+        } as React.CSSProperties
+      }
+      theme={theme as ToasterProps["theme"]}
+      toastOptions={{
+        classNames: {
+          default: "!text-xl justify-center !w-fit whitespace-pre-wrap",
+          description: "!text-sm !text-muted-foreground",
+        },
       }}
       {...props}
     />

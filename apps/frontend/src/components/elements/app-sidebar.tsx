@@ -1,3 +1,6 @@
+import { Home, Mail, User } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
 import {
   Sidebar,
   SidebarContent,
@@ -8,9 +11,6 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { Home, Mail, User } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
 import { NextLinkLoader } from "./next-link-loader";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
@@ -28,15 +28,15 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarHeader className="border-b border-sidebar-border">
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton size="lg" asChild>
+            <SidebarMenuButton asChild size="lg">
               <Link href="/">
                 <Image
-                  src="/pdcxa.svg"
                   alt="Logo"
                   className="h-7 w-auto dark:invert"
-                  quality={100}
-                  width={140}
                   height={40}
+                  quality={100}
+                  src="/pdcxa.svg"
+                  width={140}
                 />
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-semibold">Web Version</span>
@@ -60,7 +60,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     asChild
                     className="flex items-center space-x-3 gap-2 px-4"
                   >
-                    <Link key={item.href} href={item.href}>
+                    <Link href={item.href} key={item.href}>
                       <item.icon />
                       <span className="text-base">{item.label}</span>
                       <NextLinkLoader />
