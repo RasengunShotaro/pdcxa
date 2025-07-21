@@ -1,5 +1,9 @@
 import Image from "next/image";
-import { ArrayBufferToUrl } from "@/feature/pd/utils/array-buffer-to-url";
+import { useEffect } from "react";
+import {
+  ArrayBufferToUrl,
+  revokeArrayBufferUrl,
+} from "@/feature/pd/utils/array-buffer-to-url";
 import { useS3Image } from "@/hooks/use-s3-image";
 
 interface PdImageProps {
@@ -8,6 +12,14 @@ interface PdImageProps {
 
 export const PdImage = ({ imageFileName }: PdImageProps) => {
   const { data: pdImage } = useS3Image(imageFileName);
+
+  useEffect(() => {
+    return () => {
+      if (pdImage) {
+        revokeArrayBufferUrl(pdImage);
+      }
+    };
+  }, [pdImage]);
 
   return (
     <>
