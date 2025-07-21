@@ -1,5 +1,8 @@
 "use client";
 
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { Fragment } from "react";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -9,9 +12,6 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { generateBreadcrumbs } from "@/utils/generate-bread-crumbs";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { Fragment } from "react";
 import { NextLinkLoader } from "./next-link-loader";
 
 export const NavBreadcrumb = () => {
@@ -26,7 +26,7 @@ export const NavBreadcrumb = () => {
             <BreadcrumbItem>
               {index < breadcrumbPaths.length - 1 ? (
                 <BreadcrumbLink asChild>
-                  <Link href={breadcrumb.href} className="flex items-center">
+                  <Link className="flex items-center" href={breadcrumb.href}>
                     {breadcrumb.label}
                     <NextLinkLoader className="size-4 ml-2" />
                   </Link>

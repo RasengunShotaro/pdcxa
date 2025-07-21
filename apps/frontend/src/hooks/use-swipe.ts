@@ -38,7 +38,7 @@ export const useSwipe = (setIsVisible: (state: boolean) => void) => {
         startYRef.current = null;
       }
     },
-    [setIsVisible]
+    [setIsVisible],
   );
 
   const handleTouchEnd = useCallback(() => {

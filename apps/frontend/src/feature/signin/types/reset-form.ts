@@ -10,11 +10,11 @@ export const resetPasswordFormSchema = v.pipe(
   v.object({
     code: v.pipe(
       v.string(),
-      v.length(6, "確認コードは6文字である必要があります")
+      v.length(6, "確認コードは6文字である必要があります"),
     ),
     password: v.pipe(
       v.string(),
-      v.minLength(8, "パスワードは8文字以上である必要があります")
+      v.minLength(8, "パスワードは8文字以上である必要があります"),
     ),
     confirmPassword: v.string(),
   }),
@@ -22,10 +22,10 @@ export const resetPasswordFormSchema = v.pipe(
     v.partialCheck(
       [["password"], ["confirmPassword"]],
       (input) => input.password === input.confirmPassword,
-      "パスワードが一致しません"
+      "パスワードが一致しません",
     ),
-    ["confirmPassword"]
-  )
+    ["confirmPassword"],
+  ),
 );
 
 export type ResetPasswordFormSchema = v.InferOutput<

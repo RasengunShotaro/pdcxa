@@ -9,7 +9,7 @@ const createRePdSchema = v.object({
   content: v.pipe(
     v.string(),
     v.maxLength(200, "RePDが長すぎます。200文字以内で入力してください"),
-    v.minLength(1, "RePDを入力してください")
+    v.minLength(1, "RePDを入力してください"),
   ),
 });
 

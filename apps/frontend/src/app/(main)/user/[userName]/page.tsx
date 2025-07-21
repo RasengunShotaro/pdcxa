@@ -1,12 +1,13 @@
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from "@tanstack/react-query";
+import { Suspense } from "react";
 import { fetchDetailedPds } from "@/feature/pd/api/pd/fetch-detailed-pds";
 import { PdItemSkeleton } from "@/feature/pd/components/pd/pd-item-skeleton";
 import { UserPdTimeLine } from "@/feature/pd/components/pd/user-pd-timeline";
-import {
-  HydrationBoundary,
-  QueryClient,
-  dehydrate,
-} from "@tanstack/react-query";
-import { Suspense } from "react";
+
 interface UserPageProps {
   params: Promise<{
     userName: string;

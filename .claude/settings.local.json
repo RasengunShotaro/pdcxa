@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(bun run:*)",
+      "WebFetch(domain:www.better-auth.com)",
+      "Bash(bun add:*)",
+      "mcp__context7__resolve-library-id",
+      "mcp__context7__get-library-docs",
+      "Bash(bun install:*)",
+      "Bash(node:*)",
+      "Bash(bun check-types:*)",
+      "Bash(bun lint:*)",
+      "Bash(bunx biome check:*)",
+      "Bash(bun:*)"
+    ],
+    "deny": []
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "context7",
+    "playwright"
+  ]
+}
