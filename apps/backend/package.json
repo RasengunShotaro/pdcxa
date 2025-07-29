@@ -22,8 +22,8 @@
     "@hono/clerk-auth": "^3.0.2",
     "@hono/standard-validator": "^0.1.4",
     "@neondatabase/serverless": "^1.0.1",
-    "drizzle-orm": "^0.44.3",
-    "hono": "^4.8.5",
+    "drizzle-orm": "^0.44.4",
+    "hono": "^4.8.10",
     "uuidv7": "^1.0.2",
     "wasm-image-optimization": "^1.2.30"
   },
