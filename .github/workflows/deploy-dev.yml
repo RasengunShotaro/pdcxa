@@ -22,7 +22,7 @@ jobs:
         run: bun install --frozen-lockfile
 
       - name: Cache for Turbo
-        uses: rharkor/caching-for-turbo@v2.1.3
+        uses: rharkor/caching-for-turbo@v2.2.4
 
       - name: デプロイ
         run: bun run deploy:dev
