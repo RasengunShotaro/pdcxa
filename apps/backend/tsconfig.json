@@ -3,15 +3,11 @@
     "jsx": "react-jsx",
     "jsxImportSource": "hono/jsx",
     "paths": {
-      "#/*": [
-        "./src/*"
-      ]
+      "#/*": ["./src/*"]
     },
     "strict": true,
-    "types": [
-      "@cloudflare/workers-types",
-    ],
-    "skipLibCheck": true,
+    "types": ["@cloudflare/workers-types"],
+    "skipLibCheck": true
   },
   "exclude": ["node_modules"]
 }

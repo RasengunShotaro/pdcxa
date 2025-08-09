@@ -22,8 +22,8 @@ export const PDのいいね状態を更新する = async ({
     .where(
       and(
         eq(pdLikes.userId, ログイン中のユーザーID),
-        eq(pdLikes.targetPdId, pdId)
-      )
+        eq(pdLikes.targetPdId, pdId),
+      ),
     )
     .limit(1);
 
@@ -33,8 +33,8 @@ export const PDのいいね状態を更新する = async ({
       .where(
         and(
           eq(pdLikes.userId, ログイン中のユーザーID),
-          eq(pdLikes.targetPdId, pdId)
-        )
+          eq(pdLikes.targetPdId, pdId),
+        ),
       );
   } else {
     await db.insert(pdLikes).values({

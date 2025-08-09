@@ -27,12 +27,8 @@
           "name": "pd_likes_target_pd_id_pds_id_fk",
           "tableFrom": "pd_likes",
           "tableTo": "pds",
-          "columnsFrom": [
-            "target_pd_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["target_pd_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -103,12 +99,8 @@
           "name": "repd_likes_target_repd_id_repds_id_fk",
           "tableFrom": "repd_likes",
           "tableTo": "repds",
-          "columnsFrom": [
-            "target_repd_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["target_repd_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -160,12 +152,8 @@
           "name": "repds_pd_id_pds_id_fk",
           "tableFrom": "repds",
           "tableTo": "pds",
-          "columnsFrom": [
-            "pd_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["pd_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }

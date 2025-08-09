@@ -65,7 +65,7 @@ export const fetchRawPds = async ({
     .leftJoin(repliesCountSubquery, eq(pdsSchema.id, repliesCountSubquery.pdId))
     .leftJoin(
       likesDetailsSubquery,
-      eq(pdsSchema.id, likesDetailsSubquery.pdId)
+      eq(pdsSchema.id, likesDetailsSubquery.pdId),
     );
 
   type QueryResult = Awaited<typeof baseQuery>;

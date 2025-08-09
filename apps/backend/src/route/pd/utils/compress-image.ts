@@ -2,7 +2,7 @@ import { optimizeImage } from "wasm-image-optimization";
 
 const compress = async (
   image: ArrayBuffer,
-  quality: number
+  quality: number,
 ): Promise<Uint8Array> => {
   return (await optimizeImage({
     image: image,
@@ -54,7 +54,7 @@ export const compressImage = async ({
     throw new Error(
       `圧縮後の画像サイズが${maxSizeKB}KBを超えました。最終サイズ: ${(
         currentSize / 1024
-      ).toFixed(2)}KB`
+      ).toFixed(2)}KB`,
     );
   }
 

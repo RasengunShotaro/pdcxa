@@ -22,7 +22,7 @@ export const invitationApp = new Hono().post(
       {
         message: "招待を作成しました",
       },
-      200
+      200,
     );
-  }
+  },
 );
