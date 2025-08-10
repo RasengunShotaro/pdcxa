@@ -33,7 +33,7 @@ export const pdLikes = pgTable(
       .references(() => pds.id),
     userId: varchar("user_id").notNull(),
   },
-  (table) => [primaryKey({ columns: [table.targetPdId, table.userId] })]
+  (table) => [primaryKey({ columns: [table.targetPdId, table.userId] })],
 );
 
 export const rePdLikes = pgTable(
@@ -44,5 +44,5 @@ export const rePdLikes = pgTable(
       .references(() => rePds.id),
     userId: varchar("user_id").notNull(),
   },
-  (table) => [primaryKey({ columns: [table.targetRePdId, table.userId] })]
+  (table) => [primaryKey({ columns: [table.targetRePdId, table.userId] })],
 );
