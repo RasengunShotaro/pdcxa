@@ -3,9 +3,7 @@
   "name": "backend",
   "main": "src/index.ts",
   "compatibility_date": "2025-05-26",
-  "compatibility_flags": [
-    "nodejs_compat"
-  ],
+  "compatibility_flags": ["nodejs_compat"],
   "env": {
     "dev": {
       "name": "backend-dev",

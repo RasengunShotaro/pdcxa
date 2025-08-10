@@ -22,8 +22,8 @@ export const RePdのいいね状態を更新する = async ({
     .where(
       and(
         eq(rePdLikes.targetRePdId, rePdId),
-        eq(rePdLikes.userId, ログイン中のユーザーID)
-      )
+        eq(rePdLikes.userId, ログイン中のユーザーID),
+      ),
     );
 
   if (existingLike.length > 0) {
@@ -32,8 +32,8 @@ export const RePdのいいね状態を更新する = async ({
       .where(
         and(
           eq(rePdLikes.targetRePdId, rePdId),
-          eq(rePdLikes.userId, ログイン中のユーザーID)
-        )
+          eq(rePdLikes.userId, ログイン中のユーザーID),
+        ),
       );
     return;
   }

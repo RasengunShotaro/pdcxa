@@ -329,7 +329,6 @@ export function TextAnimate({
     case "line":
       segments = children.split("\n");
       break;
-    case "text":
     default:
       segments = [children];
       break;
@@ -400,7 +399,7 @@ export function TextAnimate({
               segmentClassName,
             )}
             custom={i * staggerTimings[by]}
-            key={`${by}-${segment}-${i}`}
+            key={`${by}-${segment}`}
             variants={finalVariants.item}
           >
             {segment}

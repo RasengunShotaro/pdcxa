@@ -45,7 +45,7 @@ export const fetchRawRePds = async ({
     .leftJoin(likesCountSubquery, eq(rePdsSchema.id, likesCountSubquery.rePdId))
     .leftJoin(
       likesDetailsSubquery,
-      eq(rePdsSchema.id, likesDetailsSubquery.rePdId)
+      eq(rePdsSchema.id, likesDetailsSubquery.rePdId),
     );
 
   type QueryResult = Awaited<typeof query>;
@@ -58,7 +58,9 @@ export const fetchRawRePds = async ({
     }));
 
   const fetchedRePds = formatRePdRows(
-    await query.where(eq(rePdsSchema.pdId, pdId)).orderBy(rePdsSchema.createdAt)
+    await query
+      .where(eq(rePdsSchema.pdId, pdId))
+      .orderBy(rePdsSchema.createdAt),
   );
 
   const currentUserId = userId;
