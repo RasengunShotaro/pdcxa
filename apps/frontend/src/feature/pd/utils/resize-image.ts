@@ -1,4 +1,8 @@
 export const resizeImage = async (image: File): Promise<File> => {
+  if (image.type === "image/gif") {
+    return image;
+  }
+
   const maxWidth = 1920;
   const maxHeight = 1920;
 
