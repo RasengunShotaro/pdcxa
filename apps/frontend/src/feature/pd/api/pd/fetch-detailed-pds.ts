@@ -1,5 +1,9 @@
 "use server";
 
+import {
+  PDを詳細化する,
+  ユーザーIDリストを抽出する,
+} from "../../utils/pd-data-transformer";
 import { fetchUserDetails } from "../fetch-user-details";
 import { fetchRawPds } from "./fetch-raw-pds";
 
@@ -14,41 +18,12 @@ export const fetchDetailedPds = async ({
 }) => {
   const fetchedPds = await fetchRawPds({ pdId, userName, cursor });
 
-  const allUserIds = fetchedPds.items.flatMap((pd) => {
-    const likeUserIds = pd.likes.map((like) => like.userId);
-    return [pd.userId, ...likeUserIds];
-  });
-  const uniqueUserIds = [...new Set(allUserIds)];
-  const userDetails = await fetchUserDetails(uniqueUserIds);
-  const userDetailsMap = new Map(userDetails.map((user) => [user.id, user]));
-
-  const detailedPds = fetchedPds.items.map((pd) => {
-    const userDetail = userDetailsMap.get(pd.userId);
-    const userFullName = `${userDetail?.firstName ?? ""} ${
-      userDetail?.lastName ?? ""
-    }`;
-
-    const likeUserNames = pd.likes.map((like) => {
-      const likeUserDetail = userDetailsMap.get(like.userId);
-      return `${likeUserDetail?.firstName ?? ""} ${
-        likeUserDetail?.lastName ?? ""
-      }`;
-    });
-
-    return {
-      ...pd,
-      userDetail: {
-        id: userDetail?.id ?? "",
-        userFullName,
-        imageUrl: userDetail?.imageUrl ?? "",
-        userName: userDetail?.userName ?? "",
-      },
-      likeUserNames,
-    };
-  });
+  const userDetails = await fetchUserDetails(
+    ユーザーIDリストを抽出する(fetchedPds.items),
+  );
 
   return {
-    items: detailedPds,
+    items: PDを詳細化する(fetchedPds.items, userDetails),
     nextCursor: fetchedPds.nextCursor,
   };
 };
