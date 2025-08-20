@@ -16,15 +16,32 @@ export const PDを作成する = async ({
   c: Context<Bindings>;
 }) => {
   const user = ログイン中のユーザーを取得(c);
-  const compressedImage = image ? await compressImage({ image }) : null;
-  const imageFileName = compressedImage
-    ? await R2に画像をアップロードする({
-        body: compressedImage,
-        fileName: `${user.userId}-${Date.now()}`,
-        contentType: "image/jpeg",
-        extension: "jpeg",
-        c,
-      })
+
+  const imageFileName = image
+    ? await (async () => {
+        const isGif = image.type === "image/gif";
+        const fileName = `${user.userId}-${Date.now()}`;
+
+        if (isGif) {
+          const imageBuffer = await image.arrayBuffer();
+          return R2に画像をアップロードする({
+            body: new Uint8Array(imageBuffer),
+            fileName,
+            contentType: "image/gif",
+            extension: "gif",
+            c,
+          });
+        }
+
+        const compressedImage = await compressImage({ image });
+        return R2に画像をアップロードする({
+          body: compressedImage,
+          fileName,
+          contentType: "image/jpeg",
+          extension: "jpeg",
+          c,
+        });
+      })()
     : null;
 
   const newPd = {
