@@ -54,7 +54,3 @@ bun dev
 ```
 
 開発サーバーは http://localhost:3000 で起動します。
-
-## 開発ガイドライン
-
-- [Roo Rules](.roo/rules)に配置

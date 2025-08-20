@@ -24,7 +24,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { usePd } from "@/hooks/use-pd";
 import { type PdFormSchema, pdFormSchema } from "../../types";
-import { resizeImage } from "../../utils/resize-image";
+import { 画像をリサイズする } from "../../utils/resize-image";
 
 interface PdModalProps {
   isOpen: boolean;
@@ -46,7 +46,9 @@ export const PdModal: React.FC<PdModalProps> = ({ isOpen, onClose }) => {
 
   const onSubmit = async (values: PdFormSchema) => {
     try {
-      const image = values.image ? await resizeImage(values.image) : undefined;
+      const image = values.image
+        ? await 画像をリサイズする(values.image)
+        : undefined;
       await createPd({ content: values.content, image });
       toast.success("PDしました!");
 
