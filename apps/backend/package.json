@@ -20,7 +20,7 @@
   },
   "dependencies": {
     "@hono/clerk-auth": "^3.0.3",
-    "@hono/standard-validator": "^0.1.4",
+    "@hono/standard-validator": "^0.1.5",
     "@neondatabase/serverless": "^1.0.1",
     "drizzle-orm": "^0.44.4",
     "hono": "^4.9.2",
