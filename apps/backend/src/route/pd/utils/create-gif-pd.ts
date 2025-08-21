@@ -3,34 +3,29 @@ import { pds } from "../../../db/schema";
 import type { Bindings } from "../../../lib/bindings";
 import { db } from "../../../lib/db";
 import { ログイン中のユーザーを取得 } from "../../../utils/current-user";
-import { compressImage } from "./compress-image";
 import { R2に画像をアップロードする } from "./r2-utils";
 
-export const PDを作成する = async ({
+export const GIFを含むPDを作成する = async ({
   content,
   image,
   c,
 }: {
   content: string;
-  image?: File;
+  image: File;
   c: Context<Bindings>;
 }) => {
   const user = ログイン中のユーザーを取得(c);
 
-  const imageFileName = image
-    ? await (async () => {
-        const compressedImage = await compressImage({ image });
-        const fileName = `${user.userId}-${Date.now()}`;
+  const imageBuffer = await image.arrayBuffer();
+  const fileName = `${user.userId}-${Date.now()}`;
 
-        return R2に画像をアップロードする({
-          body: compressedImage,
-          fileName,
-          contentType: "image/jpeg",
-          extension: "jpeg",
-          c,
-        });
-      })()
-    : null;
+  const imageFileName = await R2に画像をアップロードする({
+    body: new Uint8Array(imageBuffer),
+    fileName,
+    contentType: "image/gif",
+    extension: "gif",
+    c,
+  });
 
   const newPd = {
     content,

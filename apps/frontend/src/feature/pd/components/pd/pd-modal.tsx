@@ -3,7 +3,7 @@
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { Image, Loader2, MessageCircle, X } from "lucide-react";
 import NextImage from "next/image";
-import { useRef, useState } from "react";
+import { useRef, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -23,6 +23,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { usePd } from "@/hooks/use-pd";
+import { createGifPd } from "../../api/pd/create-gif-pd";
 import { type PdFormSchema, pdFormSchema } from "../../types";
 import { 画像をリサイズする } from "../../utils/resize-image";
 
@@ -43,24 +44,34 @@ export const PdModal: React.FC<PdModalProps> = ({ isOpen, onClose }) => {
     },
   });
   const { createPd, isMutationPending } = usePd({});
+  const [isPending, startTransition] = useTransition();
 
   const onSubmit = async (values: PdFormSchema) => {
-    try {
-      const image = values.image
-        ? await 画像をリサイズする(values.image)
-        : undefined;
-      await createPd({ content: values.content, image });
-      toast.success("PDしました!");
+    startTransition(async () => {
+      try {
+        const isGif = values.image?.type === "image/gif";
 
-      form.reset();
-      if (fileInputRef.current) {
-        fileInputRef.current.value = "";
+        if (isGif && values.image) {
+          await createGifPd({ content: values.content, image: values.image });
+        } else {
+          const image = values.image
+            ? await 画像をリサイズする(values.image)
+            : undefined;
+          await createPd({ content: values.content, image });
+        }
+
+        toast.success("PDしました!");
+
+        form.reset();
+        if (fileInputRef.current) {
+          fileInputRef.current.value = "";
+        }
+        setPreviewUrl(null);
+        onClose();
+      } catch {
+        toast.error("PDに失敗しました");
       }
-      setPreviewUrl(null);
-      onClose();
-    } catch {
-      toast.error("PDに失敗しました");
-    }
+    });
   };
 
   return (
@@ -163,7 +174,9 @@ export const PdModal: React.FC<PdModalProps> = ({ isOpen, onClose }) => {
               </div>
               <div>
                 <Button type="submit">
-                  {isMutationPending && <Loader2 className="animate-spin" />}
+                  {(isMutationPending || isPending) && (
+                    <Loader2 className="animate-spin" />
+                  )}
                   <MessageCircle className="h-3 w-3 mr-1" />
                   PDする
                 </Button>
