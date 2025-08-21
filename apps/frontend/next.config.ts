@@ -15,6 +15,9 @@ const nextConfig: NextConfig = {
       "@radix-ui/react-separator",
       "@radix-ui/react-tooltip",
     ],
+    serverActions: {
+      bodySizeLimit: "2mb",
+    },
   },
 };
 
