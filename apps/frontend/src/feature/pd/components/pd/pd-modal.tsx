@@ -25,7 +25,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { usePd } from "@/hooks/use-pd";
 import { createGifPd } from "../../api/pd/create-gif-pd";
 import { type PdFormSchema, pdFormSchema } from "../../types";
-import { 画像をリサイズする } from "../../utils/resize-image";
+import { resizeImage } from "../../utils/resize-image";
 
 interface PdModalProps {
   isOpen: boolean;
@@ -55,7 +55,7 @@ export const PdModal: React.FC<PdModalProps> = ({ isOpen, onClose }) => {
           await createGifPd({ content: values.content, image: values.image });
         } else {
           const image = values.image
-            ? await 画像をリサイズする(values.image)
+            ? await resizeImage(values.image)
             : undefined;
           await createPd({ content: values.content, image });
         }

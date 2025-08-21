@@ -16,7 +16,7 @@ const nextConfig: NextConfig = {
       "@radix-ui/react-tooltip",
     ],
     serverActions: {
-      bodySizeLimit: "3mb",
+      bodySizeLimit: "2mb",
     },
   },
 };

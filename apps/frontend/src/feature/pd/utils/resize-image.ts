@@ -1,38 +1,21 @@
-const リサイズ後の寸法を計算する = (
-  originalWidth: number,
-  originalHeight: number,
-  maxWidth: number,
-  maxHeight: number,
-) => {
-  const widthRatio = maxWidth / originalWidth;
-  const heightRatio = maxHeight / originalHeight;
-  const ratio = Math.min(widthRatio, heightRatio);
-
-  return {
-    width: Math.round(originalWidth * ratio),
-    height: Math.round(originalHeight * ratio),
-  };
-};
-
-export const 画像をリサイズする = async (image: File): Promise<File> => {
-  if (image.type === "image/gif") {
-    return image;
-  }
-
+export const resizeImage = async (image: File): Promise<File> => {
   const maxWidth = 1920;
   const maxHeight = 1920;
 
   const imageBitmap = await createImageBitmap(image);
-  const { width, height } = imageBitmap;
+  const originalWidth = imageBitmap.width;
+  const originalHeight = imageBitmap.height;
 
-  const { width: newWidth, height: newHeight } = リサイズ後の寸法を計算する(
-    width,
-    height,
-    maxWidth,
-    maxHeight,
-  );
-  if (newWidth === width && newHeight === height) {
-    return image;
+  let newWidth = originalWidth;
+  let newHeight = originalHeight;
+
+  if (originalWidth > maxWidth) {
+    newWidth = maxWidth;
+    newHeight = (originalHeight * maxWidth) / originalWidth;
+  }
+  if (newHeight > maxHeight) {
+    newHeight = maxHeight;
+    newWidth = (originalWidth * maxHeight) / originalHeight;
   }
 
   const canvas = new OffscreenCanvas(newWidth, newHeight);
