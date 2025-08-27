@@ -1,9 +1,9 @@
 {
   "name": "@pdcxa/common-dev-packages",
   "devDependencies": {
-    "@biomejs/biome": "^2.2.0",
-    "@cloudflare/workers-types": "^4.20250816.0",
-    "@types/bun": "^1.2.20",
-    "wrangler": "^4.31.0"
+    "@biomejs/biome": "^2.2.2",
+    "@cloudflare/workers-types": "^4.20250826.0",
+    "@types/bun": "^1.2.21",
+    "wrangler": "^4.33.0"
   }
 }
