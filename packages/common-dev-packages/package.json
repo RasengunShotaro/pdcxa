@@ -4,6 +4,6 @@
     "@biomejs/biome": "^2.2.2",
     "@cloudflare/workers-types": "^4.20250904.0",
     "@types/bun": "^1.2.21",
-    "wrangler": "^4.33.2"
+    "wrangler": "^4.34.0"
   }
 }
