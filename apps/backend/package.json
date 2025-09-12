@@ -23,7 +23,7 @@
     "@hono/standard-validator": "^0.1.5",
     "@neondatabase/serverless": "^1.0.1",
     "drizzle-orm": "^0.44.5",
-    "hono": "^4.9.6",
+    "hono": "^4.9.7",
     "uuidv7": "^1.0.2",
     "wasm-image-optimization": "^1.2.30"
   },
