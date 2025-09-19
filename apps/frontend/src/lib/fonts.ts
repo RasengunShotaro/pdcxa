@@ -16,12 +16,12 @@ export const udShinGo = localFont({
       weight: "700",
     },
   ],
-  preload: false,
+  preload: true,
   display: "swap",
 });
 
 export const bizUdpGothic = BIZ_UDPGothic({
   weight: ["400", "700"],
-  preload: false,
+  preload: true,
   display: "swap",
 });
