@@ -1,4 +1,3 @@
-import { BIZ_UDPGothic } from "next/font/google";
 import localFont from "next/font/local";
 
 export const udShinGo = localFont({
@@ -16,12 +15,6 @@ export const udShinGo = localFont({
       weight: "700",
     },
   ],
-  preload: false,
-  display: "swap",
-});
-
-export const bizUdpGothic = BIZ_UDPGothic({
-  weight: ["400", "700"],
-  preload: false,
+  preload: true,
   display: "swap",
 });
