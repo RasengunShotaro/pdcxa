@@ -51,19 +51,20 @@ bun deploy:dev
 
 ## アーキテクチャ
 
-### ディレクトリ構造（Bulletproof React準拠）
+### ディレクトリ構造（Bulletproof React 準拠）
 
-- `apps/frontend/src/feature/` - 機能別のコンポーネント、hooks、API呼び出し、型定義
+- `apps/frontend/src/feature/` - 機能別のコンポーネント、hooks、API 呼び出し、型定義
 - `apps/frontend/src/components/` - 共通コンポーネント（ui/, elements/）
 - `apps/backend/src/route/` - エンドポイント別のルーティング（pd/, repd/, user/, invitation/）
 - `apps/backend/src/route/[domain]/utils/` - ドメインロジック実装
 
 ### ヘキサゴナルアーキテクチャ（バックエンド）
 
-各ドメインは3層構造：
+各ドメインは 3 層構造：
+
 - `application/` - アプリケーション層
 - `infrastructure/` - インフラ層
-- `utils/` - ドメインロジック（現在はutilsディレクトリに配置）
+- `utils/` - ドメインロジック（現在は utils ディレクトリに配置）
 
 ### ドメイン用語
 
@@ -98,12 +99,13 @@ bun deploy:dev
 ## データベース設計
 
 主要テーブル：
-- `pds` - PD投稿
-- `repds` - RePd投稿
-- `pd_likes` - PDいいね
-- `repd_likes` - RePdいいね
 
-## API設計
+- `pds` - PD 投稿
+- `repds` - RePd 投稿
+- `pd_likes` - PD いいね
+- `repd_likes` - RePd いいね
+
+## API 設計
 
 - Hono フレームワーク使用
 - Valibot によるバリデーション
@@ -114,3 +116,4 @@ bun deploy:dev
 - 機密情報（API キー、環境変数）の読み取り・PUSH 禁止
 - ライブラリの勝手なアップデート禁止
 - Shadcn UI は `shadcn@latest` を使用（`shadcn-ui@latest` は非推奨）
+- コメント、JSDoc は書かないこと
