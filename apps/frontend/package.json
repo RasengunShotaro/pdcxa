@@ -16,9 +16,9 @@
     "test": "bun test"
   },
   "dependencies": {
-    "@clerk/localizations": "^3.27.0",
-    "@clerk/nextjs": "^6.34.5",
-    "@clerk/themes": "^2.4.33",
+    "@clerk/localizations": "^3.28.0",
+    "@clerk/nextjs": "^6.35.1",
+    "@clerk/themes": "^2.4.36",
     "@hookform/resolvers": "^5.2.2",
     "@opennextjs/cloudflare": "^1.11.1",
     "@pdcxa/backend": "workspace:*",
@@ -34,7 +34,7 @@
     "@radix-ui/react-tooltip": "^1.2.8",
     "@tanstack/react-query": "^5.90.7",
     "@tanstack/react-query-devtools": "^5.90.2",
-    "babel-plugin-react-compiler": "^19.1.0-rc.3",
+    "babel-plugin-react-compiler": "1.0.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "input-otp": "^1.4.2",

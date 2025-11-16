@@ -31,10 +31,18 @@
       "mcp__serena__insert_before_symbol",
       "mcp__next-devtools__enable_cache_components",
       "Bash(copy:*)",
-      "mcp__next-devtools__nextjs_runtime"
+      "mcp__next-devtools__nextjs_runtime",
+      "WebSearch",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:opennext.js.org)",
+      "WebFetch(domain:www.npmjs.com)"
     ],
     "deny": []
   },
   "enableAllProjectMcpServers": true,
-  "enabledMcpjsonServers": ["context7", "playwright", "next-devtools"]
+  "enabledMcpjsonServers": [
+    "context7",
+    "playwright",
+    "next-devtools"
+  ]
 }
