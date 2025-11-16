@@ -28,10 +28,13 @@
       "mcp__serena__read_memory",
       "mcp__serena__think_about_task_adherence",
       "mcp__serena__replace_symbol_body",
-      "mcp__serena__insert_before_symbol"
+      "mcp__serena__insert_before_symbol",
+      "mcp__next-devtools__enable_cache_components",
+      "Bash(copy:*)",
+      "mcp__next-devtools__nextjs_runtime"
     ],
     "deny": []
   },
   "enableAllProjectMcpServers": true,
-  "enabledMcpjsonServers": ["context7", "playwright"]
+  "enabledMcpjsonServers": ["context7", "playwright", "next-devtools"]
 }

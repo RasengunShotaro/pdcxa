@@ -2,11 +2,7 @@
 import { jaJP } from "@clerk/localizations";
 import { ClerkProvider } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
-import {
-  isServer,
-  QueryClient,
-  QueryClientProvider,
-} from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { ThemeProvider } from "next-themes";
 import type { ReactNode } from "react";
@@ -30,7 +26,7 @@ const makeQueryClient = () => {
 let browserQueryClient: QueryClient | undefined;
 
 const getQueryClient = () => {
-  if (isServer) {
+  if (typeof window === "undefined") {
     return makeQueryClient();
   }
   if (!browserQueryClient) browserQueryClient = makeQueryClient();
