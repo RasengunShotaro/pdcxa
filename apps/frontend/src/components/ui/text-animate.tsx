@@ -6,7 +6,8 @@ import {
   motion,
   type Variants,
 } from "motion/react";
-import type { ElementType } from "react";
+import { type ElementType, memo } from "react";
+
 import { cn } from "@/lib/utils";
 
 type AnimationType = "text" | "word" | "character" | "line";
@@ -67,6 +68,10 @@ interface TextAnimateProps extends MotionProps {
    * The animation preset to use
    */
   animation?: AnimationVariant;
+  /**
+   * Whether to enable accessibility features (default: true)
+   */
+  accessible?: boolean;
 }
 
 const staggerTimings: Record<AnimationType, number> = {
@@ -302,7 +307,7 @@ const defaultItemAnimationVariants: Record<
   },
 };
 
-export function TextAnimate({
+const TextAnimateBase = ({
   children,
   delay = 0,
   duration = 0.3,
@@ -314,8 +319,9 @@ export function TextAnimate({
   once = false,
   by = "word",
   animation = "fadeIn",
+  accessible = true,
   ...props
-}: TextAnimateProps) {
+}: TextAnimateProps) => {
   const MotionComponent = motion.create(Component);
 
   let segments: string[] = [];
@@ -383,6 +389,7 @@ export function TextAnimate({
     <AnimatePresence mode="popLayout">
       <MotionComponent
         animate={startOnView ? undefined : "show"}
+        aria-label={accessible ? children : undefined}
         className={cn("whitespace-pre-wrap", className)}
         exit="exit"
         initial="hidden"
@@ -391,15 +398,17 @@ export function TextAnimate({
         whileInView={startOnView ? "show" : undefined}
         {...props}
       >
+        {accessible && <span className="sr-only">{children}</span>}
         {segments.map((segment, i) => (
           <motion.span
+            aria-hidden={accessible ? true : undefined}
             className={cn(
               by === "line" ? "block" : "inline-block whitespace-pre",
               by === "character" && "",
               segmentClassName,
             )}
             custom={i * staggerTimings[by]}
-            key={`${by}-${segment}`}
+            key={`${by}-${segment}-${i}`}
             variants={finalVariants.item}
           >
             {segment}
@@ -408,4 +417,7 @@ export function TextAnimate({
       </MotionComponent>
     </AnimatePresence>
   );
-}
+};
+
+// Export the memoized version
+export const TextAnimate = memo(TextAnimateBase);

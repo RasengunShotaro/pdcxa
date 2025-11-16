@@ -64,7 +64,7 @@ export default function AuthLayout({
           priority
           src={backgroundImage}
         />
-        <div className="fixed inset-0 bg-gradient-to-t from-background/50 via-transparent to-transparent" />
+        <div className="fixed inset-0 bg-linear-to-t from-background/50 via-transparent to-transparent" />
       </div>
       <div className="flex items-center justify-center p-8 relative">
         <div className="flex-auto w-full max-w-md">{children}</div>
