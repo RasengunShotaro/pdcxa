@@ -15,6 +15,9 @@ export default function RootLayout({
 }>) {
   return (
     <html className={udShinGo.className} lang="ja" suppressHydrationWarning>
+      <head>
+        <meta name="darkreader-lock" />
+      </head>
       <body>
         <Providers>{children}</Providers>
       </body>
