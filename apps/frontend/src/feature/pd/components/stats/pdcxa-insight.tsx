@@ -168,7 +168,7 @@ export const PDCXAInsight = ({ stats }: { stats: PdWeeklyStatsDetailed }) => {
             </ChartContainer>
           </CardContent>
         </Card>
-        <Card className="space-y-2">
+        <Card className="space-y-2 overflow-hidden">
           <CardHeader>
             <CardTitle>PD件数ランキング</CardTitle>
           </CardHeader>
@@ -184,7 +184,7 @@ export const PDCXAInsight = ({ stats }: { stats: PdWeeklyStatsDetailed }) => {
                     className="flex justify-between gap-4"
                     key={entry.userId}
                   >
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-3 min-w-0 flex-1">
                       <span className="text-lg font-semibold text-muted-foreground">
                         {index + 1}
                       </span>
@@ -194,9 +194,11 @@ export const PDCXAInsight = ({ stats }: { stats: PdWeeklyStatsDetailed }) => {
                           src={entry.imageUrl}
                         />
                       </Avatar>
-                      <div>
-                        <p className="font-semibold">{entry.displayName}</p>
-                        <p className="text-muted-foreground text-xs">
+                      <div className="min-w-0">
+                        <p className="font-semibold truncate">
+                          {entry.displayName}
+                        </p>
+                        <p className="text-muted-foreground text-xs truncate">
                           {entry.userName ? `@${entry.userName}` : entry.userId}
                         </p>
                       </div>
