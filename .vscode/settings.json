@@ -1,3 +1,4 @@
 {
-  "cSpell.words": ["linkify", "PDCXA", "repd", "sonner", "uuidv", "valibot"]
+  "cSpell.words": ["linkify", "PDCXA", "repd", "sonner", "uuidv", "valibot"],
+  "css.lint.unknownAtRules": "ignore"
 }
