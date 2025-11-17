@@ -14,7 +14,7 @@ const ユーザー詳細情報のMapを作成する = (
   return new Map(userDetails.map((user) => [user.id, user]));
 };
 
-const ユーザーのフルネームをフォーマットする = (
+export const ユーザーのフルネームをフォーマットする = (
   userDetail?: UserDetail,
 ): string => {
   return `${userDetail?.firstName ?? ""} ${userDetail?.lastName ?? ""}`.trim();

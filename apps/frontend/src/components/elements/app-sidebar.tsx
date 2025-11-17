@@ -1,4 +1,4 @@
-import { Home, Mail, User } from "lucide-react";
+import { BarChart3, Home, Mail, User } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -17,6 +17,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const menuItems = [
     { href: "/", label: "ホーム", icon: Home },
     { href: "/profile", label: "プロフィール", icon: User },
+    { href: "/stats", label: "統計", icon: BarChart3 },
     { href: "/invitation", label: "招待", icon: Mail },
   ];
 
