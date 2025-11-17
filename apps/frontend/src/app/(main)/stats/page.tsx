@@ -15,7 +15,7 @@ export default async function PdStatsPage() {
       <div className="space-y-2">
         <h1 className="text-3xl font-bold">PDCXA insight</h1>
         <p className="text-muted-foreground text-sm">
-          直近7日間 ({rangeLabel}) のPD/RePDアクティビティです。
+          {rangeLabel} のアクティビティ
         </p>
       </div>
       <PDCXAInsight stats={stats} />

@@ -40,9 +40,5 @@
     "deny": []
   },
   "enableAllProjectMcpServers": true,
-  "enabledMcpjsonServers": [
-    "context7",
-    "playwright",
-    "next-devtools"
-  ]
+  "enabledMcpjsonServers": ["context7", "playwright", "next-devtools"]
 }
