@@ -6,6 +6,7 @@ import type { PD詳細 } from "./types/pd-detail";
 import { GIFを含むPDを作成する } from "./utils/create-gif-pd";
 import { PDを作成する } from "./utils/create-pd";
 import { fetchRawPds } from "./utils/fetch-raw-pds";
+import { PD週間統計を取得する } from "./utils/fetch-weekly-stats";
 import { PDのいいね状態を更新する } from "./utils/update-pd-like";
 
 const fetchPdSchema = v.object({
@@ -60,6 +61,11 @@ export const pdApp = new Hono<Bindings>()
     });
 
     return c.json(PD詳細, 200);
+  })
+  .get("/stats/weekly", async (c) => {
+    const 統計 = await PD週間統計を取得する();
+
+    return c.json(統計, 200);
   })
   .post("/create", sValidator("form", createPdSchema), async (c) => {
     const { content, image } = c.req.valid("form");
