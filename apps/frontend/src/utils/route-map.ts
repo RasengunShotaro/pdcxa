@@ -4,4 +4,5 @@ export const RouteMap = {
   "/pd/[id]": "PD詳細",
   "/user/[id]": "ユーザー詳細",
   "/profile": "プロフィール",
+  "/stats": "統計",
 };
