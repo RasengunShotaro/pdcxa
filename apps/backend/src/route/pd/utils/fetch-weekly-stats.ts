@@ -16,18 +16,23 @@ const DateをYYYY_MM_DDに変換する = (date: Date) =>
   dayjs(date).tz(JST).format("YYYY-MM-DD");
 
 const 週次集計期間を決定する = (): 日付範囲 => {
-  const now = new Date();
-  const end = dayjs(now).tz(JST).endOf("day").utc().toDate();
-  const start = dayjs(end).tz(JST).startOf("day").utc().toDate();
-  start.setUTCDate(end.getUTCDate() - (取得対象日数 - 1));
+  const now = dayjs().tz(JST);
+  const end = now.endOf("day");
+  const start = end
+    .clone()
+    .subtract(取得対象日数 - 1, "day")
+    .startOf("day");
 
-  return { start, end };
+  return { start: start.utc().toDate(), end: end.utc().toDate() };
 };
 
-const 期間内の日別一覧を作成する = ({ start }: 日付範囲) =>
-  Array.from({ length: 取得対象日数 }, (_, offset) =>
-    DateをYYYY_MM_DDに変換する(dayjs(start).add(offset, "day").toDate()),
+const 期間内の日別一覧を作成する = ({ start }: 日付範囲) => {
+  const 開始日 = dayjs(start).tz(JST);
+  const 日数 = 取得対象日数;
+  return Array.from({ length: 日数 }, (_, offset) =>
+    開始日.add(offset, "day").format("YYYY-MM-DD"),
   );
+};
 
 const 日次集計Mapを作成する = (
   日時集計一覧: { 集計日: string; count: number }[],
