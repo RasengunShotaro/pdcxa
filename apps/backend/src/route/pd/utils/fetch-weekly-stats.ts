@@ -1,45 +1,33 @@
 import { and, eq, gte, lte, sql } from "drizzle-orm";
 import { pdLikes, pds, rePds } from "../../../db/schema";
+import { dayjs } from "../../../lib/dayjs";
 import { db } from "../../../lib/db";
 import type { PD週間統計 } from "../types/pd-weekly-stats";
 
 const 取得対象日数 = 7;
+const JST = "Asia/Tokyo";
 
 type 日付範囲 = {
   start: Date;
   end: Date;
 };
 
-const 一日の始まりの時刻を計算する = (date: Date) => {
-  const start = new Date(date);
-  start.setUTCHours(0, 0, 0, 0);
-  return start;
-};
-
-const 一日の最終時刻を計算する = (date: Date) => {
-  const end = new Date(date);
-  end.setUTCHours(23, 59, 59, 999);
-  return end;
-};
-
 const DateをYYYY_MM_DDに変換する = (date: Date) =>
-  date.toISOString().slice(0, 10);
+  dayjs(date).tz(JST).format("YYYY-MM-DD");
 
 const 週次集計期間を決定する = (): 日付範囲 => {
   const now = new Date();
-  const end = 一日の最終時刻を計算する(now);
-  const start = 一日の始まりの時刻を計算する(end);
+  const end = dayjs(now).tz(JST).endOf("day").utc().toDate();
+  const start = dayjs(end).tz(JST).startOf("day").utc().toDate();
   start.setUTCDate(end.getUTCDate() - (取得対象日数 - 1));
 
   return { start, end };
 };
 
 const 期間内の日別一覧を作成する = ({ start }: 日付範囲) =>
-  Array.from({ length: 取得対象日数 }, (_, offset) => {
-    const date = new Date(start);
-    date.setUTCDate(start.getUTCDate() + offset);
-    return DateをYYYY_MM_DDに変換する(date);
-  });
+  Array.from({ length: 取得対象日数 }, (_, offset) =>
+    DateをYYYY_MM_DDに変換する(dayjs(start).add(offset, "day").toDate()),
+  );
 
 const 日次集計Mapを作成する = (
   日時集計一覧: { 集計日: string; count: number }[],
@@ -52,8 +40,8 @@ const 日次集計Mapを作成する = (
 
 const 日毎の統計を取得する = async (range: 日付範囲) => {
   const { start, end } = range;
-  const PD日付 = sql<string>`date_trunc('day', ${pds.createdAt})`;
-  const RePD日付 = sql<string>`date_trunc('day', ${rePds.createdAt})`;
+  const PD日付 = sql<string>`date_trunc('day', (${pds.createdAt} AT TIME ZONE 'UTC') AT TIME ZONE 'Asia/Tokyo')`;
+  const RePD日付 = sql<string>`date_trunc('day', (${rePds.createdAt} AT TIME ZONE 'UTC') AT TIME ZONE 'Asia/Tokyo')`;
   const pd期間条件 = and(gte(pds.createdAt, start), lte(pds.createdAt, end));
   const repd期間条件 = and(
     gte(rePds.createdAt, start),
