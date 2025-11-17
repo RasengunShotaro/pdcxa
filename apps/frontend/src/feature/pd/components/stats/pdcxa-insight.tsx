@@ -168,7 +168,7 @@ export const PDCXAInsight = ({ stats }: { stats: PdWeeklyStatsDetailed }) => {
             </ChartContainer>
           </CardContent>
         </Card>
-        <Card className="space-y-2">
+        <Card className="space-y-2 overflow-hidden">
           <CardHeader>
             <CardTitle>PD件数ランキング</CardTitle>
           </CardHeader>
