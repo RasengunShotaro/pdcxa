@@ -2,7 +2,6 @@
 
 import { Heart } from "lucide-react";
 import { motion, type Variants } from "motion/react";
-import { cn } from "@/lib/utils";
 
 const MotionHeart = motion.create(Heart);
 
@@ -10,7 +9,7 @@ const heartVariants = {
   idle: {
     scale: 1,
     rotate: 0,
-    fill: "rgba(0,0,0,0)",
+    fill: "rgba(255,255,255,0)",
     strokeWidth: 1.8,
   },
   liked: {
@@ -26,7 +25,7 @@ export function AnimatedHeart({ isActive }: { isActive: boolean }) {
   return (
     <MotionHeart
       animate={isActive ? "liked" : "idle"}
-      className={cn("h-4 w-4", isActive ? "text-red-500" : "text-white")}
+      className={`h-4 w-4 ${isActive && "text-red-500!"}`}
       fill="none"
       initial={false}
       strokeWidth={1.8}
