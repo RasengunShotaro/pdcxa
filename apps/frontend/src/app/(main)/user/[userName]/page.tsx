@@ -19,7 +19,7 @@ export default async function UserPage({ params }: UserPageProps) {
   const queryClient = new QueryClient();
 
   await queryClient.prefetchInfiniteQuery({
-    queryKey: ["PD詳細", null, unwrapParams.userName],
+    queryKey: ["PD詳細", undefined, unwrapParams.userName],
     queryFn: () => fetchDetailedPds({ userName: unwrapParams.userName }),
     initialPageParam: undefined as string | undefined,
   });

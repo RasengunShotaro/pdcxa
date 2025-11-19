@@ -20,7 +20,7 @@ export default async function PdDetailPage({ params }: PdDetailProps) {
   const queryClient = new QueryClient();
 
   await queryClient.prefetchInfiniteQuery({
-    queryKey: ["PD詳細", unwrapParams.id, null],
+    queryKey: ["PD詳細", unwrapParams.id, undefined],
     queryFn: () => fetchDetailedPds({ pdId: unwrapParams.id }),
     initialPageParam: undefined as string | undefined,
   });

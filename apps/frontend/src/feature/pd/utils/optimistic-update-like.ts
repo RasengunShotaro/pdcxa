@@ -13,7 +13,7 @@ export const optimisticUpdateLike = async ({
   myUserId,
 }: {
   pd: Pd;
-  queryKey: (string | null)[];
+  queryKey: (string | undefined)[];
   queryClient: QueryClient;
   myUserId: string;
 }) => {
