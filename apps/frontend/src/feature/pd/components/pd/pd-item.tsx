@@ -78,8 +78,10 @@ const PdItem: React.FC<PdItemProps> = ({ pd, like }) => {
               {like}
               <Link href={`/pd/${pd.id}`}>
                 <Button className="space-x-1" size="sm" variant="ghost">
-                  <NextLinkLoader />
-                  <MessageCircle className="h-4 w-4" />
+                  <NextLinkLoader
+                    className="h-4 w-4"
+                    fallback={<MessageCircle className="h-4 w-4" />}
+                  />
                   <span>{pd.replyCount}</span>
                 </Button>
               </Link>
