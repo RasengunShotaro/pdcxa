@@ -20,9 +20,9 @@ export const useRePd = (pdId: string) => {
     mutationFn: (pd: string) => createRePd({ pdId, content: pd }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["RePD詳細", pdId] });
-      queryClient.invalidateQueries({ queryKey: ["PD詳細", [pdId]] });
+      queryClient.invalidateQueries({ queryKey: ["PD詳細", pdId, undefined] });
       queryClient.refetchQueries({
-        queryKey: ["PD詳細", null, null],
+        queryKey: ["PD詳細", undefined, undefined],
         exact: true,
         type: "all",
       });
