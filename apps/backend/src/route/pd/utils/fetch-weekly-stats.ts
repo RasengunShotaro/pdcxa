@@ -106,20 +106,16 @@ const 投稿者ランキングを取得する = async (range: 日付範囲) => {
         .where(pd期間条件)
         .groupBy(pds.userId),
       db
-        .select({
-          userId: pds.userId,
-          value: sql<number>`count(${pdLikes.userId})`,
-        })
-        .from(pds)
-        .leftJoin(pdLikes, eq(pds.id, pdLikes.targetPdId))
+        .select({ userId: pdLikes.userId, value: sql<number>`count(*)` })
+        .from(pdLikes)
+        .innerJoin(pds, eq(pdLikes.targetPdId, pds.id))
         .where(pd期間条件)
-        .groupBy(pds.userId),
+        .groupBy(pdLikes.userId),
       db
-        .select({ userId: pds.userId, value: sql<number>`count(${rePds.id})` })
-        .from(pds)
-        .innerJoin(rePds, eq(rePds.pdId, pds.id))
-        .where(and(pd期間条件, repd期間条件))
-        .groupBy(pds.userId),
+        .select({ userId: rePds.userId, value: sql<number>`count(*)` })
+        .from(rePds)
+        .where(repd期間条件)
+        .groupBy(rePds.userId),
     ]);
 
   const いいねMap = 投稿者別指標Mapを作成する(ユーザーごとのいいね数);
