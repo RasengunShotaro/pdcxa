@@ -38,23 +38,24 @@ const PdItem: React.FC<PdItemProps> = ({ pd, like }) => {
     >
       <Card>
         <CardHeader className="p-4 pt-0 pb-0">
-          <div className="min-w-0">
-            <Link className="block" href={`/user/${userDetail?.userName}`}>
-              <div className="flex items-center space-x-3 hover:bg-accent rounded-lg -m-1 p-1">
-                <UserAvatar
-                  imageUrl={userDetail.imageUrl}
-                  userFullName={userDetail.userFullName}
-                />
-                <div className="min-w-0">
-                  <CardTitle className="text-base font-bold truncate">
-                    {userDetail.userFullName}
-                  </CardTitle>
-                  <p className="text-sm text-muted-foreground truncate">{`@${
-                    userDetail?.userName ?? ""
-                  }`}</p>
-                </div>
-                <NextLinkLoader />
+          <div className="min-w-0 flex">
+            <Link
+              className="flex items-center space-x-3 hover:bg-accent rounded-lg -m-1 p-1 min-w-0"
+              href={`/user/${userDetail?.userName}`}
+            >
+              <UserAvatar
+                imageUrl={userDetail.imageUrl}
+                userFullName={userDetail.userFullName}
+              />
+              <div className="min-w-0">
+                <CardTitle className="text-base font-bold truncate">
+                  {userDetail.userFullName}
+                </CardTitle>
+                <p className="text-sm text-muted-foreground truncate">{`@${
+                  userDetail?.userName ?? ""
+                }`}</p>
               </div>
+              <NextLinkLoader />
             </Link>
           </div>
           <CardAction>
