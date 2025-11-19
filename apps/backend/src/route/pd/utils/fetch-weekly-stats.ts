@@ -129,8 +129,8 @@ const 投稿者ランキングを取得する = async (range: 日付範囲) => {
     .map((row) => ({
       userId: row.userId,
       pdCount: Number(row.value),
-      likeCount: いいねMap[row.userId],
-      rePdCount: rePdMap[row.userId],
+      likeCount: いいねMap[row.userId] ?? 0,
+      rePdCount: rePdMap[row.userId] ?? 0,
     }))
     .sort((a, b) => {
       if (b.pdCount !== a.pdCount) {
