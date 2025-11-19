@@ -2,8 +2,20 @@
 
 import { Loader2 } from "lucide-react";
 import { useLinkStatus } from "next/link";
+import type { ReactNode } from "react";
 
-export const NextLinkLoader = ({ className }: { className?: string }) => {
+interface NextLinkLoaderProps {
+  className?: string;
+  fallback?: ReactNode;
+}
+
+export const NextLinkLoader = ({
+  className,
+  fallback,
+}: NextLinkLoaderProps) => {
   const { pending } = useLinkStatus();
-  return pending ? <Loader2 className={`animate-spin ${className}`} /> : null;
+  if (pending) {
+    return <Loader2 className={`animate-spin ${className}`} />;
+  }
+  return fallback ?? null;
 };

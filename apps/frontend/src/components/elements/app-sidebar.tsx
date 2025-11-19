@@ -62,9 +62,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     className="flex items-center space-x-3 gap-2 px-4"
                   >
                     <Link href={item.href} key={item.href}>
-                      <item.icon />
+                      <NextLinkLoader
+                        className="h-4 w-4"
+                        fallback={<item.icon className="h-4 w-4" />}
+                      />
                       <span className="text-base">{item.label}</span>
-                      <NextLinkLoader />
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
