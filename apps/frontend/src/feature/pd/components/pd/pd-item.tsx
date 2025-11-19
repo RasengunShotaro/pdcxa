@@ -6,6 +6,7 @@ import { NextLinkLoader } from "@/components/elements/next-link-loader";
 import { Button } from "@/components/ui/button";
 import {
   Card,
+  CardAction,
   CardContent,
   CardFooter,
   CardHeader,
@@ -37,26 +38,28 @@ const PdItem: React.FC<PdItemProps> = ({ pd, like }) => {
     >
       <Card>
         <CardHeader className="p-4 pt-0 pb-0">
-          <div className="flex justify-between items-start">
-            <Link href={`/user/${userDetail?.userName}`}>
+          <div className="min-w-0">
+            <Link className="block" href={`/user/${userDetail?.userName}`}>
               <div className="flex items-center space-x-3 hover:bg-accent rounded-lg -m-1 p-1">
                 <UserAvatar
                   imageUrl={userDetail.imageUrl}
                   userFullName={userDetail.userFullName}
                 />
-                <div>
-                  <CardTitle className="text-base font-bold">
+                <div className="min-w-0">
+                  <CardTitle className="text-base font-bold truncate">
                     {userDetail.userFullName}
                   </CardTitle>
-                  <p className="text-sm text-muted-foreground">{`@${
+                  <p className="text-sm text-muted-foreground truncate">{`@${
                     userDetail?.userName ?? ""
                   }`}</p>
                 </div>
                 <NextLinkLoader />
               </div>
             </Link>
-            <PdMenu pd={pd} />
           </div>
+          <CardAction>
+            <PdMenu pd={pd} />
+          </CardAction>
         </CardHeader>
         <CardContent className="p-4 pt-2 pb-2">
           <Linkify>
