@@ -1,7 +1,6 @@
 import { motion } from "motion/react";
 import Link from "next/link";
 import { NextLinkLoader } from "@/components/elements/next-link-loader";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Card,
   CardAction,
@@ -16,6 +15,7 @@ import { formatDateTime } from "../../utils/format-datetime";
 import { popInVariants } from "../../utils/motion";
 import { PdMenu } from "../pd/pd-menu";
 import { PopOverLike } from "../pd/pop-over-like";
+import { UserAvatar } from "../pd/user-avatar";
 import { Like } from "./repd-like";
 
 interface PdItemProps {
@@ -39,17 +39,10 @@ const RePdItem: React.FC<PdItemProps> = ({ rePd }) => {
               className="flex items-center space-x-3 hover:bg-accent rounded-lg -m-1 p-1 min-w-0"
               href={`/user/${userDetail?.userName}`}
             >
-              <Avatar className="h-10 w-10">
-                {userDetail?.imageUrl && (
-                  <AvatarImage
-                    alt={userDetail.userFullName}
-                    src={userDetail.imageUrl}
-                  />
-                )}
-                <AvatarFallback>
-                  {userDetail.userFullName.charAt(0).toUpperCase()}
-                </AvatarFallback>
-              </Avatar>
+              <UserAvatar
+                imageUrl={userDetail.imageUrl}
+                userFullName={userDetail.userFullName}
+              />
               <div className="min-w-0">
                 <CardTitle className="text-base font-bold truncate">
                   {userDetail.userFullName}
