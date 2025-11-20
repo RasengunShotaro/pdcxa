@@ -1,7 +1,7 @@
 "use client";
 import { jaJP } from "@clerk/localizations";
 import { ClerkProvider } from "@clerk/nextjs";
-import { dark } from "@clerk/themes";
+import { shadcn } from "@clerk/themes";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { ThemeProvider } from "next-themes";
@@ -39,7 +39,7 @@ export function Providers({ children }: { children: ReactNode }) {
   return (
     <ClerkProvider
       appearance={{
-        baseTheme: dark,
+        baseTheme: shadcn,
       }}
       localization={jaJP}
     >
