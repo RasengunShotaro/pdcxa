@@ -6,18 +6,20 @@ import { invitationApp } from "./route/invitation/app";
 import { pdApp } from "./route/pd/app";
 import { rePdApp } from "./route/repd/app";
 import { userApp } from "./route/user/app";
-import { ログイン中のユーザーを取得 } from "./utils/current-user";
+import { ログイン中のユーザーIDを取得 } from "./utils/current-user";
 
-type ErrorResponse = {
-  message: string;
-};
+declare module "hono" {
+  interface ContextVariableMap {
+    userId: string;
+  }
+}
 
 export const ログイン状態Middleware: MiddlewareHandler = async (c, next) => {
-  const user = ログイン中のユーザーを取得(c);
-  const userId = user?.userId;
+  const userId = ログイン中のユーザーIDを取得(c);
   if (!userId) {
-    return c.json<ErrorResponse>({ message: "ログインしていないです" }, 401);
+    throw new HTTPException(401, { message: "ログインしていません" });
   }
+  c.set("userId", userId);
   await next();
 };
 

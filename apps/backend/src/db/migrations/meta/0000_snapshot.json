@@ -1,5 +1,5 @@
 {
-  "id": "093532bf-6c40-4628-80ea-c7bc52155e84",
+  "id": "a42019d5-a39a-4d6d-83d5-000baaf8cf9b",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -11,7 +11,7 @@
         "target_pd_id": {
           "name": "target_pd_id",
           "type": "uuid",
-          "primaryKey": true,
+          "primaryKey": false,
           "notNull": true
         },
         "user_id": {
@@ -33,7 +33,12 @@
           "onUpdate": "no action"
         }
       },
-      "compositePrimaryKeys": {},
+      "compositePrimaryKeys": {
+        "pd_likes_target_pd_id_user_id_pk": {
+          "name": "pd_likes_target_pd_id_user_id_pk",
+          "columns": ["target_pd_id", "user_id"]
+        }
+      },
       "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {},
@@ -66,6 +71,12 @@
           "type": "varchar",
           "primaryKey": false,
           "notNull": true
+        },
+        "image_file_name": {
+          "name": "image_file_name",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {},
@@ -83,7 +94,7 @@
         "target_repd_id": {
           "name": "target_repd_id",
           "type": "uuid",
-          "primaryKey": true,
+          "primaryKey": false,
           "notNull": true
         },
         "user_id": {
@@ -105,7 +116,12 @@
           "onUpdate": "no action"
         }
       },
-      "compositePrimaryKeys": {},
+      "compositePrimaryKeys": {
+        "repd_likes_target_repd_id_user_id_pk": {
+          "name": "repd_likes_target_repd_id_user_id_pk",
+          "columns": ["target_repd_id", "user_id"]
+        }
+      },
       "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {},

@@ -16,7 +16,8 @@
     "deploy": "wrangler deploy --minify",
     "deploy:dev": "wrangler deploy --env=dev --minify",
     "check-types": "tsc --noEmit",
-    "build": "tsc -p tsconfig.build.json"
+    "build": "tsc -p tsconfig.build.json",
+    "test": "vitest"
   },
   "dependencies": {
     "@hono/clerk-auth": "^3.0.3",
@@ -30,6 +31,11 @@
   },
   "devDependencies": {
     "@pdcxa/common-dev-packages": "workspace:*",
-    "drizzle-kit": "^0.31.7"
+    "@testcontainers/postgresql": "^11.8.1",
+    "@types/pg": "^8.15.6",
+    "drizzle-kit": "^0.31.7",
+    "pg": "^8.16.3",
+    "postgres": "^3.4.7",
+    "vitest": "^4.0.13"
   }
 }

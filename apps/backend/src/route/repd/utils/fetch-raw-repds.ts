@@ -1,17 +1,15 @@
 import { eq, sql } from "drizzle-orm";
-import type { Context } from "hono";
 import { rePdLikes, rePds as rePdsSchema } from "../../../db/schema";
 import { db } from "../../../lib/db";
-import { ログイン中のユーザーを取得 } from "../../../utils/current-user";
 
 export const fetchRawRePds = async ({
   pdId,
-  c,
+  ログイン中のユーザーID,
 }: {
   pdId: string;
-  c: Context;
+  ログイン中のユーザーID: string;
 }) => {
-  const userId = ログイン中のユーザーを取得(c).userId;
+  const userId = ログイン中のユーザーID;
 
   const likesCountSubquery = db
     .select({
