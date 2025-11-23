@@ -5,29 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1744448042751,
-      "tag": "0000_thankful_micromax",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1744887098224,
-      "tag": "0001_smiling_susan_delgado",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1747928199044,
-      "tag": "0002_lonely_bill_hollister",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1748344021233,
-      "tag": "0003_gorgeous_dagger",
+      "when": 1763787016810,
+      "tag": "0000_calm_doctor_strange",
       "breakpoints": true
     }
   ]
