@@ -1,21 +1,14 @@
 import { and, eq } from "drizzle-orm";
-import type { Context } from "hono";
 import { rePdLikes } from "../../../db/schema";
 import { db } from "../../../lib/db";
-import { ログイン中のユーザーを取得 } from "../../../utils/current-user";
 
 export const RePdのいいね状態を更新する = async ({
   rePdId,
-  c,
+  ログイン中のユーザーID,
 }: {
   rePdId: string;
-  c: Context;
+  ログイン中のユーザーID: string;
 }) => {
-  const ログイン中のユーザーID = ログイン中のユーザーを取得(c).userId;
-  if (!ログイン中のユーザーID) {
-    throw new Error("ログインしていないです");
-  }
-
   const existingLike = await db
     .select()
     .from(rePdLikes)

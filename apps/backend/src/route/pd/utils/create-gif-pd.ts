@@ -1,36 +1,33 @@
-import type { Context } from "hono";
 import { pds } from "../../../db/schema";
-import type { Bindings } from "../../../lib/bindings";
 import { db } from "../../../lib/db";
-import { ログイン中のユーザーを取得 } from "../../../utils/current-user";
 import { R2に画像をアップロードする } from "./r2-utils";
 
 export const GIFを含むPDを作成する = async ({
   content,
   image,
-  c,
+  ログイン中のユーザーID,
+  R2,
 }: {
   content: string;
   image: File;
-  c: Context<Bindings>;
+  ログイン中のユーザーID: string;
+  R2: R2Bucket;
 }) => {
-  const user = ログイン中のユーザーを取得(c);
-
   const imageBuffer = await image.arrayBuffer();
-  const fileName = `${user.userId}-${Date.now()}`;
+  const fileName = `${ログイン中のユーザーID}-${Date.now()}`;
 
   const imageFileName = await R2に画像をアップロードする({
     body: new Uint8Array(imageBuffer),
     fileName,
     contentType: "image/gif",
     extension: "gif",
-    c,
+    R2,
   });
 
   const newPd = {
     content,
     createdAt: new Date(),
-    userId: `${user.userId}`,
+    userId: `${ログイン中のユーザーID}`,
     imageFileName: imageFileName,
   };
 

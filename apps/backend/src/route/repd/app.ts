@@ -27,25 +27,28 @@ const mutateRePdLikeSchema = v.object({
 export const rePdApp = new Hono<Bindings>()
   .get("/", sValidator("query", fetchRePdSchema), async (c) => {
     const { pdId } = c.req.valid("query");
+    const ログイン中のユーザーID = c.get("userId");
 
     const RePD詳細: RePD詳細 = await fetchRawRePds({
       pdId,
-      c,
+      ログイン中のユーザーID,
     });
 
     return c.json(RePD詳細, 200);
   })
   .post("/create", sValidator("json", createRePdSchema), async (c) => {
     const { pdId, content } = c.req.valid("json");
+    const ログイン中のユーザーID = c.get("userId");
 
-    await RePDを作成する({ pdId, content, c });
+    await RePDを作成する({ pdId, content, ログイン中のユーザーID });
 
     return c.json({ message: "RePDが作成されました" }, 201);
   })
   .put("/like", sValidator("json", mutateRePdLikeSchema), async (c) => {
     const { rePdId } = c.req.valid("json");
+    const ログイン中のユーザーID = c.get("userId");
 
-    await RePdのいいね状態を更新する({ rePdId, c });
+    await RePdのいいね状態を更新する({ rePdId, ログイン中のユーザーID });
 
     return c.json({ message: "RePDのいいね状態を更新しました" }, 201);
   });
