@@ -22,8 +22,13 @@ jobs:
       - name: Cache for Turbo
         uses: rharkor/caching-for-turbo@v2.2.4
 
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
       - name: コンパイル
         run: bun check-types
 
       - name: テスト実行
         run: bun run test
+        env:
+          TESTCONTAINERS_RYUK_DISABLED: true
