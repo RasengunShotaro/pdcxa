@@ -36,7 +36,7 @@ export const テストDBを起動する = async () => {
 
   client = postgres(container.getConnectionUri());
 
-  const migrationsDir = join(__dirname, "../db/migrations");
+  const migrationsDir = join(__dirname, "../../db/migrations");
   const migrationFiles = (await readdir(migrationsDir))
     .filter((file) => file.endsWith(".sql"))
     .sort();
