@@ -1,5 +1,6 @@
 {
   "lockfileVersion": 1,
+  "configVersion": 0,
   "workspaces": {
     "": {
       "name": "pdcxa",
@@ -11,7 +12,7 @@
       "name": "@pdcxa/backend",
       "dependencies": {
         "@hono/clerk-auth": "^3.0.3",
-        "@hono/standard-validator": "^0.2.0",
+        "@hono/standard-validator": "^0.1.5",
         "@neondatabase/serverless": "^1.0.2",
         "dayjs": "^1.11.19",
         "drizzle-orm": "^0.45.0",
@@ -356,7 +357,7 @@
 
     "@hono/clerk-auth": ["@hono/clerk-auth@3.0.3", "", { "dependencies": { "@clerk/backend": "^2.4.1", "@clerk/types": "^4.64.0" }, "peerDependencies": { "hono": ">=3.0.0" } }, "sha512-N671mw3ulvxqxY8ou8D8ojVT7EKljXE6RjdC2egWExMcrQAglMSTvqvU096MbOT5zvWtc8QMo3SKiyTXn30BrQ=="],
 
-    "@hono/standard-validator": ["@hono/standard-validator@0.2.0", "", { "peerDependencies": { "@standard-schema/spec": "1.0.0", "hono": ">=3.9.0" } }, "sha512-pFq0UVAnjzXcDAgqFpDeVL3MOUPrlIh/kPqBDvbCYoThVhhS+Vf37VcdsakdOFFGiqoiYVxp3LifXFhGhp/rgQ=="],
+    "@hono/standard-validator": ["@hono/standard-validator@0.1.5", "", { "peerDependencies": { "@standard-schema/spec": "1.0.0", "hono": ">=3.9.0" } }, "sha512-EIyZPPwkyLn6XKwFj5NBEWHXhXbgmnVh2ceIFo5GO7gKI9WmzTjPDKnppQB0KrqKeAkq3kpoW4SIbu5X1dgx3w=="],
 
     "@hookform/resolvers": ["@hookform/resolvers@5.2.2", "", { "dependencies": { "@standard-schema/utils": "^0.3.0" }, "peerDependencies": { "react-hook-form": "^7.55.0" } }, "sha512-A/IxlMLShx3KjV/HeTcTfaMxdwy690+L/ZADoeaTltLx+CVuzkeVIPuybK3jrRfw7YZnmdKsVVHAlEPIAEUNlA=="],
 
