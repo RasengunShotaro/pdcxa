@@ -4,14 +4,16 @@ import { CursorPagination } from "@/components/ui/cursor-pagination";
 import PdItem from "@/feature/pd/components/pd/pd-item";
 import { PdItemSkeleton } from "@/feature/pd/components/pd/pd-item-skeleton";
 import { PostPdButton } from "@/feature/pd/components/pd/post-pd-button";
+import { useLegacy待ち } from "@/hooks/use-legacy-ready";
 import { usePd } from "@/hooks/use-pd";
 import { Like } from "./pd-like";
 
 export function PdTimeLine() {
+  const isLegacy待機完了 = useLegacy待ち();
   const { pds, isPending, isFetchingNextPage, hasNextPage, fetchNextPage } =
     usePd({});
 
-  if (isPending) {
+  if (!isLegacy待機完了 || isPending) {
     return <PdItemSkeleton PD数={5} />;
   }
 

@@ -6,6 +6,6 @@ export const legacyDelay = () => {
     return Promise.resolve();
   }
   return new Promise<void>((resolve) => {
-    setTimeout(resolve, 5000);
+    setTimeout(resolve, 8000);
   });
 };

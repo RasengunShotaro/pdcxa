@@ -4,6 +4,7 @@ import PdItem from "@/feature/pd/components/pd/pd-item";
 import { PdItemSkeleton } from "@/feature/pd/components/pd/pd-item-skeleton";
 import { PostRePdButton } from "@/feature/pd/components/repd/post-repd-button";
 import { RePdList } from "@/feature/pd/components/repd/repd-list";
+import { useLegacy待ち } from "@/hooks/use-legacy-ready";
 import { usePd } from "@/hooks/use-pd";
 import { useRePd } from "@/hooks/use-repd";
 import { Like } from "./pd-like";
@@ -13,11 +14,12 @@ interface PdDetailProps {
 }
 
 export const PdDetail = ({ pdId }: PdDetailProps) => {
+  const isLegacy待機完了 = useLegacy待ち();
   const { pds, isPending, isError } = usePd({ pdId });
   const pd = pds[0];
   const { rePds } = useRePd(pdId);
 
-  if (isPending) {
+  if (!isLegacy待機完了 || isPending) {
     return <PdItemSkeleton PD数={1} />;
   }
 
