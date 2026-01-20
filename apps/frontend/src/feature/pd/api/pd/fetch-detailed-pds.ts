@@ -17,6 +17,9 @@ export const fetchDetailedPds = async ({
   cursor?: string;
 }) => {
   const fetchedPds = await fetchRawPds({ pdId, userName, cursor });
+  if ("error" in fetchedPds) {
+    throw new Error("Pdの取得に失敗しました");
+  }
 
   const userDetails = await fetchUserDetails(
     ユーザーIDリストを抽出する(fetchedPds.items),
