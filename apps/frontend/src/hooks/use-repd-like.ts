@@ -4,6 +4,7 @@ import { useUser } from "@clerk/nextjs";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { mutateRePdLike } from "@/feature/pd/api/repd/mutate-repd-like";
 import type { RePd } from "@/feature/pd/types";
+import { legacyDelay } from "@/utils/legacy-delay";
 
 export const useRePdLike = (rePd: RePd) => {
   const queryClient = useQueryClient();
@@ -11,7 +12,10 @@ export const useRePdLike = (rePd: RePd) => {
   const userId = user?.id ?? "";
 
   const { mutate: toggleLike } = useMutation({
-    mutationFn: () => mutateRePdLike(rePd.id),
+    mutationFn: async () => {
+      await legacyDelay();
+      await mutateRePdLike(rePd.id);
+    },
     onMutate: async () => {
       const previousRePds = queryClient.getQueryData<RePd[]>([
         "RePD詳細",

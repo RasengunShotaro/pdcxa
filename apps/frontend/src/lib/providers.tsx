@@ -49,6 +49,7 @@ export function Providers({ children }: { children: ReactNode }) {
           defaultTheme="system"
           disableTransitionOnChange
           enableSystem
+          themes={["light", "dark", "legacy"]}
         >
           <Toaster position="top-center" />
           {children}

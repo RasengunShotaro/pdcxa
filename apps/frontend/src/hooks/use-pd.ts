@@ -6,6 +6,7 @@ import {
 import { createPd } from "@/feature/pd/api/pd/create-pd";
 import { fetchDetailedPds } from "@/feature/pd/api/pd/fetch-detailed-pds";
 import type { Pd } from "@/feature/pd/types";
+import { legacyDelay } from "@/utils/legacy-delay";
 
 export const usePd = ({
   pdId,
@@ -36,8 +37,16 @@ export const usePd = ({
     isPending: isMutationPending,
     isError: isMutationError,
   } = useMutation({
-    mutationFn: ({ content, image }: { content: string; image?: File }) =>
-      createPd({ content, image }),
+    mutationFn: async ({
+      content,
+      image,
+    }: {
+      content: string;
+      image?: File;
+    }) => {
+      await legacyDelay();
+      await createPd({ content, image });
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["PD詳細"] });
     },

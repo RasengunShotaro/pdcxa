@@ -3,6 +3,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createRePd } from "@/feature/pd/api/repd/create-repd";
 import { fetchDetailedRepds } from "@/feature/pd/api/repd/fetch-detailed-repds";
+import { legacyDelay } from "@/utils/legacy-delay";
 
 export const useRePd = (pdId: string) => {
   const queryClient = useQueryClient();
@@ -17,7 +18,10 @@ export const useRePd = (pdId: string) => {
   });
 
   const { mutate: createNewRePd } = useMutation({
-    mutationFn: (pd: string) => createRePd({ pdId, content: pd }),
+    mutationFn: async (pd: string) => {
+      await legacyDelay();
+      await createRePd({ pdId, content: pd });
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["RePD詳細", pdId] });
       queryClient.invalidateQueries({ queryKey: ["PD詳細", pdId, undefined] });
