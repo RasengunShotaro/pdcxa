@@ -42,7 +42,7 @@ export const ColorModeSwitcher = () => {
           System
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => setTheme("legacy")}>
-          Legacy
+          Legacy(開発中)
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
