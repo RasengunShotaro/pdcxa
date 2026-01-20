@@ -5,6 +5,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { mutatePdLike } from "@/feature/pd/api/pd/mutate-pd-like";
 import type { Pd } from "@/feature/pd/types";
 import { optimisticUpdateLike } from "@/feature/pd/utils/optimistic-update-like";
+import { legacyDelay } from "@/utils/legacy-delay";
 
 export const usePdLike = ({
   pd,
@@ -26,7 +27,10 @@ export const usePdLike = ({
       : ["PD詳細", undefined, undefined];
 
   const { mutate: toggleLike } = useMutation({
-    mutationFn: () => mutatePdLike(pd.id),
+    mutationFn: async () => {
+      await legacyDelay();
+      await mutatePdLike(pd.id);
+    },
     onMutate: () =>
       optimisticUpdateLike({ pd, queryKey, queryClient, myUserId }),
     onError: (_, __, context) => {
