@@ -14,7 +14,10 @@ export const useRePd = (pdId: string) => {
     error,
   } = useQuery({
     queryKey: ["RePD詳細", pdId],
-    queryFn: () => fetchDetailedRepds(pdId),
+    queryFn: async () => {
+      await legacyDelay();
+      return await fetchDetailedRepds(pdId);
+    },
   });
 
   const { mutate: createNewRePd } = useMutation({

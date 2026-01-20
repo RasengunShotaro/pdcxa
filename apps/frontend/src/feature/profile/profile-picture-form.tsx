@@ -12,6 +12,7 @@ import {
   FormField,
   FormMessage,
 } from "@/components/ui/form";
+import { legacyDelay } from "@/utils/legacy-delay";
 import { type ImageFormSchema, imageFormSchema } from "./types";
 
 export function ProfilePictureForm() {
@@ -27,6 +28,7 @@ export function ProfilePictureForm() {
 
     startTransition(async () => {
       try {
+        await legacyDelay();
         await user.setProfileImage({ file: data.image });
         toast.success("画像を変更しました！");
       } catch {

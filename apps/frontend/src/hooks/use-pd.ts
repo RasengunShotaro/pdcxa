@@ -26,8 +26,10 @@ export const usePd = ({
     isError,
   } = useInfiniteQuery({
     queryKey: ["PD詳細", pdId, userName],
-    queryFn: ({ pageParam: cursor }) =>
-      fetchDetailedPds({ pdId, userName, cursor }),
+    queryFn: async ({ pageParam: cursor }) => {
+      await legacyDelay();
+      return await fetchDetailedPds({ pdId, userName, cursor });
+    },
     initialPageParam: undefined as string | undefined,
     getNextPageParam: (lastPage) => lastPage.nextCursor,
   });

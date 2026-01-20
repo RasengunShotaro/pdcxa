@@ -23,6 +23,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { usePd } from "@/hooks/use-pd";
+import { legacyDelay } from "@/utils/legacy-delay";
 import { createGifPd } from "../../api/pd/create-gif-pd";
 import { type PdFormSchema, pdFormSchema } from "../../types";
 import { resizeImage } from "../../utils/resize-image";
@@ -52,6 +53,7 @@ export const PdModal: React.FC<PdModalProps> = ({ isOpen, onClose }) => {
         const isGif = values.image?.type === "image/gif";
 
         if (isGif && values.image) {
+          await legacyDelay();
           await createGifPd({ content: values.content, image: values.image });
         } else {
           const image = values.image

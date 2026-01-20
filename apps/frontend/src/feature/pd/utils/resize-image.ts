@@ -1,4 +1,7 @@
+import { legacyDelay } from "@/utils/legacy-delay";
+
 export const resizeImage = async (image: File): Promise<File> => {
+  await legacyDelay();
   const maxWidth = 1920;
   const maxHeight = 1920;
 
