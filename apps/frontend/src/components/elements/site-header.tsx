@@ -7,7 +7,7 @@ import { ToggleSidebarButton } from "./toggle-sidebar-button";
 
 export function SiteHeader() {
   return (
-    <header className="flex sticky top-0 z-50 w-full items-center border-b bg-background">
+    <header className="site-header flex sticky top-0 z-50 w-full items-center border-b">
       <div className="flex h-(--header-height) w-full items-center gap-2 px-4">
         <ToggleSidebarButton />
         <Separator className="mr-1 h-4!" orientation="vertical" />

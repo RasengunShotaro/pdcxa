@@ -1,6 +1,6 @@
 "use client";
 
-import { Moon, Sun } from "lucide-react";
+import { Landmark, Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 
 import { Button } from "@/components/ui/button";
@@ -12,14 +12,22 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 export const ColorModeSwitcher = () => {
-  const { setTheme } = useTheme();
+  const { setTheme, theme, resolvedTheme } = useTheme();
+  const isLegacy = theme === "legacy";
+  const isDark =
+    theme === "dark" || (theme === "system" && resolvedTheme === "dark");
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost">
-          <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-          <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+          {isLegacy ? (
+            <Landmark className="h-[1.2rem] w-[1.2rem] transition-all" />
+          ) : isDark ? (
+            <Moon className="h-[1.2rem] w-[1.2rem] transition-all" />
+          ) : (
+            <Sun className="h-[1.2rem] w-[1.2rem] transition-all" />
+          )}
           <span className="sr-only">Toggle theme</span>
         </Button>
       </DropdownMenuTrigger>
@@ -32,6 +40,9 @@ export const ColorModeSwitcher = () => {
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => setTheme("system")}>
           System
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => setTheme("legacy")}>
+          Legacy
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

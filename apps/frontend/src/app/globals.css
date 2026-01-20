@@ -128,6 +128,20 @@
   --sidebar-ring: oklch(0.541 0.281 293.009);
 }
 
+.site-header {
+  background-color: var(--background);
+  border-color: var(--border);
+  color: var(--foreground);
+}
+
+.legacy .site-header {
+  background-color: #5b21b6;
+  border-color: #4c1d95;
+  color: #fff;
+  --foreground: #fff;
+  --muted-foreground: #fff;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

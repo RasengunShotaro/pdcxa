@@ -32,7 +32,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
           "--normal-border": "var(--border)",
         } as React.CSSProperties
       }
-      theme={theme as ToasterProps["theme"]}
+      theme={theme === "legacy" ? "light" : (theme as ToasterProps["theme"])}
       toastOptions={{
         classNames: {
           default: "!text-xl justify-center !w-fit whitespace-pre-wrap",
