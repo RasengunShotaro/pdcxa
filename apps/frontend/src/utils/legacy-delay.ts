@@ -1,4 +1,4 @@
-export const legacyDelay = (ms = 600) => {
+export const legacyDelay = () => {
   if (typeof document === "undefined") {
     return Promise.resolve();
   }
@@ -6,6 +6,6 @@ export const legacyDelay = (ms = 600) => {
     return Promise.resolve();
   }
   return new Promise<void>((resolve) => {
-    setTimeout(resolve, ms);
+    setTimeout(resolve, 5000);
   });
 };
