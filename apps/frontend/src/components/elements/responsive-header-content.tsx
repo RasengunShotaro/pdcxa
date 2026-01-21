@@ -12,7 +12,7 @@ export const ResponsiveHeaderContent = () => {
     <Link href="/">
       <Image
         alt="Logo"
-        className="h-7 w-auto dark:invert"
+        className="h-7 w-auto dark:invert legacy:invert"
         height={40}
         quality={100}
         src="/pdcxa.svg"

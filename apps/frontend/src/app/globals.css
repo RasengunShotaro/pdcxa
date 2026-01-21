@@ -3,6 +3,7 @@
 @import "@clerk/themes/shadcn.css";
 
 @custom-variant dark (&:is(.dark *));
+@custom-variant legacy (&:is(.legacy *));
 
 @theme inline {
   --color-background: var(--background);
@@ -128,18 +129,10 @@
   --sidebar-ring: oklch(0.541 0.281 293.009);
 }
 
-.site-header {
-  background-color: var(--background);
-  border-color: var(--border);
-  color: var(--foreground);
-}
-
-.legacy .site-header {
-  background-color: #5b21b6;
-  border-color: #4c1d95;
-  color: #fff;
-  --foreground: #fff;
-  --muted-foreground: #fff;
+@layer components {
+  .site-header {
+    @apply bg-background border-border text-foreground legacy:bg-[#5b21b6] legacy:border-[#4c1d95] legacy:text-white legacy:[--foreground:#fff] legacy:[--muted-foreground:#fff];
+  }
 }
 
 @layer base {
