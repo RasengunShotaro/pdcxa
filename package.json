@@ -11,7 +11,7 @@
     "deploy": "turbo run deploy"
   },
   "devDependencies": {
-    "turbo": "^2.7.6"
+    "turbo": "^2.8.1"
   },
   "workspaces": [
     "apps/*",
