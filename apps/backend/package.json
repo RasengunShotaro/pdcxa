@@ -23,19 +23,19 @@
     "@hono/clerk-auth": "^3.1.0",
     "@hono/standard-validator": "^0.2.2",
     "@neondatabase/serverless": "^1.0.2",
-    "dayjs": "^1.11.19",
+    "dayjs": "^1.11.20",
     "drizzle-orm": "^0.45.1",
-    "hono": "^4.11.7",
-    "uuidv7": "^1.1.0",
-    "wasm-image-optimization": "^1.4.5"
+    "hono": "^4.12.9",
+    "uuidv7": "^1.2.1",
+    "wasm-image-optimization": "^2.0.7"
   },
   "devDependencies": {
     "@pdcxa/common-dev-packages": "workspace:*",
-    "@testcontainers/postgresql": "^11.11.0",
-    "@types/pg": "^8.16.0",
-    "drizzle-kit": "^0.31.8",
-    "pg": "^8.18.0",
+    "@testcontainers/postgresql": "^11.13.0",
+    "@types/pg": "^8.20.0",
+    "drizzle-kit": "^0.31.10",
+    "pg": "^8.20.0",
     "postgres": "^3.4.8",
-    "vitest": "^4.0.18"
+    "vitest": "^4.1.1"
   }
 }
