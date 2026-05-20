@@ -4,12 +4,13 @@ const compress = async (
   image: ArrayBuffer,
   quality: number,
 ): Promise<Uint8Array> => {
-  return (await optimizeImage({
+  const result = await optimizeImage({
     image: image,
     format: "jpeg",
     quality: quality,
     speed: 10,
-  })) as Uint8Array;
+  });
+  return result.data;
 };
 
 export const compressImage = async ({

@@ -21,7 +21,7 @@ import { type CheckEmailFormSchema, checkEmailFormSchema } from "../types";
 
 export function ResetPasswordForm() {
   const router = useRouter();
-  const { isLoaded, signIn } = useSignIn();
+  const { signIn } = useSignIn();
   const [isPending, startTransition] = useTransition();
 
   const form = useForm<CheckEmailFormSchema>({
@@ -32,23 +32,29 @@ export function ResetPasswordForm() {
   });
 
   const onSubmit = async (values: CheckEmailFormSchema) => {
-    if (!isLoaded) return;
-
     startTransition(async () => {
-      try {
-        const firstFactor = await signIn.create({
-          strategy: "reset_password_email_code",
-          identifier: values.email,
-        });
+      const { error: createError } = await signIn.create({
+        identifier: values.email,
+      });
 
-        if (firstFactor.status === "needs_first_factor") {
-          router.push("/signin/reset-password/step2");
-        }
-      } catch {
+      if (createError) {
         toast.error("問題が発生しました", {
           description: "再度お試しください",
         });
+        return;
       }
+
+      const { error: sendCodeError } =
+        await signIn.resetPasswordEmailCode.sendCode();
+
+      if (sendCodeError) {
+        toast.error("問題が発生しました", {
+          description: "再度お試しください",
+        });
+        return;
+      }
+
+      router.push("/signin/reset-password/step2");
     });
   };
 
