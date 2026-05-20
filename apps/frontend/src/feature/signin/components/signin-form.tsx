@@ -24,7 +24,7 @@ import {
 } from "@/feature/signin/types";
 
 export function SignInForm() {
-  const { isLoaded, signIn, setActive } = useSignIn();
+  const { signIn } = useSignIn();
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
 
@@ -37,24 +37,31 @@ export function SignInForm() {
   });
 
   const onSubmit = async (values: SigninFormSchema) => {
-    if (!isLoaded) return;
-
     startTransition(async () => {
-      try {
-        const result = await signIn.create({
-          identifier: values.email,
-          password: values.password,
-        });
+      const { error } = await signIn.password({
+        emailAddress: values.email,
+        password: values.password,
+      });
 
-        if (result.status === "complete") {
-          await setActive({ session: result.createdSessionId });
-          toast.success("ログインしました!");
-          router.push(`${window.location.origin}/`);
-        }
-      } catch {
+      if (error) {
         toast.error("ログインに失敗しました", {
           description: "メールアドレスまたはパスワードが正しいか確認して下さい",
         });
+        return;
+      }
+
+      if (signIn.status === "complete") {
+        await signIn.finalize({
+          navigate: ({ decorateUrl }) => {
+            const url = decorateUrl("/");
+            if (url.startsWith("http")) {
+              window.location.href = url;
+            } else {
+              router.push(url);
+            }
+          },
+        });
+        toast.success("ログインしました!");
       }
     });
   };

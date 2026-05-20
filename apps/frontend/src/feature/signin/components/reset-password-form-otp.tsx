@@ -30,7 +30,7 @@ import {
 export function ResetPasswordOtpForm() {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
-  const { isLoaded, signIn, setActive } = useSignIn();
+  const { signIn } = useSignIn();
 
   const form = useForm<ResetPasswordFormSchema>({
     resolver: standardSchemaResolver(resetPasswordFormSchema),
@@ -42,27 +42,43 @@ export function ResetPasswordOtpForm() {
   });
 
   const onSubmit = async (values: ResetPasswordFormSchema) => {
-    if (!isLoaded) return;
-
     startTransition(async () => {
-      try {
-        const attemptFirstFactor = await signIn.attemptFirstFactor({
-          strategy: "reset_password_email_code",
+      const { error: verifyError } =
+        await signIn.resetPasswordEmailCode.verifyCode({
           code: values.code,
-          password: values.password,
         });
 
-        if (attemptFirstFactor.status === "complete") {
-          await setActive({
-            session: attemptFirstFactor.createdSessionId,
-          });
-          router.push(`${window.location.origin}/`);
-          toast.success("パスワードが正常にリセットされました。");
-        }
-      } catch {
+      if (verifyError) {
         toast.error("問題が発生しました", {
           description: "再度お試しください",
         });
+        return;
+      }
+
+      const { error: submitError } =
+        await signIn.resetPasswordEmailCode.submitPassword({
+          password: values.password,
+        });
+
+      if (submitError) {
+        toast.error("問題が発生しました", {
+          description: "再度お試しください",
+        });
+        return;
+      }
+
+      if (signIn.status === "complete") {
+        await signIn.finalize({
+          navigate: ({ decorateUrl }) => {
+            const url = decorateUrl("/");
+            if (url.startsWith("http")) {
+              window.location.href = url;
+            } else {
+              router.push(url);
+            }
+          },
+        });
+        toast.success("パスワードが正常にリセットされました。");
       }
     });
   };
