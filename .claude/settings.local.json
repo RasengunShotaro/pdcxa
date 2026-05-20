@@ -1,44 +1,5 @@
 {
   "permissions": {
-    "allow": [
-      "Bash(bun run:*)",
-      "WebFetch(domain:www.better-auth.com)",
-      "Bash(bun add:*)",
-      "mcp__context7__resolve-library-id",
-      "mcp__context7__get-library-docs",
-      "Bash(bun install:*)",
-      "Bash(node:*)",
-      "Bash(bun check-types:*)",
-      "Bash(bun lint:*)",
-      "Bash(bunx biome check:*)",
-      "Bash(bun:*)",
-      "mcp__serena__check_onboarding_performed",
-      "mcp__serena__onboarding",
-      "mcp__serena__list_dir",
-      "mcp__serena__get_symbols_overview",
-      "mcp__serena__find_symbol",
-      "mcp__serena__write_memory",
-      "mcp__serena__think_about_whether_you_are_done",
-      "mcp__serena__search_for_pattern",
-      "mcp__serena__think_about_collected_information",
-      "mcp__serena__activate_project",
-      "mcp__serena__insert_after_symbol",
-      "mcp__serena__replace_regex",
-      "mcp__serena__find_file",
-      "mcp__serena__read_memory",
-      "mcp__serena__think_about_task_adherence",
-      "mcp__serena__replace_symbol_body",
-      "mcp__serena__insert_before_symbol",
-      "mcp__next-devtools__enable_cache_components",
-      "Bash(copy:*)",
-      "mcp__next-devtools__nextjs_runtime",
-      "WebSearch",
-      "WebFetch(domain:github.com)",
-      "WebFetch(domain:opennext.js.org)",
-      "WebFetch(domain:www.npmjs.com)"
-    ],
-    "deny": []
-  },
-  "enableAllProjectMcpServers": true,
-  "enabledMcpjsonServers": ["context7", "playwright", "next-devtools"]
+    "allow": []
+  }
 }
