@@ -4,7 +4,7 @@ PDCXA は、PD に関する投稿とフィードバックを共有するプラ�
 
 ## 開発環境のセットアップ
 
-Bun の仮想環境管理は [Proto](https://moonrepo.dev/proto) の利用を推奨([.prototools](./.prototools) にピン留め済み)
+Bun のバージョン管理は [mise](https://mise.jdx.dev/) の利用を推奨([mise.toml](./mise.toml) にピン留め済み)
 
 ### 1. リポジトリのクローン
 

@@ -7,7 +7,7 @@
 - ルート直下の `turbo.json` と `biome.json` がパイプラインとスタイルの単一情報源です。改定時は frontend/backend 双方でのキャッシュクリアを忘れないでください。
 
 ## Build, Test, and Development Commands
-- `bun install`: Proto が固定した Bun バージョンで依存を導入します。
+- `bun install`: mise が固定した Bun バージョンで依存を導入します。
 - `bun run dev`: Turbo で全アプリの `dev` を並列起動します。個別には `cd apps/frontend && bun run dev` や `cd apps/backend && bun run dev` を使用します。
 - `bun run build`: すべての `build` タスクを実行し、Cloudflare 用アーティファクト (`dist/`, `.open-next/`) を生成します。
 - `bun run lint` / `bun run check-types`: Biome と TypeScript の静的検証をワークスペース全体に適用します。
@@ -32,4 +32,4 @@
 
 ## Security & Configuration Tips
 - 機密値は `.env.local` または `wrangler.jsonc` の `vars` に定義し、Git 管理ファイルへ直書きしないでください。README の環境変数一覧を最新化しつつ共有します。
-- Cloudflare Workers / Neon 認証情報は環境ごとに分離し、`bun run deploy:dev` 実行前に `BASE_URL` と Clerk の URL が環境一致しているか確認してください。Proto で Bun を更新した場合は `bunx env` を再読込し、Wrangler の API トークン有効期限も併せて確認します。
+- Cloudflare Workers / Neon 認証情報は環境ごとに分離し、`bun run deploy:dev` 実行前に `BASE_URL` と Clerk の URL が環境一致しているか確認してください。mise で Bun を更新した場合は `mise install` を再実行し、Wrangler の API トークン有効期限も併せて確認します。
