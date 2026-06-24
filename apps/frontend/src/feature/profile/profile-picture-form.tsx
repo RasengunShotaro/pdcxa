@@ -1,6 +1,5 @@
 "use client";
 
-import { useUser } from "@clerk/nextjs";
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { useTransition } from "react";
 import { useForm } from "react-hook-form";
@@ -12,11 +11,12 @@ import {
   FormField,
   FormMessage,
 } from "@/components/ui/form";
+import { useCurrentUser } from "@/lib/auth/use-current-user";
 import { legacyDelay } from "@/utils/legacy-delay";
 import { type ImageFormSchema, imageFormSchema } from "./types";
 
 export function ProfilePictureForm() {
-  const { user } = useUser();
+  const { user } = useCurrentUser();
   const [isPending, startTransition] = useTransition();
 
   const imageForm = useForm<ImageFormSchema>({

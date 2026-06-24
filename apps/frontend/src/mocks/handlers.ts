@@ -1,3 +1,4 @@
+import { MOCK_USER_ID } from "@/lib/auth/mock-user";
 import { getPdcxaApiMock } from "@/schema/api.msw";
 
 const base64Url = (value: object): string =>
@@ -6,7 +7,7 @@ const base64Url = (value: object): string =>
     .replace(/\//g, "_")
     .replace(/=+$/, "");
 
-export const MOCK_USER_ID = "user_2abc";
+export { MOCK_USER_ID };
 
 export const MOCK_ID_TOKEN = [
   base64Url({ alg: "none", typ: "JWT" }),

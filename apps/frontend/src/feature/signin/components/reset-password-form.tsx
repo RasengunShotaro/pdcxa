@@ -1,6 +1,5 @@
 "use client";
 
-import { useSignIn } from "@clerk/nextjs";
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -17,11 +16,12 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useSignInFlow } from "@/lib/auth/use-sign-in";
 import { type CheckEmailFormSchema, checkEmailFormSchema } from "../types";
 
 export function ResetPasswordForm() {
   const router = useRouter();
-  const { signIn } = useSignIn();
+  const { signIn } = useSignInFlow();
   const [isPending, startTransition] = useTransition();
 
   const form = useForm<CheckEmailFormSchema>({

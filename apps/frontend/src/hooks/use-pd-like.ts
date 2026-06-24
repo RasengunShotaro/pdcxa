@@ -1,10 +1,10 @@
 "use client";
 
-import { useUser } from "@clerk/nextjs";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { mutatePdLike } from "@/feature/pd/api/pd/mutate-pd-like";
 import type { Pd } from "@/feature/pd/types";
 import { optimisticUpdateLike } from "@/feature/pd/utils/optimistic-update-like";
+import { useCurrentUser } from "@/lib/auth/use-current-user";
 import { legacyDelay } from "@/utils/legacy-delay";
 
 export const usePdLike = ({
@@ -17,7 +17,7 @@ export const usePdLike = ({
   userId?: string;
 }) => {
   const queryClient = useQueryClient();
-  const { user } = useUser();
+  const { user } = useCurrentUser();
   const myUserId = user?.id ?? "";
 
   const queryKey = pdId

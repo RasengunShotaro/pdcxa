@@ -7,6 +7,7 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { ThemeProvider } from "next-themes";
 import type { ReactNode } from "react";
 import { Toaster } from "@/components/ui/sonner";
+import { AUTH_MOCKING } from "@/lib/auth/mocking";
 import { MswProvider } from "@/lib/msw-provider";
 
 const makeQueryClient = () => {
@@ -37,6 +38,26 @@ const getQueryClient = () => {
 export function Providers({ children }: { children: ReactNode }) {
   const queryClient = getQueryClient();
 
+  const tree = (
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider
+        attribute="class"
+        defaultTheme="system"
+        disableTransitionOnChange
+        enableSystem
+        themes={["light", "dark", "legacy"]}
+      >
+        <Toaster position="top-center" />
+        <MswProvider>{children}</MswProvider>
+      </ThemeProvider>
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
+  );
+
+  if (AUTH_MOCKING) {
+    return tree;
+  }
+
   return (
     <ClerkProvider
       appearance={{
@@ -44,19 +65,7 @@ export function Providers({ children }: { children: ReactNode }) {
       }}
       localization={jaJP}
     >
-      <QueryClientProvider client={queryClient}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          disableTransitionOnChange
-          enableSystem
-          themes={["light", "dark", "legacy"]}
-        >
-          <Toaster position="top-center" />
-          <MswProvider>{children}</MswProvider>
-        </ThemeProvider>
-        <ReactQueryDevtools initialIsOpen={false} />
-      </QueryClientProvider>
+      {tree}
     </ClerkProvider>
   );
 }

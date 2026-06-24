@@ -1,6 +1,5 @@
 "use client";
 
-import { useUser } from "@clerk/nextjs";
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { Loader2 } from "lucide-react";
 import { useEffect, useTransition } from "react";
@@ -15,9 +14,10 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useCurrentUser } from "@/lib/auth/use-current-user";
 import { type NameFormSchema, nameFormSchema } from "./types";
 export function ProfileNameForm() {
-  const { user } = useUser();
+  const { user } = useCurrentUser();
   const [isPending, startTransition] = useTransition();
 
   const form = useForm<NameFormSchema>({

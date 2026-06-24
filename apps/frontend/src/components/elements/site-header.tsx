@@ -1,5 +1,5 @@
-import { UserButton } from "@clerk/nextjs";
 import { Separator } from "@/components/ui/separator";
+import { UserMenu } from "@/lib/auth/user-menu";
 import { ColorModeSwitcher } from "./color-mode-switcher";
 import { TimeLineRefetchButton } from "./refetch";
 import { ResponsiveHeaderContent } from "./responsive-header-content";
@@ -16,7 +16,7 @@ export function SiteHeader() {
           <TimeLineRefetchButton />
           <ColorModeSwitcher />
           <div className="mx-1" />
-          <UserButton />
+          <UserMenu />
         </div>
       </div>
     </header>

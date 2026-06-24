@@ -1,6 +1,5 @@
 "use client";
 
-import { useSignIn } from "@clerk/nextjs";
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -22,6 +21,7 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { PasswordInput } from "@/components/ui/password-input";
+import { useSignInFlow } from "@/lib/auth/use-sign-in";
 import {
   type ResetPasswordFormSchema,
   resetPasswordFormSchema,
@@ -30,7 +30,7 @@ import {
 export function ResetPasswordOtpForm() {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
-  const { signIn } = useSignIn();
+  const { signIn } = useSignInFlow();
 
   const form = useForm<ResetPasswordFormSchema>({
     resolver: standardSchemaResolver(resetPasswordFormSchema),

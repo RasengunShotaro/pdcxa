@@ -1,14 +1,14 @@
 "use client";
 
-import { useUser } from "@clerk/nextjs";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { mutateRePdLike } from "@/feature/pd/api/repd/mutate-repd-like";
 import type { RePd } from "@/feature/pd/types";
+import { useCurrentUser } from "@/lib/auth/use-current-user";
 import { legacyDelay } from "@/utils/legacy-delay";
 
 export const useRePdLike = (rePd: RePd) => {
   const queryClient = useQueryClient();
-  const { user } = useUser();
+  const { user } = useCurrentUser();
   const userId = user?.id ?? "";
 
   const { mutate: toggleLike } = useMutation({

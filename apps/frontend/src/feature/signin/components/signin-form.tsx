@@ -1,6 +1,5 @@
 "use client";
 
-import { useSignIn } from "@clerk/nextjs";
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -22,9 +21,10 @@ import {
   type SigninFormSchema,
   signinFormSchema,
 } from "@/feature/signin/types";
+import { useSignInFlow } from "@/lib/auth/use-sign-in";
 
 export function SignInForm() {
-  const { signIn } = useSignIn();
+  const { signIn } = useSignInFlow();
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
 
