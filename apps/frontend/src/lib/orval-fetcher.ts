@@ -29,6 +29,21 @@ const getToken = async (): Promise<string | null> => {
   return session.getToken();
 };
 
+export const handleOrvalResponse = async <T>(res: Response): Promise<T> => {
+  if (!res.ok) {
+    throw new Error(`API request failed: ${res.status}`);
+  }
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  const data = body ? parseJsonBody(body) : {};
+
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as T;
+};
+
 export const orvalFetch = async <T>(
   path: string,
   options?: RequestInit,
@@ -45,16 +60,5 @@ export const orvalFetch = async <T>(
     credentials: "include",
   });
 
-  if (!res.ok) {
-    throw new Error(`API request failed: ${res.status}`);
-  }
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-  const data = body ? parseJsonBody(body) : {};
-
-  return {
-    data,
-    status: res.status,
-    headers: res.headers,
-  } as T;
+  return handleOrvalResponse<T>(res);
 };

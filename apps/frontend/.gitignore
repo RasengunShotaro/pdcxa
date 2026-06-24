@@ -43,3 +43,7 @@ next-env.d.ts
 
 ## roo
 mcp.json
+
+# vitest browser mode
+.vitest-attachments/
+storybook-static/

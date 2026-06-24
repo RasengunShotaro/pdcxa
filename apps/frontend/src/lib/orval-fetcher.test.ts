@@ -1,49 +1,41 @@
-import { afterEach, describe, expect, it } from "bun:test";
-import { orvalFetch } from "./orval-fetcher";
+import { describe, expect, it } from "vitest";
+import { handleOrvalResponse } from "./orval-fetcher";
 
-const originalFetch = globalThis.fetch;
+describe("API レスポンスを envelope に変換する", () => {
+  it("成功レスポンスの JSON ボディを data に載せて返す", async () => {
+    const res = new Response(JSON.stringify({ message: "ok" }), {
+      status: 200,
+    });
 
-const stubFetch = (response: Response) => {
-  globalThis.fetch = Object.assign(async () => response, {
-    preconnect: () => {},
-  });
-};
-
-afterEach(() => {
-  globalThis.fetch = originalFetch;
-});
-
-describe("orvalFetch", () => {
-  it("2xx の JSON ボディを data に載せて返す", async () => {
-    stubFetch(new Response(JSON.stringify({ message: "ok" }), { status: 200 }));
-
-    const result = await orvalFetch<{ data: { message: string } }>("/pd");
+    const result = await handleOrvalResponse<{ data: { message: string } }>(
+      res,
+    );
 
     expect(result.data).toEqual({ message: "ok" });
   });
 
-  it("非 2xx では例外を投げる", async () => {
-    stubFetch(new Response("internal error", { status: 500 }));
+  it("失敗レスポンスでは HTTP ステータス付きの例外を投げる", async () => {
+    const res = new Response("internal error", { status: 500 });
 
-    expect(orvalFetch("/pd/create", { method: "POST" })).rejects.toThrow(
+    await expect(handleOrvalResponse(res)).rejects.toThrow(
       "API request failed: 500",
     );
   });
 
-  it("壊れた JSON ボディでも例外を投げず空オブジェクトを返す", async () => {
-    stubFetch(new Response("<<not json>>", { status: 200 }));
+  it("成功レスポンスのボディが壊れた JSON でも例外を投げず空オブジェクトを返す", async () => {
+    const res = new Response("<<not json>>", { status: 200 });
 
-    const result = await orvalFetch<{ data: unknown }>("/pd");
+    const result = await handleOrvalResponse<{ data: unknown }>(res);
 
     expect(result.data).toEqual({});
   });
 
-  it("204 No Content では data を空オブジェクトにする", async () => {
-    stubFetch(new Response(null, { status: 204 }));
+  it("本文を持たない成功レスポンスでは data を空オブジェクトにする", async () => {
+    const res = new Response(null, { status: 204 });
 
-    const result = await orvalFetch<{ data: unknown; status: number }>("/pd", {
-      method: "PUT",
-    });
+    const result = await handleOrvalResponse<{ data: unknown; status: number }>(
+      res,
+    );
 
     expect(result.data).toEqual({});
     expect(result.status).toBe(204);
