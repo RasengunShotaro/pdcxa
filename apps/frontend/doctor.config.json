@@ -22,6 +22,11 @@
         "files": ["src/schema/api.ts", "src/schema/api.msw.ts"],
         "rules": ["deslop/unused-export"],
         "reason": "orval 生成物。export は生成器が網羅的に出すもので手で消さない。files で whole-file ignore するとモジュールグラフから外れ、これらだけが import する src/lib/orval-fetcher.ts が unused-file 偽陽性になるため、unused-export のみを override で抑止する。"
+      },
+      {
+        "files": ["src/components/ui/**"],
+        "rules": ["react-doctor/no-multi-comp"],
+        "reason": "shadcn の複合コンポーネント規約。1 ファイルに Root/Title/Description 等の compound パーツを co-locate するのが shadcn (radix-nova) の設計で、card/sidebar/dialog/dropdown-menu 等 vendored ファイルすべてが同形。分割すると shadcn add 由来の構造と乖離し保守コストが上がるため、ui/ 配下のみ本ルールを除外する (アプリ側 components/elements は分割を維持し対象外)。"
       }
     ]
   }

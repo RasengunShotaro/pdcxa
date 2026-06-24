@@ -1,3 +1,5 @@
+import { ApiError } from "./api-error";
+
 declare global {
   interface Window {
     Clerk?: {
@@ -31,7 +33,7 @@ const getToken = async (): Promise<string | null> => {
 
 export const handleOrvalResponse = async <T>(res: Response): Promise<T> => {
   if (!res.ok) {
-    throw new Error(`API request failed: ${res.status}`);
+    throw new ApiError(res.status);
   }
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
