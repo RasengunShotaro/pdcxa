@@ -1,48 +1,59 @@
-# Coding Style
+# コーディングスタイル
 
-## Immutability (CRITICAL)
+## イミュータビリティ（重要）
 
-ALWAYS create new objects, NEVER mutate existing ones:
+常に新しいオブジェクトを作成し、既存のオブジェクトを変更しない。
 
 ```
-// Pseudocode
-WRONG:  modify(original, field, value) → changes original in-place
-CORRECT: update(original, field, value) → returns new copy with change
+// 疑似コード
+NG: modify(original, field, value) → original をその場で変更する
+OK: update(original, field, value) → 変更を反映した新しいコピーを返す
 ```
 
-Rationale: Immutable data prevents hidden side effects, makes debugging easier, and enables safe concurrency.
+理由: イミュータブルなデータは、隠れた副作用を防ぎ、デバッグを容易にし、安全な並行処理を可能にする。
 
-## File Organization
+## ファイル構成
 
-MANY SMALL FILES > FEW LARGE FILES:
-- High cohesion, low coupling
-- 200-400 lines typical, 800 max
-- Extract utilities from large modules
-- Organize by feature/domain, not by type
+少数の大きなファイルより、多数の小さなファイルを優先する。
 
-## Error Handling
+- 高凝集・低結合にする
+- 目安は 200-400 行、最大でも 800 行までにする
+- 大きなモジュールから utility を切り出す
+- 種類別ではなく、feature / domain 別に整理する
 
-ALWAYS handle errors comprehensively:
-- Handle errors explicitly at every level
-- Provide user-friendly error messages in UI-facing code
-- Log detailed error context on the server side
-- Never silently swallow errors
+## コメントとドキュメント
 
-## Input Validation
+- コメント・docstring・JSDoc は追加しない。コード構造、命名、型で意図を表現する。
+- 既存のコメントは、今回の変更で触る場合を除き、削除しなくてよい。
 
-ALWAYS validate at system boundaries:
-- Validate all user input before processing
-- Use schema-based validation where available
-- Fail fast with clear error messages
-- Never trust external data (API responses, user input, file content)
+## エラーハンドリング
 
-## Code Quality Checklist
+常にエラーを網羅的に扱う。
 
-Before marking work complete:
-- [ ] Code is readable and well-named
-- [ ] Functions are small (<50 lines)
-- [ ] Files are focused (<800 lines)
-- [ ] No deep nesting (>4 levels)
-- [ ] Proper error handling
-- [ ] No hardcoded values (use constants or config)
-- [ ] No mutation (immutable patterns used)
+- 各レイヤーでエラーを明示的に扱う
+- UI に表示されるコードでは、ユーザーに分かりやすいエラーメッセージを出す
+- サーバー側では、詳細なエラーコンテキストをログに残す
+- エラーを黙って握りつぶさない
+- ユーザーの目に触れる文言（画面・通知・API エラー本文）では "LLM" を使わず "AI" と表記する（理由: エンドユーザーに技術用語を出さない。内部識別子・型名・ログ等の非ユーザー向けは対象外）
+- backend の error 文字列（API レスポンスの `error`）を Alert / toast に **verbatim で出さない**。**HTTP status → フロント著作の固定文言** にマップする（retryable=「通信に失敗しました。再試行してください」/ fatal=「予期しないエラーが発生しました」等）。backend の生メッセージは監視ログのみ（理由: 現場ユーザーに技術語・内部識別子・例外断片・"LLM" が漏れる。ユーザー向け文言はフロントが制御する）
+
+## 入力検証
+
+常にシステム境界で検証する。
+
+- すべてのユーザー入力を処理前に検証する
+- 利用できる場合は schema-based validation を使う
+- 明確なエラーメッセージで早期に失敗させる
+- 外部データ（API レスポンス、ユーザー入力、ファイル内容）を信用しない
+
+## コード品質チェックリスト
+
+作業完了とする前に確認する。
+
+- [ ] コードが読みやすく、適切に命名されている
+- [ ] 関数が小さい（50 行未満）
+- [ ] ファイルの責務が絞られている（800 行未満）
+- [ ] 深いネストがない（4 階層超を避ける）
+- [ ] 適切にエラーハンドリングしている
+- [ ] ハードコードされた値がない（定数または config を使う）
+- [ ] mutation がない（イミュータブルなパターンを使う）

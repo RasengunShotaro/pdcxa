@@ -68,16 +68,16 @@ it("作成されたプロジェクトには UUID 形式の ID が割り当てら
 ```typescript
 // WRONG: SDK / 実装用語が漏れている
 it("CauseからerrorTypeを抽出する", ...);
-it("S3 GetObjectCommand を呼び出して body を返す", ...);
+it("GetObjectCommand を呼び出して body を返す", ...);
 
 // CORRECT: ドメイン語
 it("原因が構造化されているときは、エラー種別とエラーメッセージを結合する", ...);
 it("音声ファイルを読み込んで本文を返す", ...);
 ```
 
-「Lambda の」「SDK の」「Bedrock の」等の前置きが付いたら危険シグナル。
+「SDK の」「ライブラリの」等の前置きが付いたら危険シグナル。
 
-**ドメイン語に含まれる語**: 「リポジトリ」「サービス」「ユースケース」「ドメイン」「集約」など、設計用語として定着している語は `it` 名に書いてよい。NG なのは特定の SDK / クラウド製品 / ライブラリ固有の名前 (Cognito, DynamoDB, S3, Lambda, Bedrock, Drizzle, Hono 等)。
+**ドメイン語に含まれる語**: 「リポジトリ」「サービス」「ユースケース」「ドメイン」「集約」など、設計用語として定着している語は `it` 名に書いてよい。NG なのは特定の SDK / 外部サービス / ライブラリ固有の名前 (Clerk, Neon, Drizzle, Hono, valibot 等)。
 
 **describe の選び方**: `describe` には対象の関数名 / 型名 / ドメイン名のいずれを書いてもよい。判断基準は **`it` の主語が省略されても文意が通ること**。`describe("createUser")` で `it` が「ユーザーを作成すると ...」なら問題なし。逆に `describe` がドメイン名で `it` が「内部呼び出しを ...」になるなら、`it` 側に SDK 用語が漏れていないか §3 本文で再確認する。
 
@@ -92,8 +92,35 @@ it("音声ファイルを読み込んで本文を返す", ...);
 | `ラベル` / `ID`                     | UI 表現や識別子の話で振る舞いではない                | 「疑問点の内容を解析結果に保つ」                   |
 | `5 セクション応答` / `1 行目`       | データ構造の数 — 仕様変更で数字が変わる              | 「ノウハウ・現場条件・疑問点・要約・要約表が揃った応答を受け取れる」 |
 | `Storybook` / `play function` / `mock`     | テストインフラ用語 — テストの性質ではなく道具       | 「保存ボタンが disabled になる」のように観測される振る舞いで書く |
+| `Blob` / `PNG` / `JPEG` / `Buffer` (識別子として) | Web Standard API / ファイル形式 — 振る舞いではなく実装の型 / 拡張子を語っている | 「画像」「画像ファイル」「バイナリ」 |
+| `Container` / `Element` / `Node` (識別子として) | DOM API の技術語 | 「領域」「要素」 |
+
+※ 型注釈 `: Blob` / `: HTMLElement` のように **TS 型システムで Web Standard 型として使う場合は OK**。Storybook play function の標準引数 (`canvasElement` / `canvas` / `within` 等) もフレームワーク API なので OK。**自前で付ける識別子名 / 関数名 / テスト名** に出るのが NG。
 
 判定: `it` を読んで「**何が起きて欲しいか (= 観測される振る舞い)**」が伝わるか。「**プログラムが何をしているか**」になっていたら NG。
+
+### テスト名は単独で観点が読めること
+
+`it` 名は、**他のテストを読まずに単独で「何を観測しているか」が分かる**ように書く。「〜も」「同じ」「上記の通り」のように前テストとの対比に依存する名前は NG。前テストとの差分を語りたいなら、その差分自体を**観点としてテスト名に書く**。
+
+```typescript
+// WRONG: 何と同じか単独で読めない / 前テスト依存
+it("暖房も同じ形式で組み立てる", ...);
+it("上記と同じだが順位が違う場合", ...);
+it("暖房の2チャンク目もゼロ埋めで命名する", ...); // 運転種別観点とゼロ埋め観点の混在
+
+// CORRECT: 観点が単独で読める
+it("運転種別が ZIP ファイル名に反映される", ...);    // 「運転種別 → ファイル名」観点
+it("4桁の順位はゼロ埋め無しで連番化する", ...);       // ゼロ埋め有無の境界条件観点
+```
+
+判定: 「**ファイル全体を初めて読む人が、この `it` 1 行だけ見て、何を観測したいか分かるか**」。前後のテストを読む必要があるなら書き直す。
+
+### テストへの技術語 leak は production 命名見直しのシグナル
+
+テスト名 / テスト本文の識別子に技術語が leak していたら、ほぼ確実に **production 識別子側に同じ技術語がある**。テスト側だけリネームすると production と乖離するので、**まず production 側を疑って一緒に直す**。
+
+例: テストに `画像Blob: new Blob(...)` が出ていたら、production の `生成済みデータ.画像Blob: Blob` フィールド名そのものが技術語 (`Blob`) の塊。production を `生成済みデータ.画像ファイル: Blob` に直し、テストは import するだけで自然に追随させる。テスト側で `画像Blob` を `画像` に書き換えるだけだと production と乖離する。
 
 ## 4. 期待値に実装ロジックを流出させない
 
@@ -117,7 +144,7 @@ expect(f(1)).toBe(123);
 
 ## 5. モック必須テストは設計の悪臭 — 削除候補
 
-**ここでいう「モック」とは**: `vi.fn()` / `jest.fn()` 等で外部 SDK・グローバル関数 (`fetch`, `Date.now` 等)・副作用持ち実装を **直接捕獲する** ことを指す。
+**ここでいう「モック」とは**: `vi.fn()` / `jest.fn()` 等で外部 SDK・グローバル関数 (`fetch`, `Date.now` 等)・副作用持ち実装を **直接捕獲する** こと、および **`vi.stubGlobal` でブラウザ global (`matchMedia` / `ResizeObserver` / `navigator` 等) を monkeypatch する** ことを指す。
 
 **「モック」に **含まれない** もの**: domain で定義した interface / `Context.Tag` (Effect-TS) / DI コンテナの差替は **正規の DI 注入** であり §5 の対象外。`Layer.succeed(SomeRepository, { ... })` でテスト用実装を差し込むのは、interface に対するもう 1 つの実装を提供しているだけ。これらは §9 (factory で構築) のルールが適用される。
 
@@ -127,7 +154,7 @@ expect(f(1)).toBe(123);
 2. **純粋関数を切り出す**: 検証したい本質ロジック (payload 組み立て等) を pure function として export し、引数→戻り値だけのテストにする
 3. **DI interface 化**: SDK クライアントを mock したいなら interface を定義する (§6)
 
-副作用 (DB 書き込み等) は mock せず **MiniStack で本物を叩く** (下記「AWS SDK のテスト」セクション)。
+副作用 (DB 書き込み等) は mock せず **本物の DB を叩く** 統合テストでカバーする (下記「Infrastructure / Repository 層のテスト」)。
 
 実 API を叩く価値しかない関数 (薄いラッパー) は、本質ロジックを pure function に切り出してそちらをテストする。SDK 呼び出しを mock しても、本物の挙動から乖離した「動いているように見えるだけのテスト」になりがち。
 
@@ -144,13 +171,15 @@ async function callApi(input: Input) {
 
 `buildRequest` のような pure function は引数→戻り値のテストで十分。
 
-**外部 SDK / 副作用を扱うときの判断順序**（§5 → §6 → MiniStack の階層）:
+ブラウザ API 依存の薄いフック (`useIsMobile` / `useMediaQuery` 等、`window.matchMedia` 等を包むだけのもの) も同じ。jsdom で global を `vi.stubGlobal` 差し替えしてテストするのは実装詳細テストで、`matchMedia` が `fetch` / `Date.now` でないことは省略理由にならない。本質ロジックがあれば pure function に切り出し、フックの実挙動は実機 (Storybook play / Playwright) で観測する。
+
+**外部 SDK / 副作用を扱うときの判断順序**（§5 → §6 → 本物の統合テストの階層）:
 
 1. **まず本質ロジックを pure function に切り出せないか**（本節）。切り出せたら pure func の unit test だけ書き、SDK 呼び出し部分はテスト対象から外す。
-2. **副作用を含めて検証したい部分は MiniStack で本物を叩く**（後述「AWS SDK のテスト」）。これが第一選択。
-3. **MiniStack で再現できない外部依存** (社外 API、Bedrock 等) や、**unit テストの粒度で振る舞いを観測したい場合のみ** §6 の DI interface 化に進む。`vi.fn()` で SDK を直接 mock するのは最後の選択肢。
+2. **副作用を含めて検証したい部分は本物の DB / サービスを叩く**（後述「Infrastructure / Repository 層のテスト」）。これが第一選択。
+3. **本物で再現できない外部依存** (社外 API 等) や、**unit テストの粒度で振る舞いを観測したい場合のみ** §6 の DI interface 化に進む。`vi.fn()` で SDK を直接 mock するのは最後の選択肢。
 
-実プロジェクトでは「pure 切り出し + DI interface unit test + MiniStack 統合 test」の 3 層構成が典型。順序を守れば各層の責務が重複せず、テストが本物挙動から乖離するリスクも下がる。
+実プロジェクトでは「pure 切り出し + DI interface unit test + 本物 DB 統合 test」の 3 層構成が典型。順序を守れば各層の責務が重複せず、テストが本物挙動から乖離するリスクも下がる。
 
 ## 6. `as unknown as` 禁止
 
@@ -169,7 +198,7 @@ const mockClient: MyClient = {
 };
 ```
 
-戻り値での個別フィールドへの限定的 `as SomeOutput` は許容。Lambda Event 型は handler が使うフィールドだけの独自 interface に縮める。
+戻り値での個別フィールドへの限定的 `as SomeOutput` は許容。外部イベント型は handler が使うフィールドだけの独自 interface に縮める。
 
 ## 7. 実装詳細テストの削除
 
@@ -188,7 +217,7 @@ const mockClient: MyClient = {
 | factory で `captured` した副作用呼び出しの **回数 (1 回 / 0 回 / 2 回以上)** | 振る舞い | 「保存処理が起きたか / 重複していないか」はドメインの不変条件 |
 | factory で `captured` した副作用呼び出しの **引数 (input がそのまま渡るか)** | 振る舞い | 上位層→下位層の data flow 観測 |
 | `vi.spyOn` で **内部 helper 関数** が何回呼ばれたか | 実装詳細 | helper は別実装に置換可能 |
-| SDK Command の **クラス型** (`expect.any(AdminCreateUserCommand)`) | 実装詳細 | SDK 仕様変更で別 Command に変わっても振る舞いは同じ |
+| SDK Command の **クラス型** (`expect.any(SomeCommand)`) | 実装詳細 | SDK 仕様変更で別 Command に変わっても振る舞いは同じ |
 | `Date.now()` 差分 | 実装詳細 | フレーキー、性能特性は別 (load test) で測る |
 
 `captured.push(input)` で副作用回数や入力値を観測するのは振る舞い観測として OK。「内部 method を何回呼んだか」「内部生成オブジェクトの型」を見るのは NG。
@@ -227,7 +256,7 @@ it("...", async () => {
 });
 ```
 
-MiniStack 統合テストで handler がモジュールスコープ生成される場合は `beforeEach` リセットを許容するが、生成自体は factory で。
+統合テストで handler がモジュールスコープ生成される場合は `beforeEach` リセットを許容するが、生成自体は factory で。
 
 **§9 (mock factory) と §10 (Object Mother / data factory) の関係**:
 
@@ -302,6 +331,10 @@ it("...", () => {
 
 §9（モック factory）と同じ思想で、**入力データもテストごとに独立にビルドする**。
 
+### 「妥当だが存在しない ID」は実フォーマットで作る
+
+越境/404 テスト等で「バリデーションは通るが存在しない ID」が要るとき、`00000000-…-0000000000ff` のような任意のゼロ埋め値を使わない。`z.uuid()` / `z.string().uuid()` は **UUID の version/variant ビットも検証**するため、version nibble が 0 等の不正値は弾かれ、狙った 404 ではなく **400 (入力エラー) で先に落ちて**テストが誤った理由で失敗する (実際に踏んだ)。`uuidv7()` を呼ぶか、実在フォーマットの例 (`018f5e8a-9c30-7a01-…`) を使う。
+
 ## 11. テナント越境テスト必須
 
 多テナント・多ユーザー境界がある機能を実装したら、**「他テナント／他ユーザーのリソースを取得・更新できないこと」を必ずテストする**。
@@ -337,58 +370,12 @@ it("別テナントから他テナントの ID を指定すると 404 を返す"
 ## 深刻度の指針 (レビュー時)
 
 - **高 (削除/書き直し必須)**: フレーキー、何も検証していない、期待値が実装と同じ式、mock でしか書けない実装詳細、**テナント越境拒絶のテスト欠落**
-- **中 (修正)**: 1テスト複数観点、`as unknown as`、層間重複、テスト名の SDK 用語、実装マジックナンバーの流出、トップレベル fixture に依存した assert
+- **中 (修正)**: 1テスト複数観点、`as unknown as`、層間重複、テスト名の SDK / Web Standard / DOM 技術語、前テスト依存のテスト名 (「〜も」「同じ」)、実装マジックナンバーの流出、トップレベル fixture に依存した assert
 - **低 (見つけ次第)**: テスト名の微妙な不一致、mutable state
 
 ---
 
 # インフラ・フレームワーク
-
-## AWS SDK のテスト: MiniStack (ローカル AWS エミュ) を使う
-
-AWS SDK (Cognito IDP, Lambda, S3, SQS 等) を使うコードのテストでは、**[MiniStack](https://github.com/ministackorg/ministack) を Docker で起動してローカルで本物のサービスを叩く**。SDK モックは禁止 (§5 の理由)。
-
-### 起動
-
-`docker compose up -d` で `infra/docker-compose.yml` の ministack サービスを起動。デフォルトで port 4566 を待ち受ける。
-
-```yaml
-services:
-  ministack:
-    image: ministackorg/ministack:latest
-    ports:
-      - "4566:4566"
-    environment:
-      AWS_DEFAULT_REGION: ap-northeast-1
-      AWS_REGION: ap-northeast-1
-    volumes:
-      - ministack-data:/data
-      - /var/run/docker.sock:/var/run/docker.sock
-```
-
-### SDK 設定 (テスト/開発時)
-
-`endpoint` を環境変数で切り替え可能にする。infrastructure 層でクライアント生成時に注入し、テストとプロダクションで同じコードが動くようにする。
-
-```typescript
-const config = {
-  endpoint: process.env.AWS_ENDPOINT_URL,
-  region: process.env.AWS_DEFAULT_REGION ?? "ap-northeast-1",
-  credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID ?? "test",
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY ?? "test",
-  },
-  forcePathStyle: true, // S3 のローカル endpoint で必須
-};
-```
-
-テスト時は `AWS_ENDPOINT_URL=http://localhost:4566` を渡す。プロダクションでは未設定 → SDK が AWS 本物に向く。
-
-### テストの書き方
-
-- setup/teardown でリソース (User Pool, テーブル, バケット 等) を作成・削除する
-- mock せず本物の MiniStack を叩く。返り値の構造も本物と同じ
-- 別エミュ (LocalStack 等) からの移行時、API 互換のため endpoint URL を切り替えるだけで動くケースが多い
 
 ## Infrastructure / Repository 層のテスト
 
@@ -421,10 +408,19 @@ export const toProject = (
   });
 ```
 
-- **(1) 副作用** は MiniStack / 本物 DB を叩く統合テストでカバー
+- **(1) 副作用** は本物の DB を叩く統合テストでカバー
 - **(2) 純粋変換** は pure func の unit test でカバー（例: invalid な値 → エラー）
 
 §8 の通り、上位層が通っているという理由だけで infra のテストを省略しない (上位層から到達不能な分岐は infra unit test でしか踏めない)。
+
+### ローカルで再現できない外部依存: 「外部の形」は公式 fixture/docs に pin する
+
+ローカル / エミュレータで**再現できない外部 API・SDK 依存**に依存する分岐 — エラー処理・retryable 判定・レスポンスや metadata の parse・**ハッピーパスのレスポンス形** — は、テストで**一度も実際に踏めない**。pure func に切り出して logic を unit test しても、その logic が前提とする「外部が実際に返す形」自体は自分のテストでは検証されない。fake/DI スタブにも同じ**思い込みの形**を書けば、テストも本番経路も両方緑になり、間違いに気づけない。
+
+したがって、これらの分岐を書くときは:
+
+- **「外部 API / SDK が実際に返す形」を公式 docs / SDK の型定義・エラー fixture で裏取りしてから** decode/分岐ロジックを書く。ローカルで踏めない以上、「テスト緑 = 正しい」は成り立たない。**fixture をその裏取りした実形のコピーにする** (推測値で埋めない)。
+- decode/分岐は pure func に切り出し、裏取りした実形を入力に unit test する (logic 自体の回帰は防げる)。
 
 ## E2E Testing
 

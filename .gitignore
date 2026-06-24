@@ -43,3 +43,6 @@ next-env.d.ts
 mcp.json
 
 .turbo
+
+# local working docs (migration plan 等・git 管理外)
+docs/

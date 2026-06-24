@@ -22,7 +22,7 @@ React コンポーネントは テストとして **`.stories.tsx`** を書く:
 
 - **Next.js app router 規約ファイル**: `layout.tsx` / `page.tsx` / `loading.tsx` / `error.tsx` / `not-found.tsx` / `template.tsx` / `default.tsx` / `route.ts` / `global-error.tsx`
   - レンダリングだけのページは E2E (Playwright) に任せる
-- **shadcn コピペ**: `frontend/src/components/ui/` 配下。upstream のテストを信頼する
+- **shadcn コピペ**: `apps/frontend/src/components/ui/` 配下。upstream のテストを信頼する
 
 これらは Stop hook (`.claude/hooks/check-test-pair.sh`) が自動除外する。
 
