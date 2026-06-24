@@ -1,5 +1,5 @@
 import type { InfiniteData, QueryClient } from "@tanstack/react-query";
-import type { Pd } from "../types";
+import type { LikeUser, Pd } from "../types";
 
 type InfinitePds = {
   items: Pd[];
@@ -11,11 +11,13 @@ export const optimisticUpdateLike = async ({
   queryKey,
   queryClient,
   myUserId,
+  myLikeUser,
 }: {
   pd: Pd;
   queryKey: (string | undefined)[];
   queryClient: QueryClient;
   myUserId: string;
+  myLikeUser: LikeUser;
 }) => {
   const previousPages =
     queryClient.getQueryData<InfiniteData<InfinitePds>>(queryKey);
@@ -37,10 +39,14 @@ export const optimisticUpdateLike = async ({
             const updatedLikes = isCurrentlyLiked
               ? oldPd.likes.filter((like) => like.userId !== myUserId)
               : [...oldPd.likes, { userId: myUserId }];
+            const updatedLikeUsers = isCurrentlyLiked
+              ? oldPd.likeUsers.filter((user) => user.userId !== myUserId)
+              : [...oldPd.likeUsers, myLikeUser];
 
             return {
               ...oldPd,
               likes: updatedLikes,
+              likeUsers: updatedLikeUsers,
               likeCount: isCurrentlyLiked
                 ? Number(oldPd.likeCount) - 1
                 : Number(oldPd.likeCount) + 1,

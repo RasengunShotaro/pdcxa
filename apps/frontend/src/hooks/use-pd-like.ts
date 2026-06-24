@@ -1,10 +1,13 @@
 "use client";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 import { mutatePdLike } from "@/feature/pd/api/pd/mutate-pd-like";
 import type { Pd } from "@/feature/pd/types";
+import { buildLikeUser } from "@/feature/pd/utils/build-like-user";
 import { optimisticUpdateLike } from "@/feature/pd/utils/optimistic-update-like";
 import { useCurrentUser } from "@/lib/auth/use-current-user";
+import { errorDisplay } from "@/lib/error-message";
 import { legacyDelay } from "@/utils/legacy-delay";
 
 export const usePdLike = ({
@@ -19,6 +22,7 @@ export const usePdLike = ({
   const queryClient = useQueryClient();
   const { user } = useCurrentUser();
   const myUserId = user?.id ?? "";
+  const myLikeUser = buildLikeUser(user);
 
   const queryKey = pdId
     ? ["PD詳細", pdId, undefined]
@@ -26,17 +30,18 @@ export const usePdLike = ({
       ? ["PD詳細", undefined, userId]
       : ["PD詳細", undefined, undefined];
 
-  const { mutate: toggleLike } = useMutation({
+  const { mutate: toggleLike, isPending } = useMutation({
     mutationFn: async () => {
       await legacyDelay();
       await mutatePdLike(pd.id);
     },
     onMutate: () =>
-      optimisticUpdateLike({ pd, queryKey, queryClient, myUserId }),
-    onError: (_, __, context) => {
+      optimisticUpdateLike({ pd, queryKey, queryClient, myUserId, myLikeUser }),
+    onError: (error, __, context) => {
       if (context?.previousPages) {
         queryClient.setQueryData(queryKey, context.previousPages);
       }
+      toast.warning(errorDisplay(error).message);
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: queryKey });
@@ -48,5 +53,6 @@ export const usePdLike = ({
   return {
     isLiked,
     toggleLike,
+    isPending,
   };
 };

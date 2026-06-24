@@ -15,9 +15,9 @@
     "api:generate": "cd ../backend && bun run openapi:generate && cd ../frontend && orval --config ./orval.config.ts",
     "check-types": "tsc --noEmit",
     "test": "vitest --project unit",
-    "test:storybook": "vitest --project storybook",
-    "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build",
+    "test:storybook": "NEXT_PUBLIC_API_MOCKING=enabled vitest --project storybook",
+    "storybook": "NEXT_PUBLIC_API_MOCKING=enabled storybook dev -p 6006",
+    "build-storybook": "NEXT_PUBLIC_API_MOCKING=enabled storybook build",
     "doctor": "react-doctor --verbose"
   },
   "dependencies": {

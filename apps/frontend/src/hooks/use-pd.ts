@@ -26,6 +26,8 @@ export const usePd = ({
     isPending,
     isFetchingNextPage,
     isError,
+    error,
+    refetch,
   } = useInfiniteQuery({
     queryKey: ["PD詳細", pdId, userName],
     queryFn: async ({ pageParam: cursor }) => {
@@ -62,11 +64,13 @@ export const usePd = ({
     pds,
     isPending,
     isError,
+    error,
     createPd: createNewPd,
     isMutationPending,
     isMutationError,
     hasNextPage,
     fetchNextPage,
     isFetchingNextPage,
+    refetch,
   };
 };

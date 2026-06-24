@@ -1,4 +1,4 @@
-import type { Pd, RawPd, UserDetail } from "../types/pd";
+import type { LikeUser, Pd, RawPd, UserDetail } from "../types/pd";
 
 export const ユーザーIDリストを抽出する = (pds: RawPd[]): string[] => {
   const allUserIds = pds.flatMap((pd) => {
@@ -30,6 +30,21 @@ const いいねユーザーの名前リストを作成する = (
   });
 };
 
+const いいねユーザーの詳細リストを作成する = (
+  likes: { userId: string }[],
+  userDetailsMap: Map<string, UserDetail>,
+): LikeUser[] => {
+  return likes.map((like) => {
+    const likeUserDetail = userDetailsMap.get(like.userId);
+    return {
+      userId: like.userId,
+      userFullName: ユーザーのフルネームをフォーマットする(likeUserDetail),
+      imageUrl: likeUserDetail?.imageUrl ?? "",
+      userName: likeUserDetail?.userName ?? "",
+    };
+  });
+};
+
 export const PDを詳細化する = (
   pds: RawPd[],
   userDetails: UserDetail[],
@@ -42,6 +57,10 @@ export const PDを詳細化する = (
       pd.likes,
       userDetailsMap,
     );
+    const likeUsers = いいねユーザーの詳細リストを作成する(
+      pd.likes,
+      userDetailsMap,
+    );
     return {
       ...pd,
       userDetail: {
@@ -51,6 +70,7 @@ export const PDを詳細化する = (
         userName: userDetail?.userName ?? "",
       },
       likeUserNames,
+      likeUsers,
     };
   });
 };

@@ -119,6 +119,20 @@ describe("PDを詳細化する", () => {
           userName: "user1",
         },
         likeUserNames: ["田中2 太郎2", "田中3 太郎3"],
+        likeUsers: [
+          {
+            userId: "user-2",
+            userFullName: "田中2 太郎2",
+            imageUrl: "https://example.com/avatar2.jpg",
+            userName: "user2",
+          },
+          {
+            userId: "user-3",
+            userFullName: "田中3 太郎3",
+            imageUrl: "https://example.com/avatar3.jpg",
+            userName: "user3",
+          },
+        ],
       },
     ]);
   });
@@ -157,6 +171,14 @@ describe("PDを詳細化する", () => {
           userName: "",
         },
         likeUserNames: [""],
+        likeUsers: [
+          {
+            userId: "unknown-user-2",
+            userFullName: "",
+            imageUrl: "",
+            userName: "",
+          },
+        ],
       },
     ]);
   });
@@ -207,6 +229,20 @@ describe("PDを詳細化する", () => {
           userName: "user2",
         },
         likeUserNames: ["三郎", ""],
+        likeUsers: [
+          {
+            userId: "user-3",
+            userFullName: "三郎",
+            imageUrl: userDetails[2].imageUrl || "",
+            userName: "user3",
+          },
+          {
+            userId: "user-4",
+            userFullName: "",
+            imageUrl: userDetails[3].imageUrl || "",
+            userName: "",
+          },
+        ],
       },
     ]);
   });
@@ -257,6 +293,7 @@ describe("PDを詳細化する", () => {
           userName: "user1",
         },
         likeUserNames: [],
+        likeUsers: [],
       },
       {
         ...rawPds[1],
@@ -267,6 +304,14 @@ describe("PDを詳細化する", () => {
           userName: "user2",
         },
         likeUserNames: ["田中3 太郎3"],
+        likeUsers: [
+          {
+            userId: "user-3",
+            userFullName: "田中3 太郎3",
+            imageUrl: userDetails[2].imageUrl || "",
+            userName: "user3",
+          },
+        ],
       },
     ]);
   });
@@ -307,6 +352,7 @@ describe("PDを詳細化する", () => {
           userName: "user1",
         },
         likeUserNames: [],
+        likeUsers: [],
       },
       {
         ...rawPds[1],
@@ -317,6 +363,14 @@ describe("PDを詳細化する", () => {
           userName: "user1",
         },
         likeUserNames: ["田中2 太郎2"],
+        likeUsers: [
+          {
+            userId: "user-2",
+            userFullName: "田中2 太郎2",
+            imageUrl: userDetails[1].imageUrl || "",
+            userName: "user2",
+          },
+        ],
       },
     ]);
   });
@@ -358,5 +412,34 @@ describe("内部関数の振る舞い", () => {
     const result = PDを詳細化する(rawPds, userDetails);
 
     expect(result[0].likeUserNames).toEqual(["次郎", "三郎", ""]);
+  });
+
+  test("いいねしたユーザーの識別子・表示名・アバター・ユーザー名をまとめて取得できる", () => {
+    const rawPds = [
+      RawPdMother({
+        userId: "user-1",
+        likes: [{ userId: "user-2" }],
+      }),
+    ];
+    const userDetails = [
+      UserDetailMother({
+        id: "user-2",
+        firstName: "花子",
+        lastName: "鈴木",
+        imageUrl: "https://example.com/hanako.jpg",
+        userName: "hanako",
+      }),
+    ];
+
+    const result = PDを詳細化する(rawPds, userDetails);
+
+    expect(result[0].likeUsers).toEqual([
+      {
+        userId: "user-2",
+        userFullName: "花子 鈴木",
+        imageUrl: "https://example.com/hanako.jpg",
+        userName: "hanako",
+      },
+    ]);
   });
 });

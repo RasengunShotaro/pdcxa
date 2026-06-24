@@ -18,6 +18,13 @@ export type RawPd = {
   imageFileName: string | null;
 };
 
+export type LikeUser = {
+  userId: string;
+  userFullName: string;
+  imageUrl: string;
+  userName: string;
+};
+
 export type Pd = RawPd & {
   userDetail: {
     id: string;
@@ -26,6 +33,7 @@ export type Pd = RawPd & {
     userName: string;
   };
   likeUserNames: string[];
+  likeUsers: LikeUser[];
 };
 
 export type RePd = {

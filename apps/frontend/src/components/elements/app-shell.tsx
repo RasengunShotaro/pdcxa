@@ -83,7 +83,7 @@ export function AppShell({
       </Sidebar>
 
       <SidebarInset>
-        <header className="flex h-16 shrink-0 items-center gap-2 border-b transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
+        <header className="flex h-16 shrink-0 items-center gap-2 border-b bg-background transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
           <div className="flex items-center gap-2 px-4">
             <SidebarTrigger className="-ml-1 max-md:size-11" />
             <Separator
@@ -96,7 +96,7 @@ export function AppShell({
             <ColorModeSwitcher />
           </div>
         </header>
-        <div className="flex flex-1 flex-col overflow-y-auto">
+        <div className="flex flex-1 flex-col overflow-y-auto bg-muted/40">
           <div
             className="mx-auto w-full max-w-[1042px] px-4 py-6"
             id="main-content"
