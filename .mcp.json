@@ -1,5 +1,13 @@
 {
   "mcpServers": {
+    "melta-ui": {
+      "command": "node",
+      "args": ["./melta-ui/dist/index.js"]
+    },
+    "shadcn": {
+      "command": "npx",
+      "args": ["shadcn@latest", "mcp"]
+    },
     "context7": {
       "type": "stdio",
       "command": "npx",

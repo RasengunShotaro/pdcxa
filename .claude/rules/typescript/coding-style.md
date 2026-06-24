@@ -5,7 +5,6 @@ paths:
   - "**/*.js"
   - "**/*.jsx"
 ---
-
 # TypeScript/JavaScript Coding Style
 
 > This file extends [common/coding-style.md](../common/coding-style.md) with TypeScript/JavaScript specific content.
@@ -23,18 +22,35 @@ Use types to make public APIs, shared models, and component props explicit, read
 ```typescript
 // WRONG: Exported function without explicit types
 export function formatUser(user) {
-  return `${user.firstName} ${user.lastName}`;
+  return `${user.firstName} ${user.lastName}`
 }
 
 // CORRECT: Explicit types on public APIs
 interface User {
-  firstName: string;
-  lastName: string;
+  firstName: string
+  lastName: string
 }
 
 export function formatUser(user: User): string {
-  return `${user.firstName} ${user.lastName}`;
+  return `${user.firstName} ${user.lastName}`
 }
+```
+
+### 引数 2 つ以上は options object で受ける
+
+引数を 2 つ以上取る関数は、位置引数でなく options object（`{ field }` 分割代入）で受ける（理由: 位置引数は順番を取り違えうる。特に複数の引数が同じ型だと、入れ替えても型エラーにならずサイレントに壊れる。object 引数なら呼び出し側がフィールド名で固定され、取り違えが型レベルで消える）。任意引数は `?` + 分割代入のデフォルトにする。sibling 関数は揃える（片方だけ object 引数だと不整合）。単一引数はそのままでよい。
+
+```typescript
+// WRONG: 同型の位置引数（question と siteDigest を入れ替えても型は通る）
+function buildKnowhowQuery(question: string, tradeId: string, siteDigest: string): string
+
+// CORRECT: options object
+interface BuildKnowhowQueryInput {
+  readonly question: string
+  readonly tradeId: string
+  readonly siteDigest?: string
+}
+function buildKnowhowQuery({ question, tradeId, siteDigest = '' }: BuildKnowhowQueryInput): string
 ```
 
 ### Interfaces vs. Type Aliases
@@ -45,14 +61,14 @@ export function formatUser(user: User): string {
 
 ```typescript
 interface User {
-  id: string;
-  email: string;
+  id: string
+  email: string
 }
 
-type UserRole = "admin" | "member";
+type UserRole = 'admin' | 'member'
 type UserWithRole = User & {
-  role: UserRole;
-};
+  role: UserRole
+}
 ```
 
 ### `as` キャスト禁止
@@ -61,15 +77,15 @@ type UserWithRole = User & {
 
 ```typescript
 // WRONG: as cast
-const user = data as User;
+const user = data as User
 
 // CORRECT: Type Guard
 function isUser(data: unknown): data is User {
-  return typeof data === "object" && data !== null && "id" in data;
+  return typeof data === 'object' && data !== null && 'id' in data
 }
 
 if (isUser(data)) {
-  console.log(data.id); // safely narrowed
+  console.log(data.id) // safely narrowed
 }
 ```
 
@@ -82,16 +98,16 @@ if (isUser(data)) {
 ```typescript
 // WRONG: any removes type safety
 function getErrorMessage(error: any) {
-  return error.message;
+  return error.message
 }
 
 // CORRECT: unknown forces safe narrowing
 function getErrorMessage(error: unknown): string {
   if (error instanceof Error) {
-    return error.message;
+    return error.message
   }
 
-  return "Unexpected error";
+  return 'Unexpected error'
 }
 ```
 
@@ -119,18 +135,8 @@ function UserCard({ user, onSelect }: UserCardProps) {
 
 ### JavaScript Files
 
-- In `.js` and `.jsx` files, use JSDoc when types improve clarity and a TypeScript migration is not practical
-- Keep JSDoc aligned with runtime behavior
-
-```javascript
-/**
- * @param {{ firstName: string, lastName: string }} user
- * @returns {string}
- */
-export function formatUser(user) {
-  return `${user.firstName} ${user.lastName}`;
-}
-```
+- Do not add JSDoc as a substitute for types.
+- If type clarity is needed, prefer migrating the file to TypeScript or extracting named types in nearby TypeScript code.
 
 ## 命名規律 (次の作業者の認知負荷を下げる)
 
@@ -141,14 +147,14 @@ export function formatUser(user) {
 ```typescript
 // WRONG: 意味が独立した別軸 (管理観点軸 と 専門分野軸) を数字で区別
 interface SummaryRow {
-  category1: "品質" | "工程" | "コスト" | "安全" | "環境"; // 管理観点
-  category2: "意匠" | "構造" | "設備" | "共通"; // 専門分野
+  category1: '品質' | '工程' | 'コスト' | '安全' | '環境'  // 管理観点
+  category2: '意匠' | '構造' | '設備' | '共通'              // 専門分野
 }
 
 // CORRECT: 軸の意味を名前にする
 interface SummaryRow {
-  managementAspect: "品質" | "工程" | "コスト" | "安全" | "環境";
-  discipline: "意匠" | "構造" | "設備" | "共通";
+  managementAspect: '品質' | '工程' | 'コスト' | '安全' | '環境'
+  discipline: '意匠' | '構造' | '設備' | '共通'
 }
 ```
 
@@ -175,16 +181,10 @@ interface SummaryRow {
 // DocumentImport BC (書類取込) が「ファイル取込」で重なる
 
 // WRONG: 両 BC で同じ「ファイル取込」を使う
-const INPUT_METHOD_LABELS = {
-  upload: "ファイル取込",
-  realtime: "リアルタイム",
-};
+const INPUT_METHOD_LABELS = { upload: "ファイル取込", realtime: "リアルタイム" }
 
 // CORRECT: Meeting 固有の文脈に絞る
-const INPUT_METHOD_LABELS = {
-  upload: "録音・録画ファイル",
-  realtime: "リアルタイム録音",
-};
+const INPUT_METHOD_LABELS = { upload: "録音・録画ファイル", realtime: "リアルタイム録音" }
 ```
 
 判定: 「他 BC のメニューに同じ語があるか」 — あれば差別化必須。
@@ -195,12 +195,12 @@ const INPUT_METHOD_LABELS = {
 
 ```typescript
 // CORRECT
-プロジェクト配下のミーティング件数を集計する(projectId);
-ミーティングの疑問点を取得する(meetingId);
+プロジェクト配下のミーティング件数を集計する(projectId)
+ミーティングの疑問点を取得する(meetingId)
 
 // WRONG (何を集計? 何を取得?)
-プロジェクト配下を集計する(projectId);
-ミーティングごとに取得する(meetingId);
+プロジェクト配下を集計する(projectId)
+ミーティングごとに取得する(meetingId)
 ```
 
 判定: 「関数名だけを別ファイルで見たとき、戻り値の意味が伝わるか」。
@@ -211,13 +211,15 @@ const INPUT_METHOD_LABELS = {
 
 ```typescript
 // CORRECT (entity を表す名詞として読める)
-取込ファイル / ミーティング / 案件;
+取込ファイル / ミーティング / 案件
 
 // WRONG (動詞句が entity 名詞に化けて曖昧)
-書類取込; // 「書類を取り込む」行為? それとも取り込まれた何か?
+書類取込  // 「書類を取り込む」行為? それとも取り込まれた何か?
 ```
 
 判定: 「名詞として読んだとき、行為と entity のどちらか曖昧に聞こえないか」。曖昧なら別語に変える。
+
+このルールが対象とするのは **識別子・entity ラベル**（型名 / フィールド名 / モノを指す UI ラベル）。サイドバーやタブの **機能・メニュー名** は対象外で、`書類取込` のような動詞句のままでよい（entity を別語で分離していれば OK。例: メニュー名「書類取込」／ entity「取込ファイル」の併存は意図的で違反ではない）。
 
 ## Immutability
 
@@ -225,22 +227,22 @@ Use spread operator for immutable updates:
 
 ```typescript
 interface User {
-  id: string;
-  name: string;
+  id: string
+  name: string
 }
 
 // WRONG: Mutation
 function updateUser(user: User, name: string): User {
-  user.name = name; // MUTATION!
-  return user;
+  user.name = name // MUTATION!
+  return user
 }
 
 // CORRECT: Immutability
 function updateUser(user: Readonly<User>, name: string): User {
   return {
     ...user,
-    name,
-  };
+    name
+  }
 }
 ```
 
@@ -250,33 +252,33 @@ Use async/await with try-catch and narrow unknown errors safely:
 
 ```typescript
 interface User {
-  id: string;
-  email: string;
+  id: string
+  email: string
 }
 
-declare function riskyOperation(userId: string): Promise<User>;
+declare function riskyOperation(userId: string): Promise<User>
 
 function getErrorMessage(error: unknown): string {
   if (error instanceof Error) {
-    return error.message;
+    return error.message
   }
 
-  return "Unexpected error";
+  return 'Unexpected error'
 }
 
 const logger = {
   error: (message: string, error: unknown) => {
     // Replace with your production logger (for example, pino or winston).
-  },
-};
+  }
+}
 
 async function loadUser(userId: string): Promise<User> {
   try {
-    const result = await riskyOperation(userId);
-    return result;
+    const result = await riskyOperation(userId)
+    return result
   } catch (error: unknown) {
-    logger.error("Operation failed", error);
-    throw new Error(getErrorMessage(error));
+    logger.error('Operation failed', error)
+    throw new Error(getErrorMessage(error))
   }
 }
 ```
@@ -286,16 +288,16 @@ async function loadUser(userId: string): Promise<User> {
 Use Zod for schema-based validation and infer types from the schema:
 
 ```typescript
-import { z } from "zod";
+import { z } from 'zod'
 
 const userSchema = z.object({
   email: z.string().email(),
-  age: z.number().int().min(0).max(150),
-});
+  age: z.number().int().min(0).max(150)
+})
 
-type UserInput = z.infer<typeof userSchema>;
+type UserInput = z.infer<typeof userSchema>
 
-const validated: UserInput = userSchema.parse(input);
+const validated: UserInput = userSchema.parse(input)
 ```
 
 ## Console.log

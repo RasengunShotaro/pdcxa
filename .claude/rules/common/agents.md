@@ -25,6 +25,11 @@ No user prompt needed:
 3. Bug fix or new feature - Use **tdd-guide** agent
 4. Architectural decision - Use **architect** agent
 
+判断のトリガ:
+- **trade-off を伴うアーキ判断**は単発推奨に飛ばない。並列サブエージェントで複数案を議論させ（→ Multi-Perspective Analysis）、結果を**ドメイン語**で trade-off 付きに整理して提示する（理由: 単一推奨は根拠が検証されず、ユーザーが比較レビューできない）
+- **AI/LLM 駆動機能が期待通り動かないとき**は、インフラ/コード変更より先に **プロンプトを実データで empirical 検証**する（`empirical-prompt-tuning` skill）。原因切り分けは prompt → model → data → infra の順（理由: 多くは prompt の曖昧さが原因で、コードを触る前にプロンプトを測れば遠回りを避けられる）
+- **モダリティやモデルグレードの要否を伴うアーキ判断**（例: 視覚入力は必要か、安いモデルで足りるか）は、推論で決めず**実データの controlled A/B 実測を先に行う**（理由: 会議解析の視覚要否を実測したら「抽出項目は同等・コスト半額」が判明し、推論だけでは逆の結論に向かっていた。実測は数百円・数十分で済み、設計の手戻りより遥かに安い）
+
 ## Parallel Task Execution
 
 ALWAYS use parallel Task execution for independent operations:

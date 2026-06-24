@@ -1,5 +1,12 @@
 {
   "permissions": {
     "allow": []
-  }
+  },
+  "enabledMcpjsonServers": [
+    "melta-ui",
+    "shadcn",
+    "context7",
+    "playwright",
+    "next-devtools"
+  ]
 }

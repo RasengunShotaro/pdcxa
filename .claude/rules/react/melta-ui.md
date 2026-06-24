@@ -29,13 +29,13 @@ melta-ui は **コンポーネントライブラリではない**。React 実装
 
 `.mcp.json` で `melta-ui` MCP サーバーが登録済み。以下のツールを必要な時だけ呼ぶ（毎回ファイルを Read しない）：
 
-| ツール          | 用途                                                                          |
-| --------------- | ----------------------------------------------------------------------------- |
-| `get_component` | 28 コンポーネント仕様（variant / size / a11y / Tailwind クラス）              |
-| `get_token`     | 99 デザイントークン参照（例: `color.primary.500`）                            |
-| `check_rule`    | 89 禁止ルール中の自動検出可能サブセットで Tailwind クラスを検証               |
-| `get_rules`     | 89 ルール参照（manual 含む全件、category / severity / detector で filter 可） |
-| `search`        | 全文検索                                                                      |
+| ツール | 用途 |
+|--------|------|
+| `get_component` | 28 コンポーネント仕様（variant / size / a11y / Tailwind クラス） |
+| `get_token` | 99 デザイントークン参照（例: `color.primary.500`） |
+| `check_rule` | 89 禁止ルール中の自動検出可能サブセットで Tailwind クラスを検証 |
+| `get_rules` | 89 ルール参照（manual 含む全件、category / severity / detector で filter 可） |
+| `search` | 全文検索 |
 
 リソース（参照のみ）: `melta://tokens` / `melta://components` / `melta://components/{id}` / `melta://rules`
 

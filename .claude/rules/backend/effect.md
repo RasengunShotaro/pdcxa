@@ -8,12 +8,12 @@ paths:
 > backend の新規実装は **Effect-TS** で書く。関数型・副作用管理・DI・エラーハンドリングを Effect で統一。
 > `async/await` だけで完結させない (副作用が型に出ず、エラーハンドリングがバラつく)。
 >
-> **例外**: Lambda の entry point やフレームワーク境界 (`handle(app)` 等) のみ。
+> **例外**: Cloudflare Workers の entry point やフレームワーク境界 (`handle(app)` 等) のみ。
 
 > 関連 (このファイルでは再掲しない、各リンク先に従う):
 >
 > - 型キャスト禁止 (`as unknown as` / `unknown` の扱い): [typescript/coding-style.md](../typescript/coding-style.md)
-> - テスト規約 (AAA, factory, ドメイン語, MiniStack など): [typescript/testing.md](../typescript/testing.md)
+> - テスト規約 (AAA, factory, ドメイン語 など): [typescript/testing.md](../typescript/testing.md)
 
 ## オニオンアーキテクチャ (層構造)
 
@@ -24,8 +24,8 @@ backend/src/
 ├── routes/           # 最外層: Hono ルート、リクエスト/レスポンス変換
 ├── services/         # アプリケーション層: ユースケース、オーケストレーション
 ├── domain/           # コア層: 型、Service Tag、エラー型 (依存ゼロ)
-├── infrastructure/   # 外部接続層: AWS SDK 操作、Layer 実装
-└── lib/              # AWS SDK クライアント singleton、env 読み取り
+├── infrastructure/   # 外部接続層: 外部 API / DB 操作、Layer 実装
+└── lib/              # 外部 API / DB クライアント singleton、env 読み取り
 ```
 
 依存方向:
@@ -38,9 +38,9 @@ routes → services → domain ← infrastructure ← lib
 | -------------- | -------------------------------------- | ---------------- | ------------------------------------- |
 | domain         | Service Tag、エラー型、純粋型定義      | (なし)           | `Context.Tag`, `Data.TaggedError`     |
 | services       | ユースケース、層間オーケストレーション | domain           | `Effect.gen`, `yield*`                |
-| infrastructure | AWS SDK / 外部 API の具象実装          | domain, lib      | `Layer.succeed`, `Effect.tryPromise`  |
+| infrastructure | 外部 API / DB の具象実装               | domain, lib      | `Layer.succeed`, `Effect.tryPromise`  |
 | routes         | Hono ルート、Effect 実行と HTTP 変換   | services, domain | `Effect.runPromise`, `Effect.provide` |
-| lib            | AWS SDK クライアント singleton         | (内部のみ)       | -                                     |
+| lib            | 外部 API / DB クライアント singleton   | (内部のみ)       | -                                     |
 
 ## リクエストスコープの context は Service Tag で表現
 
@@ -94,7 +94,7 @@ export class SessionNotFoundError extends Data.TaggedError(
   sessionId: string;
 }> {}
 
-export class DynamoDBError extends Data.TaggedError("DynamoDBError")<{
+export class DatabaseError extends Data.TaggedError("DatabaseError")<{
   message: string;
 }> {}
 
@@ -105,11 +105,11 @@ export class SessionRepository extends Context.Tag("SessionRepository")<
       userId: string,
       sessionId: string,
       createdAt: string,
-    ) => Effect.Effect<void, DynamoDBError>;
+    ) => Effect.Effect<void, DatabaseError>;
     readonly 取得する: (
       userId: string,
       sessionId: string,
-    ) => Effect.Effect<Session, SessionNotFoundError | DynamoDBError>;
+    ) => Effect.Effect<Session, SessionNotFoundError | DatabaseError>;
   }
 >() {}
 ```
@@ -120,20 +120,17 @@ domain の Tag に対して具象実装を `Layer.succeed` で提供する。**`
 
 ```typescript
 import { Effect, Layer } from "effect";
-import { docClient } from "../lib/dynamodb";
-import { DynamoDBError, SessionRepository } from "../domain/session";
+import { db } from "../lib/db";
+import { sessions } from "../lib/schema";
+import { DatabaseError, SessionRepository } from "../domain/session";
 
 export const SessionRepositoryLive = Layer.succeed(SessionRepository, {
   作成する: (userId, sessionId, createdAt) =>
     Effect.tryPromise({
       try: () =>
-        docClient.send(
-          new PutCommand({
-            /* ... */
-          }),
-        ),
+        db.insert(sessions).values({ /* ... */ }).returning(),
       catch: (error) =>
-        new DynamoDBError({
+        new DatabaseError({
           message: `作成失敗: ${error instanceof Error ? error.message : String(error)}`,
         }),
     }).pipe(Effect.asVoid),
@@ -161,7 +158,7 @@ infrastructure/
 新 BC 追加時の手順:
 
 1. `infrastructure/postgres/{bc}-repo.ts`（実装）
-2. `infrastructure/{bc}/layer.ts` で BC が必要とするインフラを `Layer.mergeAll(...)`（後で S3 等が増えたらここに追記）
+2. `infrastructure/{bc}/layer.ts` で BC が必要とするインフラを `Layer.mergeAll(...)`（後で外部 API 等が増えたらここに追記）
 3. `infrastructure/layers.ts` の `Layer.mergeAll(...)` に 1 行追加
 
 ## services: Effect.gen
@@ -211,6 +208,10 @@ sessions.get("/:id", async (c) => {
 ```
 
 `appLayer` は `Layer.mergeAll(SessionRepositoryLive, StorageServiceLive, ...)` を `infrastructure/layers.ts` で定義する。
+
+### OpenAPI route schema は全フィールドに `.openapi({ example })` を付ける
+
+`@hono/zod-openapi` の route schema は、**各フィールドと object 全体に `.openapi({ example })` を付ける**。欠けると、orval の mock 生成 (`api:generate`) が example の無いフィールドを `@faker-js/faker` で埋めようとし、生成された `api.msw.ts` が faker を import する。このリポは faker 未導入のため **frontend の typecheck が壊れる** (`Cannot find module '@faker-js/faker'`)。既存 route schema は全フィールドに example を付けており、新規も倣う。理由: orval は静的 example があればそれを mock 値に使い faker を呼ばない。
 
 ## エラーで分岐するなら `catchTag` / `catchTags`
 
