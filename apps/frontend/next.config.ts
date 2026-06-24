@@ -28,4 +28,6 @@ export default nextConfig;
 
 import { initOpenNextCloudflareForDev } from "@opennextjs/cloudflare";
 
-initOpenNextCloudflareForDev();
+if (!process.env.VITEST && !process.env.STORYBOOK) {
+  initOpenNextCloudflareForDev();
+}
