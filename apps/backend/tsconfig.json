@@ -10,5 +10,5 @@
     "types": ["@cloudflare/workers-types", "node"],
     "skipLibCheck": true
   },
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "**/__fixtures__/**"]
 }

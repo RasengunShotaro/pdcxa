@@ -17,6 +17,7 @@
     "deploy:dev": "wrangler deploy --env=dev --minify",
     "check-types": "tsc --noEmit",
     "build": "tsc -p tsconfig.build.json",
+    "lint": "biome check",
     "test": "vitest"
   },
   "dependencies": {

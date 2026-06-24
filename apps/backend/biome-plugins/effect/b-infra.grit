@@ -1,0 +1,9 @@
+// Rule B — infra 層: Live(実装)の構築のみ。配線(provide)・実行(run)はしない。
+// 注: 「ポートは domain に置く」は spec の原則だが、Context.Tag の禁止は lint では強制しない。
+// DynamoClient のような具体 infra クライアントの内部 Tag は正当で、domain へ移すと
+// AWS が domain に漏れて逆にオニオン違反になる。domain ポートか infra 内部 Tag かは
+// 構文では判別できないため、ポート配置はレビュー時の判断に委ねる。
+`Effect.$m` as $n where {
+  $m <: r"provide.*|run.*",
+  register_diagnostic(span=$n, message="infra 層では Effect.provide* / Effect.run* は禁止: 配線・実行は handler(合成ルート)へ。infra は実装専任。", severity="error")
+}

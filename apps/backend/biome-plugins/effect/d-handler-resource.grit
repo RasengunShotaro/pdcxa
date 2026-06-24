@@ -1,0 +1,11 @@
+// Rule D — handler(合成ルート): リソース構築のメモ化を壊さない。
+// Layer.mergeAll(...) をリクエストパス内で provide すると重い Layer が毎回再構築される。
+// 正: 起動時に AppLive を一度 ManagedRuntime 化し、共有 Runtime で runPromise する。
+or {
+  `Effect.provide(Layer.mergeAll($args))` as $n where {
+    register_diagnostic(span=$n, message="リクエストパス内で Layer.mergeAll(...) を provide するのは禁止: 毎回 Layer 再構築でメモ化が無効化する。起動時に AppLive を ManagedRuntime 化し共有 Runtime で実行する。", severity="error")
+  },
+  `Effect.provide($eff, Layer.mergeAll($args))` as $n where {
+    register_diagnostic(span=$n, message="リクエストパス内で Layer.mergeAll(...) を provide するのは禁止: 毎回 Layer 再構築でメモ化が無効化する。起動時に AppLive を ManagedRuntime 化し共有 Runtime で実行する。", severity="error")
+  }
+}

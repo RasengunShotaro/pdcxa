@@ -70,7 +70,7 @@ function ChartTooltipContent({
         const itemConfig = config[key];
         const color = item.color ?? itemConfig?.color;
         return (
-          <div className="flex items-center gap-2" key={index}>
+          <div className="flex items-center gap-2" key={key}>
             <span
               className={cn("h-2 w-2 rounded-full", {
                 "border border-foreground": indicator === "line",
@@ -116,8 +116,8 @@ function ChartLegendContent({
 export {
   type ChartConfig,
   ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
   ChartLegend,
   ChartLegendContent,
+  ChartTooltip,
+  ChartTooltipContent,
 };
