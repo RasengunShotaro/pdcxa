@@ -7,6 +7,7 @@
 
 @theme inline {
   --color-background: var(--background);
+  --color-bg-page: var(--bg-page);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
@@ -84,6 +85,7 @@
 :root {
   --radius: 0.5rem;
   --background: oklch(1 0 0);
+  --bg-page: oklch(0.967 0.001 286.375);
   --foreground: oklch(0.141 0.005 285.823);
   --text-default: oklch(0.409 0.0382 257.28);
   --card: oklch(1 0 0);
@@ -125,6 +127,7 @@
 .dark {
   --text-default: oklch(0.869 0.0198 252.89);
   --background: oklch(0.2077 0.0398 265.75);
+  --bg-page: oklch(0.1683 0.0337 265.75);
   --foreground: oklch(0.9683 0.0069 247.9);
   --card: oklch(0.2795 0.0368 260.03);
   --card-foreground: oklch(0.9683 0.0069 247.9);

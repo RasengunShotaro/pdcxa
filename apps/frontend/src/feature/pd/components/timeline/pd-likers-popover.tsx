@@ -1,5 +1,7 @@
 "use client";
 
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 import {
   Popover,
   PopoverContent,
@@ -19,18 +21,23 @@ export function PdLikersPopover({
 }: PdLikersPopoverProps) {
   if (likeCount === 0) {
     return (
-      <span className="text-sm text-muted-foreground tabular-nums">0</span>
+      <span className="inline-flex h-11 items-center px-2 text-sm text-muted-foreground tabular-nums">
+        0
+      </span>
     );
   }
 
   return (
     <Popover>
-      <PopoverTrigger
-        aria-label="いいねした人を表示"
-        className="inline-flex h-8 items-center rounded-md px-2 text-sm text-muted-foreground tabular-nums transition-colors hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
-        type="button"
-      >
-        {likeCount}
+      <PopoverTrigger asChild>
+        <Button
+          aria-label="いいねした人を表示"
+          className="h-11 rounded-full px-2 text-sm text-muted-foreground tabular-nums"
+          type="button"
+          variant="ghost"
+        >
+          {likeCount}
+        </Button>
       </PopoverTrigger>
       <PopoverContent align="start" className="w-64 p-2">
         <p className="px-2 py-1.5 text-sm font-medium text-foreground">
@@ -42,20 +49,12 @@ export function PdLikersPopover({
               className="flex items-center gap-2.5 rounded-md px-2 py-1.5"
               key={user.userId}
             >
-              <span className="flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-full bg-muted">
-                {user.imageUrl ? (
-                  // biome-ignore lint/performance/noImgElement: 外部 (Clerk CDN) のアバター URL を表示するため
-                  <img
-                    alt=""
-                    className="size-full object-cover"
-                    src={user.imageUrl}
-                  />
-                ) : (
-                  <span className="text-xs font-medium text-muted-foreground">
-                    {avatarInitials(user.userFullName)}
-                  </span>
-                )}
-              </span>
+              <Avatar className="size-8 shrink-0">
+                <AvatarImage alt="" src={user.imageUrl} />
+                <AvatarFallback className="text-xs font-medium text-muted-foreground">
+                  {avatarInitials(user.userFullName)}
+                </AvatarFallback>
+              </Avatar>
               <span className="min-w-0">
                 <span className="block truncate text-sm font-medium text-foreground">
                   {user.userFullName || "名前未設定"}

@@ -96,7 +96,7 @@ export function AppShell({
             <ColorModeSwitcher />
           </div>
         </header>
-        <div className="flex flex-1 flex-col overflow-y-auto bg-muted/40">
+        <div className="flex flex-1 flex-col overflow-y-auto bg-bg-page">
           <div
             className="mx-auto w-full max-w-[1042px] px-4 py-6"
             id="main-content"

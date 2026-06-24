@@ -220,3 +220,105 @@ export const Likers: Story = {
     );
   },
 };
+
+const LONG_NAME_USERS = [
+  userDetail(
+    "u-long",
+    "とてもながいなまえのてすとゆーざー名前名前名前名前名前",
+    "苗字苗字苗字苗字苗字苗字苗字苗字苗字苗字苗字苗字",
+    "very_long_user_name_that_should_be_truncated_in_the_layout_somewhere",
+  ),
+];
+
+const LONG_BODY = `改行や空白の無い長い文字列が折り返されるか: ${"abcdefghij".repeat(40)}`;
+
+export const LongContent: Story = {
+  name: "長い名前・ユーザー名・本文の表示",
+  parameters: {
+    msw: {
+      handlers: [
+        http.get("*/pd", () =>
+          HttpResponse.json({
+            items: [
+              rawPd({
+                id: "pd-long",
+                content: LONG_BODY,
+                userId: "u-long",
+                replyCount: 12345,
+              }),
+            ],
+          }),
+        ),
+        http.get("*/user/details", () => HttpResponse.json(LONG_NAME_USERS)),
+      ],
+    },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await waitFor(() =>
+      expect(canvas.getByText(LONG_BODY)).toBeInTheDocument(),
+    );
+  },
+};
+
+export const MultilineAndLinks: Story = {
+  name: "改行とURL自動リンクの表示",
+  parameters: {
+    msw: {
+      handlers: [
+        http.get("*/pd", () =>
+          HttpResponse.json({
+            items: [
+              rawPd({
+                id: "pd-ml",
+                content:
+                  "1行目です\n2行目です\n詳しくは https://example.com/articles/123 を見てください",
+                userId: "u-taro",
+              }),
+            ],
+          }),
+        ),
+        userDetailsHandler(),
+      ],
+    },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await waitFor(() =>
+      expect(canvas.getByText(/1行目です/)).toBeInTheDocument(),
+    );
+    const link = canvas.getByRole("link", {
+      name: "https://example.com/articles/123",
+    });
+    expect(link).toHaveAttribute("href", "https://example.com/articles/123");
+  },
+};
+
+export const ManyItems: Story = {
+  name: "大量の投稿が並ぶ",
+  parameters: {
+    msw: {
+      handlers: [
+        http.get("*/pd", () =>
+          HttpResponse.json({
+            items: Array.from({ length: 30 }, (_, index) =>
+              rawPd({
+                id: `pd-many-${index}`,
+                content: `投稿 ${index + 1} 件目`,
+                userId: index % 2 === 0 ? "u-taro" : "u-hanako",
+              }),
+            ),
+          }),
+        ),
+        userDetailsHandler(),
+      ],
+    },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await waitFor(() =>
+      expect(canvas.getByText("投稿 1 件目")).toBeInTheDocument(),
+    );
+    expect(canvas.getByText("投稿 30 件目")).toBeInTheDocument();
+  },
+};
