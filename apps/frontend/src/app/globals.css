@@ -162,12 +162,6 @@
   --sidebar-ring: oklch(0.656 0.1347 163.23);
 }
 
-@layer components {
-  .site-header {
-    @apply bg-background border-border text-foreground legacy:bg-[#5b21b6] legacy:border-[#4c1d95] legacy:text-white legacy:[--foreground:#fff] legacy:[--muted-foreground:#fff];
-  }
-}
-
 @layer base {
   * {
     @apply border-border outline-ring/50;
