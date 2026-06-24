@@ -1,11 +1,3 @@
-import {
-  dehydrate,
-  HydrationBoundary,
-  QueryClient,
-} from "@tanstack/react-query";
-import { Suspense } from "react";
-import { fetchDetailedPds } from "@/feature/pd/api/pd/fetch-detailed-pds";
-import { PdItemSkeleton } from "@/feature/pd/components/pd/pd-item-skeleton";
 import { UserPdTimeLine } from "@/feature/pd/components/pd/user-pd-timeline";
 
 interface UserPageProps {
@@ -15,20 +7,7 @@ interface UserPageProps {
 }
 
 export default async function UserPage({ params }: UserPageProps) {
-  const unwrapParams = await params;
-  const queryClient = new QueryClient();
+  const { userName } = await params;
 
-  await queryClient.prefetchInfiniteQuery({
-    queryKey: ["PD詳細", undefined, unwrapParams.userName],
-    queryFn: () => fetchDetailedPds({ userName: unwrapParams.userName }),
-    initialPageParam: undefined as string | undefined,
-  });
-
-  return (
-    <Suspense fallback={<PdItemSkeleton PD数={5} />}>
-      <HydrationBoundary state={dehydrate(queryClient)}>
-        <UserPdTimeLine userId={unwrapParams.userName} />
-      </HydrationBoundary>
-    </Suspense>
-  );
+  return <UserPdTimeLine userId={userName} />;
 }

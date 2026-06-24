@@ -1,16 +1,5 @@
-"use server";
+import { createInvitation as createInvitationApi } from "@/schema/api";
 
-import { getClient } from "@/lib/hono";
-import { actionClient } from "@/lib/safe-action";
-import { invitationFormSchema } from "./types";
-
-export const createInvitation = actionClient
-  .inputSchema(invitationFormSchema)
-  .action(async ({ parsedInput: { mail } }) => {
-    const client = await getClient();
-    await client.invitation.create.$post({
-      json: {
-        emailAddress: mail,
-      },
-    });
-  });
+export const createInvitation = async ({ mail }: { mail: string }) => {
+  await createInvitationApi({ emailAddress: mail });
+};

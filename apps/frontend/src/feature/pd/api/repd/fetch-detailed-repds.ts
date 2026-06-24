@@ -1,14 +1,9 @@
-"use server";
-
 import type { RePd } from "../../types";
 import { fetchUserDetails } from "../fetch-user-details";
 import { fetchRawRePds } from "./fetch-raw-repds";
 
 export const fetchDetailedRepds = async (pdId: string): Promise<RePd[]> => {
   const fetchedRePds = await fetchRawRePds(pdId);
-  if ("error" in fetchedRePds) {
-    throw new Error("RePdの取得に失敗しました");
-  }
   if (fetchedRePds.length === 0) {
     return [];
   }
@@ -19,9 +14,6 @@ export const fetchDetailedRepds = async (pdId: string): Promise<RePd[]> => {
   });
   const uniqueUserIds = [...new Set(allUserIds)];
   const userDetails = await fetchUserDetails(uniqueUserIds);
-  if ("error" in userDetails) {
-    throw new Error("ユーザー詳細の取得に失敗しました");
-  }
 
   const userDetailsMap = new Map(userDetails.map((user) => [user.id, user]));
 

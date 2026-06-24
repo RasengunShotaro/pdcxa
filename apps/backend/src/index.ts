@@ -1,5 +1,6 @@
 import { clerkMiddleware } from "@hono/clerk-auth";
-import { Hono, type MiddlewareHandler } from "hono";
+import { OpenAPIHono } from "@hono/zod-openapi";
+import type { MiddlewareHandler } from "hono";
 import { cors } from "hono/cors";
 import { HTTPException } from "hono/http-exception";
 import { invitationApp } from "./route/invitation/app";
@@ -23,7 +24,7 @@ export const ログイン状態Middleware: MiddlewareHandler = async (c, next) =
   await next();
 };
 
-const app = new Hono();
+const app = new OpenAPIHono();
 app.use("*", clerkMiddleware());
 app.use("*", async (c, next) => {
   const corsMiddlewareHandler = cors({
@@ -41,6 +42,23 @@ export const ルート = app
   .route("/user", userApp)
   .route("/pd", pdApp)
   .route("/repd", rePdApp);
+
+export const openApiDocument = () =>
+  ルート.getOpenAPIDocument({
+    openapi: "3.1.0",
+    info: {
+      title: "PDCXA API",
+      version: "1.0.0",
+    },
+  });
+
+ルート.doc("/doc", {
+  openapi: "3.1.0",
+  info: {
+    title: "PDCXA API",
+    version: "1.0.0",
+  },
+});
 
 export default {
   port: 8787,

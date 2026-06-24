@@ -1,18 +1,36 @@
-import { sValidator } from "@hono/standard-validator";
-import { Hono } from "hono";
-import * as v from "valibot";
+import { createRoute, OpenAPIHono } from "@hono/zod-openapi";
+import { jsonContent } from "../common/openapi";
+import {
+  userDetailQuerySchema,
+  userDetailSchema,
+  userDetailsQuerySchema,
+  userDetailsSchema,
+} from "./schema";
 import { ユーザー名に紐づくユーザー詳細を取得 } from "./utils/fetch-user-detail";
 import { ユーザーIDに紐づくユーザー詳細一覧を取得 } from "./utils/fetch-user-details";
 
-const userDetailSchema = v.object({
-  userName: v.string(),
-});
-const userDetailsSchema = v.object({
-  userIds: v.union([v.array(v.string()), v.string()]), // 配列の要素数が1のときは、arrayではなくstringとみなされるため
+const userDetailRoute = createRoute({
+  operationId: "fetchUserDetail",
+  method: "get",
+  path: "/detail",
+  request: { query: userDetailQuerySchema },
+  responses: {
+    200: jsonContent(userDetailSchema, "ユーザー詳細"),
+  },
 });
 
-export const userApp = new Hono()
-  .get("/detail", sValidator("query", userDetailSchema), async (c) => {
+const userDetailsRoute = createRoute({
+  operationId: "fetchUserDetails",
+  method: "get",
+  path: "/details",
+  request: { query: userDetailsQuerySchema },
+  responses: {
+    200: jsonContent(userDetailsSchema, "ユーザー詳細一覧"),
+  },
+});
+
+export const userApp = new OpenAPIHono()
+  .openapi(userDetailRoute, async (c) => {
     const clerkClient = c.get("clerk");
 
     const { userName } = c.req.valid("query");
@@ -23,12 +41,10 @@ export const userApp = new Hono()
 
     return c.json(ユーザー詳細, 200);
   })
-  .get("/details", sValidator("query", userDetailsSchema), async (c) => {
+  .openapi(userDetailsRoute, async (c) => {
     const clerkClient = c.get("clerk");
 
-    const query = c.req.valid("query");
-    const userIds =
-      typeof query.userIds === "string" ? [query.userIds] : query.userIds;
+    const { userIds } = c.req.valid("query");
 
     const userDetails = await ユーザーIDに紐づくユーザー詳細一覧を取得({
       userIds,

@@ -7,6 +7,7 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { ThemeProvider } from "next-themes";
 import type { ReactNode } from "react";
 import { Toaster } from "@/components/ui/sonner";
+import { MswProvider } from "@/lib/msw-provider";
 
 const makeQueryClient = () => {
   return new QueryClient({
@@ -52,7 +53,7 @@ export function Providers({ children }: { children: ReactNode }) {
           themes={["light", "dark", "legacy"]}
         >
           <Toaster position="top-center" />
-          {children}
+          <MswProvider>{children}</MswProvider>
         </ThemeProvider>
         <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>

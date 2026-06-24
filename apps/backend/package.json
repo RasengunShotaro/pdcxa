@@ -15,6 +15,7 @@
     "drizzle:introspect": "drizzle-kit introspect --config=./drizzle/drizzle.config.ts",
     "deploy": "wrangler deploy --minify",
     "deploy:dev": "wrangler deploy --env=dev --minify",
+    "openapi:generate": "bun run scripts/gen-openapi.ts",
     "check-types": "tsc --noEmit",
     "build": "tsc -p tsconfig.build.json",
     "lint": "biome check",
@@ -22,13 +23,14 @@
   },
   "dependencies": {
     "@hono/clerk-auth": "^3.1.1",
-    "@hono/standard-validator": "^0.2.2",
+    "@hono/zod-openapi": "^1.4.0",
     "@neondatabase/serverless": "^1.1.0",
     "dayjs": "^1.11.21",
     "drizzle-orm": "^0.45.2",
     "hono": "^4.12.23",
     "uuidv7": "^1.2.1",
-    "wasm-image-optimization": "^2.0.9"
+    "wasm-image-optimization": "^2.0.9",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@pdcxa/common-dev-packages": "workspace:*",

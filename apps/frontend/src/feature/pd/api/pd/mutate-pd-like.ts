@@ -1,13 +1,5 @@
-"use server";
-
-import { getClient } from "@/lib/hono";
+import { mutatePdLike as mutatePdLikeApi } from "@/schema/api";
 
 export const mutatePdLike = async (pdId: string) => {
-  const client = await getClient();
-
-  await client.pd.like.$put({
-    json: {
-      pdId,
-    },
-  });
+  await mutatePdLikeApi({ pdId });
 };

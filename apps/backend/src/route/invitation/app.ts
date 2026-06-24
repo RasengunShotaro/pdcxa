@@ -1,28 +1,32 @@
-import { sValidator } from "@hono/standard-validator";
-import { Hono } from "hono";
-import * as v from "valibot";
+import { createRoute, OpenAPIHono } from "@hono/zod-openapi";
+import { jsonContent, messageSchema } from "../common/openapi";
+import { createInvitationSchema } from "./schema";
 
-const invitationAppSchema = v.object({
-  emailAddress: v.string(),
+const createInvitationRoute = createRoute({
+  operationId: "createInvitation",
+  method: "post",
+  path: "/create",
+  request: {
+    body: {
+      content: { "application/json": { schema: createInvitationSchema } },
+    },
+  },
+  responses: {
+    200: jsonContent(messageSchema("招待を作成しました"), "作成成功"),
+  },
 });
 
-export const invitationApp = new Hono().post(
-  "/create",
-  sValidator("json", invitationAppSchema),
+export const invitationApp = new OpenAPIHono().openapi(
+  createInvitationRoute,
   async (c) => {
     const clerkClient = c.get("clerk");
 
-    const body = c.req.valid("json");
+    const { emailAddress } = c.req.valid("json");
     await clerkClient.invitations.createInvitation({
-      emailAddress: body.emailAddress,
+      emailAddress,
       ignoreExisting: true,
     });
 
-    return c.json(
-      {
-        message: "招待を作成しました",
-      },
-      200,
-    );
+    return c.json({ message: "招待を作成しました" }, 200);
   },
 );
