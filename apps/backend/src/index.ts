@@ -3,11 +3,12 @@ import { OpenAPIHono } from "@hono/zod-openapi";
 import type { MiddlewareHandler } from "hono";
 import { cors } from "hono/cors";
 import { HTTPException } from "hono/http-exception";
-import { invitationApp } from "./route/invitation/app";
-import { pdApp } from "./route/pd/app";
-import { rePdApp } from "./route/repd/app";
-import { userApp } from "./route/user/app";
-import { ログイン中のユーザーIDを取得 } from "./utils/current-user";
+import { ログイン中のユーザーIDを取得 } from "./lib/current-user";
+import { 境界エラーレスポンス } from "./lib/http-error";
+import { invitationApp } from "./routes/invitation/app";
+import { pdApp } from "./routes/pd/app";
+import { rePdApp } from "./routes/repd/app";
+import { userApp } from "./routes/user/app";
 
 declare module "hono" {
   interface ContextVariableMap {
@@ -33,9 +34,7 @@ app.use("*", async (c, next) => {
   return corsMiddlewareHandler(c, next);
 });
 app.use("*", ログイン状態Middleware);
-app.onError((エラー) => {
-  throw new HTTPException(500, { message: エラー.message });
-});
+app.onError((エラー) => 境界エラーレスポンス(エラー));
 
 export const ルート = app
   .route("/invitation", invitationApp)

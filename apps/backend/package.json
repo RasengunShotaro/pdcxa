@@ -17,6 +17,7 @@
     "deploy:dev": "wrangler deploy --env=dev --minify",
     "openapi:generate": "bun run scripts/gen-openapi.ts",
     "check-types": "tsc --noEmit",
+    "typecheck": "tsc --noEmit",
     "build": "tsc -p tsconfig.build.json",
     "lint": "biome check",
     "test": "vitest"
@@ -27,6 +28,7 @@
     "@neondatabase/serverless": "^1.1.0",
     "dayjs": "^1.11.21",
     "drizzle-orm": "^0.45.2",
+    "effect": "^3.21.4",
     "hono": "^4.12.23",
     "uuidv7": "^1.2.1",
     "wasm-image-optimization": "^2.0.9",
