@@ -14,7 +14,7 @@ type ChartContextValue = {
 const ChartContext = React.createContext<ChartContextValue | null>(null);
 
 const useChartContext = () => {
-  const context = React.useContext(ChartContext);
+  const context = React.use(ChartContext);
   if (!context) {
     throw new Error("Chart components must be wrapped in <ChartContainer />");
   }

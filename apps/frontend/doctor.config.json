@@ -48,6 +48,19 @@
         "files": ["src/feature/invitation/hooks/use-create-invitation.ts"],
         "rules": ["react-doctor/query-mutation-missing-invalidation"],
         "reason": "招待は送信専用で、招待一覧/取得の useQuery がアプリに存在しない (Phase 4 まで招待管理 UI は作らない)。無効化すべきキャッシュが無いため invalidate を足せない構造的 FP。招待一覧を導入した時点で本除外を外し invalidate を配線する。"
+      },
+      {
+        "files": ["src/components/ui/**"],
+        "rules": ["react-doctor/only-export-components"],
+        "reason": "shadcn は cva variant (buttonVariants / sidebarMenuButtonVariants) や hook (useFormField / useSidebar) を component と同一ファイルに co-locate する設計。別ファイルに分割すると shadcn add 由来の構造と乖離し保守コストが上がる。既存の no-multi-comp 除外 (同じ shadcn co-location 理由) と整合させ、ui/ 配下のみ本ルールを除外する (アプリ側 components/elements は対象外)。"
+      },
+      {
+        "files": [
+          "src/components/ui/sidebar.tsx",
+          "src/components/ui/text-animate.tsx"
+        ],
+        "rules": ["react-doctor/react-compiler-no-manual-memoization"],
+        "reason": "biome の useExhaustiveDependencies (CI lint ゲート) が sidebar の keydown effect / context value に安定参照を要求し、biome は React Compiler のメモ化を認識しないため useCallback/useMemo を外すと CI が落ちる。既存の jsx-no-constructed-context-values 除外 (同じ React Compiler vs ツール の理由) と整合。vendored shadcn(sidebar)/magicui(text-animate) の手動メモ化はこの理由で残す構造的 FP。"
       }
     ]
   }
