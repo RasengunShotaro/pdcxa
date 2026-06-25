@@ -1,6 +1,7 @@
 "use client";
 
 import { Loader2, MessageCirclePlus, MessageSquare } from "lucide-react";
+import type { ReactNode } from "react";
 import { EmptyState } from "@/components/elements/empty-state";
 import { ListError } from "@/components/elements/list-error";
 import { ListSkeleton } from "@/components/elements/list-skeleton";
@@ -10,10 +11,16 @@ import { PdCard } from "./pd-card";
 import { useInfiniteScroll } from "./use-infinite-scroll";
 
 interface PdTimelineProps {
+  userName?: string;
   onCompose?: () => void;
+  emptyState?: ReactNode;
 }
 
-export function PdTimeline({ onCompose }: PdTimelineProps) {
+export function PdTimeline({
+  userName,
+  onCompose,
+  emptyState,
+}: PdTimelineProps) {
   const {
     pds,
     isPending,
@@ -23,7 +30,7 @@ export function PdTimeline({ onCompose }: PdTimelineProps) {
     fetchNextPage,
     isFetchingNextPage,
     refetch,
-  } = usePd({});
+  } = usePd({ userName });
 
   const sentinelRef = useInfiniteScroll({
     hasNextPage,
@@ -40,6 +47,9 @@ export function PdTimeline({ onCompose }: PdTimelineProps) {
   }
 
   if (pds.length === 0) {
+    if (emptyState !== undefined) {
+      return <>{emptyState}</>;
+    }
     return (
       <EmptyState
         action={

@@ -1,4 +1,4 @@
-import { UserPdTimeLine } from "@/feature/pd/components/pd/user-pd-timeline";
+import { UserTimelineView } from "@/feature/user/components/user-timeline-view";
 
 interface UserPageProps {
   params: Promise<{
@@ -9,5 +9,5 @@ interface UserPageProps {
 export default async function UserPage({ params }: UserPageProps) {
   const { userName } = await params;
 
-  return <UserPdTimeLine userId={userName} />;
+  return <UserTimelineView userName={userName} />;
 }
