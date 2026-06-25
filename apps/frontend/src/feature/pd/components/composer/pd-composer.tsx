@@ -1,7 +1,7 @@
 "use client";
 
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
-import { Loader2, Send, TriangleAlert } from "lucide-react";
+import { ImagePlus, Loader2, Send, TriangleAlert, X } from "lucide-react";
 import { useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
@@ -11,7 +11,6 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
@@ -19,12 +18,12 @@ import { Form } from "@/components/ui/form";
 import { useCreatePd } from "@/hooks/use-create-pd";
 import { errorDisplay } from "@/lib/error-message";
 import { ComposerContentField } from "./composer-content-field";
-import { ComposerImageField } from "./composer-image-field";
 import {
   type ComposerSchema,
   canSubmitContent,
   composerSchema,
 } from "./composer-schema";
+import { useComposerImage } from "./use-composer-image";
 
 interface PdComposerProps {
   open: boolean;
@@ -42,6 +41,15 @@ export function PdComposer({ open, onOpenChange }: PdComposerProps) {
   const [submitError, setSubmitError] = useState<unknown>(null);
 
   const content = useWatch({ control: form.control, name: "content" }) ?? "";
+  const {
+    inputRef,
+    previewUrl,
+    value: imageValue,
+    error: imageError,
+    selectFile,
+    removeFile,
+    openPicker,
+  } = useComposerImage(form.control);
 
   const handleOpenChange = (next: boolean) => {
     if (!next) {
@@ -88,7 +96,44 @@ export function PdComposer({ open, onOpenChange }: PdComposerProps) {
             onSubmit={form.handleSubmit(onSubmit)}
           >
             <ComposerContentField control={form.control} disabled={isPending} />
-            <ComposerImageField control={form.control} disabled={isPending} />
+
+            <input
+              accept="image/*"
+              aria-label="画像ファイルを選択"
+              className="hidden"
+              disabled={isPending}
+              onChange={(event) => selectFile(event.target.files?.[0])}
+              ref={inputRef}
+              type="file"
+            />
+
+            {previewUrl && imageValue ? (
+              <div className="relative mx-auto w-fit">
+                {/** biome-ignore lint/performance/noImgElement: ローカルの ObjectURL プレビューで next/image は不可 */}
+                <img
+                  alt="添付する画像のプレビュー"
+                  className="max-h-40 rounded-lg border border-border object-contain"
+                  src={previewUrl}
+                />
+                <Button
+                  aria-label="画像を削除"
+                  className="absolute top-1.5 right-1.5 size-8 rounded-full bg-background/80 backdrop-blur"
+                  disabled={isPending}
+                  onClick={removeFile}
+                  size="icon"
+                  type="button"
+                  variant="outline"
+                >
+                  <X aria-hidden="true" className="size-4" />
+                </Button>
+              </div>
+            ) : null}
+
+            {imageError ? (
+              <p className="text-sm text-destructive" role="alert">
+                {imageError.message}
+              </p>
+            ) : null}
 
             {submitError ? (
               <Alert
@@ -105,21 +150,16 @@ export function PdComposer({ open, onOpenChange }: PdComposerProps) {
               </Alert>
             ) : null}
 
-            <DialogFooter className="flex-row justify-end gap-2">
-              {isPending ? (
-                <span
-                  aria-live="polite"
-                  className="mr-auto flex items-center text-sm text-muted-foreground"
-                >
-                  投稿中…
-                </span>
-              ) : null}
+            <div className="flex items-center justify-between">
               <Button
-                onClick={() => handleOpenChange(false)}
+                className="text-muted-foreground"
+                disabled={isPending}
+                onClick={openPicker}
                 type="button"
                 variant="outline"
               >
-                キャンセル
+                <ImagePlus aria-hidden="true" className="size-4" />
+                画像を追加
               </Button>
               <Button disabled={!canSubmit} type="submit">
                 {isPending ? (
@@ -129,7 +169,7 @@ export function PdComposer({ open, onOpenChange }: PdComposerProps) {
                 )}
                 PDする
               </Button>
-            </DialogFooter>
+            </div>
           </form>
         </Form>
       </DialogContent>

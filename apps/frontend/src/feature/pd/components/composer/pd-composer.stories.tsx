@@ -104,7 +104,7 @@ export const DraftRetainedAfterClose: Story = {
     const textarea = await dialog.findByRole("textbox");
 
     await userEvent.type(textarea, "書きかけの下書き");
-    await userEvent.click(dialog.getByRole("button", { name: "キャンセル" }));
+    await userEvent.click(dialog.getByRole("button", { name: "Close" }));
 
     await waitFor(() =>
       expect(
