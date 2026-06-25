@@ -1,11 +1,12 @@
 "use client";
 
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
-import { Loader2 } from "lucide-react";
+import { Loader2, Send, TriangleAlert } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useTransition } from "react";
+import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -16,13 +17,26 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import type { SignInFlow } from "@/lib/auth/types";
 import { useSignInFlow } from "@/lib/auth/use-sign-in";
-import { type CheckEmailFormSchema, checkEmailFormSchema } from "../types";
+import {
+  type CheckEmailFormSchema,
+  checkEmailFormSchema,
+} from "../types/reset-form";
 
-export function ResetPasswordForm() {
+const RESET_FAILED = "問題が発生しました";
+const RESET_FAILED_DETAIL = "再度お試しください";
+
+interface ResetPasswordFormProps {
+  flow?: SignInFlow;
+}
+
+export function ResetPasswordForm({ flow }: ResetPasswordFormProps) {
   const router = useRouter();
-  const { signIn } = useSignInFlow();
+  const seam = useSignInFlow();
+  const signIn = flow ?? seam.signIn;
   const [isPending, startTransition] = useTransition();
+  const [hasError, setHasError] = useState(false);
 
   const form = useForm<CheckEmailFormSchema>({
     resolver: standardSchemaResolver(checkEmailFormSchema),
@@ -31,16 +45,16 @@ export function ResetPasswordForm() {
     },
   });
 
-  const onSubmit = async (values: CheckEmailFormSchema) => {
+  const onSubmit = (values: CheckEmailFormSchema) => {
+    setHasError(false);
     startTransition(async () => {
       const { error: createError } = await signIn.create({
         identifier: values.email,
       });
 
       if (createError) {
-        toast.error("問題が発生しました", {
-          description: "再度お試しください",
-        });
+        setHasError(true);
+        toast.error(RESET_FAILED, { description: RESET_FAILED_DETAIL });
         return;
       }
 
@@ -48,9 +62,8 @@ export function ResetPasswordForm() {
         await signIn.resetPasswordEmailCode.sendCode();
 
       if (sendCodeError) {
-        toast.error("問題が発生しました", {
-          description: "再度お試しください",
-        });
+        setHasError(true);
+        toast.error(RESET_FAILED, { description: RESET_FAILED_DETAIL });
         return;
       }
 
@@ -60,7 +73,12 @@ export function ResetPasswordForm() {
 
   return (
     <Form {...form}>
-      <form className="grid gap-4" onSubmit={form.handleSubmit(onSubmit)}>
+      <form
+        aria-busy={isPending}
+        className="grid gap-4"
+        noValidate
+        onSubmit={form.handleSubmit(onSubmit)}
+      >
         <FormField
           control={form.control}
           name="email"
@@ -68,18 +86,33 @@ export function ResetPasswordForm() {
             <FormItem>
               <FormLabel>メールアドレス</FormLabel>
               <FormControl>
-                <Input placeholder="abcde@example.com" {...field} />
+                <Input
+                  autoComplete="email"
+                  inputMode="email"
+                  placeholder="abcde@example.com"
+                  type="email"
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button disabled={isPending}>
-          {isPending && <Loader2 className="animate-spin" />}
+
+        {hasError ? (
+          <Alert variant="destructive">
+            <TriangleAlert />
+            <AlertDescription>{RESET_FAILED_DETAIL}</AlertDescription>
+          </Alert>
+        ) : null}
+
+        <Button className="w-full" disabled={isPending} type="submit">
+          {isPending ? (
+            <Loader2 aria-hidden="true" className="size-4 animate-spin" />
+          ) : (
+            <Send aria-hidden="true" className="size-4" />
+          )}
           再設定メールを送信
-          <span className="sr-only">
-            パスワードのリセット確認を続けてください
-          </span>
         </Button>
       </form>
     </Form>
