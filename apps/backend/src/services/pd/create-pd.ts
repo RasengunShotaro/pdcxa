@@ -19,10 +19,12 @@ export const PDを作成する = ({
       ? yield* storage.画像を圧縮してアップロードする({ image, userId })
       : null;
 
-    yield* repo.作成する({
+    const created = yield* repo.作成する({
       content,
       userId,
       createdAt: new Date(),
       imageFileName,
     });
+
+    return { ...created, isMyPd: true };
   });

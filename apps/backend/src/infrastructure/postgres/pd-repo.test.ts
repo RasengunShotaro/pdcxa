@@ -119,6 +119,55 @@ describe("PdRepositoryLive", () => {
     expect(likes[0].userId).toBe(userId2);
   });
 
+  const 作成する = (newPd: {
+    content: string;
+    userId: string;
+    createdAt: Date;
+    imageFileName: string | null;
+  }) =>
+    Effect.runPromise(
+      PdRepository.pipe(
+        Effect.flatMap((repo) => repo.作成する(newPd)),
+        Effect.provide(レイヤー(ctx.db)),
+      ),
+    );
+
+  it("作成すると採番された ID 付きで作成した PD を返す", async () => {
+    const created = 作成する({
+      content: "作成したPD",
+      userId: "author",
+      createdAt: new Date("2026-06-26T00:00:00.000Z"),
+      imageFileName: null,
+    });
+
+    const result = await created;
+
+    expect(result).toMatchObject({
+      content: "作成したPD",
+      userId: "author",
+      imageFileName: null,
+      likeCount: 0,
+      replyCount: 0,
+      likes: [],
+    });
+    expect(result.id).toMatch(
+      /^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[0-9a-f]{4}-[0-9a-f]{12}$/,
+    );
+  });
+
+  it("作成した PD が一覧取得で先頭に現れる", async () => {
+    const created = await 作成する({
+      content: "新着PD",
+      userId: "author",
+      createdAt: new Date("2026-06-26T12:00:00.000Z"),
+      imageFileName: null,
+    });
+
+    const result = await 一覧を取得する({ userId: "author" });
+
+    expect(result.items[0].id).toBe(created.id);
+  });
+
   const 一覧を取得する = (params: { userId?: string; cursor?: string }) =>
     Effect.runPromise(
       PdRepository.pipe(

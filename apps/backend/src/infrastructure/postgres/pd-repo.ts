@@ -124,9 +124,26 @@ export const PdRepositoryLive = Layer.effect(
 
       作成する: (newPd) =>
         Effect.tryPromise({
-          try: () => db.insert(pdsSchema).values(newPd),
+          try: async () => {
+            const [inserted] = await db
+              .insert(pdsSchema)
+              .values(newPd)
+              .returning({
+                id: pdsSchema.id,
+                content: pdsSchema.content,
+                createdAt: pdsSchema.createdAt,
+                userId: pdsSchema.userId,
+                imageFileName: pdsSchema.imageFileName,
+              });
+            return {
+              ...inserted,
+              likeCount: 0,
+              replyCount: 0,
+              likes: [],
+            };
+          },
           catch: toDatabaseError,
-        }).pipe(Effect.asVoid),
+        }),
 
       いいねをトグルする: ({ pdId, userId }) =>
         Effect.tryPromise({

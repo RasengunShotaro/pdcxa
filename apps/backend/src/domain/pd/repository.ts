@@ -19,7 +19,7 @@ export class PdRepository extends Context.Tag("PdRepository")<
     readonly IDで取得する: (
       pdId: string,
     ) => Effect.Effect<RawPd[], DatabaseError>;
-    readonly 作成する: (newPd: NewPd) => Effect.Effect<void, DatabaseError>;
+    readonly 作成する: (newPd: NewPd) => Effect.Effect<RawPd, DatabaseError>;
     readonly いいねをトグルする: (params: {
       readonly pdId: string;
       readonly userId: string;

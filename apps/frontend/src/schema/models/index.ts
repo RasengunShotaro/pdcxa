@@ -1,9 +1,11 @@
 
 export * from './createGifPd201';
+export * from './createGifPd201LikesItem';
 export * from './createGifPdBody';
 export * from './createInvitation200';
 export * from './createInvitationBody';
 export * from './createPd201';
+export * from './createPd201LikesItem';
 export * from './createPdBody';
 export * from './createRePd201';
 export * from './createRePdBody';

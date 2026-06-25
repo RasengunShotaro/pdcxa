@@ -21,6 +21,7 @@ import {
   mutatePdLikeSchema,
   pdDetailSchema,
   pdImageBinarySchema,
+  pdItemSchema,
   weeklyStatsSchema,
 } from "./schema";
 
@@ -53,7 +54,7 @@ const createPdRoute = createRoute({
     },
   },
   responses: {
-    201: jsonContent(messageSchema("PDが作成されました"), "作成成功"),
+    201: jsonContent(pdItemSchema, "作成成功"),
   },
 });
 
@@ -67,7 +68,7 @@ const createGifPdRoute = createRoute({
     },
   },
   responses: {
-    201: jsonContent(messageSchema("GIF付きPDが作成されました"), "作成成功"),
+    201: jsonContent(pdItemSchema, "作成成功"),
   },
 });
 
@@ -137,7 +138,12 @@ export const pdApp = new OpenAPIHono<Bindings>()
 
     return runtime.runPromise(
       PDを作成する({ content, image }).pipe(
-        Effect.map(() => c.json({ message: "PDが作成されました" }, 201)),
+        Effect.map((created) =>
+          c.json(
+            { ...created, createdAt: created.createdAt.toISOString() },
+            201,
+          ),
+        ),
         Effect.tapError((error) => Effect.logError(error.message)),
         Effect.provideService(AuthContext, { userId: c.get("userId") }),
         Effect.provideService(R2Storage, c.env.R2),
@@ -149,7 +155,12 @@ export const pdApp = new OpenAPIHono<Bindings>()
 
     return runtime.runPromise(
       GIFを含むPDを作成する({ content, image }).pipe(
-        Effect.map(() => c.json({ message: "GIF付きPDが作成されました" }, 201)),
+        Effect.map((created) =>
+          c.json(
+            { ...created, createdAt: created.createdAt.toISOString() },
+            201,
+          ),
+        ),
         Effect.tapError((error) => Effect.logError(error.message)),
         Effect.provideService(AuthContext, { userId: c.get("userId") }),
         Effect.provideService(R2Storage, c.env.R2),
