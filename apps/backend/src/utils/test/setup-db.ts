@@ -1,17 +1,11 @@
-import { readdir, readFile } from "node:fs/promises";
-import { join } from "node:path";
-import {
-  PostgreSqlContainer,
-  type StartedPostgreSqlContainer,
-} from "@testcontainers/postgresql";
 import { getTableName, is, sql } from "drizzle-orm";
 import { PgTable } from "drizzle-orm/pg-core";
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
 import type { DbClient } from "#/lib/db";
 import * as schema from "../../db/schema";
+import { テスト用データベースURL } from "./database-url";
 
-let container: StartedPostgreSqlContainer | null = null;
 let testDb: DbClient | null = null;
 let client: ReturnType<typeof postgres> | null = null;
 
@@ -27,27 +21,14 @@ const テストDBを作成する = (pgClient: ReturnType<typeof postgres>) => {
 };
 
 export const テストDBを起動する = async () => {
-  if (container && testDb) {
+  if (testDb) {
     return testDb;
   }
 
-  container = await new PostgreSqlContainer("postgres:16-alpine")
-    .withExposedPorts(5432)
-    .start();
+  client = postgres(テスト用データベースURL());
+  testDb = テストDBを作成する(client);
 
-  client = postgres(container.getConnectionUri());
-
-  const migrationsDir = join(__dirname, "../../db/migrations");
-  const migrationFiles = (await readdir(migrationsDir))
-    .filter((file) => file.endsWith(".sql"))
-    .sort();
-
-  for (const file of migrationFiles) {
-    const sqlContent = await readFile(join(migrationsDir, file), "utf-8");
-    await client.unsafe(sqlContent);
-  }
-
-  return テストDBを作成する(client);
+  return testDb;
 };
 
 export const テストDBをリセットする = async (db: DbClient) => {
@@ -61,10 +42,9 @@ export const テストDBをリセットする = async (db: DbClient) => {
 };
 
 export const テストDBを削除する = async () => {
-  if (container) {
-    await container.stop();
-    container = null;
-    testDb = null;
+  if (client) {
+    await client.end();
     client = null;
+    testDb = null;
   }
 };

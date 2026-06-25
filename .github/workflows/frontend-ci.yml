@@ -8,6 +8,20 @@ on:
 jobs:
   ci:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: test
+          POSTGRES_PASSWORD: test
+          POSTGRES_DB: test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U test -d test"
+          --health-interval 3s
+          --health-timeout 3s
+          --health-retries 20
     steps:
       - uses: actions/checkout@v4
 
@@ -20,13 +34,10 @@ jobs:
       - name: Cache for Turbo
         uses: rharkor/caching-for-turbo@v2.2.4
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
       - name: コンパイル
         run: bun check-types
 
       - name: テスト実行
         run: bun run test
         env:
-          TESTCONTAINERS_RYUK_DISABLED: true
+          DATABASE_URL: postgres://test:test@localhost:5432/test

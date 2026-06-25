@@ -11,6 +11,8 @@ export default defineConfig({
     env: {
       DATABASE_URL: "postgres://test:test@localhost:5432/test",
     },
+    globalSetup: ["./src/utils/test/global-setup.ts"],
+    fileParallelism: false,
     exclude: [...configDefaults.exclude, "**/__fixtures__/**"],
   },
 });
