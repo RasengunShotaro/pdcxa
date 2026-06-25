@@ -3,6 +3,7 @@ import { ApiError } from "./api-error";
 declare global {
   interface Window {
     Clerk?: {
+      loaded?: boolean;
       session?: {
         getToken: () => Promise<string | null>;
       } | null;
@@ -10,7 +11,7 @@ declare global {
   }
 }
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "";
+const API_URL = (process.env.NEXT_PUBLIC_API_URL ?? "").replace(/\/+$/, "");
 
 const parseJsonBody = (body: string): unknown => {
   try {
@@ -20,15 +21,26 @@ const parseJsonBody = (body: string): unknown => {
   }
 };
 
+const sleep = (ms: number): Promise<void> =>
+  new Promise((resolve) => setTimeout(resolve, ms));
+
 const getToken = async (): Promise<string | null> => {
   if (typeof window === "undefined") {
     return null;
   }
-  const session = window.Clerk?.session;
-  if (!session) {
-    return null;
+
+  for (let i = 0; i < 50; i++) {
+    const session = window.Clerk?.session;
+    if (session) {
+      return session.getToken();
+    }
+    if (window.Clerk?.loaded) {
+      return null;
+    }
+    await sleep(100);
   }
-  return session.getToken();
+
+  return null;
 };
 
 const isBinaryResponse = (res: Response): boolean => {
@@ -75,7 +87,6 @@ export const orvalFetch = async <T>(
   const res = await fetch(`${API_URL}${path}`, {
     ...options,
     headers,
-    credentials: "include",
   });
 
   return handleOrvalResponse<T>(res);
