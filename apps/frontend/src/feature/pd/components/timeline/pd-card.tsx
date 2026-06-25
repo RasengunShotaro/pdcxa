@@ -32,14 +32,14 @@ export function PdCard({ pd }: PdCardProps) {
         imageFileName={pd.imageFileName}
       />
 
-      <div className="flex items-center gap-2 pt-1 text-muted-foreground">
+      <div className="flex items-center justify-end gap-2 pt-1 text-muted-foreground">
         <div className="flex items-center">
           <PdLikeButton pd={pd} />
           <PdLikersPopover likeCount={pd.likeCount} likeUsers={pd.likeUsers} />
         </div>
         <Button
           asChild
-          className="h-11 gap-1.5 rounded-full px-3 text-sm text-muted-foreground"
+          className="h-11 gap-2.5 rounded-full px-3 text-sm text-muted-foreground"
           variant="ghost"
         >
           <Link

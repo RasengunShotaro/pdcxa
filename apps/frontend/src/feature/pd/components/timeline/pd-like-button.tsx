@@ -21,7 +21,7 @@ export function PdLikeButton({ pd }: PdLikeButtonProps) {
     <Button
       aria-label={label}
       aria-pressed={isLiked}
-      className="size-11 rounded-full"
+      className="h-11 w-auto rounded-full pr-1.5 pl-2.5"
       disabled={pd.isMyPd || isPending}
       onClick={() => toggleLike()}
       size="icon"
