@@ -15,7 +15,7 @@ export function UserTimelineView({ userName }: UserTimelineViewProps) {
   const detail = pds[0]?.userDetail;
 
   return (
-    <div className="space-y-4">
+    <div className="mx-auto w-full max-w-2xl space-y-4">
       <UserTimelineHeader
         imageUrl={detail?.imageUrl}
         userFullName={detail?.userFullName}

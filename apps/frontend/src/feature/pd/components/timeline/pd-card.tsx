@@ -15,7 +15,7 @@ interface PdCardProps {
 
 export function PdCard({ pd }: PdCardProps) {
   return (
-    <Card className="gap-3 px-6 py-5 transition-shadow hover:shadow-md">
+    <Card className="gap-2 px-4 py-4 transition-shadow hover:shadow-md">
       <PdAuthor
         createdAt={pd.createdAt}
         imageUrl={pd.userDetail.imageUrl}
@@ -39,7 +39,7 @@ export function PdCard({ pd }: PdCardProps) {
         </div>
         <Button
           asChild
-          className="h-11 gap-2.5 rounded-full px-3 text-sm text-muted-foreground"
+          className="h-9 gap-2 rounded-full px-3 text-sm text-muted-foreground"
           variant="ghost"
         >
           <Link

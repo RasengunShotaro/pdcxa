@@ -12,7 +12,7 @@ interface RePdCardProps {
 export function RePdCard({ rePd }: RePdCardProps) {
   return (
     <article>
-      <Card className="gap-3 px-6 py-5 transition-shadow hover:shadow-md">
+      <Card className="gap-2 px-4 py-4 transition-shadow hover:shadow-md">
         <PdAuthor
           createdAt={rePd.createdAt}
           imageUrl={rePd.userDetail.imageUrl}

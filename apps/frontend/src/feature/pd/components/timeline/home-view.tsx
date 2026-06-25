@@ -10,7 +10,7 @@ export function HomeView() {
 
   return (
     <>
-      <div className="pb-[calc(5.5rem+env(safe-area-inset-bottom))]">
+      <div className="mx-auto w-full max-w-2xl pb-[calc(5.5rem+env(safe-area-inset-bottom))]">
         <PdTimeline onCompose={() => setIsComposerOpen(true)} />
       </div>
       <ComposeFab onClick={() => setIsComposerOpen(true)} />

@@ -50,7 +50,7 @@ export function PdDetailView({ pdId }: PdDetailViewProps) {
   } = useRePd(pdId);
 
   return (
-    <div className="space-y-6 pb-[calc(5.5rem+env(safe-area-inset-bottom))]">
+    <div className="mx-auto w-full max-w-2xl space-y-6 pb-[calc(5.5rem+env(safe-area-inset-bottom))]">
       <Link
         className="inline-flex items-center gap-1 text-muted-foreground text-sm transition-colors hover:text-foreground"
         href="/"

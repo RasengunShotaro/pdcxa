@@ -29,10 +29,10 @@ export function PdAuthor({
           </AvatarFallback>
         </Avatar>
         <div className="min-w-0">
-          <p className="truncate font-semibold leading-tight text-foreground">
+          <p className="truncate font-semibold leading-normal text-foreground">
             {userFullName}
           </p>
-          <p className="truncate text-sm leading-tight text-muted-foreground">
+          <p className="truncate text-sm leading-normal text-muted-foreground">
             @{userName}
           </p>
         </div>

@@ -2,6 +2,13 @@
 
 import { ImageOff } from "lucide-react";
 import { useState } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Skeleton } from "@/components/ui/skeleton";
 import { blobToObjectUrl } from "@/feature/pd/utils/blob-to-url";
 import { useFetchPdImage } from "@/schema/api";
@@ -22,26 +29,52 @@ export function PdCardImage({ imageFileName, alt }: PdCardImageProps) {
   const hasError = Boolean(error) || failed;
   const imageBlob = data?.data;
 
+  if (isPending && !hasError) {
+    return <Skeleton className="h-48 w-full max-w-xs rounded-lg" />;
+  }
+
+  if (hasError) {
+    return (
+      <div className="flex h-32 w-full max-w-xs flex-col items-center justify-center gap-2 rounded-lg border border-border bg-muted text-muted-foreground">
+        <ImageOff aria-hidden="true" className="size-6" />
+        <span className="text-sm">画像を読み込めませんでした</span>
+      </div>
+    );
+  }
+
+  if (!imageBlob) return null;
+
+  const src = blobToObjectUrl(imageBlob);
+
   return (
-    <div className="relative aspect-[3/2] w-full overflow-hidden rounded-lg border border-border bg-muted">
-      {isPending && !hasError ? (
-        <Skeleton className="absolute inset-0 size-full" />
-      ) : null}
-      {hasError ? (
-        <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 text-muted-foreground">
-          <ImageOff aria-hidden="true" className="size-6" />
-          <span className="text-sm">画像を読み込めませんでした</span>
-        </div>
-      ) : null}
-      {imageBlob && !hasError ? (
-        // biome-ignore lint/performance/noImgElement: backend が配信する R2 画像を ObjectURL で表示するため next/image は使えない
+    <Dialog>
+      <DialogTrigger asChild>
+        <button
+          aria-label={`${alt}を拡大表示`}
+          className="block w-fit cursor-zoom-in rounded-lg transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
+          type="button"
+        >
+          {/* biome-ignore lint/performance/noImgElement: backend が配信する R2 画像を ObjectURL で表示するため next/image は使えない */}
+          <img
+            alt={alt}
+            className="max-h-80 w-auto rounded-lg border border-border object-contain"
+            onError={() => setFailed(true)}
+            src={src}
+          />
+        </button>
+      </DialogTrigger>
+      <DialogContent className="max-w-3xl p-2">
+        <DialogTitle className="sr-only">{alt}</DialogTitle>
+        <DialogDescription className="sr-only">
+          {alt}の拡大表示
+        </DialogDescription>
+        {/* biome-ignore lint/performance/noImgElement: backend が配信する R2 画像を ObjectURL で表示するため next/image は使えない */}
         <img
           alt={alt}
-          className="absolute inset-0 size-full object-cover"
-          onError={() => setFailed(true)}
-          src={blobToObjectUrl(imageBlob)}
+          className="max-h-[80vh] w-full rounded-lg object-contain"
+          src={src}
         />
-      ) : null}
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 }

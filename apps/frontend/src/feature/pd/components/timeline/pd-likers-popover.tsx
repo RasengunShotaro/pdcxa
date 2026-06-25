@@ -21,7 +21,7 @@ export function PdLikersPopover({
 }: PdLikersPopoverProps) {
   if (likeCount === 0) {
     return (
-      <span className="inline-flex h-11 items-center pr-2 pl-1 text-sm text-muted-foreground tabular-nums">
+      <span className="inline-flex h-9 items-center pr-2 pl-1 text-sm text-muted-foreground tabular-nums">
         0
       </span>
     );
@@ -32,7 +32,7 @@ export function PdLikersPopover({
       <PopoverTrigger asChild>
         <Button
           aria-label="いいねした人を表示"
-          className="h-11 rounded-full pr-2.5 pl-1 text-sm text-muted-foreground tabular-nums"
+          className="h-9 rounded-full pr-2.5 pl-1 text-sm text-muted-foreground tabular-nums"
           type="button"
           variant="ghost"
         >
