@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { isNavItemActive, pageLabelForPath } from "./nav-items";
+import { isNavItemActive, NAV_ITEMS, pageLabelForPath } from "./nav-items";
 
 describe("ナビ項目が現在地かどうかを判定する", () => {
   it("ホームではホームを現在地として示す", () => {
@@ -46,5 +46,15 @@ describe("現在地のラベルを解決する", () => {
 
   it("どのページにも該当しないパスではラベルを返さない", () => {
     expect(pageLabelForPath("/unknown")).toBeUndefined();
+  });
+
+  it("プロフィールページではプロフィールを返す", () => {
+    expect(pageLabelForPath("/profile")).toBe("プロフィール");
+  });
+});
+
+describe("サイドバーのナビ項目", () => {
+  it("プロフィールはサイドバーのナビ項目に含めない", () => {
+    expect(NAV_ITEMS.some((item) => item.href === "/profile")).toBe(false);
   });
 });

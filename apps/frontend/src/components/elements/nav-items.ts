@@ -1,11 +1,4 @@
-import {
-  BarChart3,
-  Bell,
-  Home,
-  type LucideIcon,
-  Mail,
-  User,
-} from "lucide-react";
+import { BarChart3, Bell, Home, type LucideIcon, Mail } from "lucide-react";
 
 export interface NavItem {
   href: string;
@@ -18,7 +11,6 @@ export const NAV_ITEMS: readonly NavItem[] = [
   { href: "/notifications", label: "通知", icon: Bell },
   { href: "/stats", label: "統計", icon: BarChart3 },
   { href: "/invitation", label: "招待", icon: Mail },
-  { href: "/profile", label: "プロフィール", icon: User },
 ];
 
 interface IsNavItemActiveInput {
@@ -37,6 +29,7 @@ export const isNavItemActive = ({
 const DYNAMIC_PAGE_LABELS: readonly { prefix: string; label: string }[] = [
   { prefix: "/pd/", label: "PD詳細" },
   { prefix: "/user/", label: "ユーザー" },
+  { prefix: "/profile", label: "プロフィール" },
 ];
 
 export const pageLabelForPath = (pathname: string): string | undefined => {

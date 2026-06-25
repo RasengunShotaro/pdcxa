@@ -8,6 +8,4 @@ export const MOCK_USER: AuthUser = {
   lastName: "User",
   fullName: "Dev User",
   imageUrl: "",
-  update: async () => undefined,
-  setProfileImage: async () => undefined,
 };

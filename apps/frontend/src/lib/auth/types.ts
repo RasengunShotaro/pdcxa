@@ -4,10 +4,6 @@ export interface AuthUser {
   readonly lastName: string | null;
   readonly fullName: string | null;
   readonly imageUrl: string;
-  update(params: { firstName?: string; lastName?: string }): Promise<unknown>;
-  setProfileImage(params: {
-    file: Blob | File | string | null;
-  }): Promise<unknown>;
 }
 
 export type SignInResult = { error: unknown };
