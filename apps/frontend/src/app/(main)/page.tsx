@@ -1,5 +1,5 @@
-import { PdTimeline } from "@/feature/pd/components/timeline/pd-timeline";
+import { HomeView } from "@/feature/pd/components/timeline/home-view";
 
 export default function Page() {
-  return <PdTimeline />;
+  return <HomeView />;
 }

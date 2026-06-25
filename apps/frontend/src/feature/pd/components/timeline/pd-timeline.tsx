@@ -1,6 +1,6 @@
 "use client";
 
-import { Loader2, MessageSquare } from "lucide-react";
+import { Loader2, MessageCirclePlus, MessageSquare } from "lucide-react";
 import { EmptyState } from "@/components/elements/empty-state";
 import { ListError } from "@/components/elements/list-error";
 import { ListSkeleton } from "@/components/elements/list-skeleton";
@@ -9,7 +9,11 @@ import { usePd } from "@/hooks/use-pd";
 import { PdCard } from "./pd-card";
 import { useInfiniteScroll } from "./use-infinite-scroll";
 
-export function PdTimeline() {
+interface PdTimelineProps {
+  onCompose?: () => void;
+}
+
+export function PdTimeline({ onCompose }: PdTimelineProps) {
   const {
     pds,
     isPending,
@@ -38,6 +42,14 @@ export function PdTimeline() {
   if (pds.length === 0) {
     return (
       <EmptyState
+        action={
+          onCompose ? (
+            <Button onClick={onCompose} type="button">
+              <MessageCirclePlus aria-hidden="true" className="size-4" />
+              最初の PD をしてみよう
+            </Button>
+          ) : undefined
+        }
         icon={<MessageSquare aria-hidden="true" className="size-8" />}
         message="まだ PD がありません"
       />
