@@ -2,6 +2,7 @@
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { rePdDetailQueryKey } from "@/feature/pd/api/query-keys";
 import { mutateRePdLike } from "@/feature/pd/api/repd/mutate-repd-like";
 import type { RePd } from "@/feature/pd/types";
 import { buildLikeUser } from "@/feature/pd/utils/build-like-user";
@@ -15,7 +16,7 @@ export const useRePdLike = (rePd: RePd) => {
   const { user } = useCurrentUser();
   const myUserId = user?.id ?? "";
   const myLikeUser = buildLikeUser(user);
-  const queryKey = ["RePD詳細", rePd.pdId];
+  const queryKey = rePdDetailQueryKey(rePd.pdId);
 
   const { mutate: toggleLike, isPending } = useMutation({
     mutationFn: async () => {

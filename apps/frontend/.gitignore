@@ -47,3 +47,4 @@ mcp.json
 # vitest browser mode
 .vitest-attachments/
 storybook-static/
+**/__screenshots__/

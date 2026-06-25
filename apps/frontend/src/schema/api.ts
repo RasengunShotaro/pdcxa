@@ -834,6 +834,113 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
       return useMutation(getMutatePdLikeMutationOptions(options), queryClient);
     }
 
+export type fetchPdImageResponse200 = {
+  data: Blob
+  status: 200
+}
+
+export type fetchPdImageResponseSuccess = (fetchPdImageResponse200) & {
+  headers: Headers;
+};
+;
+
+export type fetchPdImageResponse = (fetchPdImageResponseSuccess)
+
+export const getFetchPdImageUrl = (fileName: string,) => {
+
+
+
+
+  return `/pd/image/${fileName}`
+}
+
+export const fetchPdImage = async (fileName: string, options?: RequestInit): Promise<fetchPdImageResponse> => {
+
+  return orvalFetch<fetchPdImageResponse>(getFetchPdImageUrl(fileName),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getFetchPdImageQueryKey = (fileName: string,) => {
+    return [
+    `/pd/image/${fileName}`
+    ] as const;
+    }
+
+
+export const getFetchPdImageQueryOptions = <TData = Awaited<ReturnType<typeof fetchPdImage>>, TError = unknown>(fileName: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof fetchPdImage>>, TError, TData>>, request?: SecondParameter<typeof orvalFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getFetchPdImageQueryKey(fileName);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof fetchPdImage>>> = ({ signal }) => fetchPdImage(fileName, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: fileName !== null && fileName !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof fetchPdImage>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type FetchPdImageQueryResult = NonNullable<Awaited<ReturnType<typeof fetchPdImage>>>
+export type FetchPdImageQueryError = unknown
+
+
+export function useFetchPdImage<TData = Awaited<ReturnType<typeof fetchPdImage>>, TError = unknown>(
+ fileName: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof fetchPdImage>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof fetchPdImage>>,
+          TError,
+          Awaited<ReturnType<typeof fetchPdImage>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof orvalFetch>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useFetchPdImage<TData = Awaited<ReturnType<typeof fetchPdImage>>, TError = unknown>(
+ fileName: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof fetchPdImage>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof fetchPdImage>>,
+          TError,
+          Awaited<ReturnType<typeof fetchPdImage>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof orvalFetch>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useFetchPdImage<TData = Awaited<ReturnType<typeof fetchPdImage>>, TError = unknown>(
+ fileName: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof fetchPdImage>>, TError, TData>>, request?: SecondParameter<typeof orvalFetch>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+
+export function useFetchPdImage<TData = Awaited<ReturnType<typeof fetchPdImage>>, TError = unknown>(
+ fileName: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof fetchPdImage>>, TError, TData>>, request?: SecondParameter<typeof orvalFetch>}
+ , queryClient?: QueryClient
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getFetchPdImageQueryOptions(fileName,options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
 export type fetchRePdsResponse200 = {
   data: FetchRePds200Item[]
   status: 200

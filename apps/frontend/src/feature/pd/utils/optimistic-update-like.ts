@@ -1,4 +1,8 @@
-import type { InfiniteData, QueryClient } from "@tanstack/react-query";
+import type {
+  InfiniteData,
+  QueryClient,
+  QueryKey,
+} from "@tanstack/react-query";
 import type { LikeUser, Pd } from "../types";
 
 type InfinitePds = {
@@ -14,7 +18,7 @@ export const optimisticUpdateLike = async ({
   myLikeUser,
 }: {
   pd: Pd;
-  queryKey: (string | undefined)[];
+  queryKey: QueryKey;
   queryClient: QueryClient;
   myUserId: string;
   myLikeUser: LikeUser;

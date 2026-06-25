@@ -3,6 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { ListError } from "@/components/elements/list-error";
 import { fetchDetailedPdWeeklyStats } from "@/feature/pd/api/pd/fetch-detailed-weekly-stats";
+import { weeklyStatsQueryKey } from "@/feature/pd/api/query-keys";
 import {
   formatRangeLabel,
   summarizeStats,
@@ -21,7 +22,7 @@ export const StatsView = () => {
     error,
     refetch,
   } = useQuery({
-    queryKey: ["週次統計"],
+    queryKey: weeklyStatsQueryKey(),
     queryFn: fetchDetailedPdWeeklyStats,
   });
 

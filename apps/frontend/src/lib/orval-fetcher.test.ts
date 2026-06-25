@@ -40,4 +40,15 @@ describe("API レスポンスを envelope に変換する", () => {
     expect(result.data).toEqual({});
     expect(result.status).toBe(204);
   });
+
+  it("画像レスポンスでは data に画像データを載せて返す", async () => {
+    const res = new Response(new Uint8Array([1, 2, 3]), {
+      status: 200,
+      headers: { "Content-Type": "image/jpeg" },
+    });
+
+    const result = await handleOrvalResponse<{ data: Blob }>(res);
+
+    expect(result.data).toBeInstanceOf(Blob);
+  });
 });

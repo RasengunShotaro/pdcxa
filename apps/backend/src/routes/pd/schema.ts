@@ -44,6 +44,17 @@ export const mutatePdLikeSchema = z.object({
   pdId: z.string().openapi({ example: "0190d2c0-0000-7000-8000-000000000001" }),
 });
 
+export const fetchPdImageParamSchema = z.object({
+  fileName: z.string().openapi({
+    param: { name: "fileName", in: "path" },
+    example: "user_2abc-1700000000000.jpeg",
+  }),
+});
+
+export const pdImageBinarySchema = z
+  .any()
+  .openapi({ type: "string", format: "binary" });
+
 const pdLikeExample = { userId: "user_2abc" };
 const pdLikeSchema = z
   .object({

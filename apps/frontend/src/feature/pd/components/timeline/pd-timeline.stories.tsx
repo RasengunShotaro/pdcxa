@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { HttpResponse, http } from "msw";
 import { expect, userEvent, waitFor, within } from "storybook/test";
+import { getFetchPdImageMockHandler } from "@/schema/api.msw";
 import { PdTimeline } from "./pd-timeline";
 
 interface RawLike {
@@ -14,12 +15,13 @@ const rawPd = (overrides: {
   likes?: RawLike[];
   replyCount?: number;
   isMyPd?: boolean;
+  imageFileName?: string | null;
 }) => ({
   id: overrides.id,
   content: overrides.content,
   userId: overrides.userId,
   createdAt: "2026-06-24T00:00:00.000Z",
-  imageFileName: null,
+  imageFileName: overrides.imageFileName ?? null,
   likeCount: overrides.likes?.length ?? 0,
   replyCount: overrides.replyCount ?? 0,
   likes: overrides.likes ?? [],
@@ -218,6 +220,39 @@ export const Likers: Story = {
     );
     await waitFor(() =>
       expect(within(document.body).getByText("花子 鈴木")).toBeInTheDocument(),
+    );
+  },
+};
+
+export const WithImage: Story = {
+  name: "画像付きの PD を表示する",
+  parameters: {
+    msw: {
+      handlers: [
+        http.get("*/pd", () =>
+          HttpResponse.json({
+            items: [
+              rawPd({
+                id: "pd-1",
+                content: "画像も一緒に共有します",
+                userId: "u-taro",
+                imageFileName: "u-taro-1.jpeg",
+              }),
+            ],
+          }),
+        ),
+        getFetchPdImageMockHandler(),
+        userDetailsHandler(),
+      ],
+    },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await waitFor(() =>
+      expect(canvas.getByText("画像も一緒に共有します")).toBeInTheDocument(),
+    );
+    await waitFor(() =>
+      expect(canvas.getByAltText(/さんが投稿した画像/)).toBeInTheDocument(),
     );
   },
 };

@@ -31,9 +31,25 @@ const getToken = async (): Promise<string | null> => {
   return session.getToken();
 };
 
+const isBinaryResponse = (res: Response): boolean => {
+  const contentType = res.headers.get("content-type") ?? "";
+  return (
+    contentType.includes("application/octet-stream") ||
+    contentType.startsWith("image/")
+  );
+};
+
 export const handleOrvalResponse = async <T>(res: Response): Promise<T> => {
   if (!res.ok) {
     throw new ApiError(res.status);
+  }
+
+  if (isBinaryResponse(res)) {
+    return {
+      data: await res.blob(),
+      status: res.status,
+      headers: res.headers,
+    } as T;
   }
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();

@@ -62,4 +62,23 @@ export const StorageServiceLive = Layer.succeed(StorageService, {
         catch: toStorageError,
       });
     }),
+
+  画像を取得する: ({ fileName }) =>
+    Effect.gen(function* () {
+      const R2 = yield* R2Storage;
+      return yield* Effect.tryPromise({
+        try: async () => {
+          const object = await R2.get(fileName);
+          if (!object) {
+            return null;
+          }
+          return {
+            body: object.body,
+            contentType:
+              object.httpMetadata?.contentType ?? "application/octet-stream",
+          };
+        },
+        catch: toStorageError,
+      });
+    }),
 });

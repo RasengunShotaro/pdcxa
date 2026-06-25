@@ -3,6 +3,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { mutatePdLike } from "@/feature/pd/api/pd/mutate-pd-like";
+import { pdDetailQueryKey } from "@/feature/pd/api/query-keys";
 import type { Pd } from "@/feature/pd/types";
 import { buildLikeUser } from "@/feature/pd/utils/build-like-user";
 import { optimisticUpdateLike } from "@/feature/pd/utils/optimistic-update-like";
@@ -10,25 +11,13 @@ import { useCurrentUser } from "@/lib/auth/use-current-user";
 import { errorDisplay } from "@/lib/error-message";
 import { legacyDelay } from "@/utils/legacy-delay";
 
-export const usePdLike = ({
-  pd,
-  pdId,
-  userId,
-}: {
-  pd: Pd;
-  pdId?: string;
-  userId?: string;
-}) => {
+export const usePdLike = ({ pd }: { pd: Pd }) => {
   const queryClient = useQueryClient();
   const { user } = useCurrentUser();
   const myUserId = user?.id ?? "";
   const myLikeUser = buildLikeUser(user);
 
-  const queryKey = pdId
-    ? ["PD詳細", pdId, undefined]
-    : userId
-      ? ["PD詳細", undefined, userId]
-      : ["PD詳細", undefined, undefined];
+  const queryKey = pdDetailQueryKey();
 
   const { mutate: toggleLike, isPending } = useMutation({
     mutationFn: async () => {

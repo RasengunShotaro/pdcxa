@@ -7,6 +7,7 @@ import {
 } from "@tanstack/react-query";
 import { createPd } from "@/feature/pd/api/pd/create-pd";
 import { fetchDetailedPds } from "@/feature/pd/api/pd/fetch-detailed-pds";
+import { pdDetailQueryKey, pdRootQueryKey } from "@/feature/pd/api/query-keys";
 import type { Pd } from "@/feature/pd/types";
 import { legacyDelay } from "@/utils/legacy-delay";
 
@@ -29,7 +30,7 @@ export const usePd = ({
     error,
     refetch,
   } = useInfiniteQuery({
-    queryKey: ["PD詳細", pdId, userName],
+    queryKey: pdDetailQueryKey({ pdId, userName }),
     queryFn: async ({ pageParam: cursor }) => {
       await legacyDelay();
       return await fetchDetailedPds({ pdId, userName, cursor });
@@ -54,7 +55,7 @@ export const usePd = ({
       await createPd({ content, image });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["PD詳細"] });
+      queryClient.invalidateQueries({ queryKey: pdRootQueryKey() });
     },
   });
 

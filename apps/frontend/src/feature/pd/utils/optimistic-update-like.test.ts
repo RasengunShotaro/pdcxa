@@ -1,5 +1,6 @@
 import { type InfiniteData, QueryClient } from "@tanstack/react-query";
 import { describe, expect, test } from "vitest";
+import { pdDetailQueryKey } from "../api/query-keys";
 import type { LikeUser, Pd } from "../types";
 import { optimisticUpdateLike } from "./optimistic-update-like";
 
@@ -43,7 +44,7 @@ const me: LikeUser = {
   userName: "",
 };
 
-const queryKey = ["PD詳細", undefined, undefined];
+const queryKey = pdDetailQueryKey();
 
 const seed = (pd: Pd) => {
   const queryClient = new QueryClient();

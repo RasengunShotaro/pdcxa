@@ -746,6 +746,35 @@
         }
       }
     },
+    "/pd/image/{fileName}": {
+      "get": {
+        "operationId": "fetchPdImage",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "example": "user_2abc-1700000000000.jpeg"
+            },
+            "required": true,
+            "name": "fileName",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "PD画像のバイナリ",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/repd": {
       "get": {
         "operationId": "fetchRePds",

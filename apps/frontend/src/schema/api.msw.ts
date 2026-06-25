@@ -40,6 +40,14 @@ export const getCreateGifPdResponseMock = (): CreateGifPd201 => ({"message":"GIF
 
 export const getMutatePdLikeResponseMock = (): MutatePdLike201 => ({"message":"いいね状態を更新しました"})
 
+export const getFetchPdImageResponseMock = () => ((() =>
+              Uint8Array.from(
+                atob(
+                  "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=="
+                ),
+                (char) => char.charCodeAt(0)
+              ).buffer)())
+
 export const getFetchRePdsResponseMock = (): FetchRePds200Item[] => ([{"isMyRePd":false,"likeCount":2,"likes":[{"userId":"user_2abc"}],"id":"0190d2c0-0000-7000-8000-000000000003","content":"とても参考になりました","createdAt":"2026-06-24T00:00:00.000Z","userId":"user_2abc","pdId":"0190d2c0-0000-7000-8000-000000000001"}])
 
 export const getCreateRePdResponseMock = (): CreateRePd201 => ({"message":"RePDが作成されました"})
@@ -149,6 +157,22 @@ export const getMutatePdLikeMockHandler = (overrideResponse?: MutatePdLike201 | 
   }, options)
 }
 
+export const getFetchPdImageMockHandler = (overrideResponse?: ArrayBuffer | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<ArrayBuffer> | ArrayBuffer), options?: RequestHandlerOptions) => {
+  return http.get('*/pd/image/:fileName', async (info: Parameters<Parameters<typeof http.get>[1]>[0]) => {
+
+  const binaryBody = overrideResponse !== undefined
+    ? (typeof overrideResponse === "function" ? await overrideResponse(info) : overrideResponse)
+    : getFetchPdImageResponseMock();
+    return HttpResponse.arrayBuffer(
+      binaryBody instanceof ArrayBuffer
+        ? binaryBody
+        : new ArrayBuffer(0),
+      { status: 200,
+        headers: { 'Content-Type': 'application/octet-stream' }
+      })
+  }, options)
+}
+
 export const getFetchRePdsMockHandler = (overrideResponse?: FetchRePds200Item[] | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<FetchRePds200Item[]> | FetchRePds200Item[]), options?: RequestHandlerOptions) => {
   return http.get('*/repd', async (info: Parameters<Parameters<typeof http.get>[1]>[0]) => {
 
@@ -229,6 +253,7 @@ export const getPdcxaApiMock = () => [
   getCreatePdMockHandler(),
   getCreateGifPdMockHandler(),
   getMutatePdLikeMockHandler(),
+  getFetchPdImageMockHandler(),
   getFetchRePdsMockHandler(),
   getCreateRePdMockHandler(),
   getMutateRePdLikeMockHandler(),

@@ -17,6 +17,19 @@ export default defineConfig({
           name: "orvalFetch",
         },
         header: false,
+        operations: {
+          fetchPdImage: {
+            mock: {
+              data: () =>
+                Uint8Array.from(
+                  atob(
+                    "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==",
+                  ),
+                  (char) => char.charCodeAt(0),
+                ).buffer,
+            },
+          },
+        },
       },
       mock: {
         generators: [

@@ -3,6 +3,10 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createGifPd } from "@/feature/pd/api/pd/create-gif-pd";
 import { createPd } from "@/feature/pd/api/pd/create-pd";
+import {
+  pdRootQueryKey,
+  weeklyStatsQueryKey,
+} from "@/feature/pd/api/query-keys";
 import { resizeImage } from "@/feature/pd/utils/resize-image";
 
 interface CreatePdInput {
@@ -23,8 +27,8 @@ export const useCreatePd = () => {
       await createPd({ content, image: resized });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["PD詳細"] });
-      queryClient.invalidateQueries({ queryKey: ["週次統計"] });
+      queryClient.invalidateQueries({ queryKey: pdRootQueryKey() });
+      queryClient.invalidateQueries({ queryKey: weeklyStatsQueryKey() });
     },
   });
 
