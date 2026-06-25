@@ -12,11 +12,3 @@ export const ArrayBufferToUrl = (image: ArrayBuffer): string => {
 
   return url;
 };
-
-export const revokeArrayBufferUrl = (image: ArrayBuffer): void => {
-  const url = imageUrlCache.get(image);
-  if (url) {
-    URL.revokeObjectURL(url);
-    imageUrlCache.delete(image);
-  }
-};

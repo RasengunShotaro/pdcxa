@@ -39,7 +39,7 @@ export function ComposerContentField({
         className="min-h-32 resize-none text-base"
         disabled={disabled}
         id="pd-composer-content"
-        placeholder="いま考えていること・現場で気づいたことを書いてみよう"
+        placeholder="いま考えていること・気づいたことを書いてみよう"
         {...field}
       />
       <div className="flex items-center justify-between">

@@ -59,7 +59,7 @@ function InputOTPSlot({
       {char}
       {hasFakeCaret && (
         <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
-          <div className="animate-caret-blink bg-foreground h-4 w-px duration-1000" />
+          <div className="animate-caret-blink bg-foreground h-4 w-px" />
         </div>
       )}
     </div>
@@ -68,10 +68,7 @@ function InputOTPSlot({
 
 function InputOTPSeparator({ ...props }: React.ComponentProps<"div">) {
   return (
-    // biome-ignore lint/a11y/useFocusableInteractive: <shadcn>
-    // biome-ignore lint/a11y/useSemanticElements: <shadcn>
-    // biome-ignore lint/a11y/useAriaPropsForRole: <shadcn>
-    <div data-slot="input-otp-separator" role="separator" {...props}>
+    <div aria-hidden="true" data-slot="input-otp-separator" {...props}>
       <MinusIcon />
     </div>
   );

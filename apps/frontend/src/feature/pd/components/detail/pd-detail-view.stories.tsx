@@ -63,7 +63,7 @@ const pdOk = () =>
       items: [
         rawPd({
           id: "pd-1",
-          content: "現場で気づいたことを共有します",
+          content: "気づいたことを共有します",
           userId: "u-taro",
           likes: [{ userId: "u-hanako" }],
           replyCount: 2,
@@ -109,9 +109,7 @@ export const Populated: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await waitFor(() =>
-      expect(
-        canvas.getByText("現場で気づいたことを共有します"),
-      ).toBeInTheDocument(),
+      expect(canvas.getByText("気づいたことを共有します")).toBeInTheDocument(),
     );
     await waitFor(() =>
       expect(canvas.getByText("とても参考になりました")).toBeInTheDocument(),
@@ -205,9 +203,7 @@ export const ReplyFromComposer: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await waitFor(() =>
-      expect(
-        canvas.getByText("現場で気づいたことを共有します"),
-      ).toBeInTheDocument(),
+      expect(canvas.getByText("気づいたことを共有します")).toBeInTheDocument(),
     );
 
     await userEvent.click(canvas.getByRole("button", { name: "RePDする" }));

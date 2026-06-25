@@ -59,7 +59,7 @@ export const Populated: Story = {
             items: [
               rawPd({
                 id: "pd-1",
-                content: "太郎の現場メモです",
+                content: "太郎のメモです",
                 userId: "u-taro",
                 replyCount: 1,
               }),
@@ -78,7 +78,7 @@ export const Populated: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await waitFor(() =>
-      expect(canvas.getByText("太郎の現場メモです")).toBeInTheDocument(),
+      expect(canvas.getByText("太郎のメモです")).toBeInTheDocument(),
     );
     const heading = canvas.getByRole("heading", {
       level: 1,

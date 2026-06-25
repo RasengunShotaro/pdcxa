@@ -40,7 +40,7 @@ export default function AuthLayout({
         <TextAnimate
           animation="blurInUp"
           by="character"
-          className="pl-1 text-white/80 text-sm font-light tracking-wider pointer-events-none"
+          className="pl-1 text-white/80 text-sm font-normal tracking-wider pointer-events-none"
           duration={1}
         >
           New PD, New World.
@@ -52,6 +52,7 @@ export default function AuthLayout({
           className="object-cover"
           fill
           priority
+          sizes="100vw"
           src={backgroundImage}
         />
         <div className="absolute inset-0 bg-black/40" />
@@ -62,6 +63,7 @@ export default function AuthLayout({
           className="object-cover"
           fill
           priority
+          sizes="100vw"
           src={backgroundImage}
         />
         <div className="fixed inset-0 bg-linear-to-t from-background/50 via-transparent to-transparent" />

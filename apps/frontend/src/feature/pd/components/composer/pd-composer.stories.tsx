@@ -42,7 +42,7 @@ export const SubmitSuccess: Story = {
     const dialog = within(getDialog());
     const textarea = await dialog.findByRole("textbox");
 
-    await userEvent.type(textarea, "今日の現場で気づいたこと");
+    await userEvent.type(textarea, "今日気づいたこと");
     await userEvent.click(dialog.getByRole("button", { name: "PDする" }));
 
     await waitFor(() =>

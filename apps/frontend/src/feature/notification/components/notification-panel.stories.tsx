@@ -35,7 +35,7 @@ export const Populated: Story = {
                 },
                 pdId: "pd-1",
                 rePdId: null,
-                excerpt: "今日の現場メモを共有します",
+                excerpt: "今日のメモを共有します",
                 createdAt: "2026-06-24T00:00:00.000Z",
               },
             ],

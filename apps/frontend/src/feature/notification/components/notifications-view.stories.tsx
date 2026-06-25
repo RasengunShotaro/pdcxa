@@ -76,7 +76,7 @@ export const Populated: Story = {
                 actorFirstName: "太郎",
                 actorLastName: "山田",
                 pdId: "pd-1",
-                excerpt: "今日の現場メモを共有します",
+                excerpt: "今日のメモを共有します",
                 createdAt: "2026-06-23T00:00:00.000Z",
               }),
             ],

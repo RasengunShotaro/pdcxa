@@ -67,7 +67,7 @@ export const Populated: Story = {
             items: [
               rawPd({
                 id: "pd-1",
-                content: "今日の現場メモを共有します",
+                content: "今日のメモを共有します",
                 userId: "u-taro",
                 likes: [{ userId: "u-hanako" }],
                 replyCount: 2,
@@ -87,9 +87,7 @@ export const Populated: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await waitFor(() =>
-      expect(
-        canvas.getByText("今日の現場メモを共有します"),
-      ).toBeInTheDocument(),
+      expect(canvas.getByText("今日のメモを共有します")).toBeInTheDocument(),
     );
     expect(canvas.getByText("RePd お待ちしています")).toBeInTheDocument();
     expect(canvas.getByText("@taro")).toBeInTheDocument();

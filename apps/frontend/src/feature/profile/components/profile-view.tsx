@@ -13,10 +13,9 @@ import { ProfilePictureField } from "./profile-picture-field";
 
 function ProfileSkeleton() {
   return (
-    <div
+    <output
       aria-label="プロフィールを読み込み中"
       className="flex flex-col items-center gap-4"
-      role="status"
     >
       <Skeleton className="size-24 rounded-full" />
       <Skeleton className="h-10 w-40" />
@@ -25,7 +24,7 @@ function ProfileSkeleton() {
         <Skeleton className="h-16" />
         <Skeleton className="h-16" />
       </div>
-    </div>
+    </output>
   );
 }
 

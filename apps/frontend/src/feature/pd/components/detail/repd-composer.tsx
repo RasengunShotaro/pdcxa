@@ -153,7 +153,7 @@ export function RePdComposer({
               </Alert>
             ) : null}
 
-            <DialogFooter className="gap-2 sm:gap-2">
+            <DialogFooter className="flex-row justify-end gap-2">
               {isPending ? (
                 <span
                   aria-live="polite"

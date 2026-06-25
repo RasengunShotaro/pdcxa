@@ -25,7 +25,7 @@ export const composerSchema = v.object({
 
 export type ComposerSchema = v.InferOutput<typeof composerSchema>;
 
-export const contentLength = (content: string): number => content.length;
+const contentLength = (content: string): number => content.length;
 
 export const remainingChars = (content: string): number =>
   MAX_CONTENT_LENGTH - contentLength(content);

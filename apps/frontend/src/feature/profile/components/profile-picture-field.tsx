@@ -73,6 +73,7 @@ export function ProfilePictureField({
 
       <input
         accept="image/*"
+        aria-label="プロフィール画像ファイルを選択"
         className="hidden"
         disabled={isUploading}
         onChange={(event) => {
