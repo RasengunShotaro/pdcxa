@@ -2,7 +2,7 @@
 
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { Loader2, Send, TriangleAlert } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -40,20 +40,8 @@ export function PdComposer({ open, onOpenChange }: PdComposerProps) {
 
   const { createPd, isPending } = useCreatePd();
   const [submitError, setSubmitError] = useState<unknown>(null);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   const content = useWatch({ control: form.control, name: "content" }) ?? "";
-  const image = useWatch({ control: form.control, name: "image" });
-
-  useEffect(() => {
-    if (!(image instanceof File)) {
-      setPreviewUrl(null);
-      return;
-    }
-    const url = URL.createObjectURL(image);
-    setPreviewUrl(url);
-    return () => URL.revokeObjectURL(url);
-  }, [image]);
 
   const handleOpenChange = (next: boolean) => {
     if (!next) {
@@ -100,11 +88,7 @@ export function PdComposer({ open, onOpenChange }: PdComposerProps) {
             onSubmit={form.handleSubmit(onSubmit)}
           >
             <ComposerContentField control={form.control} disabled={isPending} />
-            <ComposerImageField
-              control={form.control}
-              disabled={isPending}
-              previewUrl={previewUrl}
-            />
+            <ComposerImageField control={form.control} disabled={isPending} />
 
             {submitError ? (
               <Alert

@@ -27,6 +27,14 @@
         "files": ["src/components/ui/**"],
         "rules": ["react-doctor/no-multi-comp"],
         "reason": "shadcn の複合コンポーネント規約。1 ファイルに Root/Title/Description 等の compound パーツを co-locate するのが shadcn (radix-nova) の設計で、card/sidebar/dialog/dropdown-menu 等 vendored ファイルすべてが同形。分割すると shadcn add 由来の構造と乖離し保守コストが上がるため、ui/ 配下のみ本ルールを除外する (アプリ側 components/elements は分割を維持し対象外)。"
+      },
+      {
+        "files": [
+          "src/feature/pd/components/timeline/pd-card-image.tsx",
+          "src/feature/pd/components/composer/composer-image-field.tsx"
+        ],
+        "rules": ["react-doctor/nextjs-no-img-element"],
+        "reason": "blob: の ObjectURL を表示するため next/image は使えない (next/image は blob URL を最適化対象にできず loader も通せない)。pd-card-image は R2 取得画像、composer-image-field は投稿前プレビューで、いずれも生 <img> が正当。この 2 ファイルのみ本ルールを除外する (他の画像表示は next/image を使う)。"
       }
     ]
   }

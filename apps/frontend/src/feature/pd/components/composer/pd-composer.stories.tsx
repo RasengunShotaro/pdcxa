@@ -124,6 +124,33 @@ export const DraftRetainedAfterClose: Story = {
   },
 };
 
+export const ImageAttachAndRemove: Story = {
+  name: "画像を添付するとプレビューが出て削除で消える",
+  parameters: { msw: { handlers: [createPdOk()] } },
+  render: () => <ComposerHarness />,
+  play: async () => {
+    const dialog = within(getDialog());
+    const fileInput = dialog.getByLabelText("画像ファイルを選択");
+    const file = new File(["x"], "photo.png", { type: "image/png" });
+
+    await userEvent.upload(fileInput, file);
+
+    await waitFor(() =>
+      expect(
+        dialog.getByRole("img", { name: "添付する画像のプレビュー" }),
+      ).toBeInTheDocument(),
+    );
+
+    await userEvent.click(dialog.getByRole("button", { name: "画像を削除" }));
+
+    await waitFor(() =>
+      expect(
+        dialog.queryByRole("img", { name: "添付する画像のプレビュー" }),
+      ).not.toBeInTheDocument(),
+    );
+  },
+};
+
 export const SubmitFailureKeepsDraft: Story = {
   name: "送信に失敗したら閉じず入力を保持してエラーを出す",
   parameters: { msw: { handlers: [createPdFail()] } },
