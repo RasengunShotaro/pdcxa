@@ -10,7 +10,9 @@ export function HomeView() {
 
   return (
     <>
-      <PdTimeline onCompose={() => setIsComposerOpen(true)} />
+      <div className="pb-[calc(5.5rem+env(safe-area-inset-bottom))]">
+        <PdTimeline onCompose={() => setIsComposerOpen(true)} />
+      </div>
       <ComposeFab onClick={() => setIsComposerOpen(true)} />
       <PdComposer onOpenChange={setIsComposerOpen} open={isComposerOpen} />
     </>

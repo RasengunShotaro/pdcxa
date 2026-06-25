@@ -1,68 +1,57 @@
 "use client";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 import { mutateRePdLike } from "@/feature/pd/api/repd/mutate-repd-like";
 import type { RePd } from "@/feature/pd/types";
+import { buildLikeUser } from "@/feature/pd/utils/build-like-user";
+import { optimisticToggleRePdLike } from "@/feature/pd/utils/optimistic-repd-like";
 import { useCurrentUser } from "@/lib/auth/use-current-user";
+import { errorDisplay } from "@/lib/error-message";
 import { legacyDelay } from "@/utils/legacy-delay";
 
 export const useRePdLike = (rePd: RePd) => {
   const queryClient = useQueryClient();
   const { user } = useCurrentUser();
-  const userId = user?.id ?? "";
+  const myUserId = user?.id ?? "";
+  const myLikeUser = buildLikeUser(user);
+  const queryKey = ["RePD詳細", rePd.pdId];
 
-  const { mutate: toggleLike } = useMutation({
+  const { mutate: toggleLike, isPending } = useMutation({
     mutationFn: async () => {
       await legacyDelay();
       await mutateRePdLike(rePd.id);
     },
     onMutate: async () => {
-      const previousRePds = queryClient.getQueryData<RePd[]>([
-        "RePD詳細",
-        rePd.pdId,
-      ]);
-      queryClient.setQueryData<RePd[]>(["RePD詳細", rePd.pdId], (oldRePds) => {
-        if (!oldRePds) return oldRePds;
-
-        return oldRePds.map((oldRePd) => {
-          if (oldRePd.id !== rePd.id) return oldRePd;
-
-          const isCurrentlyLiked = oldRePd.likes.some(
-            (like) => like.userId === userId,
-          );
-          const updatedLikes = isCurrentlyLiked
-            ? oldRePd.likes.filter((like) => like.userId !== userId)
-            : [...oldRePd.likes, { userId }];
-
-          return {
-            ...oldRePd,
-            likes: updatedLikes,
-            likeCount: isCurrentlyLiked
-              ? Number(oldRePd.likeCount) - 1
-              : Number(oldRePd.likeCount) + 1,
-          };
-        });
-      });
-
+      const previousRePds = queryClient.getQueryData<RePd[]>(queryKey);
+      queryClient.setQueryData<RePd[]>(queryKey, (oldRePds) =>
+        oldRePds
+          ? optimisticToggleRePdLike({
+              rePds: oldRePds,
+              rePdId: rePd.id,
+              myUserId,
+              myLikeUser,
+            })
+          : oldRePds,
+      );
       return { previousRePds };
     },
-    onError: (_, __, context) => {
+    onError: (error, _, context) => {
       if (context?.previousRePds) {
-        queryClient.setQueryData(
-          ["RePD詳細", rePd.pdId],
-          context.previousRePds,
-        );
+        queryClient.setQueryData(queryKey, context.previousRePds);
       }
+      toast.warning(errorDisplay(error).message);
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["RePD詳細", rePd.pdId] });
+      queryClient.invalidateQueries({ queryKey });
     },
   });
 
-  const isLiked = rePd.likes.some((like) => like.userId === userId);
+  const isLiked = rePd.likes.some((like) => like.userId === myUserId);
 
   return {
     isLiked,
     toggleLike,
+    isPending,
   };
 };

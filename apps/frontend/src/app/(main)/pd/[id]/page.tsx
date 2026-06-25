@@ -1,13 +1,13 @@
-import { PdDetail } from "@/feature/pd/components/pd/pd-detail";
+import { PdDetailView } from "@/feature/pd/components/detail/pd-detail-view";
 
-interface PdDetailProps {
+interface PdDetailPageProps {
   params: Promise<{
     id: string;
   }>;
 }
 
-export default async function PdDetailPage({ params }: PdDetailProps) {
+export default async function PdDetailPage({ params }: PdDetailPageProps) {
   const { id } = await params;
 
-  return <PdDetail pdId={id} />;
+  return <PdDetailView pdId={id} />;
 }

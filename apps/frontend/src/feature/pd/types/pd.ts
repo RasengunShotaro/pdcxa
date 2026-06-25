@@ -36,7 +36,7 @@ export type Pd = RawPd & {
   likeUsers: LikeUser[];
 };
 
-export type RePd = {
+export type RawRePd = {
   id: string;
   pdId: string;
   content: string;
@@ -45,6 +45,9 @@ export type RePd = {
   likeCount: number;
   likes: { userId: string }[];
   isMyRePd: boolean;
+};
+
+export type RePd = RawRePd & {
   userDetail: {
     id: string;
     userFullName: string;
@@ -52,4 +55,5 @@ export type RePd = {
     userName: string;
   };
   likeUserNames: string[];
+  likeUsers: LikeUser[];
 };

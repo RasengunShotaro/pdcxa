@@ -93,6 +93,9 @@ export const Populated: Story = {
     );
     expect(canvas.getByText("RePd お待ちしています")).toBeInTheDocument();
     expect(canvas.getByText("@taro")).toBeInTheDocument();
+    expect(
+      canvas.getByRole("link", { name: "2件の返信を見る" }),
+    ).toHaveAttribute("href", "/pd/pd-1");
   },
 };
 

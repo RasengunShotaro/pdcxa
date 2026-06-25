@@ -8,7 +8,7 @@ export const ユーザーIDリストを抽出する = (pds: RawPd[]): string[] =
   return [...new Set(allUserIds)];
 };
 
-const ユーザー詳細情報のMapを作成する = (
+export const ユーザー詳細情報のMapを作成する = (
   userDetails: UserDetail[],
 ): Map<string, UserDetail> => {
   return new Map(userDetails.map((user) => [user.id, user]));
@@ -20,7 +20,7 @@ export const ユーザーのフルネームをフォーマットする = (
   return `${userDetail?.firstName ?? ""} ${userDetail?.lastName ?? ""}`.trim();
 };
 
-const いいねユーザーの名前リストを作成する = (
+export const いいねユーザーの名前リストを作成する = (
   likes: { userId: string }[],
   userDetailsMap: Map<string, UserDetail>,
 ): string[] => {
@@ -30,7 +30,7 @@ const いいねユーザーの名前リストを作成する = (
   });
 };
 
-const いいねユーザーの詳細リストを作成する = (
+export const いいねユーザーの詳細リストを作成する = (
   likes: { userId: string }[],
   userDetailsMap: Map<string, UserDetail>,
 ): LikeUser[] => {

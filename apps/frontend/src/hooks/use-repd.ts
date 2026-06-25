@@ -11,7 +11,9 @@ export const useRePd = (pdId: string) => {
   const {
     data: rePds = [],
     isPending,
+    isError,
     error,
+    refetch,
   } = useQuery({
     queryKey: ["RePD詳細", pdId],
     queryFn: async () => {
@@ -20,10 +22,10 @@ export const useRePd = (pdId: string) => {
     },
   });
 
-  const { mutate: createNewRePd } = useMutation({
-    mutationFn: async (pd: string) => {
+  const { mutateAsync: createNewRePd, isPending: isCreating } = useMutation({
+    mutationFn: async (content: string) => {
       await legacyDelay();
-      await createRePd({ pdId, content: pd });
+      await createRePd({ pdId, content });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["RePD詳細", pdId] });
@@ -39,7 +41,10 @@ export const useRePd = (pdId: string) => {
   return {
     rePds,
     isPending,
+    isError,
     error,
+    refetch,
     createRePd: createNewRePd,
+    isCreating,
   };
 };
