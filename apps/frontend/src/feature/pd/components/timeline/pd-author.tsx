@@ -19,7 +19,7 @@ export function PdAuthor({
   return (
     <div className="flex items-center gap-3">
       <Link
-        className="flex min-w-0 items-center gap-3 rounded-lg transition-[color,transform] hover:-translate-y-px focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
+        className="-my-1 -ml-2 flex min-w-0 items-center gap-3 rounded-lg px-2 py-1 transition-[color,transform,background-color] hover:-translate-y-px hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
         href={`/user/${userName}`}
       >
         <Avatar className="size-10">

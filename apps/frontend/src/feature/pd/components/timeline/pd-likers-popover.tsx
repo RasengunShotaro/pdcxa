@@ -32,7 +32,7 @@ export function PdLikersPopover({
       <PopoverTrigger asChild>
         <Button
           aria-label="いいねした人を表示"
-          className="h-9 rounded-full pr-2.5 pl-1 text-sm text-muted-foreground tabular-nums"
+          className="h-9 rounded-full pr-2.5 pl-1 text-sm text-muted-foreground tabular-nums hover:bg-transparent dark:hover:bg-transparent"
           type="button"
           variant="ghost"
         >

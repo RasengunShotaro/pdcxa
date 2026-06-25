@@ -33,7 +33,7 @@ export function PdCard({ pd }: PdCardProps) {
       />
 
       <div className="flex items-center justify-end gap-2 pt-1 text-muted-foreground">
-        <div className="flex items-center">
+        <div className="flex items-center rounded-full transition-colors hover:bg-accent">
           <PdLikeButton pd={pd} />
           <PdLikersPopover likeCount={pd.likeCount} likeUsers={pd.likeUsers} />
         </div>

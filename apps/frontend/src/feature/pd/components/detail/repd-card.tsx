@@ -25,11 +25,13 @@ export function RePdCard({ rePd }: RePdCardProps) {
         </p>
 
         <div className="flex items-center justify-end pt-1 text-muted-foreground">
-          <RePdLikeButton rePd={rePd} />
-          <PdLikersPopover
-            likeCount={rePd.likeCount}
-            likeUsers={rePd.likeUsers}
-          />
+          <div className="flex items-center rounded-full transition-colors hover:bg-accent">
+            <RePdLikeButton rePd={rePd} />
+            <PdLikersPopover
+              likeCount={rePd.likeCount}
+              likeUsers={rePd.likeUsers}
+            />
+          </div>
         </div>
       </Card>
     </article>
