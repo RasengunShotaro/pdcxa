@@ -11,11 +11,14 @@ import type {
   CreateInvitation200,
   CreatePd201,
   CreateRePd201,
+  FetchNotificationUnreadCount200,
+  FetchNotifications200,
   FetchPds200,
   FetchRePds200Item,
   FetchUserDetail200,
   FetchUserDetails200Item,
   FetchWeeklyStats200,
+  MarkNotificationsSeen200,
   MutatePdLike201,
   MutateRePdLike201
 } from './models';
@@ -42,6 +45,12 @@ export const getFetchRePdsResponseMock = (): FetchRePds200Item[] => ([{"isMyRePd
 export const getCreateRePdResponseMock = (): CreateRePd201 => ({"message":"RePDが作成されました"})
 
 export const getMutateRePdLikeResponseMock = (): MutateRePdLike201 => ({"message":"RePDのいいね状態を更新しました"})
+
+export const getFetchNotificationUnreadCountResponseMock = (): FetchNotificationUnreadCount200 => ({"count":3})
+
+export const getFetchNotificationsResponseMock = (): FetchNotifications200 => ({"items":[{"kind":"pdLike","actor":{"id":"user_2abc","firstName":"太郎","lastName":"田中","imageUrl":"https://img.clerk.com/example.png","userName":"taro"},"pdId":"0190d2c0-0000-7000-8000-000000000001","rePdId":null,"excerpt":"今日学んだことを共有します","createdAt":"2026-06-24T00:00:00.000Z"}]})
+
+export const getMarkNotificationsSeenResponseMock = (): MarkNotificationsSeen200 => ({"ok":true})
 
 
 export const getCreateInvitationMockHandler = (overrideResponse?: CreateInvitation200 | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<CreateInvitation200> | CreateInvitation200), options?: RequestHandlerOptions) => {
@@ -175,6 +184,42 @@ export const getMutateRePdLikeMockHandler = (overrideResponse?: MutateRePdLike20
       })
   }, options)
 }
+
+export const getFetchNotificationUnreadCountMockHandler = (overrideResponse?: FetchNotificationUnreadCount200 | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<FetchNotificationUnreadCount200> | FetchNotificationUnreadCount200), options?: RequestHandlerOptions) => {
+  return http.get('*/notifications/unread-count', async (info: Parameters<Parameters<typeof http.get>[1]>[0]) => {
+
+
+    return HttpResponse.json(overrideResponse !== undefined
+    ? (typeof overrideResponse === "function" ? await overrideResponse(info) : overrideResponse)
+    : getFetchNotificationUnreadCountResponseMock(),
+      { status: 200
+      })
+  }, options)
+}
+
+export const getFetchNotificationsMockHandler = (overrideResponse?: FetchNotifications200 | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<FetchNotifications200> | FetchNotifications200), options?: RequestHandlerOptions) => {
+  return http.get('*/notifications', async (info: Parameters<Parameters<typeof http.get>[1]>[0]) => {
+
+
+    return HttpResponse.json(overrideResponse !== undefined
+    ? (typeof overrideResponse === "function" ? await overrideResponse(info) : overrideResponse)
+    : getFetchNotificationsResponseMock(),
+      { status: 200
+      })
+  }, options)
+}
+
+export const getMarkNotificationsSeenMockHandler = (overrideResponse?: MarkNotificationsSeen200 | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<MarkNotificationsSeen200> | MarkNotificationsSeen200), options?: RequestHandlerOptions) => {
+  return http.post('*/notifications/seen', async (info: Parameters<Parameters<typeof http.post>[1]>[0]) => {
+
+
+    return HttpResponse.json(overrideResponse !== undefined
+    ? (typeof overrideResponse === "function" ? await overrideResponse(info) : overrideResponse)
+    : getMarkNotificationsSeenResponseMock(),
+      { status: 200
+      })
+  }, options)
+}
 export const getPdcxaApiMock = () => [
   getCreateInvitationMockHandler(),
   getFetchUserDetailMockHandler(),
@@ -186,5 +231,8 @@ export const getPdcxaApiMock = () => [
   getMutatePdLikeMockHandler(),
   getFetchRePdsMockHandler(),
   getCreateRePdMockHandler(),
-  getMutateRePdLikeMockHandler()
+  getMutateRePdLikeMockHandler(),
+  getFetchNotificationUnreadCountMockHandler(),
+  getFetchNotificationsMockHandler(),
+  getMarkNotificationsSeenMockHandler()
 ]

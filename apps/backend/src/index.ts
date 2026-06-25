@@ -6,6 +6,7 @@ import { HTTPException } from "hono/http-exception";
 import { ログイン中のユーザーIDを取得 } from "./lib/current-user";
 import { 境界エラーレスポンス } from "./lib/http-error";
 import { invitationApp } from "./routes/invitation/app";
+import { notificationApp } from "./routes/notification/app";
 import { pdApp } from "./routes/pd/app";
 import { rePdApp } from "./routes/repd/app";
 import { userApp } from "./routes/user/app";
@@ -40,7 +41,8 @@ export const ルート = app
   .route("/invitation", invitationApp)
   .route("/user", userApp)
   .route("/pd", pdApp)
-  .route("/repd", rePdApp);
+  .route("/repd", rePdApp)
+  .route("/notifications", notificationApp);
 
 export const openApiDocument = () =>
   ルート.getOpenAPIDocument({

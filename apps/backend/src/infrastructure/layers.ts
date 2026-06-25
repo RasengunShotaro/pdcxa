@@ -1,5 +1,6 @@
 import { Layer } from "effect";
 import { InvitationLayer } from "./invitation/layer";
+import { NotificationLayer } from "./notification/layer";
 import { PdLayer } from "./pd/layer";
 import { DbClientLive } from "./postgres/client";
 import { RePdLayer } from "./repd/layer";
@@ -10,4 +11,5 @@ export const AppLive = Layer.mergeAll(
   RePdLayer,
   UserLayer,
   InvitationLayer,
+  NotificationLayer,
 ).pipe(Layer.provide(DbClientLive));

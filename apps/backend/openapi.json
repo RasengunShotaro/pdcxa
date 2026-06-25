@@ -970,6 +970,233 @@
           }
         }
       }
+    },
+    "/notifications/unread-count": {
+      "get": {
+        "operationId": "fetchNotificationUnreadCount",
+        "responses": {
+          "200": {
+            "description": "未読通知件数",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "count": {
+                      "type": "number",
+                      "example": 3
+                    }
+                  },
+                  "required": [
+                    "count"
+                  ],
+                  "example": {
+                    "count": 3
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/notifications": {
+      "get": {
+        "operationId": "fetchNotifications",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "example": "2026-06-24T00:00:00.000Z"
+            },
+            "required": false,
+            "name": "cursor",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "通知一覧",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "kind": {
+                            "type": "string",
+                            "enum": [
+                              "pdLike",
+                              "rePdLike",
+                              "rePd"
+                            ],
+                            "example": "pdLike"
+                          },
+                          "actor": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "example": "user_2abc"
+                              },
+                              "firstName": {
+                                "type": "string",
+                                "nullable": true,
+                                "example": "太郎"
+                              },
+                              "lastName": {
+                                "type": "string",
+                                "nullable": true,
+                                "example": "田中"
+                              },
+                              "imageUrl": {
+                                "type": "string",
+                                "example": "https://img.clerk.com/example.png"
+                              },
+                              "userName": {
+                                "type": "string",
+                                "nullable": true,
+                                "example": "taro"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "firstName",
+                              "lastName",
+                              "imageUrl",
+                              "userName"
+                            ],
+                            "example": {
+                              "id": "user_2abc",
+                              "firstName": "太郎",
+                              "lastName": "田中",
+                              "imageUrl": "https://img.clerk.com/example.png",
+                              "userName": "taro"
+                            }
+                          },
+                          "pdId": {
+                            "type": "string",
+                            "example": "0190d2c0-0000-7000-8000-000000000001"
+                          },
+                          "rePdId": {
+                            "type": "string",
+                            "nullable": true,
+                            "example": null
+                          },
+                          "excerpt": {
+                            "type": "string",
+                            "example": "今日学んだことを共有します"
+                          },
+                          "createdAt": {
+                            "type": "string",
+                            "example": "2026-06-24T00:00:00.000Z"
+                          }
+                        },
+                        "required": [
+                          "kind",
+                          "actor",
+                          "pdId",
+                          "rePdId",
+                          "excerpt",
+                          "createdAt"
+                        ],
+                        "example": {
+                          "kind": "pdLike",
+                          "actor": {
+                            "id": "user_2abc",
+                            "firstName": "太郎",
+                            "lastName": "田中",
+                            "imageUrl": "https://img.clerk.com/example.png",
+                            "userName": "taro"
+                          },
+                          "pdId": "0190d2c0-0000-7000-8000-000000000001",
+                          "rePdId": null,
+                          "excerpt": "今日学んだことを共有します",
+                          "createdAt": "2026-06-24T00:00:00.000Z"
+                        }
+                      },
+                      "example": [
+                        {
+                          "kind": "pdLike",
+                          "actor": {
+                            "id": "user_2abc",
+                            "firstName": "太郎",
+                            "lastName": "田中",
+                            "imageUrl": "https://img.clerk.com/example.png",
+                            "userName": "taro"
+                          },
+                          "pdId": "0190d2c0-0000-7000-8000-000000000001",
+                          "rePdId": null,
+                          "excerpt": "今日学んだことを共有します",
+                          "createdAt": "2026-06-24T00:00:00.000Z"
+                        }
+                      ]
+                    },
+                    "nextCursor": {
+                      "type": "string",
+                      "example": "2026-06-23T00:00:00.000Z"
+                    }
+                  },
+                  "required": [
+                    "items"
+                  ],
+                  "example": {
+                    "items": [
+                      {
+                        "kind": "pdLike",
+                        "actor": {
+                          "id": "user_2abc",
+                          "firstName": "太郎",
+                          "lastName": "田中",
+                          "imageUrl": "https://img.clerk.com/example.png",
+                          "userName": "taro"
+                        },
+                        "pdId": "0190d2c0-0000-7000-8000-000000000001",
+                        "rePdId": null,
+                        "excerpt": "今日学んだことを共有します",
+                        "createdAt": "2026-06-24T00:00:00.000Z"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/notifications/seen": {
+      "post": {
+        "operationId": "markNotificationsSeen",
+        "responses": {
+          "200": {
+            "description": "既読化成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  },
+                  "required": [
+                    "ok"
+                  ],
+                  "example": {
+                    "ok": true
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   }
 }

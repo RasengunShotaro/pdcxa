@@ -4,7 +4,8 @@ import {
   PostgreSqlContainer,
   type StartedPostgreSqlContainer,
 } from "@testcontainers/postgresql";
-import { sql } from "drizzle-orm";
+import { getTableName, is, sql } from "drizzle-orm";
+import { PgTable } from "drizzle-orm/pg-core";
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
 import type { DbClient } from "#/lib/db";
@@ -51,8 +52,8 @@ export const テストDBを起動する = async () => {
 
 export const テストDBをリセットする = async (db: DbClient) => {
   const tableNames = Object.values(schema)
-    .filter((table) => table && typeof table === "object" && "dbName" in table)
-    .map((table) => table.dbName);
+    .filter((table) => is(table, PgTable))
+    .map((table) => getTableName(table));
 
   for (const tableName of tableNames) {
     await db.execute(sql.raw(`TRUNCATE TABLE "${tableName}" CASCADE`));
