@@ -10,6 +10,7 @@ const meta: Meta<typeof AppShell> = {
   },
   args: {
     userFooter: <span>U</span>,
+    headerActions: <span>🔔</span>,
     children: <p>メインコンテンツ</p>,
   },
 };

@@ -6,15 +6,18 @@ import {
   SidebarGroup,
   SidebarGroupLabel,
   SidebarMenu,
+  SidebarMenuBadge,
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
+import { useUnreadCount } from "@/feature/notification/hooks/use-unread-count";
 import { isNavItemActive, NAV_ITEMS } from "./nav-items";
 
 export function AppSidebarNav() {
   const pathname = usePathname();
   const { isMobile, setOpenMobile } = useSidebar();
+  const unreadCount = useUnreadCount();
 
   const closeOnMobile = () => {
     if (isMobile) {
@@ -46,6 +49,12 @@ export function AppSidebarNav() {
                     <span>{label}</span>
                   </Link>
                 </SidebarMenuButton>
+                {href === "/notifications" && unreadCount > 0 ? (
+                  <SidebarMenuBadge className="-translate-y-1/2 bg-primary text-primary-foreground peer-data-[size=default]/menu-button:top-1/2 peer-hover/menu-button:text-primary-foreground peer-data-[active=true]/menu-button:text-primary-foreground">
+                    {unreadCount > 99 ? "99+" : unreadCount}
+                    <span className="sr-only">件の未読の通知</span>
+                  </SidebarMenuBadge>
+                ) : null}
               </SidebarMenuItem>
             );
           })}

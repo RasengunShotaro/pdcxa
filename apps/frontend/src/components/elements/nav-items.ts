@@ -1,4 +1,11 @@
-import { BarChart3, Home, type LucideIcon, Mail, User } from "lucide-react";
+import {
+  BarChart3,
+  Bell,
+  Home,
+  type LucideIcon,
+  Mail,
+  User,
+} from "lucide-react";
 
 export interface NavItem {
   href: string;
@@ -8,6 +15,7 @@ export interface NavItem {
 
 export const NAV_ITEMS: readonly NavItem[] = [
   { href: "/", label: "ホーム", icon: Home },
+  { href: "/notifications", label: "通知", icon: Bell },
   { href: "/stats", label: "統計", icon: BarChart3 },
   { href: "/invitation", label: "招待", icon: Mail },
   { href: "/profile", label: "プロフィール", icon: User },

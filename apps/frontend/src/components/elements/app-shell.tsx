@@ -23,15 +23,18 @@ import { AppSidebarNav } from "./app-sidebar-nav";
 import { ColorModeSwitcher } from "./color-mode-switcher";
 import { isNavItemActive, NAV_ITEMS } from "./nav-items";
 import { NavUser } from "./nav-user";
+import { NotificationBell } from "./notification-bell";
 
 interface AppShellProps {
   children: ReactNode;
   userFooter?: ReactNode;
+  headerActions?: ReactNode;
 }
 
 export function AppShell({
   children,
   userFooter = <NavUser />,
+  headerActions = <NotificationBell />,
 }: AppShellProps) {
   const pathname = usePathname();
   const currentLabel = NAV_ITEMS.find((item) =>
@@ -92,7 +95,8 @@ export function AppShell({
             />
             <span className="text-base font-medium">{currentLabel}</span>
           </div>
-          <div className="ml-auto px-4">
+          <div className="ml-auto flex items-center gap-1 px-4">
+            {headerActions}
             <ColorModeSwitcher />
           </div>
         </header>
