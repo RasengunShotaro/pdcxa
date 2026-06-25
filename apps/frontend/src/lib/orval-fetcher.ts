@@ -24,8 +24,14 @@ const parseJsonBody = (body: string): unknown => {
 const sleep = (ms: number): Promise<void> =>
   new Promise((resolve) => setTimeout(resolve, ms));
 
+const MOCKING_ENABLED = process.env.NEXT_PUBLIC_API_MOCKING === "enabled";
+
 const getToken = async (): Promise<string | null> => {
   if (typeof window === "undefined") {
+    return null;
+  }
+
+  if (MOCKING_ENABLED) {
     return null;
   }
 
