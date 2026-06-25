@@ -90,7 +90,7 @@ export const PdRepositoryLive = Layer.effect(
               ...(userId ? [eq(pdsSchema.userId, userId)] : []),
               ...(cursor
                 ? [
-                    sql`${pdsSchema.createdAt} < (SELECT created_at FROM pds WHERE id = ${cursor})`,
+                    sql`(${pdsSchema.createdAt}, ${pdsSchema.id}) < (SELECT created_at, id FROM pds WHERE id = ${cursor})`,
                   ]
                 : []),
             ];
@@ -101,7 +101,7 @@ export const PdRepositoryLive = Layer.effect(
                 : baseQuery;
 
             const results = await query
-              .orderBy(desc(pdsSchema.createdAt))
+              .orderBy(desc(pdsSchema.createdAt), desc(pdsSchema.id))
               .limit(PAGE_SIZE + 1);
 
             const hasNextPage = results.length > PAGE_SIZE;

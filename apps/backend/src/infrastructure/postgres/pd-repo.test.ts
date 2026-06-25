@@ -119,6 +119,40 @@ describe("PdRepositoryLive", () => {
     expect(likes[0].userId).toBe(userId2);
   });
 
+  const 一覧を取得する = (params: { userId?: string; cursor?: string }) =>
+    Effect.runPromise(
+      PdRepository.pipe(
+        Effect.flatMap((repo) => repo.一覧を取得する(params)),
+        Effect.provide(レイヤー(ctx.db)),
+      ),
+    );
+
+  it("作成時刻が同一の投稿が PAGE_SIZE を超えても全件をページングで取得できる", async () => {
+    const author = "author";
+    const sameInstant = new Date("2026-06-24T00:00:00.000Z");
+    const total = 25;
+    const ids = Array.from({ length: total }, () => uuidv7());
+    await ctx.db.insert(pds).values(
+      ids.map((id, index) => ({
+        id,
+        content: `同時刻PD ${index}`,
+        createdAt: sameInstant,
+        userId: author,
+      })),
+    );
+
+    const collected: string[] = [];
+    let cursor: string | undefined;
+    for (let page = 0; page < total + 1; page += 1) {
+      const result = await 一覧を取得する({ userId: author, cursor });
+      collected.push(...result.items.map((item) => item.id));
+      if (!result.nextCursor) break;
+      cursor = result.nextCursor;
+    }
+
+    expect([...new Set(collected)].sort()).toEqual([...ids].sort());
+  });
+
   it("IDで取得すると like 数・likes 配列を集計して返す", async () => {
     const author = "author";
     await ctx.db.insert(pds).values({
