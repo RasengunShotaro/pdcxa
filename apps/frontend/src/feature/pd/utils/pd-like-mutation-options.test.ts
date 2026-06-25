@@ -49,10 +49,7 @@ const PAGE_SIZE = 3;
 const ALL_PDS: Pd[] = Array.from({ length: 9 }, (_, i) => aPd(`pd-${i}`));
 const queryKey = pdDetailQueryKey();
 
-// 「いいね後に過去ページが取りこぼされる」不安定なバックエンドを再現する。
-// 2 回目以降の 1 ページ目取得は nextCursor を返さず、全ページ再取得が
-// 1 ページに崩れるようにする。
-const makeUnstableFetch = () => {
+const makeFetchThatCollapsesPagesOnRefetch = () => {
   let pageOneFetches = 0;
   const fetchCalls: Array<string | undefined> = [];
 
@@ -130,7 +127,7 @@ const waitForQueriesIdle = async () => {
 
 describe("いいねと無限スクロールで蓄積したページ", () => {
   test("過去ページにいいねしても蓄積済みのページが維持される", async () => {
-    const { fetchPage } = makeUnstableFetch();
+    const { fetchPage } = makeFetchThatCollapsesPagesOnRefetch();
     const { observer, unsubscribe } = await seedTwoLoadedPages(fetchPage);
     expect(currentData()?.pages).toHaveLength(2);
 
@@ -145,7 +142,7 @@ describe("いいねと無限スクロールで蓄積したページ", () => {
   });
 
   test("いいねはタイムラインの再取得を起こさない", async () => {
-    const { fetchPage, fetchCalls } = makeUnstableFetch();
+    const { fetchPage, fetchCalls } = makeFetchThatCollapsesPagesOnRefetch();
     const { unsubscribe } = await seedTwoLoadedPages(fetchPage);
     const callsBeforeLike = fetchCalls.length;
 
@@ -158,7 +155,7 @@ describe("いいねと無限スクロールで蓄積したページ", () => {
   });
 
   test("いいねした投稿には自分のいいねが楽観的に反映される", async () => {
-    const { fetchPage } = makeUnstableFetch();
+    const { fetchPage } = makeFetchThatCollapsesPagesOnRefetch();
     const { unsubscribe } = await seedTwoLoadedPages(fetchPage);
 
     const targetPd = currentData()?.pages[0].items[0] as Pd;

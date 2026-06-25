@@ -150,7 +150,7 @@ describe("PdRepositoryLive", () => {
       cursor = result.nextCursor;
     }
 
-    expect([...new Set(collected)].sort()).toEqual([...ids].sort());
+    expect([...collected].sort()).toEqual([...ids].sort());
   });
 
   it("IDで取得すると like 数・likes 配列を集計して返す", async () => {
