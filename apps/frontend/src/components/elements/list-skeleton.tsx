@@ -6,7 +6,7 @@ interface ListSkeletonProps {
 
 function PdCardSkeleton() {
   return (
-    <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+    <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
       <div className="flex items-center gap-3">
         <Skeleton className="size-10 rounded-full" />
         <div className="flex-1 space-y-2">
