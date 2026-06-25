@@ -27,7 +27,7 @@ export const useCreatePd = () => {
       await createPd({ content, image: resized });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: pdRootQueryKey() });
+      queryClient.resetQueries({ queryKey: pdRootQueryKey() });
       queryClient.invalidateQueries({ queryKey: weeklyStatsQueryKey() });
     },
   });
