@@ -1,62 +1,59 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
+import { ListError } from "@/components/elements/list-error";
 import { fetchDetailedPdWeeklyStats } from "@/feature/pd/api/pd/fetch-detailed-weekly-stats";
-import { PDCXAInsight } from "./pdcxa-insight";
-
-const dateFormatter = new Intl.DateTimeFormat("ja-JP", {
-  month: "long",
-  day: "numeric",
-});
+import {
+  formatRangeLabel,
+  summarizeStats,
+  toActivityChartData,
+} from "@/feature/pd/utils/stats-derive";
+import { ActivityTrend } from "./activity-trend";
+import { ContributorRanking } from "./contributor-ranking";
+import { StatCard } from "./stat-card";
+import { StatsSkeleton } from "./stats-skeleton";
 
 export const StatsView = () => {
   const {
     data: stats,
     isPending,
     isError,
+    error,
+    refetch,
   } = useQuery({
     queryKey: ["週次統計"],
     queryFn: fetchDetailedPdWeeklyStats,
   });
 
   if (isPending) {
-    return (
-      <div className="space-y-6 pb-4 max-w-7xl w-full">
-        <div className="space-y-2">
-          <div className="h-8 w-48 animate-pulse rounded bg-muted" />
-          <div className="h-4 w-64 animate-pulse rounded bg-muted" />
-        </div>
-        <div className="grid grid-cols-2 gap-4 xl:grid-cols-4">
-          {[0, 1, 2, 3].map((index) => (
-            <div
-              className="h-28 animate-pulse rounded-xl bg-muted"
-              key={index}
-            />
-          ))}
-        </div>
-      </div>
-    );
+    return <StatsSkeleton />;
   }
 
-  if (isError || !stats) {
-    return (
-      <div className="max-w-7xl w-full text-muted-foreground">
-        統計の取得に失敗しました。
-      </div>
-    );
+  if (isError) {
+    return <ListError error={error} onRetry={() => refetch()} />;
   }
 
-  const rangeLabel = `${dateFormatter.format(new Date(stats.range.start))} 〜 ${dateFormatter.format(new Date(stats.range.end))}`;
+  const summary = summarizeStats(stats);
+  const chartData = toActivityChartData(stats.daily);
 
   return (
-    <div className="space-y-6 pb-4 max-w-7xl w-full">
-      <div className="space-y-2">
-        <h1 className="text-3xl font-bold">PDCXA insight</h1>
-        <p className="text-muted-foreground text-sm">
-          {rangeLabel} のアクティビティ
+    <div className="space-y-6">
+      <header className="space-y-1">
+        <h1 className="text-xl font-bold text-foreground">週次統計</h1>
+        <p className="text-sm text-muted-foreground">
+          直近7日間 · {formatRangeLabel(stats.range)}
         </p>
+      </header>
+
+      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+        {summary.map((item) => (
+          <StatCard item={item} key={item.key} />
+        ))}
       </div>
-      <PDCXAInsight stats={stats} />
+
+      <ActivityTrend data={chartData} />
+
+      <ContributorRanking rankings={stats.rankings} />
     </div>
   );
 };
