@@ -1,13 +1,5 @@
-"use server";
-
-import { getClient } from "@/lib/hono";
+import { mutateRePdLike as mutateRePdLikeApi } from "@/schema/api";
 
 export const mutateRePdLike = async (rePdId: string) => {
-  const client = await getClient();
-
-  await client.repd.like.$put({
-    json: {
-      rePdId,
-    },
-  });
+  await mutateRePdLikeApi({ rePdId });
 };

@@ -1,4 +1,6 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+import { NextResponse } from "next/server";
+import { AUTH_MOCKING } from "@/lib/auth/mocking";
 
 const isPublicRoute = createRouteMatcher([
   "/signin",
@@ -6,11 +8,13 @@ const isPublicRoute = createRouteMatcher([
   "/signin/reset-password/step2",
 ]);
 
-export default clerkMiddleware(async (auth, req) => {
-  if (!isPublicRoute(req)) {
-    await auth.protect();
-  }
-});
+export default AUTH_MOCKING
+  ? () => NextResponse.next()
+  : clerkMiddleware(async (auth, req) => {
+      if (!isPublicRoute(req)) {
+        await auth.protect();
+      }
+    });
 
 export const config = {
   matcher: [

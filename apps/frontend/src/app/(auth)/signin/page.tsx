@@ -1,4 +1,3 @@
-import { currentUser } from "@clerk/nextjs/server";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
@@ -11,9 +10,10 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { SignInForm } from "@/feature/signin/components/signin-form";
+import { getCurrentUser } from "@/lib/auth/server";
 
 export default async function SignInPage() {
-  const user = await currentUser();
+  const user = await getCurrentUser();
 
   if (user) redirect("/");
 

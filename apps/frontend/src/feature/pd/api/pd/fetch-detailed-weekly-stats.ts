@@ -1,12 +1,9 @@
-"use server";
-
-import { getClient } from "@/lib/hono";
+import { fetchWeeklyStats } from "@/schema/api";
 import { 週次統計を詳細化する } from "../../utils/pd-stats-transformer";
 import { fetchUserDetails } from "../fetch-user-details";
 
 export const fetchDetailedPdWeeklyStats = async () => {
-  const client = await getClient();
-  const 週次統計 = await (await client.pd.stats.weekly.$get()).json();
+  const 週次統計 = (await fetchWeeklyStats()).data;
 
   const 一意のユーザーID一覧 = [
     ...new Set(週次統計.rankings.map((ranking) => ranking.userId)),

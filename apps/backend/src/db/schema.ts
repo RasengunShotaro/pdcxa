@@ -32,6 +32,7 @@ export const pdLikes = pgTable(
       .notNull()
       .references(() => pds.id),
     userId: varchar("user_id").notNull(),
+    createdAt: timestamp("created_at").notNull().defaultNow(),
   },
   (table) => [primaryKey({ columns: [table.targetPdId, table.userId] })],
 );
@@ -43,6 +44,12 @@ export const rePdLikes = pgTable(
       .notNull()
       .references(() => rePds.id),
     userId: varchar("user_id").notNull(),
+    createdAt: timestamp("created_at").notNull().defaultNow(),
   },
   (table) => [primaryKey({ columns: [table.targetRePdId, table.userId] })],
 );
+
+export const notificationSeen = pgTable("notification_seen", {
+  userId: varchar("user_id").primaryKey(),
+  lastSeenAt: timestamp("last_notifications_seen_at").notNull(),
+});

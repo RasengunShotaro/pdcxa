@@ -18,6 +18,13 @@ export type RawPd = {
   imageFileName: string | null;
 };
 
+export type LikeUser = {
+  userId: string;
+  userFullName: string;
+  imageUrl: string;
+  userName: string;
+};
+
 export type Pd = RawPd & {
   userDetail: {
     id: string;
@@ -26,9 +33,10 @@ export type Pd = RawPd & {
     userName: string;
   };
   likeUserNames: string[];
+  likeUsers: LikeUser[];
 };
 
-export type RePd = {
+export type RawRePd = {
   id: string;
   pdId: string;
   content: string;
@@ -37,6 +45,9 @@ export type RePd = {
   likeCount: number;
   likes: { userId: string }[];
   isMyRePd: boolean;
+};
+
+export type RePd = RawRePd & {
   userDetail: {
     id: string;
     userFullName: string;
@@ -44,4 +55,5 @@ export type RePd = {
     userName: string;
   };
   likeUserNames: string[];
+  likeUsers: LikeUser[];
 };

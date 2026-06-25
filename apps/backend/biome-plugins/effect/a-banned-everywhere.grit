@@ -1,0 +1,18 @@
+// Rule A — 全層共通: 危険メソッドの禁止（失敗が defect 化して静かに壊れる）
+or {
+  `Effect.sync` as $n where {
+    register_diagnostic(span=$n, message="Effect.sync は禁止: throw が defect 化して型付きエラーに乗らない。throw しうるなら Effect.try({ try, catch }) を使う。", severity="error")
+  },
+  `Effect.promise` as $n where {
+    register_diagnostic(span=$n, message="Effect.promise は禁止: reject が defect 化して型に乗らない。Effect.tryPromise({ try, catch }) を使う。", severity="error")
+  },
+  `Effect.runSync` as $n where {
+    register_diagnostic(span=$n, message="Effect.runSync は禁止: 非同期混入で実行時に例外を投げる。Effect.runPromise を使う。", severity="error")
+  },
+  `Effect.match` as $n where {
+    register_diagnostic(span=$n, message="Effect.match は禁止: 分岐の副作用・依存(R) が Effect の外に逃げる。Effect.matchEffect を使う。", severity="error")
+  },
+  `Effect.catchIf` as $n where {
+    register_diagnostic(span=$n, message="Effect.catchIf は禁止: エラー型が narrowing されず E から消えない。Effect.catchTag / catchTags を使う。", severity="error")
+  }
+}

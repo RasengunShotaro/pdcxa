@@ -1,12 +1,12 @@
 "use client";
 
-import { useSignIn } from "@clerk/nextjs";
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
-import { Loader2 } from "lucide-react";
+import { Loader2, LogIn, TriangleAlert } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useTransition } from "react";
+import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -18,14 +18,23 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { PasswordInput } from "@/components/ui/password-input";
-import {
-  type SigninFormSchema,
-  signinFormSchema,
-} from "@/feature/signin/types";
+import type { SignInFlow } from "@/lib/auth/types";
+import { useSignInFlow } from "@/lib/auth/use-sign-in";
+import { type SigninFormSchema, signinFormSchema } from "../types/signin-form";
 
-export function SignInForm() {
-  const { signIn } = useSignIn();
+const SIGN_IN_FAILED = "ログインに失敗しました";
+const SIGN_IN_FAILED_DETAIL =
+  "メールアドレスまたはパスワードが正しいか確認してください";
+
+interface SignInFormProps {
+  flow?: SignInFlow;
+}
+
+export function SignInForm({ flow }: SignInFormProps) {
+  const seam = useSignInFlow();
+  const signIn = flow ?? seam.signIn;
   const [isPending, startTransition] = useTransition();
+  const [hasError, setHasError] = useState(false);
   const router = useRouter();
 
   const form = useForm<SigninFormSchema>({
@@ -36,7 +45,8 @@ export function SignInForm() {
     },
   });
 
-  const onSubmit = async (values: SigninFormSchema) => {
+  const onSubmit = (values: SigninFormSchema) => {
+    setHasError(false);
     startTransition(async () => {
       const { error } = await signIn.password({
         emailAddress: values.email,
@@ -44,9 +54,8 @@ export function SignInForm() {
       });
 
       if (error) {
-        toast.error("ログインに失敗しました", {
-          description: "メールアドレスまたはパスワードが正しいか確認して下さい",
-        });
+        setHasError(true);
+        toast.error(SIGN_IN_FAILED, { description: SIGN_IN_FAILED_DETAIL });
         return;
       }
 
@@ -68,7 +77,12 @@ export function SignInForm() {
 
   return (
     <Form {...form}>
-      <form className="grid gap-4" onSubmit={form.handleSubmit(onSubmit)}>
+      <form
+        aria-busy={isPending}
+        className="grid gap-4"
+        noValidate
+        onSubmit={form.handleSubmit(onSubmit)}
+      >
         <FormField
           control={form.control}
           name="email"
@@ -76,7 +90,13 @@ export function SignInForm() {
             <FormItem>
               <FormLabel>メールアドレス</FormLabel>
               <FormControl>
-                <Input placeholder="abcde@example.com" {...field} />
+                <Input
+                  autoComplete="email"
+                  inputMode="email"
+                  placeholder="abcde@example.com"
+                  type="email"
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -89,16 +109,31 @@ export function SignInForm() {
             <FormItem>
               <FormLabel>パスワード</FormLabel>
               <FormControl>
-                <PasswordInput placeholder="" {...field} />
+                <PasswordInput
+                  autoComplete="current-password"
+                  placeholder="8文字以上のパスワード"
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button disabled={isPending}>
-          {isPending && <Loader2 className="animate-spin" />}
+
+        {hasError ? (
+          <Alert variant="destructive">
+            <TriangleAlert />
+            <AlertDescription>{SIGN_IN_FAILED_DETAIL}</AlertDescription>
+          </Alert>
+        ) : null}
+
+        <Button className="w-full" disabled={isPending} type="submit">
+          {isPending ? (
+            <Loader2 aria-hidden="true" className="size-4 animate-spin" />
+          ) : (
+            <LogIn aria-hidden="true" className="size-4" />
+          )}
           ログイン
-          <span className="sr-only">ログイン</span>
         </Button>
       </form>
     </Form>

@@ -3,13 +3,13 @@ import * as v from "valibot";
 export const nameFormSchema = v.object({
   firstName: v.pipe(
     v.string(),
-    v.maxLength(10, "FirstNameが長すぎます。10文字以内で入力してください"),
-    v.minLength(1, "FirstNameを1文字以上入力してください"),
+    v.maxLength(10, "First Name は10文字以内で入力してください"),
+    v.minLength(1, "First Name を入力してください"),
   ),
   lastName: v.pipe(
     v.string(),
-    v.maxLength(10, "LastNameが長すぎます。10文字以内で入力してください"),
-    v.minLength(1, "LastNameを1文字以上入力してください"),
+    v.maxLength(10, "Last Name は10文字以内で入力してください"),
+    v.minLength(1, "Last Name を入力してください"),
   ),
 });
 

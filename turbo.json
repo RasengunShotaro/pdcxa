@@ -11,6 +11,9 @@
       "dependsOn": ["@pdcxa/backend#build"],
       "cache": true
     },
+    "lint": {
+      "cache": true
+    },
     "test": {
       "dependsOn": ["^test"],
       "cache": true

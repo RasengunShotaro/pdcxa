@@ -1,102 +1,158 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.3.6/schema.json",
-  "assist": {
-    "actions": {
-      "source": {
-        "organizeImports": "on",
-        "useSortedAttributes": "on"
-      }
-    },
+  "$schema": "https://biomejs.dev/schemas/2.5.0/schema.json",
+  "vcs": {
     "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true
+  },
+  "plugins": [
+    {
+      "path": "apps/backend/biome-plugins/effect/a-banned-everywhere.grit",
+      "includes": ["**/backend/src/**", "!**/*.test.ts", "!**/test-support/**"]
+    },
+    {
+      "path": "apps/backend/biome-plugins/effect/b-domain-service.grit",
+      "includes": [
+        "**/backend/src/domain/**",
+        "**/backend/src/services/**",
+        "!**/*.test.ts",
+        "!**/test-support/**"
+      ]
+    },
+    {
+      "path": "apps/backend/biome-plugins/effect/b-infra.grit",
+      "includes": [
+        "**/backend/src/infrastructure/**",
+        "!**/*.test.ts",
+        "!**/test-support/**"
+      ]
+    },
+    {
+      "path": "apps/backend/biome-plugins/effect/d-handler-resource.grit",
+      "includes": [
+        "**/backend/src/routes/**",
+        "**/backend/src/handlers/**",
+        "!**/*.test.ts",
+        "!**/test-support/**"
+      ]
+    }
+  ],
+  "files": {
+    "ignoreUnknown": true,
     "includes": [
       "**",
-      "!**/node_modules/**",
-      "!**/.next/**",
-      "!**/.open-next/**",
-      "!**/.wrangler/**",
-      "!**/.turbo/**",
-      "!**/dist/**",
-      "!**/public/**"
+      "!**/node_modules",
+      "!**/biome-plugins/**/__fixtures__",
+      "!melta-ui",
+      "!**/.next",
+      "!**/dist",
+      "!**/build",
+      "!**/cdk.out",
+      "!**/src/schema",
+      "!**/public/mockServiceWorker.js",
+      "!**/openapi.json",
+      "!**/drizzle/meta",
+      "!**/globals.css"
     ]
   },
   "formatter": {
     "enabled": true,
-    "includes": [
-      "**",
-      "!**/node_modules/**",
-      "!**/.next/**",
-      "!**/.open-next/**",
-      "!**/.wrangler/**",
-      "!**/.turbo/**",
-      "!**/dist/**",
-      "!**/public/**"
-    ],
     "indentStyle": "space",
     "indentWidth": 2
   },
-  "javascript": {
-    "formatter": {
-      "quoteStyle": "double"
-    }
-  },
-  "css": {
-    "parser": {
-      "tailwindDirectives": true
-    }
-  },
   "linter": {
-    "domains": {
-      "next": "recommended"
-    },
     "enabled": true,
-    "includes": [
-      "**",
-      "!**/node_modules/**",
-      "!**/.next/**",
-      "!**/.open-next/**",
-      "!**/.wrangler/**",
-      "!**/.turbo/**",
-      "!**/dist/**",
-      "!**/public/**"
-    ],
     "rules": {
-      "complexity": {
-        "noForEach": "error"
-      },
-      "correctness": {
-        "noUnusedImports": {
-          "fix": "safe",
-          "level": "error"
-        },
-        "noUnusedVariables": {
-          "fix": "safe",
-          "level": "error",
-          "options": {}
-        }
-      },
       "recommended": true,
-      "style": {
-        "noInferrableTypes": "error",
-        "noParameterAssign": "error",
-        "noUnusedTemplateLiteral": "error",
-        "noUselessElse": {
-          "fix": "safe",
-          "level": "error"
-        },
-        "useAsConstAssertion": "error",
-        "useDefaultParameterLast": "error",
-        "useEnumInitializers": "error",
-        "useNumberNamespace": "error",
-        "useSelfClosingElements": {
-          "fix": "safe",
-          "level": "error",
-          "options": {}
-        },
-        "useSingleVarDeclarator": {
-          "fix": "safe",
-          "level": "error"
+      "suspicious": {
+        "noUnknownAtRules": "off"
+      }
+    },
+    "domains": {
+      "next": "recommended",
+      "react": "recommended"
+    }
+  },
+  "assist": {
+    "actions": {
+      "source": {
+        "organizeImports": "on"
+      }
+    }
+  },
+  "overrides": [
+    {
+      "includes": ["**/backend/src/domain/**", "!**/*.test.ts"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "patterns": [
+                  {
+                    "group": [
+                      "**/infrastructure/**",
+                      "**/services/**",
+                      "**/routes/**",
+                      "**/handlers/**"
+                    ],
+                    "message": "domain 層は他層を import 禁止(最内・内向き依存のみ)。domain は何にも依存しない。"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "includes": ["**/backend/src/infrastructure/**", "!**/*.test.ts"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "patterns": [
+                  {
+                    "group": [
+                      "**/services/**",
+                      "**/routes/**",
+                      "**/handlers/**"
+                    ],
+                    "message": "infra 層が import してよいのは domain のみ。service / route / handler への依存は禁止(内向き依存のみ)。"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "includes": ["**/backend/src/services/**", "!**/*.test.ts"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "patterns": [
+                  {
+                    "group": ["**/infrastructure/**"],
+                    "message": "service 層は infra を import 禁止: 依存先は domain の Tag のみ。実装(infra)を知ってはいけない。"
+                  },
+                  {
+                    "group": ["**/routes/**", "**/handlers/**"],
+                    "message": "service 層は route / handler を import 禁止(内向き依存のみ)。"
+                  }
+                ]
+              }
+            }
+          }
         }
       }
     }
-  }
+  ]
 }

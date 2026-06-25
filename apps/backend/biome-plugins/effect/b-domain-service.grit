@@ -1,0 +1,16 @@
+// Rule B — domain / service 層: 業務の宣言・ロジックのみ。
+// 実装(Layer)・注入(provide)・実行(run)・生 IO 構築子を禁止する。
+// IO は infra のポート越しに呼ぶ。Layer は infra、provide/run は handler(合成ルート)。
+or {
+  `Layer.$m` as $n where {
+    register_diagnostic(span=$n, message="domain / service 層では Layer.* は禁止: 実装を持たせない。Layer の構築は infra 層へ。", severity="error")
+  },
+  `Effect.$m` as $n where {
+    $m <: r"provide.*|run.*",
+    register_diagnostic(span=$n, message="domain / service 層では Effect.provide* / Effect.run* は禁止: R を開けたまま要求するだけにする。注入・実行は handler(合成ルート)へ。", severity="error")
+  },
+  `Effect.$m` as $n where {
+    $m <: r"try|tryPromise|acquireRelease",
+    register_diagnostic(span=$n, message="domain / service 層では生 IO 構築子(try / tryPromise / acquireRelease)は禁止: IO は infra のポート越しに呼ぶ。", severity="error")
+  }
+}

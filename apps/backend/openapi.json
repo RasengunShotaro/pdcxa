@@ -1,0 +1,1231 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "PDCXA API",
+    "version": "1.0.0"
+  },
+  "components": {
+    "schemas": {},
+    "parameters": {}
+  },
+  "paths": {
+    "/invitation/create": {
+      "post": {
+        "operationId": "createInvitation",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "emailAddress": {
+                    "type": "string",
+                    "example": "invitee@example.com"
+                  }
+                },
+                "required": [
+                  "emailAddress"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "作成成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "招待を作成しました"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "example": {
+                    "message": "招待を作成しました"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/detail": {
+      "get": {
+        "operationId": "fetchUserDetail",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "example": "taro"
+            },
+            "required": true,
+            "name": "userName",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ユーザー詳細",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "user_2abc"
+                    },
+                    "firstName": {
+                      "type": "string",
+                      "nullable": true,
+                      "example": "太郎"
+                    },
+                    "lastName": {
+                      "type": "string",
+                      "nullable": true,
+                      "example": "田中"
+                    },
+                    "imageUrl": {
+                      "type": "string",
+                      "example": "https://img.clerk.com/example.png"
+                    },
+                    "userName": {
+                      "type": "string",
+                      "nullable": true,
+                      "example": "taro"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "firstName",
+                    "lastName",
+                    "imageUrl",
+                    "userName"
+                  ],
+                  "example": {
+                    "id": "user_2abc",
+                    "firstName": "太郎",
+                    "lastName": "田中",
+                    "imageUrl": "https://img.clerk.com/example.png",
+                    "userName": "taro"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/details": {
+      "get": {
+        "operationId": "fetchUserDetails",
+        "parameters": [
+          {
+            "schema": {
+              "type": "array",
+              "nullable": true,
+              "items": {
+                "type": "string"
+              },
+              "example": [
+                "user_2abc",
+                "user_2def"
+              ]
+            },
+            "required": false,
+            "name": "userIds",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ユーザー詳細一覧",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "example": "user_2abc"
+                      },
+                      "firstName": {
+                        "type": "string",
+                        "nullable": true,
+                        "example": "太郎"
+                      },
+                      "lastName": {
+                        "type": "string",
+                        "nullable": true,
+                        "example": "田中"
+                      },
+                      "imageUrl": {
+                        "type": "string",
+                        "example": "https://img.clerk.com/example.png"
+                      },
+                      "userName": {
+                        "type": "string",
+                        "nullable": true,
+                        "example": "taro"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "firstName",
+                      "lastName",
+                      "imageUrl",
+                      "userName"
+                    ],
+                    "example": {
+                      "id": "user_2abc",
+                      "firstName": "太郎",
+                      "lastName": "田中",
+                      "imageUrl": "https://img.clerk.com/example.png",
+                      "userName": "taro"
+                    }
+                  },
+                  "example": [
+                    {
+                      "id": "user_2abc",
+                      "firstName": "太郎",
+                      "lastName": "田中",
+                      "imageUrl": "https://img.clerk.com/example.png",
+                      "userName": "taro"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pd": {
+      "get": {
+        "operationId": "fetchPds",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "example": "0190d2c0-0000-7000-8000-000000000001"
+            },
+            "required": false,
+            "name": "pdId",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "example": "taro"
+            },
+            "required": false,
+            "name": "userName",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "example": "0190d2c0-0000-7000-8000-000000000002"
+            },
+            "required": false,
+            "name": "cursor",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "PD一覧",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "isMyPd": {
+                            "type": "boolean",
+                            "example": false
+                          },
+                          "likeCount": {
+                            "type": "number",
+                            "example": 3
+                          },
+                          "replyCount": {
+                            "type": "number",
+                            "example": 1
+                          },
+                          "likes": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "userId": {
+                                  "type": "string",
+                                  "example": "user_2abc"
+                                }
+                              },
+                              "required": [
+                                "userId"
+                              ],
+                              "example": {
+                                "userId": "user_2abc"
+                              }
+                            },
+                            "example": [
+                              {
+                                "userId": "user_2abc"
+                              }
+                            ]
+                          },
+                          "id": {
+                            "type": "string",
+                            "example": "0190d2c0-0000-7000-8000-000000000001"
+                          },
+                          "content": {
+                            "type": "string",
+                            "example": "今日学んだことを共有します"
+                          },
+                          "createdAt": {
+                            "type": "string",
+                            "example": "2026-06-24T00:00:00.000Z"
+                          },
+                          "userId": {
+                            "type": "string",
+                            "example": "user_2abc"
+                          },
+                          "imageFileName": {
+                            "type": "string",
+                            "nullable": true,
+                            "example": null
+                          }
+                        },
+                        "required": [
+                          "isMyPd",
+                          "likeCount",
+                          "replyCount",
+                          "likes",
+                          "id",
+                          "content",
+                          "createdAt",
+                          "userId",
+                          "imageFileName"
+                        ],
+                        "example": {
+                          "isMyPd": false,
+                          "likeCount": 3,
+                          "replyCount": 1,
+                          "likes": [
+                            {
+                              "userId": "user_2abc"
+                            }
+                          ],
+                          "id": "0190d2c0-0000-7000-8000-000000000001",
+                          "content": "今日学んだことを共有します",
+                          "createdAt": "2026-06-24T00:00:00.000Z",
+                          "userId": "user_2abc",
+                          "imageFileName": null
+                        }
+                      },
+                      "example": [
+                        {
+                          "isMyPd": false,
+                          "likeCount": 3,
+                          "replyCount": 1,
+                          "likes": [
+                            {
+                              "userId": "user_2abc"
+                            }
+                          ],
+                          "id": "0190d2c0-0000-7000-8000-000000000001",
+                          "content": "今日学んだことを共有します",
+                          "createdAt": "2026-06-24T00:00:00.000Z",
+                          "userId": "user_2abc",
+                          "imageFileName": null
+                        }
+                      ]
+                    },
+                    "nextCursor": {
+                      "type": "string",
+                      "example": "0190d2c0-0000-7000-8000-000000000002"
+                    }
+                  },
+                  "required": [
+                    "items"
+                  ],
+                  "example": {
+                    "items": [
+                      {
+                        "isMyPd": false,
+                        "likeCount": 3,
+                        "replyCount": 1,
+                        "likes": [
+                          {
+                            "userId": "user_2abc"
+                          }
+                        ],
+                        "id": "0190d2c0-0000-7000-8000-000000000001",
+                        "content": "今日学んだことを共有します",
+                        "createdAt": "2026-06-24T00:00:00.000Z",
+                        "userId": "user_2abc",
+                        "imageFileName": null
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pd/stats/weekly": {
+      "get": {
+        "operationId": "fetchWeeklyStats",
+        "responses": {
+          "200": {
+            "description": "PD週間統計",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "range": {
+                      "type": "object",
+                      "properties": {
+                        "start": {
+                          "type": "string",
+                          "example": "2026-06-18"
+                        },
+                        "end": {
+                          "type": "string",
+                          "example": "2026-06-24"
+                        }
+                      },
+                      "required": [
+                        "start",
+                        "end"
+                      ],
+                      "example": {
+                        "start": "2026-06-18",
+                        "end": "2026-06-24"
+                      }
+                    },
+                    "totals": {
+                      "type": "object",
+                      "properties": {
+                        "pdCount": {
+                          "type": "number",
+                          "example": 20
+                        },
+                        "rePdCount": {
+                          "type": "number",
+                          "example": 30
+                        },
+                        "likeCount": {
+                          "type": "number",
+                          "example": 50
+                        },
+                        "activeAuthorCount": {
+                          "type": "number",
+                          "example": 4
+                        },
+                        "averagePdPerAuthor": {
+                          "type": "number",
+                          "example": 5
+                        }
+                      },
+                      "required": [
+                        "pdCount",
+                        "rePdCount",
+                        "likeCount",
+                        "activeAuthorCount",
+                        "averagePdPerAuthor"
+                      ],
+                      "example": {
+                        "pdCount": 20,
+                        "rePdCount": 30,
+                        "likeCount": 50,
+                        "activeAuthorCount": 4,
+                        "averagePdPerAuthor": 5
+                      }
+                    },
+                    "daily": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "date": {
+                            "type": "string",
+                            "example": "2026-06-24"
+                          },
+                          "pdCount": {
+                            "type": "number",
+                            "example": 5
+                          },
+                          "rePdCount": {
+                            "type": "number",
+                            "example": 8
+                          },
+                          "likeCount": {
+                            "type": "number",
+                            "example": 12
+                          }
+                        },
+                        "required": [
+                          "date",
+                          "pdCount",
+                          "rePdCount",
+                          "likeCount"
+                        ],
+                        "example": {
+                          "date": "2026-06-24",
+                          "pdCount": 5,
+                          "rePdCount": 8,
+                          "likeCount": 12
+                        }
+                      },
+                      "example": [
+                        {
+                          "date": "2026-06-24",
+                          "pdCount": 5,
+                          "rePdCount": 8,
+                          "likeCount": 12
+                        }
+                      ]
+                    },
+                    "rankings": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "userId": {
+                            "type": "string",
+                            "example": "user_2abc"
+                          },
+                          "pdCount": {
+                            "type": "number",
+                            "example": 5
+                          },
+                          "rePdCount": {
+                            "type": "number",
+                            "example": 8
+                          },
+                          "likeCount": {
+                            "type": "number",
+                            "example": 12
+                          }
+                        },
+                        "required": [
+                          "userId",
+                          "pdCount",
+                          "rePdCount",
+                          "likeCount"
+                        ],
+                        "example": {
+                          "userId": "user_2abc",
+                          "pdCount": 5,
+                          "rePdCount": 8,
+                          "likeCount": 12
+                        }
+                      },
+                      "example": [
+                        {
+                          "userId": "user_2abc",
+                          "pdCount": 5,
+                          "rePdCount": 8,
+                          "likeCount": 12
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "range",
+                    "totals",
+                    "daily",
+                    "rankings"
+                  ],
+                  "example": {
+                    "range": {
+                      "start": "2026-06-18",
+                      "end": "2026-06-24"
+                    },
+                    "totals": {
+                      "pdCount": 20,
+                      "rePdCount": 30,
+                      "likeCount": 50,
+                      "activeAuthorCount": 4,
+                      "averagePdPerAuthor": 5
+                    },
+                    "daily": [
+                      {
+                        "date": "2026-06-24",
+                        "pdCount": 5,
+                        "rePdCount": 8,
+                        "likeCount": 12
+                      }
+                    ],
+                    "rankings": [
+                      {
+                        "userId": "user_2abc",
+                        "pdCount": 5,
+                        "rePdCount": 8,
+                        "likeCount": 12
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pd/create": {
+      "post": {
+        "operationId": "createPd",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "content": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200,
+                    "example": "今日学んだことを共有します"
+                  },
+                  "image": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                },
+                "required": [
+                  "content"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "作成成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "PDが作成されました"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "example": {
+                    "message": "PDが作成されました"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pd/create-gif": {
+      "post": {
+        "operationId": "createGifPd",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "content": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200,
+                    "example": "GIF付きで共有します"
+                  },
+                  "image": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                },
+                "required": [
+                  "content",
+                  "image"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "作成成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "GIF付きPDが作成されました"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "example": {
+                    "message": "GIF付きPDが作成されました"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pd/like": {
+      "put": {
+        "operationId": "mutatePdLike",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "pdId": {
+                    "type": "string",
+                    "example": "0190d2c0-0000-7000-8000-000000000001"
+                  }
+                },
+                "required": [
+                  "pdId"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "更新成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "いいね状態を更新しました"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "example": {
+                    "message": "いいね状態を更新しました"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pd/image/{fileName}": {
+      "get": {
+        "operationId": "fetchPdImage",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "example": "user_2abc-1700000000000.jpeg"
+            },
+            "required": true,
+            "name": "fileName",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "PD画像のバイナリ",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/repd": {
+      "get": {
+        "operationId": "fetchRePds",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "example": "0190d2c0-0000-7000-8000-000000000001"
+            },
+            "required": true,
+            "name": "pdId",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "RePD一覧",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "isMyRePd": {
+                        "type": "boolean",
+                        "example": false
+                      },
+                      "likeCount": {
+                        "type": "number",
+                        "example": 2
+                      },
+                      "likes": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "userId": {
+                              "type": "string",
+                              "example": "user_2abc"
+                            }
+                          },
+                          "required": [
+                            "userId"
+                          ],
+                          "example": {
+                            "userId": "user_2abc"
+                          }
+                        },
+                        "example": [
+                          {
+                            "userId": "user_2abc"
+                          }
+                        ]
+                      },
+                      "id": {
+                        "type": "string",
+                        "example": "0190d2c0-0000-7000-8000-000000000003"
+                      },
+                      "content": {
+                        "type": "string",
+                        "example": "とても参考になりました"
+                      },
+                      "createdAt": {
+                        "type": "string",
+                        "example": "2026-06-24T00:00:00.000Z"
+                      },
+                      "userId": {
+                        "type": "string",
+                        "example": "user_2abc"
+                      },
+                      "pdId": {
+                        "type": "string",
+                        "example": "0190d2c0-0000-7000-8000-000000000001"
+                      }
+                    },
+                    "required": [
+                      "isMyRePd",
+                      "likeCount",
+                      "likes",
+                      "id",
+                      "content",
+                      "createdAt",
+                      "userId",
+                      "pdId"
+                    ],
+                    "example": {
+                      "isMyRePd": false,
+                      "likeCount": 2,
+                      "likes": [
+                        {
+                          "userId": "user_2abc"
+                        }
+                      ],
+                      "id": "0190d2c0-0000-7000-8000-000000000003",
+                      "content": "とても参考になりました",
+                      "createdAt": "2026-06-24T00:00:00.000Z",
+                      "userId": "user_2abc",
+                      "pdId": "0190d2c0-0000-7000-8000-000000000001"
+                    }
+                  },
+                  "example": [
+                    {
+                      "isMyRePd": false,
+                      "likeCount": 2,
+                      "likes": [
+                        {
+                          "userId": "user_2abc"
+                        }
+                      ],
+                      "id": "0190d2c0-0000-7000-8000-000000000003",
+                      "content": "とても参考になりました",
+                      "createdAt": "2026-06-24T00:00:00.000Z",
+                      "userId": "user_2abc",
+                      "pdId": "0190d2c0-0000-7000-8000-000000000001"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/repd/create": {
+      "post": {
+        "operationId": "createRePd",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "pdId": {
+                    "type": "string",
+                    "example": "0190d2c0-0000-7000-8000-000000000001"
+                  },
+                  "content": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200,
+                    "example": "とても参考になりました"
+                  }
+                },
+                "required": [
+                  "pdId",
+                  "content"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "作成成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "RePDが作成されました"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "example": {
+                    "message": "RePDが作成されました"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/repd/like": {
+      "put": {
+        "operationId": "mutateRePdLike",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "rePdId": {
+                    "type": "string",
+                    "example": "0190d2c0-0000-7000-8000-000000000003"
+                  }
+                },
+                "required": [
+                  "rePdId"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "更新成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "RePDのいいね状態を更新しました"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "example": {
+                    "message": "RePDのいいね状態を更新しました"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/notifications/unread-count": {
+      "get": {
+        "operationId": "fetchNotificationUnreadCount",
+        "responses": {
+          "200": {
+            "description": "未読通知件数",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "count": {
+                      "type": "number",
+                      "example": 3
+                    }
+                  },
+                  "required": [
+                    "count"
+                  ],
+                  "example": {
+                    "count": 3
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/notifications": {
+      "get": {
+        "operationId": "fetchNotifications",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "example": "2026-06-24T00:00:00.000Z"
+            },
+            "required": false,
+            "name": "cursor",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "通知一覧",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "kind": {
+                            "type": "string",
+                            "enum": [
+                              "pdLike",
+                              "rePdLike",
+                              "rePd"
+                            ],
+                            "example": "pdLike"
+                          },
+                          "actor": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "example": "user_2abc"
+                              },
+                              "firstName": {
+                                "type": "string",
+                                "nullable": true,
+                                "example": "太郎"
+                              },
+                              "lastName": {
+                                "type": "string",
+                                "nullable": true,
+                                "example": "田中"
+                              },
+                              "imageUrl": {
+                                "type": "string",
+                                "example": "https://img.clerk.com/example.png"
+                              },
+                              "userName": {
+                                "type": "string",
+                                "nullable": true,
+                                "example": "taro"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "firstName",
+                              "lastName",
+                              "imageUrl",
+                              "userName"
+                            ],
+                            "example": {
+                              "id": "user_2abc",
+                              "firstName": "太郎",
+                              "lastName": "田中",
+                              "imageUrl": "https://img.clerk.com/example.png",
+                              "userName": "taro"
+                            }
+                          },
+                          "pdId": {
+                            "type": "string",
+                            "example": "0190d2c0-0000-7000-8000-000000000001"
+                          },
+                          "rePdId": {
+                            "type": "string",
+                            "nullable": true,
+                            "example": null
+                          },
+                          "excerpt": {
+                            "type": "string",
+                            "example": "今日学んだことを共有します"
+                          },
+                          "createdAt": {
+                            "type": "string",
+                            "example": "2026-06-24T00:00:00.000Z"
+                          }
+                        },
+                        "required": [
+                          "kind",
+                          "actor",
+                          "pdId",
+                          "rePdId",
+                          "excerpt",
+                          "createdAt"
+                        ],
+                        "example": {
+                          "kind": "pdLike",
+                          "actor": {
+                            "id": "user_2abc",
+                            "firstName": "太郎",
+                            "lastName": "田中",
+                            "imageUrl": "https://img.clerk.com/example.png",
+                            "userName": "taro"
+                          },
+                          "pdId": "0190d2c0-0000-7000-8000-000000000001",
+                          "rePdId": null,
+                          "excerpt": "今日学んだことを共有します",
+                          "createdAt": "2026-06-24T00:00:00.000Z"
+                        }
+                      },
+                      "example": [
+                        {
+                          "kind": "pdLike",
+                          "actor": {
+                            "id": "user_2abc",
+                            "firstName": "太郎",
+                            "lastName": "田中",
+                            "imageUrl": "https://img.clerk.com/example.png",
+                            "userName": "taro"
+                          },
+                          "pdId": "0190d2c0-0000-7000-8000-000000000001",
+                          "rePdId": null,
+                          "excerpt": "今日学んだことを共有します",
+                          "createdAt": "2026-06-24T00:00:00.000Z"
+                        }
+                      ]
+                    },
+                    "nextCursor": {
+                      "type": "string",
+                      "example": "2026-06-23T00:00:00.000Z"
+                    }
+                  },
+                  "required": [
+                    "items"
+                  ],
+                  "example": {
+                    "items": [
+                      {
+                        "kind": "pdLike",
+                        "actor": {
+                          "id": "user_2abc",
+                          "firstName": "太郎",
+                          "lastName": "田中",
+                          "imageUrl": "https://img.clerk.com/example.png",
+                          "userName": "taro"
+                        },
+                        "pdId": "0190d2c0-0000-7000-8000-000000000001",
+                        "rePdId": null,
+                        "excerpt": "今日学んだことを共有します",
+                        "createdAt": "2026-06-24T00:00:00.000Z"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/notifications/seen": {
+      "post": {
+        "operationId": "markNotificationsSeen",
+        "responses": {
+          "200": {
+            "description": "既読化成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  },
+                  "required": [
+                    "ok"
+                  ],
+                  "example": {
+                    "ok": true
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

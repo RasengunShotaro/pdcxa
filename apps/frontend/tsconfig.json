@@ -33,5 +33,5 @@
     "global.d.ts",
     ".next/dev/types/**/*.ts"
   ],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "orval.config.ts"]
 }

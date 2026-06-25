@@ -2,6 +2,9 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   reactCompiler: true,
+  env: {
+    NEXT_PUBLIC_API_URL: process.env.BASE_URL ?? "",
+  },
   experimental: {
     optimizePackageImports: [
       "@clerk/nextjs",
@@ -25,4 +28,6 @@ export default nextConfig;
 
 import { initOpenNextCloudflareForDev } from "@opennextjs/cloudflare";
 
-initOpenNextCloudflareForDev();
+if (!process.env.VITEST && !process.env.STORYBOOK) {
+  initOpenNextCloudflareForDev();
+}

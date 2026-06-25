@@ -1,0 +1,67 @@
+{
+  "_note": "React Doctor は frontend (React) 専用。dep / config / 実行をすべて frontend にスコープする。手動実行は frontend の `bun run doctor`。config は cwd 基準で解決されるため agent hook (.claude/hooks/) と pre-commit はどちらも frontend へ cd してから react-doctor を起動する。JSON はコメント不可なので各 ignore の根拠は _ruleReasons / reason に記載 (react-doctor は未知キーを無視する)。スコア稼ぎの ignore は無し。",
+  "ignore": {
+    "rules": [
+      "react-doctor/design-no-redundant-size-axes",
+      "react-doctor/design-no-redundant-padding-axes",
+      "react-doctor/nextjs-missing-metadata",
+      "react-doctor/jsx-no-constructed-context-values",
+      "react-hooks-js/incompatible-library",
+      "react-hooks-js/todo"
+    ],
+    "_ruleReasons": {
+      "react-doctor/design-no-redundant-size-axes": "melta-ui DESIGN.md が w-4 h-4 / w-5 h-5 を明示指定している。size-4 への寄せは DS の規約クラスと衝突するため採用しない (cosmetic)。",
+      "react-doctor/design-no-redundant-padding-axes": "同上。DESIGN.md は px-3 py-2 等の明示クラスを規約としているため canonical 化しない (cosmetic)。",
+      "react-doctor/nextjs-missing-metadata": "認証スコープ配下の招待制アプリで SEO 対象外。per-page metadata を付ける必要がないため。",
+      "react-doctor/jsx-no-constructed-context-values": "React Compiler 有効 (next.config reactCompiler) で inline な context value は自動メモ化される。手動 useMemo はプロジェクトルール (react/coding-style.md) で禁止のため、レシピ通りに直せない構造的 FP。",
+      "react-hooks-js/incompatible-library": "React Compiler の最適化スキップ情報 (memo 化できないライブラリ使用)。バグではなく、コード側で直せる種類の指摘ではない。",
+      "react-hooks-js/todo": "React Compiler が未対応の構文 (msw-provider.tsx の MSW worker 動的 import)。dev 専用かつ直せない。"
+    },
+    "overrides": [
+      {
+        "files": ["src/schema/api.ts", "src/schema/api.msw.ts"],
+        "rules": ["deslop/unused-export"],
+        "reason": "orval 生成物。export は生成器が網羅的に出すもので手で消さない。files で whole-file ignore するとモジュールグラフから外れ、これらだけが import する src/lib/orval-fetcher.ts が unused-file 偽陽性になるため、unused-export のみを override で抑止する。"
+      },
+      {
+        "files": ["src/components/ui/**"],
+        "rules": ["react-doctor/no-multi-comp"],
+        "reason": "shadcn の複合コンポーネント規約。1 ファイルに Root/Title/Description 等の compound パーツを co-locate するのが shadcn (radix-nova) の設計で、card/sidebar/dialog/dropdown-menu 等 vendored ファイルすべてが同形。分割すると shadcn add 由来の構造と乖離し保守コストが上がるため、ui/ 配下のみ本ルールを除外する (アプリ側 components/elements は分割を維持し対象外)。"
+      },
+      {
+        "files": [
+          "src/feature/pd/components/timeline/pd-card-image.tsx",
+          "src/feature/pd/components/composer/composer-image-field.tsx"
+        ],
+        "rules": ["react-doctor/nextjs-no-img-element"],
+        "reason": "blob: の ObjectURL を表示するため next/image は使えない (next/image は blob URL を最適化対象にできず loader も通せない)。pd-card-image は R2 取得画像、composer-image-field は投稿前プレビューで、いずれも生 <img> が正当。この 2 ファイルのみ本ルールを除外する (他の画像表示は next/image を使う)。"
+      },
+      {
+        "files": [
+          "src/components/elements/activity-bar-chart-inner.tsx",
+          "src/components/ui/chart.tsx"
+        ],
+        "rules": ["react-doctor/prefer-dynamic-import"],
+        "reason": "recharts は既に code-split 済み。activity-bar-chart.tsx が next/dynamic({ssr:false}) で activity-bar-chart-inner を遅延ロードし、chart.tsx は inner からのみ import される。両ファイルとも『動的 import されるチャンク』の内側で recharts は初期バンドルに乗らない。ルールが要求する dynamic import は wrapper 側で実施済みでこれ以上二重化できない構造的 FP (rule は dynamic import 境界の内側を見分けられない)。この 2 ファイルのみ除外。"
+      },
+      {
+        "files": ["src/feature/invitation/hooks/use-create-invitation.ts"],
+        "rules": ["react-doctor/query-mutation-missing-invalidation"],
+        "reason": "招待は送信専用で、招待一覧/取得の useQuery がアプリに存在しない (Phase 4 まで招待管理 UI は作らない)。無効化すべきキャッシュが無いため invalidate を足せない構造的 FP。招待一覧を導入した時点で本除外を外し invalidate を配線する。"
+      },
+      {
+        "files": ["src/components/ui/**"],
+        "rules": ["react-doctor/only-export-components"],
+        "reason": "shadcn は cva variant (buttonVariants / sidebarMenuButtonVariants) や hook (useFormField / useSidebar) を component と同一ファイルに co-locate する設計。別ファイルに分割すると shadcn add 由来の構造と乖離し保守コストが上がる。既存の no-multi-comp 除外 (同じ shadcn co-location 理由) と整合させ、ui/ 配下のみ本ルールを除外する (アプリ側 components/elements は対象外)。"
+      },
+      {
+        "files": [
+          "src/components/ui/sidebar.tsx",
+          "src/components/ui/text-animate.tsx"
+        ],
+        "rules": ["react-doctor/react-compiler-no-manual-memoization"],
+        "reason": "biome の useExhaustiveDependencies (CI lint ゲート) が sidebar の keydown effect / context value に安定参照を要求し、biome は React Compiler のメモ化を認識しないため useCallback/useMemo を外すと CI が落ちる。既存の jsx-no-constructed-context-values 除外 (同じ React Compiler vs ツール の理由) と整合。vendored shadcn(sidebar)/magicui(text-animate) の手動メモ化はこの理由で残す構造的 FP。"
+      }
+    ]
+  }
+}

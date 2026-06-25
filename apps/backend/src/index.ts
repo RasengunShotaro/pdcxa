@@ -1,12 +1,15 @@
 import { clerkMiddleware } from "@hono/clerk-auth";
-import { Hono, type MiddlewareHandler } from "hono";
+import { OpenAPIHono } from "@hono/zod-openapi";
+import type { MiddlewareHandler } from "hono";
 import { cors } from "hono/cors";
 import { HTTPException } from "hono/http-exception";
-import { invitationApp } from "./route/invitation/app";
-import { pdApp } from "./route/pd/app";
-import { rePdApp } from "./route/repd/app";
-import { userApp } from "./route/user/app";
-import { ログイン中のユーザーIDを取得 } from "./utils/current-user";
+import { ログイン中のユーザーIDを取得 } from "./lib/current-user";
+import { 境界エラーレスポンス } from "./lib/http-error";
+import { invitationApp } from "./routes/invitation/app";
+import { notificationApp } from "./routes/notification/app";
+import { pdApp } from "./routes/pd/app";
+import { rePdApp } from "./routes/repd/app";
+import { userApp } from "./routes/user/app";
 
 declare module "hono" {
   interface ContextVariableMap {
@@ -23,7 +26,7 @@ export const ログイン状態Middleware: MiddlewareHandler = async (c, next) =
   await next();
 };
 
-const app = new Hono();
+const app = new OpenAPIHono();
 app.use("*", clerkMiddleware());
 app.use("*", async (c, next) => {
   const corsMiddlewareHandler = cors({
@@ -32,15 +35,31 @@ app.use("*", async (c, next) => {
   return corsMiddlewareHandler(c, next);
 });
 app.use("*", ログイン状態Middleware);
-app.onError((エラー) => {
-  throw new HTTPException(500, { message: エラー.message });
-});
+app.onError((エラー) => 境界エラーレスポンス(エラー));
 
 export const ルート = app
   .route("/invitation", invitationApp)
   .route("/user", userApp)
   .route("/pd", pdApp)
-  .route("/repd", rePdApp);
+  .route("/repd", rePdApp)
+  .route("/notifications", notificationApp);
+
+export const openApiDocument = () =>
+  ルート.getOpenAPIDocument({
+    openapi: "3.1.0",
+    info: {
+      title: "PDCXA API",
+      version: "1.0.0",
+    },
+  });
+
+ルート.doc("/doc", {
+  openapi: "3.1.0",
+  info: {
+    title: "PDCXA API",
+    version: "1.0.0",
+  },
+});
 
 export default {
   port: 8787,

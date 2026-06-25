@@ -408,6 +408,7 @@ const TextAnimateBase = ({
               segmentClassName,
             )}
             custom={i * staggerTimings[by]}
+            // biome-ignore lint/suspicious/noArrayIndexKey: 静的なテキストセグメント列で同一文字が重複しうるため、位置インデックスを含む合成キーで一意性を担保する
             key={`${by}-${segment}-${i}`}
             variants={finalVariants.item}
           >

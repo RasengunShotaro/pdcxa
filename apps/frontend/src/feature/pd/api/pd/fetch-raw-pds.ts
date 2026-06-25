@@ -1,4 +1,4 @@
-import { getClient } from "@/lib/hono";
+import { fetchPds } from "@/schema/api";
 
 export const fetchRawPds = async ({
   pdId,
@@ -9,16 +9,5 @@ export const fetchRawPds = async ({
   userName?: string;
   cursor?: string;
 }) => {
-  const client = await getClient();
-
-  const response = await client.pd.$get({
-    query: {
-      pdId,
-      userName,
-      cursor,
-    },
-  });
-  const PD一覧 = await response.json();
-
-  return PD一覧;
+  return (await fetchPds({ pdId, userName, cursor })).data;
 };
