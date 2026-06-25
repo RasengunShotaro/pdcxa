@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/sidebar";
 import { AppSidebarNav } from "./app-sidebar-nav";
 import { ColorModeSwitcher } from "./color-mode-switcher";
-import { isNavItemActive, NAV_ITEMS } from "./nav-items";
+import { pageLabelForPath } from "./nav-items";
 import { NavUser } from "./nav-user";
 import { NotificationBell } from "./notification-bell";
 
@@ -37,9 +37,7 @@ export function AppShell({
   headerActions = <NotificationBell />,
 }: AppShellProps) {
   const pathname = usePathname();
-  const currentLabel = NAV_ITEMS.find((item) =>
-    isNavItemActive({ pathname, href: item.href }),
-  )?.label;
+  const currentLabel = pageLabelForPath(pathname);
 
   return (
     <SidebarProvider>
@@ -89,11 +87,15 @@ export function AppShell({
         <header className="flex h-16 shrink-0 items-center gap-2 border-b bg-background transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
           <div className="flex items-center gap-2 px-4">
             <SidebarTrigger className="-ml-1 max-md:size-11" />
-            <Separator
-              className="mx-1 data-[orientation=vertical]:h-6"
-              orientation="vertical"
-            />
-            <span className="text-base font-medium">{currentLabel}</span>
+            {currentLabel ? (
+              <>
+                <Separator
+                  className="mx-1 data-[orientation=vertical]:h-6"
+                  orientation="vertical"
+                />
+                <span className="text-base font-medium">{currentLabel}</span>
+              </>
+            ) : null}
           </div>
           <div className="ml-auto flex items-center gap-1 px-4">
             {headerActions}

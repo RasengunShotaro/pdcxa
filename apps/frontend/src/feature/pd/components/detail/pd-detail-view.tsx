@@ -18,6 +18,15 @@ interface PdDetailViewProps {
   pdId: string;
 }
 
+const backToHome = (
+  <Button asChild variant="outline">
+    <Link href="/">
+      <ChevronLeft aria-hidden="true" className="size-4" />
+      ホームへ戻る
+    </Link>
+  </Button>
+);
+
 export function PdDetailView({ pdId }: PdDetailViewProps) {
   const [composerOpen, setComposerOpen] = useState(false);
 
@@ -39,15 +48,6 @@ export function PdDetailView({ pdId }: PdDetailViewProps) {
     createRePd,
     isCreating,
   } = useRePd(pdId);
-
-  const backToHome = (
-    <Button asChild variant="outline">
-      <Link href="/">
-        <ChevronLeft aria-hidden="true" className="size-4" />
-        ホームへ戻る
-      </Link>
-    </Button>
-  );
 
   return (
     <div className="space-y-6 pb-[calc(5.5rem+env(safe-area-inset-bottom))]">

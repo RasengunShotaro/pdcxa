@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { isNavItemActive } from "./nav-items";
+import { isNavItemActive, pageLabelForPath } from "./nav-items";
 
 describe("ナビ項目が現在地かどうかを判定する", () => {
   it("ホームではホームを現在地として示す", () => {
@@ -24,5 +24,27 @@ describe("ナビ項目が現在地かどうかを判定する", () => {
     expect(isNavItemActive({ pathname: "/statsx", href: "/stats" })).toBe(
       false,
     );
+  });
+});
+
+describe("現在地のラベルを解決する", () => {
+  it("ナビ項目のページではその項目名を返す", () => {
+    expect(pageLabelForPath("/stats")).toBe("統計");
+  });
+
+  it("ホームではホームを返す", () => {
+    expect(pageLabelForPath("/")).toBe("ホーム");
+  });
+
+  it("PD 詳細ページではPD詳細を返す", () => {
+    expect(pageLabelForPath("/pd/abc")).toBe("PD詳細");
+  });
+
+  it("他ユーザーのページではユーザーを返す", () => {
+    expect(pageLabelForPath("/user/taro")).toBe("ユーザー");
+  });
+
+  it("どのページにも該当しないパスではラベルを返さない", () => {
+    expect(pageLabelForPath("/unknown")).toBeUndefined();
   });
 });

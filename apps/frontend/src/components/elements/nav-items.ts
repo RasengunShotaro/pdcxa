@@ -33,3 +33,19 @@ export const isNavItemActive = ({
   href === "/"
     ? pathname === "/"
     : pathname === href || pathname.startsWith(`${href}/`);
+
+const DYNAMIC_PAGE_LABELS: readonly { prefix: string; label: string }[] = [
+  { prefix: "/pd/", label: "PD詳細" },
+  { prefix: "/user/", label: "ユーザー" },
+];
+
+export const pageLabelForPath = (pathname: string): string | undefined => {
+  const navItem = NAV_ITEMS.find((item) =>
+    isNavItemActive({ pathname, href: item.href }),
+  );
+  if (navItem) {
+    return navItem.label;
+  }
+  return DYNAMIC_PAGE_LABELS.find((page) => pathname.startsWith(page.prefix))
+    ?.label;
+};
