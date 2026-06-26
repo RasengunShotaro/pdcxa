@@ -8,4 +8,5 @@ export const MOCK_USER: AuthUser = {
   lastName: "User",
   fullName: "Dev User",
   imageUrl: "",
+  userName: "taro",
 };
