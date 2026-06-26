@@ -11,7 +11,19 @@ const useMockCurrentUser = (): { user: AuthUser | null } => ({
 
 const useClerkCurrentUser = (): { user: AuthUser | null } => {
   const { user } = useClerkUser();
-  return { user: user ?? null };
+  if (!user) {
+    return { user: null };
+  }
+  return {
+    user: {
+      id: user.id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      fullName: user.fullName,
+      imageUrl: user.imageUrl,
+      userName: user.username,
+    },
+  };
 };
 
 export const useCurrentUser = AUTH_MOCKING

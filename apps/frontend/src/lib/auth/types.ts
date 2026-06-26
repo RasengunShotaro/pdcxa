@@ -4,6 +4,7 @@ export interface AuthUser {
   readonly lastName: string | null;
   readonly fullName: string | null;
   readonly imageUrl: string;
+  readonly userName: string | null;
 }
 
 export type SignInResult = { error: unknown };

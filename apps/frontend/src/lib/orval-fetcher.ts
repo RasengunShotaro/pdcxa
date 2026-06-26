@@ -93,7 +93,6 @@ export const orvalFetch = async <T>(
   const res = await fetch(`${API_URL}${path}`, {
     ...options,
     headers,
-    cache: path.includes("/image/") ? "default" : "no-store",
   });
 
   return handleOrvalResponse<T>(res);

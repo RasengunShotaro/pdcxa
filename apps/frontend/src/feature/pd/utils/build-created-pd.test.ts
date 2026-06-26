@@ -22,6 +22,7 @@ const aUser = (overrides: Partial<AuthUser> = {}): AuthUser => ({
   lastName: "User",
   fullName: "Dev User",
   imageUrl: "https://example.com/me.png",
+  userName: "taro",
   ...overrides,
 });
 
@@ -40,6 +41,15 @@ describe("作成したPDを詳細化する", () => {
       userFullName: "森 太郎",
       imageUrl: "https://example.com/a.png",
     });
+  });
+
+  test("投稿者のハンドルを現在のユーザーのもので埋める", () => {
+    const result = 作成したPDを詳細化する({
+      created: aCreatedPd(),
+      user: aUser({ userName: "morimori" }),
+    });
+
+    expect(result.userDetail.userName).toBe("morimori");
   });
 
   test("フルネームが無いときは姓名を結合した表示名にする", () => {
