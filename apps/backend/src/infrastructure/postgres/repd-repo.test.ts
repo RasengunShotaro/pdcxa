@@ -135,4 +135,34 @@ describe("RePdRepositoryLive", () => {
       "fan2",
     ]);
   });
+
+  it("並行で別 PD の配下を取得しても各 PD のリプライだけが返る", async () => {
+    const 別pdId = uuidv7();
+    await ctx.db.insert(pds).values({
+      id: 別pdId,
+      content: "別の親PD",
+      createdAt: new Date(),
+      userId: "author",
+    });
+    await ctx.db.insert(rePds).values({
+      id: uuidv7(),
+      pdId: 別pdId,
+      content: "別PDのRePD",
+      createdAt: new Date(),
+      userId: "author",
+    });
+
+    const [元PDの配下, 別PDの配下] = await Effect.runPromise(
+      Effect.gen(function* () {
+        const repo = yield* RePdRepository;
+        return yield* Effect.all(
+          [repo.PD配下を取得する(ctx.pdId), repo.PD配下を取得する(別pdId)],
+          { concurrency: "unbounded" },
+        );
+      }).pipe(Effect.provide(レイヤー(ctx.db))),
+    );
+
+    expect(元PDの配下.map((r) => r.pdId)).toEqual([ctx.pdId]);
+    expect(別PDの配下.map((r) => r.pdId)).toEqual([別pdId]);
+  });
 });

@@ -176,6 +176,32 @@ describe("PdRepositoryLive", () => {
       ),
     );
 
+  it("カーソル付き取得の直後に同じリポジトリでカーソル無し取得しても最新が先頭に来る", async () => {
+    const author = "author";
+    const base = new Date("2026-06-26T00:00:00.000Z");
+    const ids = Array.from({ length: 5 }, () => uuidv7());
+    await ctx.db.insert(pds).values(
+      ids.map((id, index) => ({
+        id,
+        content: `PD ${index}`,
+        createdAt: new Date(base.getTime() + index * 1000),
+        userId: author,
+      })),
+    );
+    const newestId = ids[4];
+    const middleId = ids[2];
+
+    const result = await Effect.runPromise(
+      Effect.gen(function* () {
+        const repo = yield* PdRepository;
+        yield* repo.一覧を取得する({ cursor: middleId });
+        return yield* repo.一覧を取得する({});
+      }).pipe(Effect.provide(レイヤー(ctx.db))),
+    );
+
+    expect(result.items[0]?.id).toBe(newestId);
+  });
+
   it("作成時刻が同一の投稿が PAGE_SIZE を超えても全件をページングで取得できる", async () => {
     const author = "author";
     const sameInstant = new Date("2026-06-24T00:00:00.000Z");
