@@ -73,7 +73,7 @@ const pdItemExample = {
   userId: "user_2abc",
   imageFileName: null as string | null,
 };
-const pdItemSchema = z
+export const pdItemSchema = z
   .object({
     isMyPd: z.boolean().openapi({ example: pdItemExample.isMyPd }),
     likeCount: z.number().openapi({ example: pdItemExample.likeCount }),

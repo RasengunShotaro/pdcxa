@@ -7,5 +7,5 @@ export const createGifPd = async ({
   content: string;
   image: File;
 }) => {
-  await createGifPdApi({ content, image });
+  return (await createGifPdApi({ content, image })).data;
 };

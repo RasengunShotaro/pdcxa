@@ -40,29 +40,30 @@ export const PdRepositoryLive = Layer.effect(
       .groupBy(pdLikes.targetPdId)
       .as("likes_details");
 
-    const baseQuery = db
-      .select({
-        id: pdsSchema.id,
-        content: pdsSchema.content,
-        createdAt: pdsSchema.createdAt,
-        userId: pdsSchema.userId,
-        imageFileName: pdsSchema.imageFileName,
-        likeCount: likesCountSubquery.count,
-        replyCount: repliesCountSubquery.count,
-        likes: likesDetailsSubquery.userIds,
-      })
-      .from(pdsSchema)
-      .leftJoin(likesCountSubquery, eq(pdsSchema.id, likesCountSubquery.pdId))
-      .leftJoin(
-        repliesCountSubquery,
-        eq(pdsSchema.id, repliesCountSubquery.pdId),
-      )
-      .leftJoin(
-        likesDetailsSubquery,
-        eq(pdsSchema.id, likesDetailsSubquery.pdId),
-      );
+    const createBaseQuery = () =>
+      db
+        .select({
+          id: pdsSchema.id,
+          content: pdsSchema.content,
+          createdAt: pdsSchema.createdAt,
+          userId: pdsSchema.userId,
+          imageFileName: pdsSchema.imageFileName,
+          likeCount: likesCountSubquery.count,
+          replyCount: repliesCountSubquery.count,
+          likes: likesDetailsSubquery.userIds,
+        })
+        .from(pdsSchema)
+        .leftJoin(likesCountSubquery, eq(pdsSchema.id, likesCountSubquery.pdId))
+        .leftJoin(
+          repliesCountSubquery,
+          eq(pdsSchema.id, repliesCountSubquery.pdId),
+        )
+        .leftJoin(
+          likesDetailsSubquery,
+          eq(pdsSchema.id, likesDetailsSubquery.pdId),
+        );
 
-    type QueryRow = Awaited<typeof baseQuery>[number];
+    type QueryRow = Awaited<ReturnType<typeof createBaseQuery>>[number];
 
     const formatRows = (rows: readonly QueryRow[]): RawPd[] =>
       rows.map((row) => ({
@@ -97,8 +98,8 @@ export const PdRepositoryLive = Layer.effect(
 
             const query =
               conditions.length > 0
-                ? baseQuery.where(and(...conditions))
-                : baseQuery;
+                ? createBaseQuery().where(and(...conditions))
+                : createBaseQuery();
 
             const results = await query
               .orderBy(desc(pdsSchema.createdAt), desc(pdsSchema.id))
@@ -118,15 +119,32 @@ export const PdRepositoryLive = Layer.effect(
       IDで取得する: (pdId) =>
         Effect.tryPromise({
           try: async () =>
-            formatRows(await baseQuery.where(eq(pdsSchema.id, pdId))),
+            formatRows(await createBaseQuery().where(eq(pdsSchema.id, pdId))),
           catch: toDatabaseError,
         }),
 
       作成する: (newPd) =>
         Effect.tryPromise({
-          try: () => db.insert(pdsSchema).values(newPd),
+          try: async () => {
+            const [inserted] = await db
+              .insert(pdsSchema)
+              .values(newPd)
+              .returning({
+                id: pdsSchema.id,
+                content: pdsSchema.content,
+                createdAt: pdsSchema.createdAt,
+                userId: pdsSchema.userId,
+                imageFileName: pdsSchema.imageFileName,
+              });
+            return {
+              ...inserted,
+              likeCount: 0,
+              replyCount: 0,
+              likes: [],
+            };
+          },
           catch: toDatabaseError,
-        }).pipe(Effect.asVoid),
+        }),
 
       いいねをトグルする: ({ pdId, userId }) =>
         Effect.tryPromise({

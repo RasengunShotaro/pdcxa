@@ -29,27 +29,28 @@ export const RePdRepositoryLive = Layer.effect(
       .groupBy(rePdLikes.targetRePdId)
       .as("likes_details");
 
-    const baseQuery = db
-      .select({
-        id: rePdsSchema.id,
-        content: rePdsSchema.content,
-        createdAt: rePdsSchema.createdAt,
-        userId: rePdsSchema.userId,
-        pdId: rePdsSchema.pdId,
-        likeCount: likesCountSubquery.count,
-        likes: likesDetailsSubquery.userIds,
-      })
-      .from(rePdsSchema)
-      .leftJoin(
-        likesCountSubquery,
-        eq(rePdsSchema.id, likesCountSubquery.rePdId),
-      )
-      .leftJoin(
-        likesDetailsSubquery,
-        eq(rePdsSchema.id, likesDetailsSubquery.rePdId),
-      );
+    const createBaseQuery = () =>
+      db
+        .select({
+          id: rePdsSchema.id,
+          content: rePdsSchema.content,
+          createdAt: rePdsSchema.createdAt,
+          userId: rePdsSchema.userId,
+          pdId: rePdsSchema.pdId,
+          likeCount: likesCountSubquery.count,
+          likes: likesDetailsSubquery.userIds,
+        })
+        .from(rePdsSchema)
+        .leftJoin(
+          likesCountSubquery,
+          eq(rePdsSchema.id, likesCountSubquery.rePdId),
+        )
+        .leftJoin(
+          likesDetailsSubquery,
+          eq(rePdsSchema.id, likesDetailsSubquery.rePdId),
+        );
 
-    type QueryRow = Awaited<typeof baseQuery>[number];
+    type QueryRow = Awaited<ReturnType<typeof createBaseQuery>>[number];
 
     const formatRows = (rows: readonly QueryRow[]): RawRePd[] =>
       rows.map((row) => ({
@@ -67,7 +68,7 @@ export const RePdRepositoryLive = Layer.effect(
         Effect.tryPromise({
           try: async () =>
             formatRows(
-              await baseQuery
+              await createBaseQuery()
                 .where(eq(rePdsSchema.pdId, pdId))
                 .orderBy(rePdsSchema.createdAt),
             ),

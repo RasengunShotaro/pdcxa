@@ -7,5 +7,5 @@ export const createPd = async ({
   content: string;
   image?: File;
 }) => {
-  await createPdApi({ content, image });
+  return (await createPdApi({ content, image })).data;
 };

@@ -627,16 +627,88 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "message": {
+                    "isMyPd": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "likeCount": {
+                      "type": "number",
+                      "example": 3
+                    },
+                    "replyCount": {
+                      "type": "number",
+                      "example": 1
+                    },
+                    "likes": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "userId": {
+                            "type": "string",
+                            "example": "user_2abc"
+                          }
+                        },
+                        "required": [
+                          "userId"
+                        ],
+                        "example": {
+                          "userId": "user_2abc"
+                        }
+                      },
+                      "example": [
+                        {
+                          "userId": "user_2abc"
+                        }
+                      ]
+                    },
+                    "id": {
                       "type": "string",
-                      "example": "PDが作成されました"
+                      "example": "0190d2c0-0000-7000-8000-000000000001"
+                    },
+                    "content": {
+                      "type": "string",
+                      "example": "今日学んだことを共有します"
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "example": "2026-06-24T00:00:00.000Z"
+                    },
+                    "userId": {
+                      "type": "string",
+                      "example": "user_2abc"
+                    },
+                    "imageFileName": {
+                      "type": "string",
+                      "nullable": true,
+                      "example": null
                     }
                   },
                   "required": [
-                    "message"
+                    "isMyPd",
+                    "likeCount",
+                    "replyCount",
+                    "likes",
+                    "id",
+                    "content",
+                    "createdAt",
+                    "userId",
+                    "imageFileName"
                   ],
                   "example": {
-                    "message": "PDが作成されました"
+                    "isMyPd": false,
+                    "likeCount": 3,
+                    "replyCount": 1,
+                    "likes": [
+                      {
+                        "userId": "user_2abc"
+                      }
+                    ],
+                    "id": "0190d2c0-0000-7000-8000-000000000001",
+                    "content": "今日学んだことを共有します",
+                    "createdAt": "2026-06-24T00:00:00.000Z",
+                    "userId": "user_2abc",
+                    "imageFileName": null
                   }
                 }
               }
@@ -681,16 +753,88 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "message": {
+                    "isMyPd": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "likeCount": {
+                      "type": "number",
+                      "example": 3
+                    },
+                    "replyCount": {
+                      "type": "number",
+                      "example": 1
+                    },
+                    "likes": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "userId": {
+                            "type": "string",
+                            "example": "user_2abc"
+                          }
+                        },
+                        "required": [
+                          "userId"
+                        ],
+                        "example": {
+                          "userId": "user_2abc"
+                        }
+                      },
+                      "example": [
+                        {
+                          "userId": "user_2abc"
+                        }
+                      ]
+                    },
+                    "id": {
                       "type": "string",
-                      "example": "GIF付きPDが作成されました"
+                      "example": "0190d2c0-0000-7000-8000-000000000001"
+                    },
+                    "content": {
+                      "type": "string",
+                      "example": "今日学んだことを共有します"
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "example": "2026-06-24T00:00:00.000Z"
+                    },
+                    "userId": {
+                      "type": "string",
+                      "example": "user_2abc"
+                    },
+                    "imageFileName": {
+                      "type": "string",
+                      "nullable": true,
+                      "example": null
                     }
                   },
                   "required": [
-                    "message"
+                    "isMyPd",
+                    "likeCount",
+                    "replyCount",
+                    "likes",
+                    "id",
+                    "content",
+                    "createdAt",
+                    "userId",
+                    "imageFileName"
                   ],
                   "example": {
-                    "message": "GIF付きPDが作成されました"
+                    "isMyPd": false,
+                    "likeCount": 3,
+                    "replyCount": 1,
+                    "likes": [
+                      {
+                        "userId": "user_2abc"
+                      }
+                    ],
+                    "id": "0190d2c0-0000-7000-8000-000000000001",
+                    "content": "今日学んだことを共有します",
+                    "createdAt": "2026-06-24T00:00:00.000Z",
+                    "userId": "user_2abc",
+                    "imageFileName": null
                   }
                 }
               }
