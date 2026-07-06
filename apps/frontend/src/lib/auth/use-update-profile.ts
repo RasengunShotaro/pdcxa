@@ -1,7 +1,12 @@
 "use client";
 
 import { useUser as useClerkUser } from "@clerk/nextjs";
+import { isClerkAPIResponseError } from "@clerk/nextjs/errors";
 import { AUTH_MOCKING } from "./mocking";
+import {
+  clerkCodesToHandleFailureReason,
+  type UpdateProfileHandleFailureReason,
+} from "./profile-handle-failure";
 
 export interface UpdateProfileNameInput {
   firstName: string;
@@ -15,6 +20,21 @@ export interface UpdateProfileName {
 export interface UpdateProfilePicture {
   updateProfilePicture: (file: Blob | File) => Promise<void>;
 }
+
+export type UpdateProfileHandleResult =
+  | { ok: true }
+  | { ok: false; reason: UpdateProfileHandleFailureReason };
+
+export interface UpdateProfileHandle {
+  updateProfileHandle: (handle: string) => Promise<UpdateProfileHandleResult>;
+}
+
+const toHandleFailureReason = (
+  error: unknown,
+): UpdateProfileHandleFailureReason =>
+  isClerkAPIResponseError(error)
+    ? clerkCodesToHandleFailureReason(error.errors.map((e) => e.code))
+    : "unknown";
 
 const useMockUpdateProfileName = (): UpdateProfileName => ({
   updateProfileName: async () => undefined,
@@ -55,3 +75,28 @@ const useClerkUpdateProfilePicture = (): UpdateProfilePicture => {
 export const useUpdateProfilePicture: () => UpdateProfilePicture = AUTH_MOCKING
   ? useMockUpdateProfilePicture
   : useClerkUpdateProfilePicture;
+
+const useMockUpdateProfileHandle = (): UpdateProfileHandle => ({
+  updateProfileHandle: async () => ({ ok: true }),
+});
+
+const useClerkUpdateProfileHandle = (): UpdateProfileHandle => {
+  const { user } = useClerkUser();
+  return {
+    updateProfileHandle: async (handle) => {
+      if (!user) {
+        return { ok: false, reason: "unknown" };
+      }
+      try {
+        await user.update({ username: handle });
+        return { ok: true };
+      } catch (error) {
+        return { ok: false, reason: toHandleFailureReason(error) };
+      }
+    },
+  };
+};
+
+export const useUpdateProfileHandle: () => UpdateProfileHandle = AUTH_MOCKING
+  ? useMockUpdateProfileHandle
+  : useClerkUpdateProfileHandle;
