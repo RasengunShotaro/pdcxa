@@ -5,9 +5,11 @@ import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useCurrentUser } from "@/lib/auth/use-current-user";
 import {
+  useUpdateProfileHandle,
   useUpdateProfileName,
   useUpdateProfilePicture,
 } from "@/lib/auth/use-update-profile";
+import { ProfileHandleField } from "./profile-handle-field";
 import { ProfileNameField } from "./profile-name-field";
 import { ProfilePictureField } from "./profile-picture-field";
 
@@ -32,6 +34,7 @@ export function ProfileView() {
   const { user } = useCurrentUser();
   const { updateProfileName } = useUpdateProfileName();
   const { updateProfilePicture } = useUpdateProfilePicture();
+  const { updateProfileHandle } = useUpdateProfileHandle();
 
   return (
     <div className="mx-auto w-full max-w-2xl">
@@ -74,6 +77,22 @@ export function ProfileView() {
                     lastName: user.lastName ?? "",
                   }}
                   onSubmit={updateProfileName}
+                />
+              </section>
+              <Separator />
+              <section
+                aria-labelledby="profile-handle-heading"
+                className="space-y-4"
+              >
+                <h2
+                  className="text-base font-medium text-muted-foreground"
+                  id="profile-handle-heading"
+                >
+                  ID
+                </h2>
+                <ProfileHandleField
+                  defaultValues={{ handle: user.userName ?? "" }}
+                  onSubmit={updateProfileHandle}
                 />
               </section>
             </>
