@@ -32,9 +32,12 @@ export const NameValidationError: Story = {
   name: "First Name が空のまま保存するとエラーを表示する",
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
+    const nameSection = within(canvas.getByRole("region", { name: "表示名" }));
 
     await userEvent.clear(canvas.getByLabelText("First Name"));
-    await userEvent.click(canvas.getByRole("button", { name: "保存する" }));
+    await userEvent.click(
+      nameSection.getByRole("button", { name: "保存する" }),
+    );
 
     await waitFor(() =>
       expect(
@@ -48,14 +51,30 @@ export const NameSubmitSuccess: Story = {
   name: "表示名の保存に成功すると完了メッセージを表示する",
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
+    const nameSection = within(canvas.getByRole("region", { name: "表示名" }));
 
-    await userEvent.click(canvas.getByRole("button", { name: "保存する" }));
+    await userEvent.click(
+      nameSection.getByRole("button", { name: "保存する" }),
+    );
 
-    const nameSection = canvas.getByRole("region", { name: "表示名" });
     await waitFor(() =>
-      expect(
-        within(nameSection).getByText("表示名を変更しました"),
-      ).toBeInTheDocument(),
+      expect(nameSection.getByText("表示名を変更しました")).toBeInTheDocument(),
+    );
+  },
+};
+
+export const HandleSubmitSuccess: Story = {
+  name: "ID の保存に成功すると完了メッセージを表示する",
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const handleSection = within(canvas.getByRole("region", { name: "ID" }));
+
+    await userEvent.click(
+      handleSection.getByRole("button", { name: "保存する" }),
+    );
+
+    await waitFor(() =>
+      expect(handleSection.getByText("IDを変更しました")).toBeInTheDocument(),
     );
   },
 };
