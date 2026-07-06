@@ -4,11 +4,9 @@ import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useCurrentUser } from "@/lib/auth/use-current-user";
-import {
-  useUpdateProfileHandle,
-  useUpdateProfileName,
-  useUpdateProfilePicture,
-} from "@/lib/auth/use-update-profile";
+import { useUpdateProfileHandle } from "../hooks/use-update-profile-handle";
+import { useUpdateProfileName } from "../hooks/use-update-profile-name";
+import { useUpdateProfilePicture } from "../hooks/use-update-profile-picture";
 import { ProfileHandleField } from "./profile-handle-field";
 import { ProfileNameField } from "./profile-name-field";
 import { ProfilePictureField } from "./profile-picture-field";
