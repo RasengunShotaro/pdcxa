@@ -1,7 +1,10 @@
 "use client";
 
-import { useUser as useClerkUser } from "@clerk/nextjs";
-import { isClerkAPIResponseError } from "@clerk/nextjs/errors";
+import { useUser as useClerkUser, useReverification } from "@clerk/nextjs";
+import {
+  isClerkAPIResponseError,
+  isReverificationCancelledError,
+} from "@clerk/nextjs/errors";
 import { AUTH_MOCKING } from "./mocking";
 import {
   clerkCodesToHandleFailureReason,
@@ -82,15 +85,24 @@ const useMockUpdateProfileHandle = (): UpdateProfileHandle => ({
 
 const useClerkUpdateProfileHandle = (): UpdateProfileHandle => {
   const { user } = useClerkUser();
+  const updateUsername = useReverification((username: string) => {
+    if (!user) {
+      throw new Error("ユーザーが見つかりません");
+    }
+    return user.update({ username });
+  });
   return {
     updateProfileHandle: async (handle) => {
       if (!user) {
         return { ok: false, reason: "unknown" };
       }
       try {
-        await user.update({ username: handle });
+        await updateUsername(handle);
         return { ok: true };
       } catch (error) {
+        if (isReverificationCancelledError(error)) {
+          return { ok: false, reason: "cancelled" };
+        }
         return { ok: false, reason: toHandleFailureReason(error) };
       }
     },
