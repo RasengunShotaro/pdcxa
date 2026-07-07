@@ -88,6 +88,25 @@ export const InvalidCharacterShowsAlert: Story = {
   },
 };
 
+export const ReverificationCancelledShowsNeutralNotice: Story = {
+  name: "本人確認をキャンセルすると変更していないことを穏当に伝える",
+  args: {
+    onSubmit: () => Promise.resolve({ ok: false, reason: "cancelled" }),
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    await userEvent.click(canvas.getByRole("button", { name: "保存する" }));
+
+    await waitFor(() =>
+      expect(inlineStatusText(canvasElement)).toBe(
+        "本人確認が完了しなかったため、IDは変更していません",
+      ),
+    );
+    expect(canvas.queryByRole("alert")).not.toBeInTheDocument();
+  },
+};
+
 export const UpdateFailureShowsAlert: Story = {
   name: "保存に失敗すると再試行を促す Alert を出す",
   args: {
