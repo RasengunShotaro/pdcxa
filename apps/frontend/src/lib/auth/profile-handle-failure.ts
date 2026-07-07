@@ -3,6 +3,7 @@ export type UpdateProfileHandleFailureReason =
   | "invalidLength"
   | "invalidCharacter"
   | "needsNonNumberChar"
+  | "cancelled"
   | "unknown";
 
 const REASON_BY_CLERK_CODE: Record<string, UpdateProfileHandleFailureReason> = {

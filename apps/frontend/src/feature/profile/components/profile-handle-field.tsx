@@ -28,12 +28,17 @@ interface ProfileHandleFieldProps {
   onSubmit: (handle: string) => Promise<UpdateProfileHandleResult>;
 }
 
+type HandleErrorReason = Exclude<UpdateProfileHandleFailureReason, "cancelled">;
+
 type Feedback =
   | { status: "idle" }
   | { status: "success" }
-  | { status: "error"; reason: UpdateProfileHandleFailureReason };
+  | { status: "cancelled" }
+  | { status: "error"; reason: HandleErrorReason };
 
-const ALERT_MESSAGE: Record<UpdateProfileHandleFailureReason, string> = {
+const CANCELLED_MESSAGE = "本人確認が完了しなかったため、IDは変更していません";
+
+const ALERT_MESSAGE: Record<HandleErrorReason, string> = {
   taken: "このIDは既に使われています。別のIDを入力してください。",
   invalidLength: "IDの文字数が規定に合っていません。別のIDを入力してください。",
   invalidCharacter:
@@ -43,7 +48,7 @@ const ALERT_MESSAGE: Record<UpdateProfileHandleFailureReason, string> = {
   unknown: "IDの変更に失敗しました。時間をおいて再試行してください。",
 };
 
-const TOAST_MESSAGE: Record<UpdateProfileHandleFailureReason, string> = {
+const TOAST_MESSAGE: Record<HandleErrorReason, string> = {
   taken: "このIDは既に使われています",
   invalidLength: "IDの文字数が規定に合っていません",
   invalidCharacter: "IDに使えない文字が含まれています",
@@ -69,6 +74,11 @@ export function ProfileHandleField({
       if (result.ok) {
         setFeedback({ status: "success" });
         toast.success("IDを変更しました");
+        return;
+      }
+      if (result.reason === "cancelled") {
+        setFeedback({ status: "cancelled" });
+        toast.message(CANCELLED_MESSAGE);
         return;
       }
       setFeedback({ status: "error", reason: result.reason });
@@ -122,6 +132,7 @@ export function ProfileHandleField({
           role="status"
         >
           {feedback.status === "success" && "IDを変更しました"}
+          {feedback.status === "cancelled" && CANCELLED_MESSAGE}
         </p>
 
         <div className="flex justify-end">
