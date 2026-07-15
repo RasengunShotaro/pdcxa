@@ -1,7 +1,9 @@
 import { hashKey } from "@tanstack/react-query";
 import { describe, expect, it } from "vitest";
 import {
+  isPdDetailQueryKey,
   pdDetailQueryKey,
+  pdRootQueryKey,
   rePdDetailQueryKey,
   weeklyStatsQueryKey,
 } from "./query-keys";
@@ -41,5 +43,22 @@ describe("rePdDetailQueryKey", () => {
 describe("weeklyStatsQueryKey", () => {
   it("週次統計エンドポイントのキーを返す", () => {
     expect(weeklyStatsQueryKey()).toEqual(["/pd/stats/weekly"]);
+  });
+});
+
+describe("isPdDetailQueryKey", () => {
+  it("ホーム・プロフィール・詳細の PD 一覧キーはいいね更新の対象になる", () => {
+    expect(isPdDetailQueryKey(pdDetailQueryKey())).toBe(true);
+    expect(isPdDetailQueryKey(pdDetailQueryKey({ userName: "me" }))).toBe(true);
+    expect(isPdDetailQueryKey(pdDetailQueryKey({ pdId: "p1" }))).toBe(true);
+  });
+
+  it("RePD 一覧キーは詳細マーカーが同じでもいいね更新の対象にしない", () => {
+    expect(isPdDetailQueryKey(rePdDetailQueryKey("p1"))).toBe(false);
+  });
+
+  it("詳細マーカーの無い PD ルート・週次統計キーはいいね更新の対象にしない", () => {
+    expect(isPdDetailQueryKey(pdRootQueryKey())).toBe(false);
+    expect(isPdDetailQueryKey(weeklyStatsQueryKey())).toBe(false);
   });
 });

@@ -1,7 +1,6 @@
 "use client";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { pdDetailQueryKey } from "@/feature/pd/api/query-keys";
 import type { Pd } from "@/feature/pd/types";
 import { buildLikeUser } from "@/feature/pd/utils/build-like-user";
 import { createPdLikeMutationOptions } from "@/feature/pd/utils/pd-like-mutation-options";
@@ -13,12 +12,9 @@ export const usePdLike = ({ pd }: { pd: Pd }) => {
   const myUserId = user?.id ?? "";
   const myLikeUser = buildLikeUser(user);
 
-  const queryKey = pdDetailQueryKey();
-
   const { mutate: toggleLike, isPending } = useMutation(
     createPdLikeMutationOptions({
       pd,
-      queryKey,
       queryClient,
       myUserId,
       myLikeUser,

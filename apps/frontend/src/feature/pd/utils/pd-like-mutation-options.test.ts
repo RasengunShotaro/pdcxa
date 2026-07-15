@@ -9,8 +9,12 @@ import { pdDetailQueryKey } from "../api/query-keys";
 import type { LikeUser, Pd } from "../types";
 import { createPdLikeMutationOptions } from "./pd-like-mutation-options";
 
+const mutateControl = vi.hoisted(() => ({ shouldFail: false }));
+
 vi.mock("@/feature/pd/api/pd/mutate-pd-like", () => ({
-  mutatePdLike: async () => undefined,
+  mutatePdLike: async () => {
+    if (mutateControl.shouldFail) throw new Error("いいねに失敗");
+  },
 }));
 vi.mock("@/utils/legacy-delay", () => ({ legacyDelay: async () => undefined }));
 vi.mock("sonner", () => ({ toast: { warning: () => undefined } }));
@@ -78,6 +82,7 @@ const makeFetchThatCollapsesPagesOnRefetch = () => {
 let queryClient: QueryClient;
 
 beforeEach(() => {
+  mutateControl.shouldFail = false;
   queryClient = new QueryClient({
     defaultOptions: { queries: { retry: false }, mutations: { retry: false } },
   });
@@ -110,7 +115,6 @@ const likePd = async (pd: Pd) => {
     queryClient,
     createPdLikeMutationOptions({
       pd,
-      queryKey,
       queryClient,
       myUserId: "me",
       myLikeUser: me,
@@ -166,5 +170,53 @@ describe("いいねと無限スクロールで蓄積したページ", () => {
     expect(updated.likeCount).toBe(1);
 
     unsubscribe();
+  });
+});
+
+describe("PD 詳細画面で親 PD にいいねしたとき", () => {
+  const detailKey = pdDetailQueryKey({ pdId: "pd-0" });
+  const timelineKey = pdDetailQueryKey();
+
+  const seedOnePage = (key: readonly unknown[], pd: Pd) => {
+    queryClient.setQueryData<InfiniteData<InfinitePds>>(key, {
+      pages: [{ items: [pd], nextCursor: undefined }],
+      pageParams: [undefined],
+    });
+  };
+
+  const pdIn = (key: readonly unknown[]) =>
+    queryClient.getQueryData<InfiniteData<InfinitePds>>(key)?.pages[0]
+      .items[0] as Pd;
+
+  test("詳細画面の親 PD に自分のいいねが楽観的に反映され件数が増える", async () => {
+    seedOnePage(detailKey, aPd("pd-0"));
+
+    await likePd(aPd("pd-0"));
+
+    expect(pdIn(detailKey).likes).toContainEqual({ userId: "me" });
+    expect(pdIn(detailKey).likeCount).toBe(1);
+  });
+
+  test("同じ PD がタイムラインと詳細の両方にあるとき一度のいいねで両方に反映される", async () => {
+    seedOnePage(timelineKey, aPd("pd-0"));
+    seedOnePage(detailKey, aPd("pd-0"));
+
+    await likePd(aPd("pd-0"));
+
+    expect(pdIn(timelineKey).likeCount).toBe(1);
+    expect(pdIn(detailKey).likeCount).toBe(1);
+  });
+
+  test("いいねに失敗すると全画面のいいねが元の状態に巻き戻る", async () => {
+    seedOnePage(timelineKey, aPd("pd-0"));
+    seedOnePage(detailKey, aPd("pd-0"));
+    mutateControl.shouldFail = true;
+
+    await likePd(aPd("pd-0")).catch(() => undefined);
+
+    expect(pdIn(timelineKey).likes).not.toContainEqual({ userId: "me" });
+    expect(pdIn(timelineKey).likeCount).toBe(0);
+    expect(pdIn(detailKey).likes).not.toContainEqual({ userId: "me" });
+    expect(pdIn(detailKey).likeCount).toBe(0);
   });
 });
