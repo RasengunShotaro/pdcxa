@@ -1,28 +1,20 @@
-import type {
-  InfiniteData,
-  QueryClient,
-  QueryKey,
-  UseMutationOptions,
-} from "@tanstack/react-query";
+import type { QueryClient, UseMutationOptions } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { mutatePdLike } from "@/feature/pd/api/pd/mutate-pd-like";
 import { errorDisplay } from "@/lib/error-message";
 import { legacyDelay } from "@/utils/legacy-delay";
 import type { LikeUser, Pd } from "../types";
-import { optimisticUpdateLike } from "./optimistic-update-like";
-
-type InfinitePds = {
-  items: Pd[];
-  nextCursor?: string;
-};
+import {
+  optimisticUpdateLike,
+  type PdDetailSnapshot,
+} from "./optimistic-update-like";
 
 type PdLikeMutationContext = {
-  previousPages?: InfiniteData<InfinitePds>;
+  previousQueries?: PdDetailSnapshot;
 };
 
 interface CreatePdLikeMutationOptionsInput {
   pd: Pd;
-  queryKey: QueryKey;
   queryClient: QueryClient;
   myUserId: string;
   myLikeUser: LikeUser;
@@ -30,7 +22,6 @@ interface CreatePdLikeMutationOptionsInput {
 
 export const createPdLikeMutationOptions = ({
   pd,
-  queryKey,
   queryClient,
   myUserId,
   myLikeUser,
@@ -45,10 +36,10 @@ export const createPdLikeMutationOptions = ({
     await mutatePdLike(pd.id);
   },
   onMutate: () =>
-    optimisticUpdateLike({ pd, queryKey, queryClient, myUserId, myLikeUser }),
+    optimisticUpdateLike({ pd, queryClient, myUserId, myLikeUser }),
   onError: (error, _variables, context) => {
-    if (context?.previousPages) {
-      queryClient.setQueryData(queryKey, context.previousPages);
+    for (const [key, data] of context?.previousQueries ?? []) {
+      queryClient.setQueryData(key, data);
     }
     toast.warning(errorDisplay(error).message);
   },

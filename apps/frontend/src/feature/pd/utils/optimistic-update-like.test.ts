@@ -68,7 +68,6 @@ describe("optimisticUpdateLike", () => {
 
     await optimisticUpdateLike({
       pd,
-      queryKey,
       queryClient,
       myUserId: "me",
       myLikeUser: me,
@@ -98,7 +97,6 @@ describe("optimisticUpdateLike", () => {
 
     await optimisticUpdateLike({
       pd,
-      queryKey,
       queryClient,
       myUserId: "me",
       myLikeUser: me,
