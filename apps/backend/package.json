@@ -24,22 +24,22 @@
   },
   "dependencies": {
     "@hono/clerk-auth": "^3.1.1",
-    "@hono/zod-openapi": "^1.4.0",
+    "@hono/zod-openapi": "^1.6.0",
     "@neondatabase/serverless": "^1.1.0",
-    "dayjs": "^1.11.21",
+    "dayjs": "^1.11.22",
     "drizzle-orm": "^0.45.2",
-    "effect": "^3.21.4",
-    "hono": "^4.12.23",
+    "effect": "^3.22.1",
+    "hono": "^4.13.2",
     "uuidv7": "^1.2.1",
     "wasm-image-optimization": "^2.0.9",
     "zod": "^4.4.3"
   },
   "devDependencies": {
     "@pdcxa/common-dev-packages": "workspace:*",
-    "@types/pg": "^8.20.0",
+    "@types/pg": "^8.21.0",
     "drizzle-kit": "^0.31.10",
-    "pg": "^8.21.0",
+    "pg": "^8.23.0",
     "postgres": "^3.4.9",
-    "vitest": "^4.1.7"
+    "vitest": "^4.1.10"
   }
 }
