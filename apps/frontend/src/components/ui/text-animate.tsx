@@ -6,9 +6,18 @@ import {
   motion,
   type Variants,
 } from "motion/react";
-import { type ElementType, memo } from "react";
+import { memo } from "react";
 
 import { cn } from "@/lib/utils";
+
+const motionElements = {
+  p: motion.p,
+  span: motion.span,
+  div: motion.div,
+  h1: motion.h1,
+  h2: motion.h2,
+  h3: motion.h3,
+};
 
 type AnimationType = "text" | "word" | "character" | "line";
 type AnimationVariant =
@@ -51,7 +60,7 @@ interface TextAnimateProps extends MotionProps {
   /**
    * The element type to render
    */
-  as?: ElementType;
+  as?: keyof typeof motionElements;
   /**
    * How to split the text ("text", "word", "character")
    */
@@ -314,7 +323,7 @@ const TextAnimateBase = ({
   variants,
   className,
   segmentClassName,
-  as: Component = "p",
+  as = "p",
   startOnView = true,
   once = false,
   by = "word",
@@ -322,7 +331,7 @@ const TextAnimateBase = ({
   accessible = true,
   ...props
 }: TextAnimateProps) => {
-  const MotionComponent = motion.create(Component);
+  const MotionComponent = motionElements[as];
 
   let segments: string[] = [];
   switch (by) {

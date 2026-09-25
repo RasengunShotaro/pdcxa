@@ -10,7 +10,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Skeleton } from "@/components/ui/skeleton";
-import { blobToObjectUrl } from "@/feature/pd/utils/blob-to-url";
+import { useObjectUrl } from "@/hooks/use-object-url";
 import { useFetchPdImage } from "@/schema/api";
 
 interface PdCardImageProps {
@@ -23,13 +23,14 @@ export function PdCardImage({ imageFileName, alt }: PdCardImageProps) {
     query: { enabled: Boolean(imageFileName) },
   });
   const [failed, setFailed] = useState(false);
+  const imageBlob = data?.data;
+  const src = useObjectUrl(imageBlob);
 
   if (!imageFileName) return null;
 
   const hasError = Boolean(error) || failed;
-  const imageBlob = data?.data;
 
-  if (isPending && !hasError) {
+  if ((isPending || (imageBlob && !src)) && !hasError) {
     return <Skeleton className="mx-auto h-48 w-full max-w-xs rounded-lg" />;
   }
 
@@ -42,9 +43,7 @@ export function PdCardImage({ imageFileName, alt }: PdCardImageProps) {
     );
   }
 
-  if (!imageBlob) return null;
-
-  const src = blobToObjectUrl(imageBlob);
+  if (!src) return null;
 
   return (
     <Dialog>
