@@ -87,13 +87,27 @@ export const getCreateInvitationUrl = () => {
   return `/invitation/create`
 }
 
-export const createInvitation = async (createInvitationBody?: CreateInvitationBody, options?: RequestInit): Promise<createInvitationResponse> => {
+export const createInvitation = async (createInvitationBody?: CreateInvitationBody, options?: Parameters<typeof orvalFetch>[1]): Promise<createInvitationResponse> => {
 
-  return orvalFetch<createInvitationResponse>(getCreateInvitationUrl(),
+    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(h as Iterable<Iterable<string>>, (entry) => Array.from(entry) as [string, string]),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<string | readonly string[] | undefined>(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+return orvalFetch<createInvitationResponse>(getCreateInvitationUrl(),
   {
     ...options,
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
     body: JSON.stringify(createInvitationBody)
   }
 );}
@@ -101,11 +115,14 @@ export const createInvitation = async (createInvitationBody?: CreateInvitationBo
 
 
 
-export const getCreateInvitationMutationOptions = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createInvitation>>, TError,{data?: CreateInvitationBody}, TContext>, request?: SecondParameter<typeof orvalFetch>}
-): UseMutationOptions<Awaited<ReturnType<typeof createInvitation>>, TError,{data?: CreateInvitationBody}, TContext> => {
 
-const mutationKey = ['createInvitation'];
+export const getCreateInvitationMutationKey = () => ['createInvitation'] as const;
+
+export const getCreateInvitationMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createInvitation>>, TError,CreateInvitationMutationVariables, TContext>, request?: SecondParameter<typeof orvalFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof createInvitation>>, TError,CreateInvitationMutationVariables, TContext> => {
+
+const mutationKey = getCreateInvitationMutationKey();
 const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -115,7 +132,7 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createInvitation>>, {data?: CreateInvitationBody}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createInvitation>>, CreateInvitationMutationVariables> = (props) => {
           const {data} = props ?? {};
 
           return  createInvitation(data,requestOptions)
@@ -131,13 +148,14 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
     export type CreateInvitationMutationResult = NonNullable<Awaited<ReturnType<typeof createInvitation>>>
     export type CreateInvitationMutationBody = CreateInvitationBody | undefined
     export type CreateInvitationMutationError = unknown
+    export type CreateInvitationMutationVariables = {data?: CreateInvitationBody}
 
     export const useCreateInvitation = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createInvitation>>, TError,{data?: CreateInvitationBody}, TContext>, request?: SecondParameter<typeof orvalFetch>}
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createInvitation>>, TError,CreateInvitationMutationVariables, TContext>, request?: SecondParameter<typeof orvalFetch>}
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof createInvitation>>,
         TError,
-        {data?: CreateInvitationBody},
+        CreateInvitationMutationVariables,
         TContext
       > => {
       return useMutation(getCreateInvitationMutationOptions(options), queryClient);
@@ -170,7 +188,7 @@ export const getFetchUserDetailUrl = (params: FetchUserDetailParams,) => {
   return stringifiedParams.length > 0 ? `/user/detail?${stringifiedParams}` : `/user/detail`
 }
 
-export const fetchUserDetail = async (params: FetchUserDetailParams, options?: RequestInit): Promise<fetchUserDetailResponse> => {
+export const fetchUserDetail = async (params: FetchUserDetailParams, options?: Parameters<typeof orvalFetch>[1]): Promise<fetchUserDetailResponse> => {
 
   return orvalFetch<fetchUserDetailResponse>(getFetchUserDetailUrl(params),
   {
@@ -284,7 +302,7 @@ export const getFetchUserDetailsUrl = (params?: FetchUserDetailsParams,) => {
   return stringifiedParams.length > 0 ? `/user/details?${stringifiedParams}` : `/user/details`
 }
 
-export const fetchUserDetails = async (params?: FetchUserDetailsParams, options?: RequestInit): Promise<fetchUserDetailsResponse> => {
+export const fetchUserDetails = async (params?: FetchUserDetailsParams, options?: Parameters<typeof orvalFetch>[1]): Promise<fetchUserDetailsResponse> => {
 
   return orvalFetch<fetchUserDetailsResponse>(getFetchUserDetailsUrl(params),
   {
@@ -398,7 +416,7 @@ export const getFetchPdsUrl = (params?: FetchPdsParams,) => {
   return stringifiedParams.length > 0 ? `/pd?${stringifiedParams}` : `/pd`
 }
 
-export const fetchPds = async (params?: FetchPdsParams, options?: RequestInit): Promise<fetchPdsResponse> => {
+export const fetchPds = async (params?: FetchPdsParams, options?: Parameters<typeof orvalFetch>[1]): Promise<fetchPdsResponse> => {
 
   return orvalFetch<fetchPdsResponse>(getFetchPdsUrl(params),
   {
@@ -505,7 +523,7 @@ export const getFetchWeeklyStatsUrl = () => {
   return `/pd/stats/weekly`
 }
 
-export const fetchWeeklyStats = async ( options?: RequestInit): Promise<fetchWeeklyStatsResponse> => {
+export const fetchWeeklyStats = async ( options?: Parameters<typeof orvalFetch>[1]): Promise<fetchWeeklyStatsResponse> => {
 
   return orvalFetch<fetchWeeklyStatsResponse>(getFetchWeeklyStatsUrl(),
   {
@@ -612,7 +630,7 @@ export const getCreatePdUrl = () => {
   return `/pd/create`
 }
 
-export const createPd = async (createPdBody?: CreatePdBody, options?: RequestInit): Promise<createPdResponse> => {
+export const createPd = async (createPdBody?: CreatePdBody, options?: Parameters<typeof orvalFetch>[1]): Promise<createPdResponse> => {
     const formData = new FormData();
 if(createPdBody?.content !== undefined) {
  formData.append(`content`, createPdBody.content);
@@ -633,11 +651,14 @@ if(createPdBody?.image !== undefined) {
 
 
 
-export const getCreatePdMutationOptions = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createPd>>, TError,{data?: CreatePdBody}, TContext>, request?: SecondParameter<typeof orvalFetch>}
-): UseMutationOptions<Awaited<ReturnType<typeof createPd>>, TError,{data?: CreatePdBody}, TContext> => {
 
-const mutationKey = ['createPd'];
+export const getCreatePdMutationKey = () => ['createPd'] as const;
+
+export const getCreatePdMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createPd>>, TError,CreatePdMutationVariables, TContext>, request?: SecondParameter<typeof orvalFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof createPd>>, TError,CreatePdMutationVariables, TContext> => {
+
+const mutationKey = getCreatePdMutationKey();
 const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -647,7 +668,7 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createPd>>, {data?: CreatePdBody}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createPd>>, CreatePdMutationVariables> = (props) => {
           const {data} = props ?? {};
 
           return  createPd(data,requestOptions)
@@ -663,13 +684,14 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
     export type CreatePdMutationResult = NonNullable<Awaited<ReturnType<typeof createPd>>>
     export type CreatePdMutationBody = CreatePdBody | undefined
     export type CreatePdMutationError = unknown
+    export type CreatePdMutationVariables = {data?: CreatePdBody}
 
     export const useCreatePd = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createPd>>, TError,{data?: CreatePdBody}, TContext>, request?: SecondParameter<typeof orvalFetch>}
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createPd>>, TError,CreatePdMutationVariables, TContext>, request?: SecondParameter<typeof orvalFetch>}
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof createPd>>,
         TError,
-        {data?: CreatePdBody},
+        CreatePdMutationVariables,
         TContext
       > => {
       return useMutation(getCreatePdMutationOptions(options), queryClient);
@@ -695,7 +717,7 @@ export const getCreateGifPdUrl = () => {
   return `/pd/create-gif`
 }
 
-export const createGifPd = async (createGifPdBody?: CreateGifPdBody, options?: RequestInit): Promise<createGifPdResponse> => {
+export const createGifPd = async (createGifPdBody?: CreateGifPdBody, options?: Parameters<typeof orvalFetch>[1]): Promise<createGifPdResponse> => {
     const formData = new FormData();
 if(createGifPdBody?.content !== undefined) {
  formData.append(`content`, createGifPdBody.content);
@@ -716,11 +738,14 @@ if(createGifPdBody?.image !== undefined) {
 
 
 
-export const getCreateGifPdMutationOptions = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createGifPd>>, TError,{data?: CreateGifPdBody}, TContext>, request?: SecondParameter<typeof orvalFetch>}
-): UseMutationOptions<Awaited<ReturnType<typeof createGifPd>>, TError,{data?: CreateGifPdBody}, TContext> => {
 
-const mutationKey = ['createGifPd'];
+export const getCreateGifPdMutationKey = () => ['createGifPd'] as const;
+
+export const getCreateGifPdMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createGifPd>>, TError,CreateGifPdMutationVariables, TContext>, request?: SecondParameter<typeof orvalFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof createGifPd>>, TError,CreateGifPdMutationVariables, TContext> => {
+
+const mutationKey = getCreateGifPdMutationKey();
 const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -730,7 +755,7 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createGifPd>>, {data?: CreateGifPdBody}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createGifPd>>, CreateGifPdMutationVariables> = (props) => {
           const {data} = props ?? {};
 
           return  createGifPd(data,requestOptions)
@@ -746,13 +771,14 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
     export type CreateGifPdMutationResult = NonNullable<Awaited<ReturnType<typeof createGifPd>>>
     export type CreateGifPdMutationBody = CreateGifPdBody | undefined
     export type CreateGifPdMutationError = unknown
+    export type CreateGifPdMutationVariables = {data?: CreateGifPdBody}
 
     export const useCreateGifPd = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createGifPd>>, TError,{data?: CreateGifPdBody}, TContext>, request?: SecondParameter<typeof orvalFetch>}
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createGifPd>>, TError,CreateGifPdMutationVariables, TContext>, request?: SecondParameter<typeof orvalFetch>}
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof createGifPd>>,
         TError,
-        {data?: CreateGifPdBody},
+        CreateGifPdMutationVariables,
         TContext
       > => {
       return useMutation(getCreateGifPdMutationOptions(options), queryClient);
@@ -778,13 +804,27 @@ export const getMutatePdLikeUrl = () => {
   return `/pd/like`
 }
 
-export const mutatePdLike = async (mutatePdLikeBody?: MutatePdLikeBody, options?: RequestInit): Promise<mutatePdLikeResponse> => {
+export const mutatePdLike = async (mutatePdLikeBody?: MutatePdLikeBody, options?: Parameters<typeof orvalFetch>[1]): Promise<mutatePdLikeResponse> => {
 
-  return orvalFetch<mutatePdLikeResponse>(getMutatePdLikeUrl(),
+    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(h as Iterable<Iterable<string>>, (entry) => Array.from(entry) as [string, string]),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<string | readonly string[] | undefined>(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+return orvalFetch<mutatePdLikeResponse>(getMutatePdLikeUrl(),
   {
     ...options,
     method: 'PUT',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
     body: JSON.stringify(mutatePdLikeBody)
   }
 );}
@@ -792,11 +832,14 @@ export const mutatePdLike = async (mutatePdLikeBody?: MutatePdLikeBody, options?
 
 
 
-export const getMutatePdLikeMutationOptions = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof mutatePdLike>>, TError,{data?: MutatePdLikeBody}, TContext>, request?: SecondParameter<typeof orvalFetch>}
-): UseMutationOptions<Awaited<ReturnType<typeof mutatePdLike>>, TError,{data?: MutatePdLikeBody}, TContext> => {
 
-const mutationKey = ['mutatePdLike'];
+export const getMutatePdLikeMutationKey = () => ['mutatePdLike'] as const;
+
+export const getMutatePdLikeMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof mutatePdLike>>, TError,MutatePdLikeMutationVariables, TContext>, request?: SecondParameter<typeof orvalFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof mutatePdLike>>, TError,MutatePdLikeMutationVariables, TContext> => {
+
+const mutationKey = getMutatePdLikeMutationKey();
 const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -806,7 +849,7 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof mutatePdLike>>, {data?: MutatePdLikeBody}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof mutatePdLike>>, MutatePdLikeMutationVariables> = (props) => {
           const {data} = props ?? {};
 
           return  mutatePdLike(data,requestOptions)
@@ -822,13 +865,14 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
     export type MutatePdLikeMutationResult = NonNullable<Awaited<ReturnType<typeof mutatePdLike>>>
     export type MutatePdLikeMutationBody = MutatePdLikeBody | undefined
     export type MutatePdLikeMutationError = unknown
+    export type MutatePdLikeMutationVariables = {data?: MutatePdLikeBody}
 
     export const useMutatePdLike = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof mutatePdLike>>, TError,{data?: MutatePdLikeBody}, TContext>, request?: SecondParameter<typeof orvalFetch>}
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof mutatePdLike>>, TError,MutatePdLikeMutationVariables, TContext>, request?: SecondParameter<typeof orvalFetch>}
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof mutatePdLike>>,
         TError,
-        {data?: MutatePdLikeBody},
+        MutatePdLikeMutationVariables,
         TContext
       > => {
       return useMutation(getMutatePdLikeMutationOptions(options), queryClient);
@@ -854,7 +898,7 @@ export const getFetchPdImageUrl = (fileName: string,) => {
   return `/pd/image/${fileName}`
 }
 
-export const fetchPdImage = async (fileName: string, options?: RequestInit): Promise<fetchPdImageResponse> => {
+export const fetchPdImage = async (fileName: string, options?: Parameters<typeof orvalFetch>[1]): Promise<fetchPdImageResponse> => {
 
   return orvalFetch<fetchPdImageResponse>(getFetchPdImageUrl(fileName),
   {
@@ -968,7 +1012,7 @@ export const getFetchRePdsUrl = (params: FetchRePdsParams,) => {
   return stringifiedParams.length > 0 ? `/repd?${stringifiedParams}` : `/repd`
 }
 
-export const fetchRePds = async (params: FetchRePdsParams, options?: RequestInit): Promise<fetchRePdsResponse> => {
+export const fetchRePds = async (params: FetchRePdsParams, options?: Parameters<typeof orvalFetch>[1]): Promise<fetchRePdsResponse> => {
 
   return orvalFetch<fetchRePdsResponse>(getFetchRePdsUrl(params),
   {
@@ -1075,13 +1119,27 @@ export const getCreateRePdUrl = () => {
   return `/repd/create`
 }
 
-export const createRePd = async (createRePdBody?: CreateRePdBody, options?: RequestInit): Promise<createRePdResponse> => {
+export const createRePd = async (createRePdBody?: CreateRePdBody, options?: Parameters<typeof orvalFetch>[1]): Promise<createRePdResponse> => {
 
-  return orvalFetch<createRePdResponse>(getCreateRePdUrl(),
+    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(h as Iterable<Iterable<string>>, (entry) => Array.from(entry) as [string, string]),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<string | readonly string[] | undefined>(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+return orvalFetch<createRePdResponse>(getCreateRePdUrl(),
   {
     ...options,
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
     body: JSON.stringify(createRePdBody)
   }
 );}
@@ -1089,11 +1147,14 @@ export const createRePd = async (createRePdBody?: CreateRePdBody, options?: Requ
 
 
 
-export const getCreateRePdMutationOptions = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createRePd>>, TError,{data?: CreateRePdBody}, TContext>, request?: SecondParameter<typeof orvalFetch>}
-): UseMutationOptions<Awaited<ReturnType<typeof createRePd>>, TError,{data?: CreateRePdBody}, TContext> => {
 
-const mutationKey = ['createRePd'];
+export const getCreateRePdMutationKey = () => ['createRePd'] as const;
+
+export const getCreateRePdMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createRePd>>, TError,CreateRePdMutationVariables, TContext>, request?: SecondParameter<typeof orvalFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof createRePd>>, TError,CreateRePdMutationVariables, TContext> => {
+
+const mutationKey = getCreateRePdMutationKey();
 const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -1103,7 +1164,7 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createRePd>>, {data?: CreateRePdBody}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createRePd>>, CreateRePdMutationVariables> = (props) => {
           const {data} = props ?? {};
 
           return  createRePd(data,requestOptions)
@@ -1119,13 +1180,14 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
     export type CreateRePdMutationResult = NonNullable<Awaited<ReturnType<typeof createRePd>>>
     export type CreateRePdMutationBody = CreateRePdBody | undefined
     export type CreateRePdMutationError = unknown
+    export type CreateRePdMutationVariables = {data?: CreateRePdBody}
 
     export const useCreateRePd = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createRePd>>, TError,{data?: CreateRePdBody}, TContext>, request?: SecondParameter<typeof orvalFetch>}
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createRePd>>, TError,CreateRePdMutationVariables, TContext>, request?: SecondParameter<typeof orvalFetch>}
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof createRePd>>,
         TError,
-        {data?: CreateRePdBody},
+        CreateRePdMutationVariables,
         TContext
       > => {
       return useMutation(getCreateRePdMutationOptions(options), queryClient);
@@ -1151,13 +1213,27 @@ export const getMutateRePdLikeUrl = () => {
   return `/repd/like`
 }
 
-export const mutateRePdLike = async (mutateRePdLikeBody?: MutateRePdLikeBody, options?: RequestInit): Promise<mutateRePdLikeResponse> => {
+export const mutateRePdLike = async (mutateRePdLikeBody?: MutateRePdLikeBody, options?: Parameters<typeof orvalFetch>[1]): Promise<mutateRePdLikeResponse> => {
 
-  return orvalFetch<mutateRePdLikeResponse>(getMutateRePdLikeUrl(),
+    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(h as Iterable<Iterable<string>>, (entry) => Array.from(entry) as [string, string]),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<string | readonly string[] | undefined>(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+return orvalFetch<mutateRePdLikeResponse>(getMutateRePdLikeUrl(),
   {
     ...options,
     method: 'PUT',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
     body: JSON.stringify(mutateRePdLikeBody)
   }
 );}
@@ -1165,11 +1241,14 @@ export const mutateRePdLike = async (mutateRePdLikeBody?: MutateRePdLikeBody, op
 
 
 
-export const getMutateRePdLikeMutationOptions = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof mutateRePdLike>>, TError,{data?: MutateRePdLikeBody}, TContext>, request?: SecondParameter<typeof orvalFetch>}
-): UseMutationOptions<Awaited<ReturnType<typeof mutateRePdLike>>, TError,{data?: MutateRePdLikeBody}, TContext> => {
 
-const mutationKey = ['mutateRePdLike'];
+export const getMutateRePdLikeMutationKey = () => ['mutateRePdLike'] as const;
+
+export const getMutateRePdLikeMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof mutateRePdLike>>, TError,MutateRePdLikeMutationVariables, TContext>, request?: SecondParameter<typeof orvalFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof mutateRePdLike>>, TError,MutateRePdLikeMutationVariables, TContext> => {
+
+const mutationKey = getMutateRePdLikeMutationKey();
 const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -1179,7 +1258,7 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof mutateRePdLike>>, {data?: MutateRePdLikeBody}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof mutateRePdLike>>, MutateRePdLikeMutationVariables> = (props) => {
           const {data} = props ?? {};
 
           return  mutateRePdLike(data,requestOptions)
@@ -1195,13 +1274,14 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
     export type MutateRePdLikeMutationResult = NonNullable<Awaited<ReturnType<typeof mutateRePdLike>>>
     export type MutateRePdLikeMutationBody = MutateRePdLikeBody | undefined
     export type MutateRePdLikeMutationError = unknown
+    export type MutateRePdLikeMutationVariables = {data?: MutateRePdLikeBody}
 
     export const useMutateRePdLike = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof mutateRePdLike>>, TError,{data?: MutateRePdLikeBody}, TContext>, request?: SecondParameter<typeof orvalFetch>}
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof mutateRePdLike>>, TError,MutateRePdLikeMutationVariables, TContext>, request?: SecondParameter<typeof orvalFetch>}
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof mutateRePdLike>>,
         TError,
-        {data?: MutateRePdLikeBody},
+        MutateRePdLikeMutationVariables,
         TContext
       > => {
       return useMutation(getMutateRePdLikeMutationOptions(options), queryClient);
@@ -1227,7 +1307,7 @@ export const getFetchNotificationUnreadCountUrl = () => {
   return `/notifications/unread-count`
 }
 
-export const fetchNotificationUnreadCount = async ( options?: RequestInit): Promise<fetchNotificationUnreadCountResponse> => {
+export const fetchNotificationUnreadCount = async ( options?: Parameters<typeof orvalFetch>[1]): Promise<fetchNotificationUnreadCountResponse> => {
 
   return orvalFetch<fetchNotificationUnreadCountResponse>(getFetchNotificationUnreadCountUrl(),
   {
@@ -1341,7 +1421,7 @@ export const getFetchNotificationsUrl = (params?: FetchNotificationsParams,) => 
   return stringifiedParams.length > 0 ? `/notifications?${stringifiedParams}` : `/notifications`
 }
 
-export const fetchNotifications = async (params?: FetchNotificationsParams, options?: RequestInit): Promise<fetchNotificationsResponse> => {
+export const fetchNotifications = async (params?: FetchNotificationsParams, options?: Parameters<typeof orvalFetch>[1]): Promise<fetchNotificationsResponse> => {
 
   return orvalFetch<fetchNotificationsResponse>(getFetchNotificationsUrl(params),
   {
@@ -1448,7 +1528,7 @@ export const getMarkNotificationsSeenUrl = () => {
   return `/notifications/seen`
 }
 
-export const markNotificationsSeen = async ( options?: RequestInit): Promise<markNotificationsSeenResponse> => {
+export const markNotificationsSeen = async ( options?: Parameters<typeof orvalFetch>[1]): Promise<markNotificationsSeenResponse> => {
 
   return orvalFetch<markNotificationsSeenResponse>(getMarkNotificationsSeenUrl(),
   {
@@ -1462,11 +1542,14 @@ export const markNotificationsSeen = async ( options?: RequestInit): Promise<mar
 
 
 
+
+export const getMarkNotificationsSeenMutationKey = () => ['markNotificationsSeen'] as const;
+
 export const getMarkNotificationsSeenMutationOptions = <TError = unknown,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof markNotificationsSeen>>, TError,void, TContext>, request?: SecondParameter<typeof orvalFetch>}
 ): UseMutationOptions<Awaited<ReturnType<typeof markNotificationsSeen>>, TError,void, TContext> => {
 
-const mutationKey = ['markNotificationsSeen'];
+const mutationKey = getMarkNotificationsSeenMutationKey();
 const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -1492,6 +1575,7 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
     export type MarkNotificationsSeenMutationResult = NonNullable<Awaited<ReturnType<typeof markNotificationsSeen>>>
 
     export type MarkNotificationsSeenMutationError = unknown
+
 
     export const useMarkNotificationsSeen = <TError = unknown,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof markNotificationsSeen>>, TError,void, TContext>, request?: SecondParameter<typeof orvalFetch>}

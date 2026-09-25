@@ -61,7 +61,7 @@ export function Providers({ children }: { children: ReactNode }) {
   return (
     <ClerkProvider
       appearance={{
-        baseTheme: shadcn,
+        theme: shadcn,
       }}
       localization={jaJP}
     >

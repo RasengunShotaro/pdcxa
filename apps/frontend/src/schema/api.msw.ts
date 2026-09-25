@@ -157,16 +157,13 @@ export const getMutatePdLikeMockHandler = (overrideResponse?: MutatePdLike201 | 
   }, options)
 }
 
-export const getFetchPdImageMockHandler = (overrideResponse?: ArrayBuffer | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<ArrayBuffer> | ArrayBuffer), options?: RequestHandlerOptions) => {
+export const getFetchPdImageMockHandler = (overrideResponse?: Blob | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<Blob> | Blob), options?: RequestHandlerOptions) => {
   return http.get('*/pd/image/:fileName', async (info: Parameters<Parameters<typeof http.get>[1]>[0]) => {
 
   const binaryBody = overrideResponse !== undefined
     ? (typeof overrideResponse === "function" ? await overrideResponse(info) : overrideResponse)
     : getFetchPdImageResponseMock();
-    return HttpResponse.arrayBuffer(
-      binaryBody instanceof ArrayBuffer
-        ? binaryBody
-        : new ArrayBuffer(0),
+    return new HttpResponse(binaryBody,
       { status: 200,
         headers: { 'Content-Type': 'application/octet-stream' }
       })

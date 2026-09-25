@@ -5,6 +5,7 @@ export type FetchNotifications200ItemsItem = {
   kind: FetchNotifications200ItemsItemKind;
   actor: FetchNotifications200ItemsItemActor;
   pdId: string;
+  /** @nullable */
   rePdId: string | null;
   excerpt: string;
   createdAt: string;
