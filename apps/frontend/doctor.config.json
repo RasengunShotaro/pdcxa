@@ -56,6 +56,15 @@
       },
       {
         "files": [
+          "src/hooks/use-object-url.ts",
+          "src/feature/pd/components/composer/use-composer-image.ts",
+          "src/feature/profile/components/profile-picture-field.tsx"
+        ],
+        "rules": ["react-doctor/no-create-object-url-without-revoke"],
+        "reason": "3 ファイルとも ObjectURL を解放している。use-object-url は参照カウント付きレジストリ (src/lib/object-url-registry.ts) が最後の表示箇所の購読解除で revoke し、use-composer-image は差し替え時と unmount 時、profile-picture-field は previewUrl を依存にした effect の cleanup で revoke する。ルールは createObjectURL と同じ関数内の revokeObjectURL しか見ないため、解放を別関数 / cleanup に置く正しい実装を検出できない構造的 FP。"
+      },
+      {
+        "files": [
           "src/components/ui/sidebar.tsx",
           "src/components/ui/text-animate.tsx"
         ],

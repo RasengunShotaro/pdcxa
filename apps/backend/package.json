@@ -23,7 +23,8 @@
     "test": "vitest"
   },
   "dependencies": {
-    "@hono/clerk-auth": "^3.1.1",
+    "@clerk/backend": "^3.20.1",
+    "@clerk/hono": "^0.1.82",
     "@hono/zod-openapi": "^1.6.3",
     "@neondatabase/serverless": "^1.1.0",
     "dayjs": "^1.11.23",
@@ -37,6 +38,7 @@
   "devDependencies": {
     "@pdcxa/common-dev-packages": "workspace:*",
     "@types/pg": "^8.23.1",
+    "dotenv": "^18.0.1",
     "drizzle-kit": "^0.31.11",
     "pg": "^8.23.0",
     "postgres": "^3.4.9",
