@@ -35,6 +35,12 @@ done < <(
 )
 
 missing=()
+# macOS の bash 3.2 は set -u 下で空配列の "${arr[@]}" を unbound variable にする。
+# 対象ファイルが 0 件のときに毎ターン Stop hook が落ちていた
+if (( ${#changed[@]} == 0 )); then
+  exit 0
+fi
+
 for src in "${changed[@]}"; do
   base="${src%.*}"
   ext="${src##*.}"

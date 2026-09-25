@@ -19,7 +19,7 @@
     "check-types": "tsc --noEmit",
     "typecheck": "tsc --noEmit",
     "build": "tsc -p tsconfig.build.json",
-    "lint": "biome check",
+    "lint": "biome check --error-on-warnings",
     "test": "vitest"
   },
   "dependencies": {
