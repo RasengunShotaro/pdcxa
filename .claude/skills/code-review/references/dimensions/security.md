@@ -32,7 +32,7 @@
 - 新規依存パッケージの追加 (既知 CVE / 攻撃面 / メンテ状況)。**追加自体は ESCALATE**
 - バージョン pin の有無, lockfile への反映
 
-## 検証手段 (必ず実行で確認)
+## 検証手段
 
 - SQL injection: payload (`'; DROP TABLE--`) をクエリ生成関数に渡し、生成 SQL を確認
 - XSS: payload を入力としてレンダリング結果を確認 (エスケープ漏れ)

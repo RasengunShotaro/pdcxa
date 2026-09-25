@@ -56,3 +56,15 @@ const preview: Preview = {
 ```
 
 **新しい Provider / Portal を `app/layout.tsx` に追加したら、`preview.tsx` にも同期する**。Storybook で「動かない / 見えない」現象の 9 割はここ。
+
+## dev server 実機確認（判断で決める）
+
+Storybook は単一コンポーネントの play しか見ておらず、**ページ全体の data flow / route guard / cookie / mutation 後の cache invalidate** は検証していない。そこが変更点に含まれるなら `http://localhost:3000` を playwright devtools mcp で開き、該当ページ到達 → 主要操作 (form 送信 / mutation / navigation) → エラーケース (validation 失敗 / mutation 失敗) を 1 周する。逆に、単体コンポーネントの見た目・純粋な表示ロジック・文言だけの変更なら Storybook と unit test で足りる。
+
+判断材料: ID mismatch / 越境ガード / SSR-CSR 境界 / portal mount 漏れ は実機でしか出ない。route guard・cookie・cache invalidate・ページ間遷移に触れたら回す。
+
+実機で回すときの既知の癖:
+
+- MSW モードと実 backend モードで挙動が違う (cookie / cache invalidate / 永続化反映)
+- **Playwright MCP の native `browser_click` / `browser_fill_form` は React handler に届かないことがある** (Turbopack + React19。初回 1 回だけ動く等 不安定。描画 / データ取得 / 遷移は正常)。クリックは `browser_evaluate` の `element.click()` で dispatch する。ログインは突破せず mock id_token を `document.cookie` に直挿しでバイパス (値は `apps/frontend/src/mocks/handlers.ts` の MOCK_ID_TOKEN と同じ組み立て)。mutation 系の操作検証は real browser で通る Storybook play を根拠にしてもよい
+- **role 限定ルートを MSW dev で確認するときはハードリロードが要る** (SPA ソフトナビは古い worker handlers と認証キャッシュを保持し role 切替が効かない)。この dev 専用 mock 変更は feature diff に含めず確認後に戻す

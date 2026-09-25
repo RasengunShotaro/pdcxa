@@ -4,7 +4,10 @@
 # (sed / python / コード生成) を検査できないため、編集経路に依存しないここで拾う。
 set -uo pipefail
 
-cd "${CLAUDE_PROJECT_DIR:-.}"
+input=$(cat)
+session_cwd=$(printf '%s' "$input" | jq -r '.cwd // empty' 2>/dev/null || true)
+cd "${session_cwd:-${CLAUDE_PROJECT_DIR:-.}}" 2>/dev/null || cd "${CLAUDE_PROJECT_DIR:-.}" || exit 0
+root=$(git rev-parse --show-toplevel 2>/dev/null) && cd "$root"
 
 files=$( (git diff --name-only HEAD; git ls-files --others --exclude-standard) 2>/dev/null | sort -u | grep -E '\.(ts|tsx|js|jsx|mjs|cjs|json|jsonc)$' || true)
 [ -z "$files" ] && exit 0
@@ -24,11 +27,11 @@ else
   exit 0
 fi
 
-out=$($runner @biomejs/biome check --no-errors-on-unmatched --files-ignore-unknown=true "${existing[@]}" 2>&1)
+out=$($runner @biomejs/biome check --error-on-warnings --no-errors-on-unmatched --files-ignore-unknown=true "${existing[@]}" 2>&1)
 status=$?
 if [ $status -ne 0 ]; then
   {
-    echo "[biome stop hook] 未コミットの変更に biome エラーがあります。修正してから終了してください:"
+    echo "[biome stop hook] 未コミットの変更に biome の指摘 (error / warning) があります。修正してから終了してください:"
     echo "$out" | tail -40
   } >&2
   exit 2

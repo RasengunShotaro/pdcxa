@@ -4,9 +4,10 @@
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
-    "lint": "turbo run lint",
+    "lint": "biome check --error-on-warnings",
     "test": "turbo run test",
     "check-types": "turbo run check-types",
+    "design:check": "bun run scripts/check-melta-rules.ts",
     "deploy:dev": "turbo run deploy:dev",
     "deploy": "turbo run deploy"
   },
