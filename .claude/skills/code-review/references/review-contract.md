@@ -1,22 +1,30 @@
-# Reviewer Contract (全 dimension 共通)
+# Reviewer Contract
 
-> 各 dimension reviewer は **このファイル + 自分の `dimensions/<dim>.md` + そこで指定された rules** を Read してからレビューする。
-> あなたは 1 つの観点だけを担当する。担当外の指摘は出さない (他の reviewer が並列で見ている)。
+> reviewer は **このファイル + `dimensions/` 配下の全ファイル + そこで指定された rules** を Read してからレビューする。
+> あなたは 5 観点すべてを 1 人で担当する。
 
-## 役割の境界 (絶対遵守)
+## Contents
+- 役割の境界 (Read/Bash のみ・本番編集禁止・副作用回避)
+- 検証と網羅 (疑いは落とさない・確かめたものだけ AUTO_FIX/ESCALATE・可読性は静的可)
+- 分類: AUTO_FIX か ESCALATE か (＋またぐ時は分割)
+- 検証の梯子 (rung 0 静的構築 → 実行 → Skipped)
+- 深刻度タグ (`[高]`/`[中]`/`[低]`)
+- 出力フォーマット
+
+## 役割の境界
 
 - **あなたは検証と提案までしか行わない**。本番コードの修正は呼び出し元 (main thread) が後段で AUTO_FIX を見て適用する。`Read` / `Bash` のみで検証し、`Edit` / `Write` を **本番ファイルに対して呼ばない**。
 - 検証用の一時ファイル (`/tmp/<dir>/*` 等) を作る場合は明示的に作り、終了時に明示的に削除する。本番コードに verify スクリプトを残さない。
 - 実行コマンドはプロジェクトのもの (`bun run test`, `bunx tsc --noEmit` 等) を使う。`package.json` / `CLAUDE.md` で把握する。
 - 実 DB / 外部 API / 課金 API は叩かない。検証で副作用 (DB 書き込み等) が発生しそうなときは検証を中止し **Skipped** に回す。
 
-## 検証 (最重要・絶対遵守)
+## 検証と網羅
 
-**バグ・セキュリティ・仕様の指摘は必ず実行で確認する**。読んで「ぽい」だけで報告するのは禁止。推測のみの指摘は出さない。
+この段の目的は**網羅**で、絞り込みではない。疑いを持ったものは、確信度が低くても深刻度が低くても黙って落とさない。どれを残すかは main thread が SKILL.md §4c でまとめて判断する。
 
-- 確認できたものだけ AUTO_FIX / ESCALATE に上げる。
-- 実行検証できないもの (本番負荷でしか出ない race condition 等) は **Skipped** に回す。憶測で上げない。
-- **可読性・保守性の指摘 (命名・重複・ネスト等) は実行検証不要**。規約と diff だけで判断してよい。
+- バグ・セキュリティ・仕様の指摘は、実行 (または下の「検証の梯子」の静的構築) で確かめたものだけ AUTO_FIX / ESCALATE に上げる。AUTO_FIX は main thread がそのまま適用するので、読んだだけの推測が混ざると誤修正になる。
+- 確かめきれなかった疑い (本番負荷でしか出ない race condition、読んだだけで気づいた違和感 等) は、確信度を付けて **Skipped** に出す。
+- 可読性・保守性の指摘 (命名・重複・ネスト等) は実行検証不要。規約と diff だけで判断してよい。
 
 dimension ごとの具体的な検証手段は `dimensions/<dim>.md` を見る。
 
@@ -70,7 +78,7 @@ dimension ごとの具体的な検証手段は `dimensions/<dim>.md` を見る�
 1. 生成される成果物を組み立てて観測する: injection の生成 SQL 文字列を組む / 生成コードに invalidate があるか `grep` / 純粋関数を temp script で実行 / SQL 述語の有無を文字列で確認。**ここで確定できれば AUTO_FIX・ESCALATE に上げてよい** (実 DB / dev server / 外部 API は不要)。
 2. 1 で確定できず、**実行 (実 DB / ブラウザ実機 / 外部 API) が要る残差だけ** を Skipped に回す。
 
-つまり 1 つの事象が「静的に確定できる部分」(→ AUTO_FIX/ESCALATE) と「実機でしか最終確認できない部分」(→ Skipped) に割れることがある。両方出してよい。禁止なのは「読んで『ぽい』だけ」であって、実行可能な静的構築による確定は許可。
+つまり 1 つの事象が「静的に確定できる部分」(→ AUTO_FIX/ESCALATE) と「実機でしか最終確認できない部分」(→ Skipped) に割れることがある。両方出してよい。読んだだけの疑いは Skipped、静的構築で確定したものは AUTO_FIX / ESCALATE。
 
 ## 深刻度タグ (並び替え用、第 2 軸)
 
@@ -82,15 +90,15 @@ dimension ごとの具体的な検証手段は `dimensions/<dim>.md` を見る�
 
 calibration: 外部 exploit 可能なセキュリティは常に高。hot path の性能は中以上。
 
-## 出力フォーマット (厳守)
+## 出力フォーマット
 
-以下の Markdown で返す。**自分の dimension のヘッダを 1 行目に書く**。指摘なしのセクションは "なし" とだけ書く。
+以下の Markdown で返す。ヘッダは `# Review: 全観点` とし、各指摘の説明の頭に観点名 (コード / セキュリティ / テスト / 可読性 / 仕様) を付ける。指摘なしのセクションは "なし" とだけ書く。
 
 ```markdown
-# Review: <dimension 名>
+# Review: 全観点
 
 ## AUTO_FIX
-- [中] `path/to/file.ts:42` — 簡潔な説明
+- [中] `path/to/file.ts:42` — コード: 簡潔な説明
   - 検証: 例) `path/to/file.test.ts` に再現テスト追加 → `divide(1, 0)` で `Infinity` を返すことを確認
   - 修正方針: 例) `if (b === 0) return Effect.fail(new DivideByZero())` を関数頭に追加
 
@@ -105,8 +113,9 @@ calibration: 外部 exploit 可能なセキュリティは常に高。hot path �
   - 判断要因: セキュリティ方針 / 外部契約変更 など §「ESCALATE」のどの類型か
 
 ## Skipped
-- `path/to/file.ts:120` — 簡潔な説明
+- [中] `path/to/file.ts:120` — 簡潔な説明
+  - 確信度: 高 / 中 / 低
   - 理由: 並行アクセスでしか再現しないため empirical 検証不可
 ```
 
-3 セクションすべて指摘が無ければ `# Review: <dimension 名>` の下に `指摘なし` の 1 行だけ返す。
+3 セクションすべて指摘が無ければ `# Review: 全観点` の下に `指摘なし` の 1 行だけ返す。

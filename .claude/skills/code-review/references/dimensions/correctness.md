@@ -14,7 +14,7 @@
 - 論理エラー: off-by-one, null/undefined deref, 0 除算, 比較演算子の取り違え, 真偽の反転
 - ロジック欠落: エッジケース未処理, early return 漏れ, 例外の伝播経路漏れ, Promise の await 漏れ
 - リソースリーク: 未 close, unsubscribe 漏れ, transaction 未終了, listener 未解除
-- 並行性: race condition, 非冪等な再実行, 競合する書き込み (確信が持てるもののみ。負荷でしか出ないものは Skipped)
+- 並行性: race condition, 非冪等な再実行, 競合する書き込み (負荷でしか再現しないものは確信度を付けて Skipped)
 
 ### 型安全 (TS)
 - `any` の濫用, `as` / `as unknown as` キャスト, narrowing 不足

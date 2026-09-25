@@ -20,10 +20,12 @@ melta-ui は **コンポーネントライブラリではない**。React 実装
 
 つまり **どのコンポーネント実装にも乗せられる規約レイヤー**。shadcn / MUI / 素の Tailwind、何で書いても出力された Tailwind クラスがこの規約に従えば OK。
 
-## 必読（このルール発火時に自動ロード）
+## 必読（このルール発火時に Read する）
 
-- @../../../melta-ui/DESIGN.md — 憲法 + Quick Reference（7原則 / カラー / クラス選択）
-- @../../../melta-ui/foundations/theme.md — テーマ・CSS 変数定義
+- `melta-ui/DESIGN.md` — 憲法 + Quick Reference（7原則 / カラー / クラス選択）
+- `melta-ui/foundations/theme.md` — テーマ・CSS 変数定義
+
+`@` インポートで書かない。`paths:` は本文にしか効かず、`@` は全セッション常時ロードになる（backend の作業でも数万文字を払う）。
 
 ## 詳細仕様は MCP 経由で on-demand 取得
 
@@ -45,6 +47,21 @@ melta-ui は **コンポーネントライブラリではない**。React 実装
 2. **トークン参照**: `bg-primary-500` などセマンティック名を使う。`bg-blue-*` のような Tailwind 直値は使わない
 3. **生成後の検証**: `check_rule` で禁止クラスの自動検出を実行し、違反があれば書き直す
 
+## Tailwind v4 の罠: `transition-[...]` に `transform` と書いても `translate-*` / `scale-*` は動かない
+
+Tailwind v4 の `translate-x-*` / `-translate-y-*` / `scale-*` / `rotate-*` は、`transform` ではなく**同名の単独 CSS プロパティ**（`translate` / `scale` / `rotate`）を出力する。`transition-transform` **ユーティリティ**は `transform, translate, scale, rotate` の 4 つに展開されるが、**角括弧の中身は素の CSS プロパティ名としてそのまま出る**ので、`transition-[transform,box-shadow]` は `translate` を一切カバーしない。
+
+```
+NG: transition-[transform,box-shadow] hover:-translate-y-px   → 移動だけ 0ms で瞬間移動し、影だけ滑らかに付く
+NG: transition-colors hover:-translate-y-px                   → 同上（colors に translate は含まれない）
+OK: transition-transform hover:-translate-y-px                 → 4 プロパティに展開されるので動く
+OK: transition-[translate,box-shadow] hover:-translate-y-px    → 実際に変化するプロパティを明示する
+```
+
+**症状が「アニメーションが急・効いていない」なので、easing や duration をいじる方向に迷い込みやすい**。hover の動きが硬いと感じたら、まず `getComputedStyle(el).transitionProperty` を実機で見て、`translate` / `scale` が入っているかを確認する。`transitionstart` イベントを張ると、どのプロパティが実際にトランジションしたかが一発で分かる。
+
+react-doctor の `no-transition-all` を避けようとしてプロパティを手書きするときに最も踏みやすい。プロパティを列挙するなら、動かしている utility が出力する**実際のプロパティ名**を書く。
+
 ## このプロジェクトでの適用面
 
 - React 実装には **shadcn (radix-nova)** を使う（既存）
@@ -59,7 +76,13 @@ git submodule update --remote melta-ui
 cd melta-ui && npm install && npm run build  # MCP サーバー再ビルド
 ```
 
-## 未対応（必要に応じて Phase 2）
+## 禁止クラスの自動検出
 
-- `npm run design:check` 相当の CI 検証（生成 PR で自動的に禁止クラスを reject）
-- `check_rule` を PostToolUse hook に組み込んで生成直後にローカル検証
+`bun run design:check`（`scripts/check-melta-rules.ts`）が `apps/frontend/src` 全ファイルの、`className` に限らない**全文字列リテラル**（cva / tv / 設定オブジェクトも対象）を melta-ui の自動検出ルールで検査する。PostToolUse hook（`.claude/hooks/check-melta-rules.mjs`）が frontend のファイルを編集したときに**同じスクリプト**を呼び、違反があれば編集を差し戻す。
+
+- 検査はファイル単位でなく frontend 全体なので、既存違反が 1 件でも残るとどの編集でも止まる。違反は 0 件に保つ
+- melta-ui submodule（`melta-ui/src`）を要求する。worktree で未初期化なら `git submodule update --init melta-ui`
+- 検出器自体が死んだら気づけないので、スクリプトは毎回 planted violation の自己確認をしてから走る
+- トークンのコントラスト検査（AA 4.5:1）は `globals.css` の値が HEX のときだけ効く。現在の pdcxa は oklch なので実質スキップされる
+
+未対応: CI での `design:check` 実行

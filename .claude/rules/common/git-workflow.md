@@ -38,9 +38,9 @@ PR のタイトル、本文、変更概要、テスト計画は日本語で書�
 
 CI は手元の全テストを代わりに回してくれる存在ではない。前提を踏まえてローカルで担保する:
 
-- **CI は main 向け PR で走る**。main 以外のブランチは push した時点で stg 環境へ自動デプロイされるので、push する前にローカルで緑を確認する
+- **CI は main 以外のブランチへの push で走る**（`.github/workflows/frontend-ci.yml`）。同じ push で dev 環境へ自動デプロイされる（`deploy-dev.yml`）ので、push する前にローカルで緑を確認する
 - **CI が回すのは unit test のみ**（storybook の play function は含まない）。`bun run test:storybook` 相当はローカルでしか担保されない
-- **CI は「ブランチ + 最新 main のマージ」をテストする**。ブランチを切った後に main へ入った新ゲートと衝突し、ローカル緑でも落ちることがある。落ちたら `git merge origin/main` で取り込み、ローカルで再現・修正してから push
+- **CI は push したブランチそのものをテストする**（最新 main とのマージではない）。ブランチを切った後に main へ入った新ゲートとの衝突は CI では見えず、main へのマージ後に初めて落ちる。PR 前に `git merge origin/main` で取り込み、ローカルで緑を確認してから push
 
 → 報告前チェックリスト（development-workflow.md）の typecheck / test / storybook / API 契約再生成（api:generate / orval）を、CI 任せにせず自分で緑にする。
 

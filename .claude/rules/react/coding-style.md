@@ -194,7 +194,29 @@ const { field } = useController({ control, name: "items" });
 return <MyField value={field.value ?? []} onChange={field.onChange} />;
 ```
 
-**この種の再描画バグは Storybook では捕まらない**: Storybook の build は Next の React Compiler を適用しないため再現せず、かつ「送信値」を見るテストは `setValue` で値だけ更新されるので素通りする。**自作フィールドは dev 実機で「クリック→画面が反映される」まで確認する**（development-workflow.md の実機チェックリスト）。Storybook play では「操作後に選択状態が**画面に出る**」視覚アサートを入れて意図を固定する。
+**この種の再描画バグは Storybook では捕まらない**: Storybook の build は Next の React Compiler を適用しないため再現せず、かつ「送信値」を見るテストは `setValue` で値だけ更新されるので素通りする。**自作フィールドは dev 実機で「クリック→画面が反映される」まで確認する**（frontend-react.md の dev server 実機確認）。Storybook play では「操作後に選択状態が**画面に出る**」視覚アサートを入れて意図を固定する。
+
+### hook を prop / 設定オブジェクトで差し替えて画面を共通化しない
+
+同じ形の画面を複数の対象で使い回すとき、**orval の生成 hook を descriptor に詰めて prop で渡し、共通コンポーネント側で `source.useList()` のように呼ぶ形にしない**（理由: React は「hook は毎レンダー同じ関数」であることを前提にしており、値として渡ってくる hook はそれを保証できない。React Compiler が最適化を諦め、react-doctor の `Performance: React Compiler can't optimize this` が出る）。
+
+共通化するときは **見た目だけを共通コンポーネントに切り出し、通信は対象ごとの薄いコンテナが静的に hook を呼ぶ**。共通側は「データ + コールバック」で受ける。行ごとの操作は `renderActions` のような render prop に逃がす。
+
+```tsx
+// WRONG: hook を prop 経由で差し替える
+<PdList source={{ useList: useGetPds, ... }} />
+
+// CORRECT: 対象ごとのコンテナが静的に hook を呼び、見た目だけ共通化する
+export function MyPdList() {
+  const { data, isLoading } = useGetMyPds({ ... });   // 静的
+  const remove = useDeletePd();                        // 静的
+  return <PdListView items={...} renderActions={(pd) => ...} />;
+}
+```
+
+対象ごとに変わる**文言だけ**は素の値の descriptor にまとめてよい。値なら React の制約に触れない。
+
+**mutation の `isPending` を一覧に引き上げたら行で絞る**。コンテナに 1 インスタンスしか無い `isPending` を全行へ配ると、1 行を操作しただけで全行が spinner になる。`remove.isPending && remove.variables?.pdId === pd.id` のように対象を突き合わせる。
 
 ## コンポーネント構造
 
@@ -325,3 +347,11 @@ hover で背景色・色が変わる要素は、ユーザーに「クリック�
 - 表示専用バッジは `variant="outline"`（または hover を持たない variant）を使い、色は status 配色を自前クラスで付ける
 - クリックできない要素に `cursor-pointer` / `hover:bg-*` / `hover:text-*` を付けない
 - 進捗・状態の系列（録画待ち / 解析中 / 解析済 / 失敗 等）は**文言だけでなく色で段階を区別**する（melta-ui の semantic status 配色を使う。3-Color Rule の範囲内）
+
+## React Doctor
+
+frontend スコープ（dep / 実行とも `apps/frontend`）。報告前に `bun run doctor` で score 低下が無いことを確認する。
+
+- 編集バッチごとに PostToolBatch hook（`.claude/hooks/react-doctor.sh`）が frontend cwd で `--diff --fail-on warning` を自動実行し、指摘を会話に返す（非ブロッキング）
+- **inline 抑止コメント（`// react-doctor-disable-next-line <rule>`）は診断行の直上 1 行にしか効かず、間に `biome-ignore` を挟むと両方壊れる**。両ツールの抑止が要る箇所は、その要素を専用コンポーネントに切り出して 1 箇所に畳む
+- shadcn (`components/ui/`) も「自分たちのコード」として直す対象。原則 react-doctor の指摘を実コードで直し、blanket な ui 除外はしない

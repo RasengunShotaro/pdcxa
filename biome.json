@@ -50,6 +50,7 @@
       "!**/cdk.out",
       "!**/src/schema",
       "!**/public/mockServiceWorker.js",
+      "!**/public/pdcxa.svg",
       "!**/openapi.json",
       "!**/drizzle/meta",
       "!**/globals.css"
@@ -63,7 +64,7 @@
   "linter": {
     "enabled": true,
     "rules": {
-      "recommended": true,
+      "preset": "recommended",
       "suspicious": {
         "noUnknownAtRules": "off"
       }
