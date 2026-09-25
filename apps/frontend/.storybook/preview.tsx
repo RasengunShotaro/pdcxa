@@ -1,14 +1,19 @@
 import type { Preview } from "@storybook/nextjs-vite";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { initialize, mswLoader } from "msw-storybook-addon";
+import { setupWorker } from "msw/browser";
+import { mswLoader } from "msw-storybook-addon/csf3";
 import { useState } from "react";
 import { Toaster } from "../src/components/ui/sonner";
 import "../src/app/globals.css";
 
-initialize({ onUnhandledRequest: "bypass" });
-
 const preview: Preview = {
-  loaders: [mswLoader],
+  loaders: [
+    mswLoader(async () => {
+      const worker = setupWorker();
+      await worker.start({ onUnhandledRequest: "bypass" });
+      return worker;
+    }),
+  ],
   decorators: [
     (Story) => {
       const [queryClient] = useState(

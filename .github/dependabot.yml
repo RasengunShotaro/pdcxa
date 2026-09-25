@@ -10,3 +10,7 @@ updates:
           - "*"
     ignore:
       - dependency-name: "recharts"
+      - dependency-name: "vitest"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@vitest/*"
+        update-types: ["version-update:semver-major"]

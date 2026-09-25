@@ -9,5 +9,6 @@ export type CreatePd201 = {
   content: string;
   createdAt: string;
   userId: string;
+  /** @nullable */
   imageFileName: string | null;
 };

@@ -9,5 +9,6 @@ export type FetchPds200ItemsItem = {
   content: string;
   createdAt: string;
   userId: string;
+  /** @nullable */
   imageFileName: string | null;
 };

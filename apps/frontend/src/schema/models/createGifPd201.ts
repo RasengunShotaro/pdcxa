@@ -9,5 +9,6 @@ export type CreateGifPd201 = {
   content: string;
   createdAt: string;
   userId: string;
+  /** @nullable */
   imageFileName: string | null;
 };
