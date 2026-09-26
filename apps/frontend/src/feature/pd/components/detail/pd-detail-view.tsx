@@ -8,7 +8,7 @@ import { FeedLayout } from "@/components/elements/feed-layout";
 import { ListError } from "@/components/elements/list-error";
 import { ListSkeleton } from "@/components/elements/list-skeleton";
 import { Button } from "@/components/ui/button";
-import { RecentNotificationsCard } from "@/feature/notification/components/recent-notifications-card";
+import { WeeklyActivityCard } from "@/feature/pd/components/stats/weekly-activity-card";
 import { usePd } from "@/hooks/use-pd";
 import { useRePd } from "@/hooks/use-repd";
 import { ComposeFab } from "../composer/compose-fab";
@@ -53,7 +53,7 @@ export function PdDetailView({ pdId }: PdDetailViewProps) {
   } = useRePd(pdId);
 
   return (
-    <FeedLayout aside={<RecentNotificationsCard />}>
+    <FeedLayout aside={<WeeklyActivityCard />}>
       <div className="pb-[calc(5.5rem+env(safe-area-inset-bottom))]">
         <div className="flex h-12 items-center border-b border-border px-4">
           <BackLink />

@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/card";
 import { avatarInitials } from "@/feature/pd/components/timeline/avatar-initials";
 import type { PdWeeklyStatsDetailed } from "@/feature/pd/types/stats";
+import { 投稿者の表示名 } from "@/feature/pd/utils/stats-derive";
 
 type RankingRow = PdWeeklyStatsDetailed["rankings"][number];
 
@@ -23,15 +24,7 @@ const RANK_BADGE: Record<number, string> = {
   3: "bg-orange-100 text-orange-700",
 };
 
-const displayNameOf = (row: RankingRow): string => {
-  if (row.displayName.trim().length > 0) {
-    return row.displayName;
-  }
-  if (row.userName.trim().length > 0) {
-    return `@${row.userName}`;
-  }
-  return "名称未設定";
-};
+const displayNameOf = 投稿者の表示名;
 
 function RankBadge({ rank }: { rank: number }) {
   const className = RANK_BADGE[rank] ?? "bg-transparent text-muted-foreground";

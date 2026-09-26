@@ -3,7 +3,7 @@
 import { Bookmark } from "lucide-react";
 import { EmptyState } from "@/components/elements/empty-state";
 import { FeedLayout } from "@/components/elements/feed-layout";
-import { RecentNotificationsCard } from "@/feature/notification/components/recent-notifications-card";
+import { WeeklyActivityCard } from "@/feature/pd/components/stats/weekly-activity-card";
 import { useBookmarkedPds } from "@/hooks/use-bookmarked-pds";
 import { PdList } from "../timeline/pd-list";
 
@@ -20,7 +20,7 @@ export function BookmarksView() {
   } = useBookmarkedPds();
 
   return (
-    <FeedLayout aside={<RecentNotificationsCard />}>
+    <FeedLayout aside={<WeeklyActivityCard />}>
       <PdList
         emptyState={
           <EmptyState

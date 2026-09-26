@@ -1,4 +1,4 @@
-import type { PdWeeklyStats } from "../types/stats";
+import type { PdWeeklyStats, PdWeeklyStatsDetailed } from "../types/stats";
 
 export interface StatSummaryItem {
   key: "pd" | "repd" | "like" | "author";
@@ -99,6 +99,31 @@ export const toActivityChartData = (
 
 export const hasNoActivity = (totals: PdWeeklyStats["totals"]): boolean =>
   totals.pdCount === 0 && totals.rePdCount === 0 && totals.likeCount === 0;
+
+type RankingRow = PdWeeklyStatsDetailed["rankings"][number];
+
+export const 投稿者の表示名 = (
+  row: Pick<RankingRow, "displayName" | "userName">,
+): string => {
+  if (row.displayName.trim().length > 0) {
+    return row.displayName;
+  }
+  if (row.userName.trim().length > 0) {
+    return `@${row.userName}`;
+  }
+  return "名称未設定";
+};
+
+interface 上位の投稿者を選ぶInput {
+  rankings: readonly RankingRow[];
+  limit: number;
+}
+
+export const 上位の投稿者を選ぶ = ({
+  rankings,
+  limit,
+}: 上位の投稿者を選ぶInput): RankingRow[] =>
+  rankings.filter((row) => row.pdCount > 0).slice(0, limit);
 
 export const formatRangeLabel = (range: {
   start: string;

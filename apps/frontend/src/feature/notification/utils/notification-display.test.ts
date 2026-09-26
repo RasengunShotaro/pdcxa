@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { NotificationActor, NotificationItem } from "../types";
 import {
-  最近の通知を選ぶ,
   行為者の表示名,
   通知のリンク先,
   通知の行為文言,
@@ -61,28 +60,6 @@ describe("通知の行為文言", () => {
 
   it("PDへの返信を知らせる", () => {
     expect(通知の行為文言("rePd")).toBe("あなたのPDにRePDしました");
-  });
-});
-
-describe("最近の通知を選ぶ", () => {
-  it("上限より多いときは新しい順の先頭から上限件数だけ返す", () => {
-    const notifications = [
-      notificationItem({ pdId: "pd-1" }),
-      notificationItem({ pdId: "pd-2" }),
-      notificationItem({ pdId: "pd-3" }),
-    ];
-
-    const recent = 最近の通知を選ぶ({ notifications, limit: 2 });
-
-    expect(recent.map((item) => item.pdId)).toEqual(["pd-1", "pd-2"]);
-  });
-
-  it("上限に満たないときはすべて返す", () => {
-    const notifications = [notificationItem({ pdId: "pd-1" })];
-
-    const recent = 最近の通知を選ぶ({ notifications, limit: 5 });
-
-    expect(recent.map((item) => item.pdId)).toEqual(["pd-1"]);
   });
 });
 

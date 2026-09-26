@@ -3,7 +3,7 @@
 import { MessageSquare } from "lucide-react";
 import { EmptyState } from "@/components/elements/empty-state";
 import { FeedLayout } from "@/components/elements/feed-layout";
-import { RecentNotificationsCard } from "@/feature/notification/components/recent-notifications-card";
+import { WeeklyActivityCard } from "@/feature/pd/components/stats/weekly-activity-card";
 import { PdTimeline } from "@/feature/pd/components/timeline/pd-timeline";
 import { usePd } from "@/hooks/use-pd";
 import { UserTimelineHeader } from "./user-timeline-header";
@@ -17,7 +17,7 @@ export function UserTimelineView({ userName }: UserTimelineViewProps) {
   const detail = pds[0]?.userDetail;
 
   return (
-    <FeedLayout aside={<RecentNotificationsCard />}>
+    <FeedLayout aside={<WeeklyActivityCard />}>
       <div className="pb-6">
         <UserTimelineHeader
           imageUrl={detail?.imageUrl}

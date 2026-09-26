@@ -26,13 +26,3 @@ export const 通知の行為文言 = (kind: NotificationKind): string =>
 
 export const 通知のリンク先 = (item: NotificationItem): string =>
   `/pd/${item.pdId}`;
-
-interface 最近の通知を選ぶInput {
-  readonly notifications: readonly NotificationItem[];
-  readonly limit: number;
-}
-
-export const 最近の通知を選ぶ = ({
-  notifications,
-  limit,
-}: 最近の通知を選ぶInput): NotificationItem[] => notifications.slice(0, limit);
