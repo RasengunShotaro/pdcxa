@@ -46,7 +46,7 @@ export const StatsView = () => {
         </p>
       </header>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
         {summary.map((item) => (
           <StatCard item={item} key={item.key} />
         ))}

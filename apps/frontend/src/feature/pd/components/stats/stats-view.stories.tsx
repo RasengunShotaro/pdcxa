@@ -83,7 +83,7 @@ const meta: Meta<typeof StatsView> = {
   component: StatsView,
   decorators: [
     (Story) => (
-      <div className="w-full max-w-2xl p-4">
+      <div className="w-full max-w-[1042px] p-4">
         <Story />
       </div>
     ),

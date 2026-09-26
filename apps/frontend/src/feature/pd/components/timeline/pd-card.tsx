@@ -28,13 +28,7 @@ export function PdCard({ pd, showAuthor = true }: PdCardProps) {
           userFullName={pd.userDetail.userFullName}
           userName={pd.userDetail.userName}
         />
-      ) : (
-        <PdTimestamp
-          className="self-end"
-          createdAt={pd.createdAt}
-          href={detailHref}
-        />
-      )}
+      ) : null}
 
       <p className="whitespace-pre-wrap break-words text-base text-body">
         <Linkify>{pd.content}</Linkify>
@@ -46,6 +40,13 @@ export function PdCard({ pd, showAuthor = true }: PdCardProps) {
       />
 
       <div className="-mr-2 flex items-center justify-end gap-1 text-muted-foreground">
+        {showAuthor ? null : (
+          <PdTimestamp
+            className="mr-auto"
+            createdAt={pd.createdAt}
+            href={detailHref}
+          />
+        )}
         <div className="flex items-center rounded-full transition-colors hover:bg-accent">
           <PdLikeButton pd={pd} />
           <PdLikersPopover likeCount={pd.likeCount} likeUsers={pd.likeUsers} />

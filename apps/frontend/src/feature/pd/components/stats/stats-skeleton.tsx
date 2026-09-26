@@ -11,7 +11,7 @@ export function StatsSkeleton() {
         <Skeleton className="h-4 w-48" />
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
         {kpis.map((key) => (
           <Card key={key}>
             <CardContent className="space-y-2 p-4 sm:p-5">

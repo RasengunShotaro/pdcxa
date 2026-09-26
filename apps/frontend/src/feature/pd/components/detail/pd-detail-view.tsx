@@ -10,7 +10,6 @@ import { Button } from "@/components/ui/button";
 import { usePd } from "@/hooks/use-pd";
 import { useRePd } from "@/hooks/use-repd";
 import { ComposeFab } from "../composer/compose-fab";
-import { ComposerTrigger } from "../composer/composer-trigger";
 import { PdCard } from "../timeline/pd-card";
 import { BackLink } from "./back-link";
 import { RePdComposer } from "./repd-composer";
@@ -52,7 +51,7 @@ export function PdDetailView({ pdId }: PdDetailViewProps) {
   } = useRePd(pdId);
 
   return (
-    <div className="space-y-6 pb-[calc(5.5rem+env(safe-area-inset-bottom))] md:pb-0">
+    <div className="space-y-6 pb-[calc(5.5rem+env(safe-area-inset-bottom))]">
       <BackLink />
 
       {isPdPending ? <ListSkeleton count={1} /> : null}
@@ -71,13 +70,6 @@ export function PdDetailView({ pdId }: PdDetailViewProps) {
       {!isPdPending && !isPdError && pd ? (
         <>
           <PdCard pd={pd} />
-
-          <ComposerTrigger
-            className="hidden md:flex"
-            label="RePDする"
-            onClick={() => setComposerOpen(true)}
-            placeholder="このPDに感じたこと・気づいたことを返信しよう"
-          />
 
           <RePdSection
             error={rePdError}
