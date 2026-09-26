@@ -8,22 +8,29 @@ import { runtime } from "#/infrastructure/runtime";
 import type { Bindings } from "#/lib/bindings";
 import { GIFを含むPDを作成する } from "#/services/pd/create-gif-pd";
 import { PDを作成する } from "#/services/pd/create-pd";
+import { ブックマークしたPD一覧を取得する } from "#/services/pd/fetch-bookmarked-pds";
 import { PD画像を取得する } from "#/services/pd/fetch-pd-image";
 import { PD一覧を取得する } from "#/services/pd/fetch-pds";
 import { PD週間統計を取得する } from "#/services/pd/fetch-weekly-stats";
+import { PDのブックマーク状態を更新する } from "#/services/pd/update-pd-bookmark";
 import { PDのいいね状態を更新する } from "#/services/pd/update-pd-like";
 import { jsonContent, messageSchema } from "../common/openapi";
+import { PDをレスポンス形式にする } from "./response";
 import {
   createGifPdFormSchema,
   createPdFormSchema,
+  fetchBookmarkedPdQuerySchema,
   fetchPdImageParamSchema,
   fetchPdQuerySchema,
+  mutatePdBookmarkSchema,
   mutatePdLikeSchema,
   pdDetailSchema,
   pdImageBinarySchema,
   pdItemSchema,
   weeklyStatsSchema,
 } from "./schema";
+
+const 引用元が見つからないメッセージ = "引用元のPDが見つかりません";
 
 const fetchPdRoute = createRoute({
   operationId: "fetchPds",
@@ -55,6 +62,10 @@ const createPdRoute = createRoute({
   },
   responses: {
     201: jsonContent(pdItemSchema, "作成成功"),
+    404: jsonContent(
+      messageSchema(引用元が見つからないメッセージ),
+      "引用元のPDが存在しない",
+    ),
   },
 });
 
@@ -69,6 +80,10 @@ const createGifPdRoute = createRoute({
   },
   responses: {
     201: jsonContent(pdItemSchema, "作成成功"),
+    404: jsonContent(
+      messageSchema(引用元が見つからないメッセージ),
+      "引用元のPDが存在しない",
+    ),
   },
 });
 
@@ -83,6 +98,33 @@ const mutatePdLikeRoute = createRoute({
   },
   responses: {
     201: jsonContent(messageSchema("いいね状態を更新しました"), "更新成功"),
+  },
+});
+
+const mutatePdBookmarkRoute = createRoute({
+  operationId: "mutatePdBookmark",
+  method: "put",
+  path: "/bookmark",
+  request: {
+    body: {
+      content: { "application/json": { schema: mutatePdBookmarkSchema } },
+    },
+  },
+  responses: {
+    200: jsonContent(
+      messageSchema("ブックマーク状態を更新しました"),
+      "更新成功",
+    ),
+  },
+});
+
+const fetchBookmarkedPdsRoute = createRoute({
+  operationId: "fetchBookmarkedPds",
+  method: "get",
+  path: "/bookmarks",
+  request: { query: fetchBookmarkedPdQuerySchema },
+  responses: {
+    200: jsonContent(pdDetailSchema, "ブックマークしたPD一覧"),
   },
 });
 
@@ -110,10 +152,7 @@ export const pdApp = new OpenAPIHono<Bindings>()
         Effect.map((result) =>
           c.json(
             {
-              items: result.items.map((item) => ({
-                ...item,
-                createdAt: item.createdAt.toISOString(),
-              })),
+              items: result.items.map(PDをレスポンス形式にする),
               nextCursor: result.nextCursor,
             },
             200,
@@ -134,14 +173,14 @@ export const pdApp = new OpenAPIHono<Bindings>()
     ),
   )
   .openapi(createPdRoute, async (c) => {
-    const { content, image } = c.req.valid("form");
+    const { content, image, quotedPdId } = c.req.valid("form");
 
     return runtime.runPromise(
-      PDを作成する({ content, image }).pipe(
-        Effect.map((created) =>
-          c.json(
-            { ...created, createdAt: created.createdAt.toISOString() },
-            201,
+      PDを作成する({ content, image, quotedPdId }).pipe(
+        Effect.map((created) => c.json(PDをレスポンス形式にする(created), 201)),
+        Effect.catchTag("QuotedPdNotFoundError", () =>
+          Effect.succeed(
+            c.json({ message: 引用元が見つからないメッセージ }, 404),
           ),
         ),
         Effect.tapError((error) => Effect.logError(error.message)),
@@ -151,14 +190,14 @@ export const pdApp = new OpenAPIHono<Bindings>()
     );
   })
   .openapi(createGifPdRoute, async (c) => {
-    const { content, image } = c.req.valid("form");
+    const { content, image, quotedPdId } = c.req.valid("form");
 
     return runtime.runPromise(
-      GIFを含むPDを作成する({ content, image }).pipe(
-        Effect.map((created) =>
-          c.json(
-            { ...created, createdAt: created.createdAt.toISOString() },
-            201,
+      GIFを含むPDを作成する({ content, image, quotedPdId }).pipe(
+        Effect.map((created) => c.json(PDをレスポンス形式にする(created), 201)),
+        Effect.catchTag("QuotedPdNotFoundError", () =>
+          Effect.succeed(
+            c.json({ message: 引用元が見つからないメッセージ }, 404),
           ),
         ),
         Effect.tapError((error) => Effect.logError(error.message)),
@@ -173,6 +212,38 @@ export const pdApp = new OpenAPIHono<Bindings>()
     return runtime.runPromise(
       PDのいいね状態を更新する({ pdId }).pipe(
         Effect.map(() => c.json({ message: "いいね状態を更新しました" }, 201)),
+        Effect.tapError((error) => Effect.logError(error.message)),
+        Effect.provideService(AuthContext, { userId: c.get("userId") }),
+      ),
+    );
+  })
+  .openapi(mutatePdBookmarkRoute, async (c) => {
+    const { pdId, bookmarked } = c.req.valid("json");
+
+    return runtime.runPromise(
+      PDのブックマーク状態を更新する({ pdId, bookmarked }).pipe(
+        Effect.map(() =>
+          c.json({ message: "ブックマーク状態を更新しました" }, 200),
+        ),
+        Effect.tapError((error) => Effect.logError(error.message)),
+        Effect.provideService(AuthContext, { userId: c.get("userId") }),
+      ),
+    );
+  })
+  .openapi(fetchBookmarkedPdsRoute, async (c) => {
+    const { cursor } = c.req.valid("query");
+
+    return runtime.runPromise(
+      ブックマークしたPD一覧を取得する({ cursor }).pipe(
+        Effect.map((result) =>
+          c.json(
+            {
+              items: result.items.map(PDをレスポンス形式にする),
+              nextCursor: result.nextCursor,
+            },
+            200,
+          ),
+        ),
         Effect.tapError((error) => Effect.logError(error.message)),
         Effect.provideService(AuthContext, { userId: c.get("userId") }),
       ),

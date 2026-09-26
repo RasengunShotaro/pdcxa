@@ -19,13 +19,17 @@ import type {
 
 import type {
   CreateGifPd201,
+  CreateGifPd404,
   CreateGifPdBody,
   CreateInvitation200,
   CreateInvitationBody,
   CreatePd201,
+  CreatePd404,
   CreatePdBody,
   CreateRePd201,
   CreateRePdBody,
+  FetchBookmarkedPds200,
+  FetchBookmarkedPdsParams,
   FetchNotificationUnreadCount200,
   FetchNotifications200,
   FetchNotificationsParams,
@@ -39,6 +43,8 @@ import type {
   FetchUserDetailsParams,
   FetchWeeklyStats200,
   MarkNotificationsSeen200,
+  MutatePdBookmark200,
+  MutatePdBookmarkBody,
   MutatePdLike201,
   MutatePdLikeBody,
   MutateRePdLike201,
@@ -615,12 +621,19 @@ export type createPdResponse201 = {
   status: 201
 }
 
+export type createPdResponse404 = {
+  data: CreatePd404
+  status: 404
+}
+
 export type createPdResponseSuccess = (createPdResponse201) & {
   headers: Headers;
 };
-;
+export type createPdResponseError = (createPdResponse404) & {
+  headers: Headers;
+};
 
-export type createPdResponse = (createPdResponseSuccess)
+export type createPdResponse = (createPdResponseSuccess | createPdResponseError)
 
 export const getCreatePdUrl = () => {
 
@@ -634,6 +647,9 @@ export const createPd = async (createPdBody?: CreatePdBody, options?: Parameters
     const formData = new FormData();
 if(createPdBody?.content !== undefined) {
  formData.append(`content`, createPdBody.content);
+ }
+if(createPdBody?.quotedPdId !== undefined) {
+ formData.append(`quotedPdId`, createPdBody.quotedPdId);
  }
 if(createPdBody?.image !== undefined) {
  formData.append(`image`, createPdBody.image);
@@ -654,7 +670,7 @@ if(createPdBody?.image !== undefined) {
 
 export const getCreatePdMutationKey = () => ['createPd'] as const;
 
-export const getCreatePdMutationOptions = <TError = unknown,
+export const getCreatePdMutationOptions = <TError = CreatePd404,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createPd>>, TError,CreatePdMutationVariables, TContext>, request?: SecondParameter<typeof orvalFetch>}
 ): UseMutationOptions<Awaited<ReturnType<typeof createPd>>, TError,CreatePdMutationVariables, TContext> => {
 
@@ -683,10 +699,10 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
     export type CreatePdMutationResult = NonNullable<Awaited<ReturnType<typeof createPd>>>
     export type CreatePdMutationBody = CreatePdBody | undefined
-    export type CreatePdMutationError = unknown
+    export type CreatePdMutationError = CreatePd404
     export type CreatePdMutationVariables = {data?: CreatePdBody}
 
-    export const useCreatePd = <TError = unknown,
+    export const useCreatePd = <TError = CreatePd404,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createPd>>, TError,CreatePdMutationVariables, TContext>, request?: SecondParameter<typeof orvalFetch>}
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof createPd>>,
@@ -702,12 +718,19 @@ export type createGifPdResponse201 = {
   status: 201
 }
 
+export type createGifPdResponse404 = {
+  data: CreateGifPd404
+  status: 404
+}
+
 export type createGifPdResponseSuccess = (createGifPdResponse201) & {
   headers: Headers;
 };
-;
+export type createGifPdResponseError = (createGifPdResponse404) & {
+  headers: Headers;
+};
 
-export type createGifPdResponse = (createGifPdResponseSuccess)
+export type createGifPdResponse = (createGifPdResponseSuccess | createGifPdResponseError)
 
 export const getCreateGifPdUrl = () => {
 
@@ -721,6 +744,9 @@ export const createGifPd = async (createGifPdBody?: CreateGifPdBody, options?: P
     const formData = new FormData();
 if(createGifPdBody?.content !== undefined) {
  formData.append(`content`, createGifPdBody.content);
+ }
+if(createGifPdBody?.quotedPdId !== undefined) {
+ formData.append(`quotedPdId`, createGifPdBody.quotedPdId);
  }
 if(createGifPdBody?.image !== undefined) {
  formData.append(`image`, createGifPdBody.image);
@@ -741,7 +767,7 @@ if(createGifPdBody?.image !== undefined) {
 
 export const getCreateGifPdMutationKey = () => ['createGifPd'] as const;
 
-export const getCreateGifPdMutationOptions = <TError = unknown,
+export const getCreateGifPdMutationOptions = <TError = CreateGifPd404,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createGifPd>>, TError,CreateGifPdMutationVariables, TContext>, request?: SecondParameter<typeof orvalFetch>}
 ): UseMutationOptions<Awaited<ReturnType<typeof createGifPd>>, TError,CreateGifPdMutationVariables, TContext> => {
 
@@ -770,10 +796,10 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
     export type CreateGifPdMutationResult = NonNullable<Awaited<ReturnType<typeof createGifPd>>>
     export type CreateGifPdMutationBody = CreateGifPdBody | undefined
-    export type CreateGifPdMutationError = unknown
+    export type CreateGifPdMutationError = CreateGifPd404
     export type CreateGifPdMutationVariables = {data?: CreateGifPdBody}
 
-    export const useCreateGifPd = <TError = unknown,
+    export const useCreateGifPd = <TError = CreateGifPd404,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createGifPd>>, TError,CreateGifPdMutationVariables, TContext>, request?: SecondParameter<typeof orvalFetch>}
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof createGifPd>>,
@@ -877,6 +903,214 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
       > => {
       return useMutation(getMutatePdLikeMutationOptions(options), queryClient);
     }
+
+export type mutatePdBookmarkResponse200 = {
+  data: MutatePdBookmark200
+  status: 200
+}
+
+export type mutatePdBookmarkResponseSuccess = (mutatePdBookmarkResponse200) & {
+  headers: Headers;
+};
+;
+
+export type mutatePdBookmarkResponse = (mutatePdBookmarkResponseSuccess)
+
+export const getMutatePdBookmarkUrl = () => {
+
+
+
+
+  return `/pd/bookmark`
+}
+
+export const mutatePdBookmark = async (mutatePdBookmarkBody?: MutatePdBookmarkBody, options?: Parameters<typeof orvalFetch>[1]): Promise<mutatePdBookmarkResponse> => {
+
+    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(h as Iterable<Iterable<string>>, (entry) => Array.from(entry) as [string, string]),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<string | readonly string[] | undefined>(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+return orvalFetch<mutatePdBookmarkResponse>(getMutatePdBookmarkUrl(),
+  {
+    ...options,
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+    body: JSON.stringify(mutatePdBookmarkBody)
+  }
+);}
+
+
+
+
+
+export const getMutatePdBookmarkMutationKey = () => ['mutatePdBookmark'] as const;
+
+export const getMutatePdBookmarkMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof mutatePdBookmark>>, TError,MutatePdBookmarkMutationVariables, TContext>, request?: SecondParameter<typeof orvalFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof mutatePdBookmark>>, TError,MutatePdBookmarkMutationVariables, TContext> => {
+
+const mutationKey = getMutatePdBookmarkMutationKey();
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof mutatePdBookmark>>, MutatePdBookmarkMutationVariables> = (props) => {
+          const {data} = props ?? {};
+
+          return  mutatePdBookmark(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type MutatePdBookmarkMutationResult = NonNullable<Awaited<ReturnType<typeof mutatePdBookmark>>>
+    export type MutatePdBookmarkMutationBody = MutatePdBookmarkBody | undefined
+    export type MutatePdBookmarkMutationError = unknown
+    export type MutatePdBookmarkMutationVariables = {data?: MutatePdBookmarkBody}
+
+    export const useMutatePdBookmark = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof mutatePdBookmark>>, TError,MutatePdBookmarkMutationVariables, TContext>, request?: SecondParameter<typeof orvalFetch>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof mutatePdBookmark>>,
+        TError,
+        MutatePdBookmarkMutationVariables,
+        TContext
+      > => {
+      return useMutation(getMutatePdBookmarkMutationOptions(options), queryClient);
+    }
+
+export type fetchBookmarkedPdsResponse200 = {
+  data: FetchBookmarkedPds200
+  status: 200
+}
+
+export type fetchBookmarkedPdsResponseSuccess = (fetchBookmarkedPdsResponse200) & {
+  headers: Headers;
+};
+;
+
+export type fetchBookmarkedPdsResponse = (fetchBookmarkedPdsResponseSuccess)
+
+export const getFetchBookmarkedPdsUrl = (params?: FetchBookmarkedPdsParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/pd/bookmarks?${stringifiedParams}` : `/pd/bookmarks`
+}
+
+export const fetchBookmarkedPds = async (params?: FetchBookmarkedPdsParams, options?: Parameters<typeof orvalFetch>[1]): Promise<fetchBookmarkedPdsResponse> => {
+
+  return orvalFetch<fetchBookmarkedPdsResponse>(getFetchBookmarkedPdsUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getFetchBookmarkedPdsQueryKey = (params?: FetchBookmarkedPdsParams,) => {
+    return [
+    `/pd/bookmarks`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getFetchBookmarkedPdsQueryOptions = <TData = Awaited<ReturnType<typeof fetchBookmarkedPds>>, TError = unknown>(params?: FetchBookmarkedPdsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof fetchBookmarkedPds>>, TError, TData>>, request?: SecondParameter<typeof orvalFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getFetchBookmarkedPdsQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof fetchBookmarkedPds>>> = ({ signal }) => fetchBookmarkedPds(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof fetchBookmarkedPds>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type FetchBookmarkedPdsQueryResult = NonNullable<Awaited<ReturnType<typeof fetchBookmarkedPds>>>
+export type FetchBookmarkedPdsQueryError = unknown
+
+
+export function useFetchBookmarkedPds<TData = Awaited<ReturnType<typeof fetchBookmarkedPds>>, TError = unknown>(
+ params: undefined |  FetchBookmarkedPdsParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof fetchBookmarkedPds>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof fetchBookmarkedPds>>,
+          TError,
+          Awaited<ReturnType<typeof fetchBookmarkedPds>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof orvalFetch>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useFetchBookmarkedPds<TData = Awaited<ReturnType<typeof fetchBookmarkedPds>>, TError = unknown>(
+ params?: FetchBookmarkedPdsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof fetchBookmarkedPds>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof fetchBookmarkedPds>>,
+          TError,
+          Awaited<ReturnType<typeof fetchBookmarkedPds>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof orvalFetch>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useFetchBookmarkedPds<TData = Awaited<ReturnType<typeof fetchBookmarkedPds>>, TError = unknown>(
+ params?: FetchBookmarkedPdsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof fetchBookmarkedPds>>, TError, TData>>, request?: SecondParameter<typeof orvalFetch>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+
+export function useFetchBookmarkedPds<TData = Awaited<ReturnType<typeof fetchBookmarkedPds>>, TError = unknown>(
+ params?: FetchBookmarkedPdsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof fetchBookmarkedPds>>, TError, TData>>, request?: SecondParameter<typeof orvalFetch>}
+ , queryClient?: QueryClient
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getFetchBookmarkedPdsQueryOptions(params,options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
 
 export type fetchPdImageResponse200 = {
   data: Blob

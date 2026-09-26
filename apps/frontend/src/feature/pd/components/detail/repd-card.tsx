@@ -1,7 +1,6 @@
-import { Card } from "@/components/ui/card";
-import { Linkify } from "@/components/ui/linkify";
 import type { RePd } from "@/feature/pd/types";
-import { PdAuthor } from "../timeline/pd-author";
+import { PdAuthorLine, PdAvatar } from "../timeline/pd-author";
+import { PdBody } from "../timeline/pd-body";
 import { PdLikersPopover } from "../timeline/pd-likers-popover";
 import { RePdLikeButton } from "./repd-like-button";
 
@@ -11,21 +10,24 @@ interface RePdCardProps {
 
 export function RePdCard({ rePd }: RePdCardProps) {
   return (
-    <article>
-      <Card className="gap-2 px-4 pt-4 pb-2">
-        <PdAuthor
+    <article className="flex gap-3 px-4 pt-3 pb-1">
+      <PdAvatar
+        imageUrl={rePd.userDetail.imageUrl}
+        userFullName={rePd.userDetail.userFullName}
+        userName={rePd.userDetail.userName}
+      />
+
+      <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+        <PdAuthorLine
           createdAt={rePd.createdAt}
-          imageUrl={rePd.userDetail.imageUrl}
           userFullName={rePd.userDetail.userFullName}
           userName={rePd.userDetail.userName}
         />
 
-        <p className="whitespace-pre-wrap break-words text-base text-body">
-          <Linkify>{rePd.content}</Linkify>
-        </p>
+        <PdBody content={rePd.content} />
 
-        <div className="-mr-2 flex items-center justify-end text-muted-foreground">
-          <div className="flex items-center rounded-full transition-colors hover:bg-accent">
+        <div className="-ml-2 mt-0.5 flex items-center text-muted-foreground">
+          <div className="inline-flex items-center rounded-full transition-colors hover:bg-accent">
             <RePdLikeButton rePd={rePd} />
             <PdLikersPopover
               likeCount={rePd.likeCount}
@@ -33,7 +35,7 @@ export function RePdCard({ rePd }: RePdCardProps) {
             />
           </div>
         </div>
-      </Card>
+      </div>
     </article>
   );
 }

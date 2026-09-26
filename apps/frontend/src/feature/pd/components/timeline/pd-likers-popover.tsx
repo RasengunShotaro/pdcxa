@@ -8,6 +8,8 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import type { LikeUser } from "@/feature/pd/types";
+import { 著者の名前を決める } from "@/feature/pd/utils/author-display";
+import { 件数を短く表す } from "@/feature/pd/utils/format-count";
 import { avatarInitials } from "./avatar-initials";
 
 interface PdLikersPopoverProps {
@@ -21,7 +23,7 @@ export function PdLikersPopover({
 }: PdLikersPopoverProps) {
   if (likeCount === 0) {
     return (
-      <span className="inline-flex h-9 items-center pr-2 pl-1 text-sm text-muted-foreground tabular-nums">
+      <span className="inline-flex h-8 items-center pr-2 pl-1 text-xs text-muted-foreground tabular-nums">
         0
       </span>
     );
@@ -32,11 +34,11 @@ export function PdLikersPopover({
       <PopoverTrigger asChild>
         <Button
           aria-label="いいねした人を表示"
-          className="h-9 rounded-full pr-2.5 pl-1 text-sm text-muted-foreground tabular-nums hover:bg-transparent dark:hover:bg-transparent"
+          className="h-8 rounded-full pr-2.5 pl-1 text-xs text-muted-foreground tabular-nums hover:bg-transparent dark:hover:bg-transparent"
           type="button"
           variant="ghost"
         >
-          {likeCount}
+          {件数を短く表す(likeCount)}
         </Button>
       </PopoverTrigger>
       <PopoverContent align="start" className="w-64 p-2">
@@ -57,9 +59,9 @@ export function PdLikersPopover({
               </Avatar>
               <span className="min-w-0">
                 <span className="block truncate text-sm font-medium text-foreground">
-                  {user.userFullName || "名前未設定"}
+                  {著者の名前を決める(user).name}
                 </span>
-                {user.userName ? (
+                {著者の名前を決める(user).handle ? (
                   <span className="block truncate text-xs text-muted-foreground">
                     @{user.userName}
                   </span>

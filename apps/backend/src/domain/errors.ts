@@ -16,6 +16,12 @@ export class ClerkError extends Data.TaggedError("ClerkError")<{
   code?: string;
 }> {}
 
+export class QuotedPdNotFoundError extends Data.TaggedError(
+  "QuotedPdNotFoundError",
+)<{
+  quotedPdId: string;
+}> {}
+
 export class UserNotFoundError extends Data.TaggedError("UserNotFoundError")<{
   userName: string;
 }> {}

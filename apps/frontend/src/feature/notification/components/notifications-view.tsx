@@ -2,7 +2,9 @@
 
 import { Loader2 } from "lucide-react";
 import { useEffect } from "react";
+import { FeedLayout } from "@/components/elements/feed-layout";
 import { Button } from "@/components/ui/button";
+import { WeeklyActivityCard } from "@/feature/pd/components/stats/weekly-activity-card";
 import { useInfiniteScroll } from "@/feature/pd/components/timeline/use-infinite-scroll";
 import { useNotifications } from "../hooks/use-notifications";
 import { NotificationListBody } from "./notification-list-body";
@@ -31,20 +33,21 @@ export function NotificationsView() {
   });
 
   return (
-    <div className="space-y-4">
+    <FeedLayout aside={<WeeklyActivityCard />}>
       <NotificationListBody
         error={error}
         isError={isError}
         isPending={isPending}
         notifications={notifications}
         onRetry={() => refetch()}
+        variant="rows"
       />
 
       {notifications.length > 0 ? (
         <>
           <div aria-hidden="true" ref={sentinelRef} />
           {hasNextPage ? (
-            <div className="flex justify-center pb-4">
+            <div className="flex justify-center py-4">
               <Button
                 disabled={isFetchingNextPage}
                 onClick={() => fetchNextPage()}
@@ -60,6 +63,6 @@ export function NotificationsView() {
           ) : null}
         </>
       ) : null}
-    </div>
+    </FeedLayout>
   );
 }

@@ -1,9 +1,14 @@
-import { and, desc, eq, gte, lte, sql } from "drizzle-orm";
+import { and, desc, eq, gte, inArray, lte, sql } from "drizzle-orm";
+import { alias } from "drizzle-orm/pg-core";
 import { Effect, Layer } from "effect";
-import { pdLikes, pds as pdsSchema, rePds } from "#/db/schema";
+import { pdBookmarks, pdLikes, pds as pdsSchema, rePds } from "#/db/schema";
 import { PdRepository } from "#/domain/pd/repository";
 import type { RawPd } from "#/domain/pd/types";
 import { toDatabaseError } from "../error-mapping";
+import {
+  保存一覧の続き位置を作る,
+  保存一覧の続き位置を読む,
+} from "./bookmark-cursor";
 import { DbClient } from "./client";
 
 const PAGE_SIZE = 20;
@@ -40,6 +45,17 @@ export const PdRepositoryLive = Layer.effect(
       .groupBy(pdLikes.targetPdId)
       .as("likes_details");
 
+    const quotesCountSubquery = db
+      .select({
+        pdId: pdsSchema.quotedPdId,
+        count: sql<number>`count(*)`.as("quote_count"),
+      })
+      .from(pdsSchema)
+      .groupBy(pdsSchema.quotedPdId)
+      .as("quotes_count");
+
+    const quotedPds = alias(pdsSchema, "quoted_pds");
+
     const createBaseQuery = () =>
       db
         .select({
@@ -51,6 +67,11 @@ export const PdRepositoryLive = Layer.effect(
           likeCount: likesCountSubquery.count,
           replyCount: repliesCountSubquery.count,
           likes: likesDetailsSubquery.userIds,
+          quoteCount: quotesCountSubquery.count,
+          quotedPdId: quotedPds.id,
+          quotedPdContent: quotedPds.content,
+          quotedPdCreatedAt: quotedPds.createdAt,
+          quotedPdUserId: quotedPds.userId,
         })
         .from(pdsSchema)
         .leftJoin(likesCountSubquery, eq(pdsSchema.id, likesCountSubquery.pdId))
@@ -61,7 +82,12 @@ export const PdRepositoryLive = Layer.effect(
         .leftJoin(
           likesDetailsSubquery,
           eq(pdsSchema.id, likesDetailsSubquery.pdId),
-        );
+        )
+        .leftJoin(
+          quotesCountSubquery,
+          eq(pdsSchema.id, quotesCountSubquery.pdId),
+        )
+        .leftJoin(quotedPds, eq(pdsSchema.quotedPdId, quotedPds.id));
 
     type QueryRow = Awaited<ReturnType<typeof createBaseQuery>>[number];
 
@@ -75,6 +101,19 @@ export const PdRepositoryLive = Layer.effect(
         likeCount: Number(row.likeCount ?? 0),
         replyCount: Number(row.replyCount ?? 0),
         likes: (row.likes ?? []).map((userId) => ({ userId })),
+        quoteCount: Number(row.quoteCount ?? 0),
+        quotedPd:
+          row.quotedPdId &&
+          row.quotedPdContent !== null &&
+          row.quotedPdCreatedAt &&
+          row.quotedPdUserId
+            ? {
+                id: row.quotedPdId,
+                content: row.quotedPdContent,
+                createdAt: row.quotedPdCreatedAt,
+                userId: row.quotedPdUserId,
+              }
+            : null,
       }));
 
     const 期間条件 = (range: { start: Date; end: Date }) =>
@@ -129,19 +168,11 @@ export const PdRepositoryLive = Layer.effect(
             const [inserted] = await db
               .insert(pdsSchema)
               .values(newPd)
-              .returning({
-                id: pdsSchema.id,
-                content: pdsSchema.content,
-                createdAt: pdsSchema.createdAt,
-                userId: pdsSchema.userId,
-                imageFileName: pdsSchema.imageFileName,
-              });
-            return {
-              ...inserted,
-              likeCount: 0,
-              replyCount: 0,
-              likes: [],
-            };
+              .returning({ id: pdsSchema.id });
+            const [created] = formatRows(
+              await createBaseQuery().where(eq(pdsSchema.id, inserted.id)),
+            );
+            return created;
           },
           catch: toDatabaseError,
         }),
@@ -170,6 +201,98 @@ export const PdRepositoryLive = Layer.effect(
           },
           catch: toDatabaseError,
         }).pipe(Effect.asVoid),
+
+      ブックマーク状態を設定する: ({ pdId, userId, bookmarked }) =>
+        Effect.tryPromise({
+          try: async () => {
+            if (bookmarked) {
+              await db
+                .insert(pdBookmarks)
+                .values({ targetPdId: pdId, userId })
+                .onConflictDoNothing();
+              return;
+            }
+            await db
+              .delete(pdBookmarks)
+              .where(
+                and(
+                  eq(pdBookmarks.targetPdId, pdId),
+                  eq(pdBookmarks.userId, userId),
+                ),
+              );
+          },
+          catch: toDatabaseError,
+        }),
+
+      ブックマーク済みのPDIDを絞り込む: ({ userId, pdIds }) =>
+        pdIds.length === 0
+          ? Effect.succeed([])
+          : Effect.tryPromise({
+              try: async () => {
+                const rows = await db
+                  .select({ pdId: pdBookmarks.targetPdId })
+                  .from(pdBookmarks)
+                  .where(
+                    and(
+                      eq(pdBookmarks.userId, userId),
+                      inArray(pdBookmarks.targetPdId, [...pdIds]),
+                    ),
+                  );
+                return rows.map((row) => row.pdId);
+              },
+              catch: toDatabaseError,
+            }),
+
+      ブックマークしたPD一覧を取得する: ({ userId, cursor }) =>
+        Effect.tryPromise({
+          try: async () => {
+            const 続き位置 = 保存一覧の続き位置を読む(cursor);
+            const conditions = 続き位置
+              ? [
+                  sql`(${pdBookmarks.createdAt}, ${pdBookmarks.targetPdId}) < (${続き位置.savedAt}::timestamp, ${続き位置.pdId}::uuid)`,
+                ]
+              : [];
+
+            const bookmarks = await db
+              .select({
+                pdId: pdBookmarks.targetPdId,
+                savedAt: sql<string>`${pdBookmarks.createdAt}::text`,
+              })
+              .from(pdBookmarks)
+              .where(and(eq(pdBookmarks.userId, userId), ...conditions))
+              .orderBy(
+                desc(pdBookmarks.createdAt),
+                desc(pdBookmarks.targetPdId),
+              )
+              .limit(PAGE_SIZE + 1);
+
+            const page = bookmarks.slice(0, PAGE_SIZE);
+            const lastBookmark = page[page.length - 1];
+            const rows =
+              page.length === 0
+                ? []
+                : await createBaseQuery().where(
+                    inArray(
+                      pdsSchema.id,
+                      page.map((bookmark) => bookmark.pdId),
+                    ),
+                  );
+            const rowById = new Map(rows.map((row) => [row.id, row]));
+            const orderedRows = page.flatMap((bookmark) => {
+              const row = rowById.get(bookmark.pdId);
+              return row ? [row] : [];
+            });
+
+            return {
+              items: formatRows(orderedRows),
+              nextCursor:
+                bookmarks.length > PAGE_SIZE && lastBookmark
+                  ? 保存一覧の続き位置を作る(lastBookmark)
+                  : undefined,
+            };
+          },
+          catch: toDatabaseError,
+        }),
 
       日毎の集計を取得する: (range) =>
         Effect.tryPromise({

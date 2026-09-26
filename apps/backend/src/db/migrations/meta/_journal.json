@@ -15,6 +15,13 @@
       "when": 1782349657678,
       "tag": "0001_strange_ben_urich",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1790417823326,
+      "tag": "0002_lonely_silver_surfer",
+      "breakpoints": true
     }
   ]
 }

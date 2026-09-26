@@ -18,6 +18,9 @@ export const isPdDetailQueryKey = (queryKey: QueryKey): boolean =>
 
 export const pdRootQueryKey = () => getFetchPdsQueryKey();
 
+export const bookmarkedPdsQueryKey = () =>
+  [...getFetchPdsQueryKey(), "保存", DETAIL] as const;
+
 export const rePdDetailQueryKey = (pdId: string) =>
   [...getFetchRePdsQueryKey({ pdId }), DETAIL] as const;
 

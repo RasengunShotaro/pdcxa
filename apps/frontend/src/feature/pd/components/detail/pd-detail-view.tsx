@@ -4,9 +4,11 @@ import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { EmptyState } from "@/components/elements/empty-state";
+import { FeedLayout } from "@/components/elements/feed-layout";
 import { ListError } from "@/components/elements/list-error";
 import { ListSkeleton } from "@/components/elements/list-skeleton";
 import { Button } from "@/components/ui/button";
+import { WeeklyActivityCard } from "@/feature/pd/components/stats/weekly-activity-card";
 import { usePd } from "@/hooks/use-pd";
 import { useRePd } from "@/hooks/use-repd";
 import { ComposeFab } from "../composer/compose-fab";
@@ -51,44 +53,51 @@ export function PdDetailView({ pdId }: PdDetailViewProps) {
   } = useRePd(pdId);
 
   return (
-    <div className="space-y-6 pb-[calc(5.5rem+env(safe-area-inset-bottom))]">
-      <BackLink />
+    <FeedLayout aside={<WeeklyActivityCard />} leading={<BackLink />}>
+      <div className="pb-[calc(5.5rem+env(safe-area-inset-bottom))]">
+        {isPdPending ? <ListSkeleton count={1} variant="rows" /> : null}
 
-      {isPdPending ? <ListSkeleton count={1} /> : null}
+        {!isPdPending && isPdError ? (
+          <div className="p-4">
+            <ListError error={pdError} onRetry={() => refetchPd()} />
+          </div>
+        ) : null}
 
-      {!isPdPending && isPdError ? (
-        <ListError error={pdError} onRetry={() => refetchPd()} />
-      ) : null}
-
-      {!isPdPending && !isPdError && !pd ? (
-        <EmptyState
-          action={backToHome}
-          message="指定されたPDが見つかりませんでした"
-        />
-      ) : null}
-
-      {!isPdPending && !isPdError && pd ? (
-        <>
-          <PdCard pd={pd} />
-
-          <RePdSection
-            error={rePdError}
-            isError={isRePdError}
-            isPending={isRePdPending}
-            onRetry={() => refetchRePd()}
-            rePds={rePds}
+        {!isPdPending && !isPdError && !pd ? (
+          <EmptyState
+            action={backToHome}
+            message="指定されたPDが見つかりませんでした"
           />
+        ) : null}
 
-          <ComposeFab label="RePDする" onClick={() => setComposerOpen(true)} />
+        {!isPdPending && !isPdError && pd ? (
+          <>
+            <div className="border-b border-border">
+              <PdCard clampBody={false} pd={pd} />
+            </div>
 
-          <RePdComposer
-            isPending={isCreating}
-            onOpenChange={setComposerOpen}
-            onSubmitRePd={(content) => createRePd(content)}
-            open={composerOpen}
-          />
-        </>
-      ) : null}
-    </div>
+            <RePdSection
+              error={rePdError}
+              isError={isRePdError}
+              isPending={isRePdPending}
+              onRetry={() => refetchRePd()}
+              rePds={rePds}
+            />
+
+            <ComposeFab
+              label="RePDする"
+              onClick={() => setComposerOpen(true)}
+            />
+
+            <RePdComposer
+              isPending={isCreating}
+              onOpenChange={setComposerOpen}
+              onSubmitRePd={(content) => createRePd(content)}
+              open={composerOpen}
+            />
+          </>
+        ) : null}
+      </div>
+    </FeedLayout>
   );
 }

@@ -72,6 +72,64 @@ describe("ユーザーIDリストを抽出する", () => {
 
     expect(result).toEqual(["user-1", "user-2", "user-3", "user-4"]);
   });
+
+  test("引用元の投稿者のIDも抽出する", () => {
+    const rawPds = [
+      RawPdMother({
+        userId: "user-1",
+        likes: [],
+        quotedPd: {
+          id: "pd-0",
+          content: "引用元",
+          createdAt: "2026-03-12T00:00:00.000Z",
+          userId: "user-9",
+        },
+      }),
+    ];
+
+    const result = ユーザーIDリストを抽出する(rawPds);
+
+    expect(result).toEqual(["user-1", "user-9"]);
+  });
+});
+
+describe("PDを詳細化する（引用）", () => {
+  test("引用元に投稿者の表示名とハンドルを付ける", () => {
+    const rawPds = [
+      RawPdMother({
+        userId: "user-1",
+        quotedPd: {
+          id: "pd-0",
+          content: "引用元",
+          createdAt: "2026-03-12T00:00:00.000Z",
+          userId: "user-9",
+        },
+      }),
+    ];
+    const userDetails = [
+      UserDetailMother({
+        id: "user-9",
+        firstName: "陽",
+        lastName: "佐藤",
+        imageUrl: "https://example.com/hinata.jpg",
+        userName: "hinata",
+      }),
+    ];
+
+    const result = PDを詳細化する(rawPds, userDetails);
+
+    expect(result[0].quotedPd).toEqual({
+      id: "pd-0",
+      content: "引用元",
+      createdAt: "2026-03-12T00:00:00.000Z",
+      userId: "user-9",
+      userDetail: {
+        userFullName: "陽 佐藤",
+        imageUrl: "https://example.com/hinata.jpg",
+        userName: "hinata",
+      },
+    });
+  });
 });
 
 describe("PDを詳細化する", () => {

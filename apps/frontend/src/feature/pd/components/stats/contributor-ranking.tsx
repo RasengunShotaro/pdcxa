@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/card";
 import { avatarInitials } from "@/feature/pd/components/timeline/avatar-initials";
 import type { PdWeeklyStatsDetailed } from "@/feature/pd/types/stats";
+import { 投稿者の表示名 } from "@/feature/pd/utils/stats-derive";
 
 type RankingRow = PdWeeklyStatsDetailed["rankings"][number];
 
@@ -21,16 +22,6 @@ const RANK_BADGE: Record<number, string> = {
   1: "bg-amber-100 text-amber-700",
   2: "bg-slate-200 text-slate-600",
   3: "bg-orange-100 text-orange-700",
-};
-
-const displayNameOf = (row: RankingRow): string => {
-  if (row.displayName.trim().length > 0) {
-    return row.displayName;
-  }
-  if (row.userName.trim().length > 0) {
-    return `@${row.userName}`;
-  }
-  return "名称未設定";
 };
 
 function RankBadge({ rank }: { rank: number }) {
@@ -45,39 +36,48 @@ function RankBadge({ rank }: { rank: number }) {
   );
 }
 
-function ContributorIdentity({ row }: { row: RankingRow }) {
-  const name = displayNameOf(row);
-  const identity = (
+function ContributorRow({ row, rank }: { row: RankingRow; rank: number }) {
+  const name = 投稿者の表示名(row);
+  const content = (
     <>
-      <Avatar className="size-10">
+      <RankBadge rank={rank} />
+      <Avatar className="size-10 shrink-0">
         <AvatarImage alt="" src={row.imageUrl} />
-        <AvatarFallback className="bg-primary/10 text-sm font-medium text-primary">
+        <AvatarFallback className="bg-primary-50 text-sm font-medium text-primary-600 dark:bg-primary/15 dark:text-primary-300">
           {avatarInitials(name)}
         </AvatarFallback>
       </Avatar>
-      <div className="min-w-0">
-        <p className="truncate font-semibold leading-tight text-foreground">
+      <div className="min-w-0 flex-1">
+        <p className="truncate font-semibold leading-snug text-foreground">
           {name}
         </p>
-        {row.userName ? (
-          <p className="truncate text-sm leading-tight text-muted-foreground">
-            @{row.userName}
-          </p>
-        ) : null}
+        <p className="flex min-w-0 flex-wrap gap-x-1.5 text-xs leading-snug text-muted-foreground">
+          {row.userName ? (
+            <span className="max-w-full truncate">@{row.userName}</span>
+          ) : null}
+          <span className="shrink-0 tabular-nums">
+            いいね{row.likeCount}件 / RePD{row.rePdCount}件
+          </span>
+        </p>
       </div>
+      <p className="shrink-0 font-semibold tabular-nums text-foreground">
+        {row.pdCount} PD
+      </p>
     </>
   );
 
+  const rowClassName = "flex items-center gap-3 rounded-lg px-2 py-2";
+
   if (!row.userName) {
-    return <div className="flex min-w-0 items-center gap-3">{identity}</div>;
+    return <div className={rowClassName}>{content}</div>;
   }
 
   return (
     <Link
-      className="flex min-w-0 items-center gap-3 rounded-lg transition-[color,transform] hover:-translate-y-px focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
+      className={`${rowClassName} transition-[background-color,translate] hover:-translate-y-px hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50`}
       href={`/user/${row.userName}`}
     >
-      {identity}
+      {content}
     </Link>
   );
 }
@@ -93,19 +93,10 @@ export function ContributorRanking({ rankings }: ContributorRankingProps) {
         {rankings.length === 0 ? (
           <EmptyState message="今週はまだ投稿者がいません" />
         ) : (
-          <ol className="space-y-4">
+          <ol className="-mx-2 space-y-1">
             {rankings.map((row, index) => (
-              <li className="flex items-center gap-3" key={row.userId}>
-                <RankBadge rank={index + 1} />
-                <div className="min-w-0 flex-1 space-y-1">
-                  <ContributorIdentity row={row} />
-                  <p className="pl-13 text-xs text-muted-foreground tabular-nums">
-                    いいね{row.likeCount}件 / RePD{row.rePdCount}件
-                  </p>
-                </div>
-                <p className="shrink-0 font-semibold tabular-nums text-foreground">
-                  {row.pdCount} PD
-                </p>
+              <li key={row.userId}>
+                <ContributorRow rank={index + 1} row={row} />
               </li>
             ))}
           </ol>

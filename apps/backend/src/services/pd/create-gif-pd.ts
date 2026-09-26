@@ -2,18 +2,22 @@ import { Effect } from "effect";
 import { AuthContext } from "#/domain/auth/principal";
 import { PdRepository } from "#/domain/pd/repository";
 import { StorageService } from "#/domain/storage/service";
+import { 引用元のPDを確かめる } from "./verify-quoted-pd";
 
 export const GIFを含むPDを作成する = ({
   content,
   image,
+  quotedPdId,
 }: {
   readonly content: string;
   readonly image: File;
+  readonly quotedPdId?: string;
 }) =>
   Effect.gen(function* () {
     const repo = yield* PdRepository;
     const storage = yield* StorageService;
     const { userId } = yield* AuthContext;
+    const 引用元 = yield* 引用元のPDを確かめる(quotedPdId);
 
     const imageFileName = yield* storage.GIF画像をアップロードする({
       image,
@@ -25,7 +29,8 @@ export const GIFを含むPDを作成する = ({
       userId,
       createdAt: new Date(),
       imageFileName,
+      quotedPdId: 引用元,
     });
 
-    return { ...created, isMyPd: true };
+    return { ...created, isMyPd: true, isBookmarked: false };
   });

@@ -1,7 +1,8 @@
 "use client";
 
-import { ChevronsUpDown, LogOut, UserCog } from "lucide-react";
+import { ChevronsUpDown, LogOut, Palette, UserCog } from "lucide-react";
 import Link from "next/link";
+import { useTheme } from "next-themes";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -9,6 +10,8 @@ import {
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
@@ -22,32 +25,51 @@ import { avatarInitials } from "@/feature/pd/components/timeline/avatar-initials
 import { useCurrentUser } from "@/lib/auth/use-current-user";
 import { useSignOut } from "@/lib/auth/use-sign-out";
 
+const THEME_OPTIONS = [
+  { value: "light", label: "ライト" },
+  { value: "dark", label: "ダーク" },
+  { value: "system", label: "システムに合わせる" },
+] as const;
+
 export function NavUser() {
   const { user } = useCurrentUser();
   const { signOut } = useSignOut();
   const { isMobile } = useSidebar();
+  const { theme, setTheme } = useTheme();
 
   const displayName = user?.fullName ?? "ユーザー";
+  const avatar = (
+    <Avatar className="size-8 shrink-0">
+      <AvatarImage alt="" src={user?.imageUrl} />
+      <AvatarFallback className="bg-primary-50 text-xs font-medium text-primary-600 dark:bg-primary/15 dark:text-primary-300">
+        {avatarInitials(displayName)}
+      </AvatarFallback>
+    </Avatar>
+  );
 
   return (
-    <SidebarMenu>
+    <SidebarMenu className="group-data-[collapsible=icon]:items-center">
       <SidebarMenuItem>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
-              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+              aria-label={displayName}
+              className="h-auto gap-3 rounded-lg p-2 data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground group-data-[collapsible=icon]:size-12! group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:p-2!"
               size="lg"
+              tooltip={displayName}
             >
-              <Avatar className="size-8 rounded-lg">
-                <AvatarImage alt={displayName} src={user?.imageUrl} />
-                <AvatarFallback className="rounded-lg">
-                  {avatarInitials(displayName)}
-                </AvatarFallback>
-              </Avatar>
-              <span className="flex-1 truncate text-left text-sm font-medium">
-                {displayName}
+              {avatar}
+              <span className="flex min-w-0 flex-1 flex-col text-left group-data-[collapsible=icon]:hidden">
+                <span className="truncate text-sm leading-[1.4] font-medium text-foreground">
+                  {displayName}
+                </span>
+                {user?.userName ? (
+                  <span className="truncate text-xs leading-[1.4] text-slate-500 dark:text-slate-400">
+                    @{user.userName}
+                  </span>
+                ) : null}
               </span>
-              <ChevronsUpDown className="ml-auto size-4" />
+              <ChevronsUpDown className="ml-auto size-4 text-muted-foreground group-data-[collapsible=icon]:hidden" />
             </SidebarMenuButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent
@@ -58,12 +80,7 @@ export function NavUser() {
           >
             <DropdownMenuLabel className="font-normal">
               <div className="flex items-center gap-2 text-left text-sm">
-                <Avatar className="size-8 rounded-lg">
-                  <AvatarImage alt={displayName} src={user?.imageUrl} />
-                  <AvatarFallback className="rounded-lg">
-                    {avatarInitials(displayName)}
-                  </AvatarFallback>
-                </Avatar>
+                {avatar}
                 <span className="flex-1 truncate font-medium">
                   {displayName}
                 </span>
@@ -78,6 +95,18 @@ export function NavUser() {
                 </Link>
               </DropdownMenuItem>
             </DropdownMenuGroup>
+            <DropdownMenuSeparator />
+            <DropdownMenuLabel className="flex items-center gap-2 text-xs font-normal text-muted-foreground">
+              <Palette aria-hidden="true" className="size-4" />
+              テーマ
+            </DropdownMenuLabel>
+            <DropdownMenuRadioGroup onValueChange={setTheme} value={theme}>
+              {THEME_OPTIONS.map((option) => (
+                <DropdownMenuRadioItem key={option.value} value={option.value}>
+                  {option.label}
+                </DropdownMenuRadioItem>
+              ))}
+            </DropdownMenuRadioGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={() => signOut()}>
               <LogOut />

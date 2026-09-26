@@ -1,66 +1,78 @@
 import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { 著者の名前を決める } from "@/feature/pd/utils/author-display";
 import { avatarInitials } from "./avatar-initials";
 import { PdTimestamp } from "./pd-timestamp";
 
-interface PdAuthorProps {
+interface PdAvatarProps {
   userFullName: string;
   userName: string;
   imageUrl: string;
-  createdAt: string;
-  href?: string;
 }
 
-export function PdAuthor({
-  userFullName,
-  userName,
-  imageUrl,
-  createdAt,
-  href,
-}: PdAuthorProps) {
+export function PdAvatar({ userFullName, userName, imageUrl }: PdAvatarProps) {
   const avatar = (
     <Avatar className="size-10">
       <AvatarImage alt="" src={imageUrl} />
-      <AvatarFallback className="bg-primary/10 text-sm font-medium text-primary">
+      <AvatarFallback className="bg-primary-50 text-sm font-medium text-primary-600 dark:bg-primary/15 dark:text-primary-300">
         {avatarInitials(userFullName)}
       </AvatarFallback>
     </Avatar>
   );
 
-  const name = (
-    <div className="min-w-0">
-      <p className="truncate font-semibold leading-normal text-foreground">
-        {userFullName}
-      </p>
-      {userName ? (
-        <p className="truncate text-sm leading-normal text-muted-foreground">
-          @{userName}
-        </p>
-      ) : null}
-    </div>
-  );
+  if (!userName) {
+    return <div className="shrink-0">{avatar}</div>;
+  }
 
   return (
-    <div className="flex items-center gap-3">
+    <Link
+      aria-label={`${userFullName}さんのページ`}
+      className="shrink-0 rounded-full transition-[opacity,translate] hover:-translate-y-px hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
+      href={`/user/${userName}`}
+    >
+      {avatar}
+    </Link>
+  );
+}
+
+interface PdAuthorLineProps {
+  userFullName: string;
+  userName: string;
+  createdAt: string;
+  href?: string;
+}
+
+export function PdAuthorLine({
+  userFullName,
+  userName,
+  createdAt,
+  href,
+}: PdAuthorLineProps) {
+  const { name, handle } = 著者の名前を決める({ userFullName, userName });
+
+  return (
+    <div className="flex min-w-0 items-baseline gap-1 text-sm leading-normal">
       {userName ? (
         <Link
-          className="-my-1 -ml-2 flex min-w-0 items-center gap-3 rounded-lg px-2 py-1 transition-[color,transform,background-color] hover:-translate-y-px hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
+          className="min-w-0 truncate font-bold text-foreground underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
           href={`/user/${userName}`}
         >
-          {avatar}
           {name}
         </Link>
       ) : (
-        <div className="flex min-w-0 items-center gap-3">
-          {avatar}
+        <span className="min-w-0 truncate font-bold text-foreground">
           {name}
-        </div>
+        </span>
       )}
-      <PdTimestamp
-        className="ml-auto shrink-0 self-start"
-        createdAt={createdAt}
-        href={href}
-      />
+      {handle ? (
+        <span className="min-w-0 shrink truncate text-muted-foreground">
+          @{handle}
+        </span>
+      ) : null}
+      <span aria-hidden="true" className="shrink-0 text-muted-foreground">
+        ·
+      </span>
+      <PdTimestamp className="shrink-0" createdAt={createdAt} href={href} />
     </div>
   );
 }

@@ -30,7 +30,10 @@ const aPd = (id: string, overrides: Partial<Pd> = {}): Pd => ({
   replyCount: 0,
   likes: [],
   isMyPd: false,
+  isBookmarked: false,
   imageFileName: null,
+  quotedPd: null,
+  quoteCount: 0,
   userDetail: {
     id: "author",
     userFullName: "投稿者",

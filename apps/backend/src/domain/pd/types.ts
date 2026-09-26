@@ -2,6 +2,13 @@ export type PdLike = {
   readonly userId: string;
 };
 
+export type QuotedPd = {
+  readonly id: string;
+  readonly content: string;
+  readonly createdAt: Date;
+  readonly userId: string;
+};
+
 export type RawPd = {
   readonly id: string;
   readonly content: string;
@@ -11,6 +18,8 @@ export type RawPd = {
   readonly likeCount: number;
   readonly replyCount: number;
   readonly likes: PdLike[];
+  readonly quotedPd: QuotedPd | null;
+  readonly quoteCount: number;
 };
 
 export type PdPage = {
@@ -20,6 +29,7 @@ export type PdPage = {
 
 export type PdDetail = RawPd & {
   readonly isMyPd: boolean;
+  readonly isBookmarked: boolean;
 };
 
 export type PdDetailPage = {
@@ -32,6 +42,7 @@ export type NewPd = {
   readonly userId: string;
   readonly createdAt: Date;
   readonly imageFileName: string | null;
+  readonly quotedPdId: string | null;
 };
 
 export type 集計期間 = {

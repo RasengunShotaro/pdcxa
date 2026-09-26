@@ -12,7 +12,10 @@ const aCreatedPd = (overrides: Partial<RawPd> = {}): RawPd => ({
   replyCount: 0,
   likes: [],
   isMyPd: true,
+  isBookmarked: false,
   imageFileName: null,
+  quotedPd: null,
+  quoteCount: 0,
   ...overrides,
 });
 
@@ -69,5 +72,29 @@ describe("作成したPDを詳細化する", () => {
 
     expect(result.likeUsers).toEqual([]);
     expect(result.likeUserNames).toEqual([]);
+  });
+
+  test("引用して作成した PD は引用元の投稿者表示を引き継ぐ", () => {
+    const quoted = {
+      id: "pd-0",
+      content: "引用元",
+      createdAt: "2026-03-12T00:00:00.000Z",
+      userId: "hinata",
+    };
+
+    const result = 作成したPDを詳細化する({
+      created: aCreatedPd({ quotedPd: quoted }),
+      user: aUser(),
+      quotedFrom: {
+        ...quoted,
+        userDetail: {
+          userFullName: "佐藤 陽",
+          imageUrl: "",
+          userName: "hinata",
+        },
+      },
+    });
+
+    expect(result.quotedPd?.userDetail.userFullName).toBe("佐藤 陽");
   });
 });

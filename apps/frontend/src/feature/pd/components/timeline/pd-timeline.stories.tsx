@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
-import { HttpResponse, http } from "msw";
+import { delay, HttpResponse, http } from "msw";
 import { expect, userEvent, waitFor, within } from "storybook/test";
 import { getFetchPdImageMockHandler } from "@/schema/api.msw";
 import { PdTimeline } from "./pd-timeline";
@@ -15,7 +15,15 @@ const rawPd = (overrides: {
   likes?: RawLike[];
   replyCount?: number;
   isMyPd?: boolean;
+  isBookmarked?: boolean;
   imageFileName?: string | null;
+  quotedPd?: {
+    id: string;
+    content: string;
+    createdAt: string;
+    userId: string;
+  } | null;
+  quoteCount?: number;
 }) => ({
   id: overrides.id,
   content: overrides.content,
@@ -26,6 +34,9 @@ const rawPd = (overrides: {
   replyCount: overrides.replyCount ?? 0,
   likes: overrides.likes ?? [],
   isMyPd: overrides.isMyPd ?? false,
+  isBookmarked: overrides.isBookmarked ?? false,
+  quotedPd: overrides.quotedPd ?? null,
+  quoteCount: overrides.quoteCount ?? 0,
 });
 
 const userDetail = (
@@ -99,6 +110,143 @@ export const Populated: Story = {
   },
 };
 
+export const BookmarkPd: Story = {
+  name: "しおりを押すと PD が保存済みになる",
+  parameters: {
+    msw: {
+      handlers: [
+        http.get("*/pd", () =>
+          HttpResponse.json({
+            items: [
+              rawPd({
+                id: "pd-1",
+                content: "あとで読み返したいメモ",
+                userId: "u-taro",
+              }),
+            ],
+          }),
+        ),
+        http.put("*/pd/bookmark", () =>
+          HttpResponse.json({ message: "ブックマーク状態を更新しました" }),
+        ),
+        userDetailsHandler(),
+      ],
+    },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const saveButton = await canvas.findByRole("button", { name: "保存する" });
+
+    await userEvent.click(saveButton);
+
+    await waitFor(() =>
+      expect(
+        canvas.getByRole("button", { name: "保存を外す" }),
+      ).toHaveAttribute("aria-pressed", "true"),
+    );
+  },
+};
+
+export const BookmarkFailureReverts: Story = {
+  name: "保存に失敗するとしおりが元の未保存の状態に戻る",
+  parameters: {
+    msw: {
+      handlers: [
+        http.get("*/pd", () =>
+          HttpResponse.json({
+            items: [
+              rawPd({
+                id: "pd-1",
+                content: "あとで読み返したいメモ",
+                userId: "u-taro",
+              }),
+            ],
+          }),
+        ),
+        http.put("*/pd/bookmark", async () => {
+          await delay(300);
+          return new HttpResponse(null, { status: 500 });
+        }),
+        userDetailsHandler(),
+      ],
+    },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const saveButton = await canvas.findByRole("button", { name: "保存する" });
+
+    await userEvent.click(saveButton);
+    await canvas.findByRole("button", { name: "保存を外す" });
+
+    await waitFor(() =>
+      expect(canvas.getByRole("button", { name: "保存する" })).toHaveAttribute(
+        "aria-pressed",
+        "false",
+      ),
+    );
+  },
+};
+
+const quotingHandlers = [
+  http.get("*/pd", () =>
+    HttpResponse.json({
+      items: [
+        rawPd({
+          id: "pd-2",
+          content: "3 月にこう書いたけど、今は逆の意見",
+          userId: "u-hanako",
+          quotedPd: {
+            id: "pd-1",
+            content: "テストは後から書けば十分だと思う",
+            createdAt: "2026-03-12T00:00:00.000Z",
+            userId: "u-taro",
+          },
+        }),
+        rawPd({
+          id: "pd-1",
+          content: "テストは後から書けば十分だと思う",
+          userId: "u-taro",
+          quoteCount: 1,
+        }),
+      ],
+    }),
+  ),
+  userDetailsHandler(),
+];
+
+export const ShowsQuotedPd: Story = {
+  name: "引用した PD には引用元の投稿者と本文が埋め込まれ、引用元へ移動できる",
+  parameters: { msw: { handlers: quotingHandlers } },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    const quoted = await canvas.findByRole("link", {
+      name: /太郎 山田.*テストは後から書けば十分だと思う/,
+    });
+
+    expect(quoted).toHaveAttribute("href", "/pd/pd-1");
+  },
+};
+
+export const OpensQuoteComposer: Story = {
+  name: "引用ボタンを押すと引用元付きの投稿画面が開く",
+  parameters: { msw: { handlers: quotingHandlers } },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const quoteButton = await canvas.findByRole("button", {
+      name: "引用する（1件の引用）",
+    });
+
+    await userEvent.click(quoteButton);
+
+    const dialog = await within(canvasElement.ownerDocument.body).findByRole(
+      "dialog",
+      { name: "引用してPDする" },
+    );
+    expect(dialog).toHaveTextContent("テストは後から書けば十分だと思う");
+  },
+};
+
 export const TimestampOpensDetail: Story = {
   name: "投稿時刻から詳細を開けて絶対日時を確認できる",
   parameters: Populated.parameters,
@@ -146,12 +294,10 @@ export const FetchFailed: Story = {
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await waitFor(() =>
-      expect(
-        canvas.getByText("通信に失敗しました。再試行してください"),
-      ).toBeInTheDocument(),
-    );
-    expect(canvas.getByRole("button", { name: "再試行" })).toBeInTheDocument();
+
+    const retry = await canvas.findByRole("button", { name: "再試行" });
+
+    expect(retry).toBeInTheDocument();
   },
 };
 

@@ -1,10 +1,12 @@
 import { describe, expect, it } from "vitest";
-import type { PdWeeklyStats } from "../types/stats";
+import type { PdWeeklyStats, PdWeeklyStatsDetailed } from "../types/stats";
 import {
   formatRangeLabel,
   hasNoActivity,
   summarizeStats,
   toActivityChartData,
+  上位の投稿者を選ぶ,
+  投稿者の表示名,
 } from "./stats-derive";
 
 const baseTotals: PdWeeklyStats["totals"] = {
@@ -89,5 +91,59 @@ describe("formatRangeLabel", () => {
     expect(formatRangeLabel({ start: "2026-06-19", end: "2026-06-25" })).toBe(
       "6月19日 〜 6月25日",
     );
+  });
+});
+
+const aRanking = (
+  overrides: Partial<PdWeeklyStatsDetailed["rankings"][number]> = {},
+): PdWeeklyStatsDetailed["rankings"][number] => ({
+  userId: "u1",
+  pdCount: 1,
+  rePdCount: 0,
+  likeCount: 0,
+  displayName: "山田 太郎",
+  userName: "taro",
+  imageUrl: "",
+  ...overrides,
+});
+
+describe("投稿者の表示名", () => {
+  it("表示名があれば表示名を使う", () => {
+    expect(投稿者の表示名(aRanking({ displayName: "山田 太郎" }))).toBe(
+      "山田 太郎",
+    );
+  });
+
+  it("表示名が無ければ @ハンドルを使う", () => {
+    expect(
+      投稿者の表示名(aRanking({ displayName: " ", userName: "taro" })),
+    ).toBe("@taro");
+  });
+
+  it("表示名もハンドルも無ければ名称未設定とする", () => {
+    expect(投稿者の表示名(aRanking({ displayName: "", userName: "" }))).toBe(
+      "名称未設定",
+    );
+  });
+});
+
+describe("上位の投稿者を選ぶ", () => {
+  it("並び順のまま上位から指定した人数だけ選ぶ", () => {
+    const rankings = ["a", "b", "c", "d"].map((userId) => aRanking({ userId }));
+
+    const result = 上位の投稿者を選ぶ({ rankings, limit: 3 });
+
+    expect(result.map((row) => row.userId)).toEqual(["a", "b", "c"]);
+  });
+
+  it("今週 PD を投稿していない人は選ばない", () => {
+    const rankings = [
+      aRanking({ userId: "a", pdCount: 2 }),
+      aRanking({ userId: "b", pdCount: 0, rePdCount: 5 }),
+    ];
+
+    const result = 上位の投稿者を選ぶ({ rankings, limit: 3 });
+
+    expect(result.map((row) => row.userId)).toEqual(["a"]);
   });
 });

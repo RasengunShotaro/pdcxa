@@ -5,5 +5,6 @@ export type CreatePdBody = {
      * @maxLength 200
      */
   content: string;
+  quotedPdId?: string;
   image?: Blob | File;
 };

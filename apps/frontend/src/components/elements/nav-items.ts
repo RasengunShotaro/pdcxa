@@ -1,4 +1,12 @@
-import { BarChart3, Bell, Home, type LucideIcon, Mail } from "lucide-react";
+import {
+  BarChart3,
+  Bell,
+  Bookmark,
+  Home,
+  type LucideIcon,
+  User,
+  UserPlus,
+} from "lucide-react";
 
 export interface NavItem {
   href: string;
@@ -6,11 +14,21 @@ export interface NavItem {
   icon: LucideIcon;
 }
 
-export const NAV_ITEMS: readonly NavItem[] = [
+export const PRIMARY_NAV_ITEMS: readonly NavItem[] = [
   { href: "/", label: "ホーム", icon: Home },
   { href: "/notifications", label: "通知", icon: Bell },
+  { href: "/bookmarks", label: "保存した PD", icon: Bookmark },
+  { href: "/profile", label: "プロフィール", icon: User },
+];
+
+export const SECONDARY_NAV_ITEMS: readonly NavItem[] = [
   { href: "/stats", label: "統計", icon: BarChart3 },
-  { href: "/invitation", label: "招待", icon: Mail },
+  { href: "/invitation", label: "招待", icon: UserPlus },
+];
+
+export const NAV_ITEMS: readonly NavItem[] = [
+  ...PRIMARY_NAV_ITEMS,
+  ...SECONDARY_NAV_ITEMS,
 ];
 
 interface IsNavItemActiveInput {
@@ -29,7 +47,6 @@ export const isNavItemActive = ({
 const DYNAMIC_PAGE_LABELS: readonly { prefix: string; label: string }[] = [
   { prefix: "/pd/", label: "PD詳細" },
   { prefix: "/user/", label: "ユーザー" },
-  { prefix: "/profile", label: "プロフィール" },
 ];
 
 export const pageLabelForPath = (pathname: string): string | undefined => {

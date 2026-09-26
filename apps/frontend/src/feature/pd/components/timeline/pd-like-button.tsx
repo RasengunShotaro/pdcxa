@@ -21,7 +21,7 @@ export function PdLikeButton({ pd }: PdLikeButtonProps) {
     <Button
       aria-label={label}
       aria-pressed={isLiked}
-      className="h-9 w-auto rounded-full pr-1.5 pl-2.5 hover:bg-transparent dark:hover:bg-transparent"
+      className="h-8 w-auto rounded-full pr-1.5 pl-2.5 hover:bg-transparent dark:hover:bg-transparent"
       disabled={pd.isMyPd || isPending}
       onClick={() => toggleLike()}
       size="icon"
@@ -31,7 +31,7 @@ export function PdLikeButton({ pd }: PdLikeButtonProps) {
       <Heart
         aria-hidden="true"
         className={cn(
-          "size-5 transition-transform duration-150 motion-reduce:transition-none",
+          "size-4.5 transition-transform duration-150 motion-reduce:transition-none",
           isLiked
             ? "scale-110 fill-primary text-primary"
             : "scale-100 text-muted-foreground",

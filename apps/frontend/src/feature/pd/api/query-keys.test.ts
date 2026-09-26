@@ -1,6 +1,7 @@
 import { hashKey } from "@tanstack/react-query";
 import { describe, expect, it } from "vitest";
 import {
+  bookmarkedPdsQueryKey,
   isPdDetailQueryKey,
   pdDetailQueryKey,
   pdRootQueryKey,
@@ -34,6 +35,14 @@ describe("pdDetailQueryKey", () => {
   });
 });
 
+describe("bookmarkedPdsQueryKey", () => {
+  it("保存した PD の一覧はホームの一覧と別キャッシュになる", () => {
+    expect(hashKey(bookmarkedPdsQueryKey())).not.toBe(
+      hashKey(pdDetailQueryKey()),
+    );
+  });
+});
+
 describe("rePdDetailQueryKey", () => {
   it("RePD 取得エンドポイントのキーに詳細マーカーを付ける", () => {
     expect(rePdDetailQueryKey("p1")).toEqual(["/repd", { pdId: "p1" }, "詳細"]);
@@ -51,6 +60,10 @@ describe("isPdDetailQueryKey", () => {
     expect(isPdDetailQueryKey(pdDetailQueryKey())).toBe(true);
     expect(isPdDetailQueryKey(pdDetailQueryKey({ userName: "me" }))).toBe(true);
     expect(isPdDetailQueryKey(pdDetailQueryKey({ pdId: "p1" }))).toBe(true);
+  });
+
+  it("保存した PD の一覧キーもいいね・保存の更新対象になる", () => {
+    expect(isPdDetailQueryKey(bookmarkedPdsQueryKey())).toBe(true);
   });
 
   it("RePD 一覧キーは詳細マーカーが同じでもいいね更新の対象にしない", () => {

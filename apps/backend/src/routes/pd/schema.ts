@@ -12,12 +12,18 @@ export const fetchPdQuerySchema = z.object({
     .openapi({ example: "0190d2c0-0000-7000-8000-000000000002" }),
 });
 
+const quotedPdIdFormField = z
+  .uuid()
+  .optional()
+  .openapi({ example: "0190d2c0-0000-7000-8000-000000000001" });
+
 export const createPdFormSchema = z.object({
   content: z
     .string()
     .min(1, "PDを入力してください")
     .max(200, "PDが長すぎます。200文字以内で入力してください")
     .openapi({ example: "今日学んだことを共有します" }),
+  quotedPdId: quotedPdIdFormField,
   image: z
     .union([z.instanceof(File), z.literal("undefined")])
     .optional()
@@ -31,6 +37,7 @@ export const createGifPdFormSchema = z.object({
     .min(1, "PDを入力してください")
     .max(200, "PDが長すぎます。200文字以内で入力してください")
     .openapi({ example: "GIF付きで共有します" }),
+  quotedPdId: quotedPdIdFormField,
   image: z
     .instanceof(File)
     .refine(
@@ -42,6 +49,32 @@ export const createGifPdFormSchema = z.object({
 
 export const mutatePdLikeSchema = z.object({
   pdId: z.string().openapi({ example: "0190d2c0-0000-7000-8000-000000000001" }),
+});
+
+const mutatePdBookmarkExample = {
+  pdId: "0190d2c0-0000-7000-8000-000000000001",
+  bookmarked: true,
+};
+export const mutatePdBookmarkSchema = z
+  .object({
+    pdId: z.uuid().openapi({ example: mutatePdBookmarkExample.pdId }),
+    bookmarked: z
+      .boolean()
+      .openapi({ example: mutatePdBookmarkExample.bookmarked }),
+  })
+  .openapi({ example: mutatePdBookmarkExample });
+
+export const fetchBookmarkedPdQuerySchema = z.object({
+  cursor: z
+    .string()
+    .regex(
+      /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}(\.\d{1,6})?\|[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/,
+    )
+    .optional()
+    .openapi({
+      example:
+        "2026-07-01 00:00:00.123456|0190d2c0-0000-7000-8000-000000000002",
+    }),
 });
 
 export const fetchPdImageParamSchema = z.object({
@@ -62,8 +95,28 @@ const pdLikeSchema = z
   })
   .openapi({ example: pdLikeExample });
 
+const quotedPdExample = {
+  id: "0190d2c0-0000-7000-8000-000000000000",
+  content: "テストは後から書けば十分だと思う",
+  createdAt: "2026-03-12T00:00:00.000Z",
+  userId: "user_2abc",
+};
+const quotedPdSchema = z
+  .object({
+    id: z.string().openapi({ example: quotedPdExample.id }),
+    content: z.string().openapi({ example: quotedPdExample.content }),
+    createdAt: z.string().openapi({ example: quotedPdExample.createdAt }),
+    userId: z.string().openapi({ example: quotedPdExample.userId }),
+  })
+  .openapi({ example: quotedPdExample });
+
+const 引用なし: typeof quotedPdExample | null = null;
+
 const pdItemExample = {
   isMyPd: false,
+  isBookmarked: false,
+  quoteCount: 0,
+  quotedPd: 引用なし,
   likeCount: 3,
   replyCount: 1,
   likes: [pdLikeExample],
@@ -76,6 +129,11 @@ const pdItemExample = {
 export const pdItemSchema = z
   .object({
     isMyPd: z.boolean().openapi({ example: pdItemExample.isMyPd }),
+    isBookmarked: z.boolean().openapi({ example: pdItemExample.isBookmarked }),
+    quoteCount: z.number().openapi({ example: pdItemExample.quoteCount }),
+    quotedPd: quotedPdSchema
+      .nullable()
+      .openapi({ example: pdItemExample.quotedPd }),
     likeCount: z.number().openapi({ example: pdItemExample.likeCount }),
     replyCount: z.number().openapi({ example: pdItemExample.replyCount }),
     likes: z.array(pdLikeSchema).openapi({ example: pdItemExample.likes }),

@@ -32,6 +32,10 @@ describe("現在地のラベルを解決する", () => {
     expect(pageLabelForPath("/stats")).toBe("統計");
   });
 
+  it("保存した PD のページでは保存した PD を返す", () => {
+    expect(pageLabelForPath("/bookmarks")).toBe("保存した PD");
+  });
+
   it("ホームではホームを返す", () => {
     expect(pageLabelForPath("/")).toBe("ホーム");
   });
@@ -54,7 +58,7 @@ describe("現在地のラベルを解決する", () => {
 });
 
 describe("サイドバーのナビ項目", () => {
-  it("プロフィールはサイドバーのナビ項目に含めない", () => {
-    expect(NAV_ITEMS.some((item) => item.href === "/profile")).toBe(false);
+  it("プロフィールへはサイドバーから直接進める", () => {
+    expect(NAV_ITEMS.some((item) => item.href === "/profile")).toBe(true);
   });
 });

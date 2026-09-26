@@ -258,6 +258,43 @@
                             "type": "boolean",
                             "example": false
                           },
+                          "isBookmarked": {
+                            "type": "boolean",
+                            "example": false
+                          },
+                          "quoteCount": {
+                            "type": "number",
+                            "example": 0
+                          },
+                          "quotedPd": {
+                            "type": "object",
+                            "nullable": true,
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "example": "0190d2c0-0000-7000-8000-000000000000"
+                              },
+                              "content": {
+                                "type": "string",
+                                "example": "テストは後から書けば十分だと思う"
+                              },
+                              "createdAt": {
+                                "type": "string",
+                                "example": "2026-03-12T00:00:00.000Z"
+                              },
+                              "userId": {
+                                "type": "string",
+                                "example": "user_2abc"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "content",
+                              "createdAt",
+                              "userId"
+                            ],
+                            "example": null
+                          },
                           "likeCount": {
                             "type": "number",
                             "example": 3
@@ -313,6 +350,9 @@
                         },
                         "required": [
                           "isMyPd",
+                          "isBookmarked",
+                          "quoteCount",
+                          "quotedPd",
                           "likeCount",
                           "replyCount",
                           "likes",
@@ -324,6 +364,9 @@
                         ],
                         "example": {
                           "isMyPd": false,
+                          "isBookmarked": false,
+                          "quoteCount": 0,
+                          "quotedPd": null,
                           "likeCount": 3,
                           "replyCount": 1,
                           "likes": [
@@ -341,6 +384,9 @@
                       "example": [
                         {
                           "isMyPd": false,
+                          "isBookmarked": false,
+                          "quoteCount": 0,
+                          "quotedPd": null,
                           "likeCount": 3,
                           "replyCount": 1,
                           "likes": [
@@ -368,6 +414,9 @@
                     "items": [
                       {
                         "isMyPd": false,
+                        "isBookmarked": false,
+                        "quoteCount": 0,
+                        "quotedPd": null,
                         "likeCount": 3,
                         "replyCount": 1,
                         "likes": [
@@ -607,6 +656,11 @@
                     "maxLength": 200,
                     "example": "今日学んだことを共有します"
                   },
+                  "quotedPdId": {
+                    "type": "string",
+                    "format": "uuid",
+                    "example": "0190d2c0-0000-7000-8000-000000000001"
+                  },
                   "image": {
                     "type": "string",
                     "format": "binary"
@@ -630,6 +684,43 @@
                     "isMyPd": {
                       "type": "boolean",
                       "example": false
+                    },
+                    "isBookmarked": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "quoteCount": {
+                      "type": "number",
+                      "example": 0
+                    },
+                    "quotedPd": {
+                      "type": "object",
+                      "nullable": true,
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "example": "0190d2c0-0000-7000-8000-000000000000"
+                        },
+                        "content": {
+                          "type": "string",
+                          "example": "テストは後から書けば十分だと思う"
+                        },
+                        "createdAt": {
+                          "type": "string",
+                          "example": "2026-03-12T00:00:00.000Z"
+                        },
+                        "userId": {
+                          "type": "string",
+                          "example": "user_2abc"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "content",
+                        "createdAt",
+                        "userId"
+                      ],
+                      "example": null
                     },
                     "likeCount": {
                       "type": "number",
@@ -686,6 +777,9 @@
                   },
                   "required": [
                     "isMyPd",
+                    "isBookmarked",
+                    "quoteCount",
+                    "quotedPd",
                     "likeCount",
                     "replyCount",
                     "likes",
@@ -697,6 +791,9 @@
                   ],
                   "example": {
                     "isMyPd": false,
+                    "isBookmarked": false,
+                    "quoteCount": 0,
+                    "quotedPd": null,
                     "likeCount": 3,
                     "replyCount": 1,
                     "likes": [
@@ -709,6 +806,28 @@
                     "createdAt": "2026-06-24T00:00:00.000Z",
                     "userId": "user_2abc",
                     "imageFileName": null
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "引用元のPDが存在しない",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "引用元のPDが見つかりません"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "example": {
+                    "message": "引用元のPDが見つかりません"
                   }
                 }
               }
@@ -731,6 +850,11 @@
                     "minLength": 1,
                     "maxLength": 200,
                     "example": "GIF付きで共有します"
+                  },
+                  "quotedPdId": {
+                    "type": "string",
+                    "format": "uuid",
+                    "example": "0190d2c0-0000-7000-8000-000000000001"
                   },
                   "image": {
                     "type": "string",
@@ -757,6 +881,43 @@
                       "type": "boolean",
                       "example": false
                     },
+                    "isBookmarked": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "quoteCount": {
+                      "type": "number",
+                      "example": 0
+                    },
+                    "quotedPd": {
+                      "type": "object",
+                      "nullable": true,
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "example": "0190d2c0-0000-7000-8000-000000000000"
+                        },
+                        "content": {
+                          "type": "string",
+                          "example": "テストは後から書けば十分だと思う"
+                        },
+                        "createdAt": {
+                          "type": "string",
+                          "example": "2026-03-12T00:00:00.000Z"
+                        },
+                        "userId": {
+                          "type": "string",
+                          "example": "user_2abc"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "content",
+                        "createdAt",
+                        "userId"
+                      ],
+                      "example": null
+                    },
                     "likeCount": {
                       "type": "number",
                       "example": 3
@@ -812,6 +973,9 @@
                   },
                   "required": [
                     "isMyPd",
+                    "isBookmarked",
+                    "quoteCount",
+                    "quotedPd",
                     "likeCount",
                     "replyCount",
                     "likes",
@@ -823,6 +987,9 @@
                   ],
                   "example": {
                     "isMyPd": false,
+                    "isBookmarked": false,
+                    "quoteCount": 0,
+                    "quotedPd": null,
                     "likeCount": 3,
                     "replyCount": 1,
                     "likes": [
@@ -835,6 +1002,28 @@
                     "createdAt": "2026-06-24T00:00:00.000Z",
                     "userId": "user_2abc",
                     "imageFileName": null
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "引用元のPDが存在しない",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "引用元のPDが見つかりません"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "example": {
+                    "message": "引用元のPDが見つかりません"
                   }
                 }
               }
@@ -882,6 +1071,276 @@
                   ],
                   "example": {
                     "message": "いいね状態を更新しました"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pd/bookmark": {
+      "put": {
+        "operationId": "mutatePdBookmark",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "pdId": {
+                    "type": "string",
+                    "format": "uuid",
+                    "example": "0190d2c0-0000-7000-8000-000000000001"
+                  },
+                  "bookmarked": {
+                    "type": "boolean",
+                    "example": true
+                  }
+                },
+                "required": [
+                  "pdId",
+                  "bookmarked"
+                ],
+                "example": {
+                  "pdId": "0190d2c0-0000-7000-8000-000000000001",
+                  "bookmarked": true
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "更新成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "ブックマーク状態を更新しました"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "example": {
+                    "message": "ブックマーク状態を更新しました"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pd/bookmarks": {
+      "get": {
+        "operationId": "fetchBookmarkedPds",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}(\\.\\d{1,6})?\\|[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+              "example": "2026-07-01 00:00:00.123456|0190d2c0-0000-7000-8000-000000000002"
+            },
+            "required": false,
+            "name": "cursor",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ブックマークしたPD一覧",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "isMyPd": {
+                            "type": "boolean",
+                            "example": false
+                          },
+                          "isBookmarked": {
+                            "type": "boolean",
+                            "example": false
+                          },
+                          "quoteCount": {
+                            "type": "number",
+                            "example": 0
+                          },
+                          "quotedPd": {
+                            "type": "object",
+                            "nullable": true,
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "example": "0190d2c0-0000-7000-8000-000000000000"
+                              },
+                              "content": {
+                                "type": "string",
+                                "example": "テストは後から書けば十分だと思う"
+                              },
+                              "createdAt": {
+                                "type": "string",
+                                "example": "2026-03-12T00:00:00.000Z"
+                              },
+                              "userId": {
+                                "type": "string",
+                                "example": "user_2abc"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "content",
+                              "createdAt",
+                              "userId"
+                            ],
+                            "example": null
+                          },
+                          "likeCount": {
+                            "type": "number",
+                            "example": 3
+                          },
+                          "replyCount": {
+                            "type": "number",
+                            "example": 1
+                          },
+                          "likes": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "userId": {
+                                  "type": "string",
+                                  "example": "user_2abc"
+                                }
+                              },
+                              "required": [
+                                "userId"
+                              ],
+                              "example": {
+                                "userId": "user_2abc"
+                              }
+                            },
+                            "example": [
+                              {
+                                "userId": "user_2abc"
+                              }
+                            ]
+                          },
+                          "id": {
+                            "type": "string",
+                            "example": "0190d2c0-0000-7000-8000-000000000001"
+                          },
+                          "content": {
+                            "type": "string",
+                            "example": "今日学んだことを共有します"
+                          },
+                          "createdAt": {
+                            "type": "string",
+                            "example": "2026-06-24T00:00:00.000Z"
+                          },
+                          "userId": {
+                            "type": "string",
+                            "example": "user_2abc"
+                          },
+                          "imageFileName": {
+                            "type": "string",
+                            "nullable": true,
+                            "example": null
+                          }
+                        },
+                        "required": [
+                          "isMyPd",
+                          "isBookmarked",
+                          "quoteCount",
+                          "quotedPd",
+                          "likeCount",
+                          "replyCount",
+                          "likes",
+                          "id",
+                          "content",
+                          "createdAt",
+                          "userId",
+                          "imageFileName"
+                        ],
+                        "example": {
+                          "isMyPd": false,
+                          "isBookmarked": false,
+                          "quoteCount": 0,
+                          "quotedPd": null,
+                          "likeCount": 3,
+                          "replyCount": 1,
+                          "likes": [
+                            {
+                              "userId": "user_2abc"
+                            }
+                          ],
+                          "id": "0190d2c0-0000-7000-8000-000000000001",
+                          "content": "今日学んだことを共有します",
+                          "createdAt": "2026-06-24T00:00:00.000Z",
+                          "userId": "user_2abc",
+                          "imageFileName": null
+                        }
+                      },
+                      "example": [
+                        {
+                          "isMyPd": false,
+                          "isBookmarked": false,
+                          "quoteCount": 0,
+                          "quotedPd": null,
+                          "likeCount": 3,
+                          "replyCount": 1,
+                          "likes": [
+                            {
+                              "userId": "user_2abc"
+                            }
+                          ],
+                          "id": "0190d2c0-0000-7000-8000-000000000001",
+                          "content": "今日学んだことを共有します",
+                          "createdAt": "2026-06-24T00:00:00.000Z",
+                          "userId": "user_2abc",
+                          "imageFileName": null
+                        }
+                      ]
+                    },
+                    "nextCursor": {
+                      "type": "string",
+                      "example": "0190d2c0-0000-7000-8000-000000000002"
+                    }
+                  },
+                  "required": [
+                    "items"
+                  ],
+                  "example": {
+                    "items": [
+                      {
+                        "isMyPd": false,
+                        "isBookmarked": false,
+                        "quoteCount": 0,
+                        "quotedPd": null,
+                        "likeCount": 3,
+                        "replyCount": 1,
+                        "likes": [
+                          {
+                            "userId": "user_2abc"
+                          }
+                        ],
+                        "id": "0190d2c0-0000-7000-8000-000000000001",
+                        "content": "今日学んだことを共有します",
+                        "createdAt": "2026-06-24T00:00:00.000Z",
+                        "userId": "user_2abc",
+                        "imageFileName": null
+                      }
+                    ]
                   }
                 }
               }

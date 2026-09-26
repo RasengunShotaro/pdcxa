@@ -14,6 +14,7 @@ interface NotificationListBodyProps {
   onRetry: () => void;
   onSelect?: () => void;
   skeletonCount?: number;
+  variant?: "cards" | "rows";
 }
 
 export function NotificationListBody({
@@ -24,13 +25,20 @@ export function NotificationListBody({
   onRetry,
   onSelect,
   skeletonCount = 5,
+  variant = "cards",
 }: NotificationListBodyProps) {
   if (isPending && notifications.length === 0) {
-    return <ListSkeleton count={skeletonCount} />;
+    return <ListSkeleton count={skeletonCount} variant={variant} />;
   }
 
   if (isError && notifications.length === 0) {
-    return <ListError error={error} onRetry={onRetry} />;
+    return variant === "rows" ? (
+      <div className="p-4">
+        <ListError error={error} onRetry={onRetry} />
+      </div>
+    ) : (
+      <ListError error={error} onRetry={onRetry} />
+    );
   }
 
   if (notifications.length === 0) {
@@ -43,10 +51,16 @@ export function NotificationListBody({
   }
 
   return (
-    <ul className="space-y-2">
+    <ul
+      className={
+        variant === "rows"
+          ? "divide-y divide-border border-b border-border"
+          : "space-y-2"
+      }
+    >
       {notifications.map((item) => (
         <li key={notificationKey(item)}>
-          <NotificationItem item={item} onSelect={onSelect} />
+          <NotificationItem item={item} onSelect={onSelect} variant={variant} />
         </li>
       ))}
     </ul>
