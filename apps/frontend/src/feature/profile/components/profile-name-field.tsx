@@ -2,7 +2,7 @@
 
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { Check, Loader2 } from "lucide-react";
-import { useState } from "react";
+import { useId, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -36,10 +36,14 @@ export function ProfileNameField({
     defaultValues,
   });
 
+  const { isDirty, isSubmitting } = form.formState;
+  const saveHintId = useId();
+
   const handleSubmit = async (value: NameFormSchema) => {
     setFeedback("idle");
     try {
       await onSubmit(value);
+      form.reset(value);
       setFeedback("success");
       toast.success("表示名を変更しました");
     } catch {
@@ -57,9 +61,9 @@ export function ProfileNameField({
             name="firstName"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>First Name</FormLabel>
+                <FormLabel>表示名（前）</FormLabel>
                 <FormControl>
-                  <Input placeholder="Taro" {...field} />
+                  <Input placeholder="太郎" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -70,9 +74,9 @@ export function ProfileNameField({
             name="lastName"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Last Name</FormLabel>
+                <FormLabel>表示名（後）</FormLabel>
                 <FormControl>
-                  <Input placeholder="Yamada" {...field} />
+                  <Input placeholder="山田" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -96,13 +100,18 @@ export function ProfileNameField({
           {feedback === "success" && "表示名を変更しました"}
         </p>
 
-        <div className="flex justify-end">
-          <Button disabled={form.formState.isSubmitting} type="submit">
-            {form.formState.isSubmitting ? (
-              <Loader2 className="animate-spin" />
-            ) : (
-              <Check />
-            )}
+        <div className="flex flex-col items-end gap-2 sm:flex-row sm:items-center sm:justify-end sm:gap-3">
+          {isDirty ? null : (
+            <p className="text-sm text-muted-foreground" id={saveHintId}>
+              表示名を変更すると保存できます
+            </p>
+          )}
+          <Button
+            aria-describedby={isDirty ? undefined : saveHintId}
+            disabled={!isDirty || isSubmitting}
+            type="submit"
+          >
+            {isSubmitting ? <Loader2 className="animate-spin" /> : <Check />}
             保存する
           </Button>
         </div>

@@ -33,6 +33,15 @@ export const remainingChars = (content: string): number =>
 export const isContentOverLimit = (content: string): boolean =>
   contentLength(content) > MAX_CONTENT_LENGTH;
 
+const ANNOUNCE_REMAINING_BELOW = 20;
+
+export const counterAnnouncement = (content: string): string => {
+  const remaining = remainingChars(content);
+  if (remaining < 0) return `${-remaining}文字超過`;
+  if (remaining <= ANNOUNCE_REMAINING_BELOW) return `残り${remaining}文字`;
+  return "";
+};
+
 export const isContentBlank = (content: string): boolean =>
   content.trim().length === 0;
 

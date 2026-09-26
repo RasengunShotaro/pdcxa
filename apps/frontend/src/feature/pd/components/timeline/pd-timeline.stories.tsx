@@ -99,6 +99,23 @@ export const Populated: Story = {
   },
 };
 
+export const TimestampOpensDetail: Story = {
+  name: "投稿時刻から詳細を開けて絶対日時を確認できる",
+  parameters: Populated.parameters,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await waitFor(() =>
+      expect(canvas.getByText("今日のメモを共有します")).toBeInTheDocument(),
+    );
+
+    const [firstTimestampLink] = canvas.getAllByRole("link", {
+      name: "2026年6月24日 09:00の投稿を開く",
+    });
+
+    expect(firstTimestampLink).toHaveAttribute("href", "/pd/pd-1");
+  },
+};
+
 export const Empty: Story = {
   name: "1件も無いとき空状態を出す",
   parameters: {
@@ -112,7 +129,7 @@ export const Empty: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await waitFor(() =>
-      expect(canvas.getByText("まだ PD がありません")).toBeInTheDocument(),
+      expect(canvas.getByText("まだPDがありません")).toBeInTheDocument(),
     );
   },
 };

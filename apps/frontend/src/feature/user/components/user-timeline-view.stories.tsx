@@ -89,6 +89,19 @@ export const Populated: Story = {
   },
 };
 
+export const AuthorNotRepeated: Story = {
+  name: "本人のページでは投稿ごとに著者名を繰り返さない",
+  parameters: Populated.parameters,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await waitFor(() =>
+      expect(canvas.getByText("太郎のメモです")).toBeInTheDocument(),
+    );
+
+    expect(canvas.getAllByText("太郎 山田")).toHaveLength(1);
+  },
+};
+
 export const Empty: Story = {
   name: "投稿が無いときヘッダーと空状態を出す",
   parameters: {

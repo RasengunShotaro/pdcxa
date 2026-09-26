@@ -7,9 +7,16 @@ import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+
+const THEME_OPTIONS = [
+  { value: "light", label: "ライト" },
+  { value: "dark", label: "ダーク" },
+  { value: "system", label: "システム" },
+] as const;
 
 export const ColorModeSwitcher = () => {
   const { setTheme, theme, resolvedTheme } = useTheme();
@@ -22,25 +29,23 @@ export const ColorModeSwitcher = () => {
       <DropdownMenuTrigger asChild>
         <Button variant="ghost">
           {isLegacy ? (
-            <Landmark className="h-[1.2rem] w-[1.2rem] transition-all" />
+            <Landmark className="h-[1.2rem] w-[1.2rem]" />
           ) : isDark ? (
-            <Moon className="h-[1.2rem] w-[1.2rem] transition-all" />
+            <Moon className="h-[1.2rem] w-[1.2rem]" />
           ) : (
-            <Sun className="h-[1.2rem] w-[1.2rem] transition-all" />
+            <Sun className="h-[1.2rem] w-[1.2rem]" />
           )}
-          <span className="sr-only">Toggle theme</span>
+          <span className="sr-only">テーマを切り替える</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={() => setTheme("light")}>
-          Light
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("dark")}>
-          Dark
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("system")}>
-          System
-        </DropdownMenuItem>
+        <DropdownMenuRadioGroup onValueChange={setTheme} value={theme}>
+          {THEME_OPTIONS.map((option) => (
+            <DropdownMenuRadioItem key={option.value} value={option.value}>
+              {option.label}
+            </DropdownMenuRadioItem>
+          ))}
+        </DropdownMenuRadioGroup>
       </DropdownMenuContent>
     </DropdownMenu>
   );

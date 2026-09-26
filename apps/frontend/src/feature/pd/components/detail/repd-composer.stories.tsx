@@ -53,7 +53,7 @@ export const SubmitSuccess: Story = {
     );
     await waitFor(() =>
       expect(
-        within(document.body).getByText("RePD しました"),
+        within(document.body).getByText("RePDしました"),
       ).toBeInTheDocument(),
     );
   },

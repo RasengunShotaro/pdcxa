@@ -10,7 +10,9 @@ import { Button } from "@/components/ui/button";
 import { usePd } from "@/hooks/use-pd";
 import { useRePd } from "@/hooks/use-repd";
 import { ComposeFab } from "../composer/compose-fab";
+import { ComposerTrigger } from "../composer/composer-trigger";
 import { PdCard } from "../timeline/pd-card";
+import { BackLink } from "./back-link";
 import { RePdComposer } from "./repd-composer";
 import { RePdSection } from "./repd-section";
 
@@ -50,14 +52,8 @@ export function PdDetailView({ pdId }: PdDetailViewProps) {
   } = useRePd(pdId);
 
   return (
-    <div className="mx-auto w-full max-w-2xl space-y-6 pb-[calc(5.5rem+env(safe-area-inset-bottom))]">
-      <Link
-        className="inline-flex items-center gap-1 text-muted-foreground text-sm transition-colors hover:text-foreground"
-        href="/"
-      >
-        <ChevronLeft aria-hidden="true" className="size-4" />
-        ホームへ戻る
-      </Link>
+    <div className="space-y-6 pb-[calc(5.5rem+env(safe-area-inset-bottom))] md:pb-0">
+      <BackLink />
 
       {isPdPending ? <ListSkeleton count={1} /> : null}
 
@@ -68,13 +64,20 @@ export function PdDetailView({ pdId }: PdDetailViewProps) {
       {!isPdPending && !isPdError && !pd ? (
         <EmptyState
           action={backToHome}
-          message="指定された PD が見つかりませんでした"
+          message="指定されたPDが見つかりませんでした"
         />
       ) : null}
 
       {!isPdPending && !isPdError && pd ? (
         <>
           <PdCard pd={pd} />
+
+          <ComposerTrigger
+            className="hidden md:flex"
+            label="RePDする"
+            onClick={() => setComposerOpen(true)}
+            placeholder="このPDに感じたこと・気づいたことを返信しよう"
+          />
 
           <RePdSection
             error={rePdError}

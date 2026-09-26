@@ -51,9 +51,7 @@ export const SubmitSuccess: Story = {
       ).not.toBeInTheDocument(),
     );
     await waitFor(() =>
-      expect(
-        within(document.body).getByText("PD しました"),
-      ).toBeInTheDocument(),
+      expect(within(document.body).getByText("PDしました")).toBeInTheDocument(),
     );
   },
 };

@@ -27,10 +27,10 @@ describe("summarizeStats", () => {
     const items = summarizeStats({ totals: baseTotals, daily: sevenDays });
 
     expect(items.map((i) => i.value)).toEqual([20, 12, 35, 4]);
-    expect(items[0].supporting).toBe("1日平均 2.9件");
-    expect(items[1].supporting).toBe("1PDあたり 0.6件");
-    expect(items[2].supporting).toBe("1PDあたり 1.8件");
-    expect(items[3].supporting).toBe("平均 5件/人");
+    expect(items[0].supporting).toBe("1日平均2.9件");
+    expect(items[1].supporting).toBe("1PDあたり0.6件");
+    expect(items[2].supporting).toBe("1PDあたり1.8件");
+    expect(items[3].supporting).toBe("平均5件/人");
   });
 
   it("PD投稿0の静かな週でもゼロ除算で NaN/Infinity を出さない", () => {
@@ -44,7 +44,7 @@ describe("summarizeStats", () => {
 
     const items = summarizeStats({ totals: quiet, daily: sevenDays });
 
-    expect(items[0].supporting).toBe("1日平均 0件");
+    expect(items[0].supporting).toBe("1日平均0件");
     expect(items[1].supporting).toBe("PD投稿がまだありません");
     expect(items[2].supporting).toBe("PD投稿がまだありません");
     expect(items[3].supporting).toBe("まだ投稿者がいません");

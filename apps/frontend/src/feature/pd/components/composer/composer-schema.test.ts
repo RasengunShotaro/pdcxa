@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import {
   canSubmitContent,
   composerSchema,
+  counterAnnouncement,
   isContentBlank,
   isContentOverLimit,
   MAX_CONTENT_LENGTH,
@@ -57,6 +58,22 @@ describe("canSubmitContent", () => {
 
   it("上限を超えているときは送信できない", () => {
     expect(canSubmitContent("a".repeat(MAX_CONTENT_LENGTH + 1))).toBe(false);
+  });
+});
+
+describe("counterAnnouncement", () => {
+  it("残りに余裕があるうちは読み上げない", () => {
+    expect(counterAnnouncement("a".repeat(100))).toBe("");
+  });
+
+  it("残りが少なくなったら残りの文字数を読み上げる", () => {
+    expect(counterAnnouncement("a".repeat(185))).toBe("残り15文字");
+  });
+
+  it("上限を超えたら超過した文字数を読み上げる", () => {
+    expect(counterAnnouncement("a".repeat(MAX_CONTENT_LENGTH + 4))).toBe(
+      "4文字超過",
+    );
   });
 });
 
