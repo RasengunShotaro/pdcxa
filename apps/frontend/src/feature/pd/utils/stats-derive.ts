@@ -42,7 +42,7 @@ const roundToTenth = (value: number): number => Number(value.toFixed(1));
 const perPdSupporting = (count: number, pdCount: number): string =>
   pdCount === 0
     ? "PD投稿がまだありません"
-    : `1PDあたり ${roundToTenth(count / pdCount)}件`;
+    : `1PDあたり${roundToTenth(count / pdCount)}件`;
 
 export const summarizeStats = (
   stats: Pick<PdWeeklyStats, "totals" | "daily">,
@@ -56,7 +56,7 @@ export const summarizeStats = (
       key: "pd",
       label: "PD投稿数",
       value: totals.pdCount,
-      supporting: `1日平均 ${perDay}件`,
+      supporting: `1日平均${perDay}件`,
     },
     {
       key: "repd",
@@ -77,7 +77,7 @@ export const summarizeStats = (
       supporting:
         totals.activeAuthorCount === 0
           ? "まだ投稿者がいません"
-          : `平均 ${totals.averagePdPerAuthor}件/人`,
+          : `平均${totals.averagePdPerAuthor}件/人`,
     },
   ];
 };

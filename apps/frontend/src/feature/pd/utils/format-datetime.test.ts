@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
-import { formatDateTime } from "./format-datetime";
+import { formatAbsoluteDateTime, formatDateTime } from "./format-datetime";
 
 describe("投稿の経過時間を計算する", () => {
   beforeEach(() => {
@@ -67,6 +67,31 @@ describe("投稿の経過時間を計算する", () => {
     expect(result).toBe("1日前");
   });
 
+  test("経過時間が7日未満の投稿は経過日数で表示される", () => {
+    const date = new Date("2019-12-25T12:00:01Z");
+
+    const result = formatDateTime(date);
+
+    expect(result).toBe("6日前");
+  });
+
+  test("経過時間が7日以上で同じ年の投稿は月日で表示される", () => {
+    vi.setSystemTime(new Date("2020-03-20T12:00:00Z"));
+    const date = new Date("2020-03-13T12:00:00Z");
+
+    const result = formatDateTime(date);
+
+    expect(result).toBe("3月13日");
+  });
+
+  test("経過時間が7日以上で前の年の投稿は年月日で表示される", () => {
+    const date = new Date("2019-12-20T12:00:00Z");
+
+    const result = formatDateTime(date);
+
+    expect(result).toBe("2019年12月20日");
+  });
+
   test("Date型でない入力値の場合でも正しく経過時間が返ってくる", () => {
     const dateString = "2020-01-01T03:00:00.000Z";
 
@@ -77,5 +102,15 @@ describe("投稿の経過時間を計算する", () => {
 
   afterEach(() => {
     vi.useRealTimers();
+  });
+});
+
+describe("formatAbsoluteDateTime", () => {
+  test("投稿日時を日本時間の年月日と時刻で表示する", () => {
+    const date = "2020-01-01T03:05:00.000Z";
+
+    const result = formatAbsoluteDateTime(date);
+
+    expect(result).toBe("2020年1月1日 12:05");
   });
 });

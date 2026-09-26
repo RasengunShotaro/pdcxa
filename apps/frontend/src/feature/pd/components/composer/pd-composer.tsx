@@ -62,7 +62,7 @@ export function PdComposer({ open, onOpenChange }: PdComposerProps) {
     setSubmitError(null);
     try {
       await createPd({ content: values.content.trim(), image: values.image });
-      toast.success("PD しました");
+      toast.success("PDしました");
       form.reset({ content: "", image: undefined });
       onOpenChange(false);
     } catch (error) {
@@ -85,7 +85,7 @@ export function PdComposer({ open, onOpenChange }: PdComposerProps) {
         <DialogHeader>
           <DialogTitle>PDする</DialogTitle>
           <DialogDescription className="sr-only">
-            PD はタイムラインに公開されます。
+            PDはタイムラインに公開されます。
           </DialogDescription>
         </DialogHeader>
 

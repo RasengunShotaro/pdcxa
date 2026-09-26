@@ -40,13 +40,13 @@ export const StatsView = () => {
   return (
     <div className="space-y-6">
       <header className="space-y-1">
-        <h1 className="text-xl font-bold text-foreground">週次統計</h1>
+        <h1 className="text-xl font-bold text-foreground">直近7日間</h1>
         <p className="text-sm text-muted-foreground">
-          直近7日間 · {formatRangeLabel(stats.range)}
+          {formatRangeLabel(stats.range)}
         </p>
       </header>
 
-      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-4">
         {summary.map((item) => (
           <StatCard item={item} key={item.key} />
         ))}

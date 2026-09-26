@@ -19,11 +19,37 @@ type Story = StoryObj<typeof ProfileNameField>;
 const inlineStatusText = (canvasElement: HTMLElement): string | undefined =>
   canvasElement.querySelector('p[role="status"]')?.textContent ?? undefined;
 
+export const SaveDisabledUntilChanged: Story = {
+  name: "表示名を変更するまで保存ボタンを押せない",
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    await expect(
+      canvas.getByRole("button", { name: "保存する" }),
+    ).toBeDisabled();
+  },
+};
+
+export const SavedValueBecomesNewBaseline: Story = {
+  name: "保存に成功すると保存した値を基準に戻し再び保存ボタンを押せなくする",
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    await userEvent.type(canvas.getByLabelText("表示名（前）"), "x");
+    await userEvent.click(canvas.getByRole("button", { name: "保存する" }));
+
+    await waitFor(() =>
+      expect(canvas.getByRole("button", { name: "保存する" })).toBeDisabled(),
+    );
+  },
+};
+
 export const SubmitSuccess: Story = {
   name: "保存に成功すると完了メッセージを画面内に表示する",
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
 
+    await userEvent.type(canvas.getByLabelText("表示名（前）"), "x");
     await userEvent.click(canvas.getByRole("button", { name: "保存する" }));
 
     await waitFor(() =>
@@ -40,6 +66,7 @@ export const SubmitFailureKeepsAlert: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
 
+    await userEvent.type(canvas.getByLabelText("表示名（前）"), "x");
     await userEvent.click(canvas.getByRole("button", { name: "保存する" }));
 
     await waitFor(() =>

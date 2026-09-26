@@ -5,6 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import {
   type ComposerSchema,
+  counterAnnouncement,
   isContentOverLimit,
   MAX_CONTENT_LENGTH,
   remainingChars,
@@ -31,7 +32,7 @@ export function ComposerContentField({
   return (
     <div className="space-y-2">
       <label className="sr-only" htmlFor="pd-composer-content">
-        PD の本文
+        PDの本文
       </label>
       <Textarea
         aria-describedby="pd-composer-counter"
@@ -50,8 +51,10 @@ export function ComposerContentField({
         ) : (
           <span aria-hidden="true" />
         )}
+        <span aria-live="polite" className="sr-only">
+          {counterAnnouncement(content)}
+        </span>
         <span
-          aria-live="polite"
           className={cn(
             "shrink-0 text-sm tabular-nums",
             overLimit

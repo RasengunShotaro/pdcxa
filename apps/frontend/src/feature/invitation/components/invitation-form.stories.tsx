@@ -37,7 +37,7 @@ export const SubmitSuccess: Story = {
 
     await waitFor(() =>
       expect(
-        canvas.getByText("invite@example.com に招待を送信しました。"),
+        canvas.getByText("invite@example.comに招待を送信しました。"),
       ).toBeInTheDocument(),
     );
     expect(input).toHaveValue("");

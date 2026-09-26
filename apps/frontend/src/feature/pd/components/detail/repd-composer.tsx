@@ -21,6 +21,7 @@ import { errorDisplay } from "@/lib/error-message";
 import { cn } from "@/lib/utils";
 import {
   canSubmitContent,
+  counterAnnouncement,
   isContentOverLimit,
   MAX_CONTENT_LENGTH,
   remainingChars,
@@ -71,7 +72,7 @@ export function RePdComposer({
     setSubmitError(null);
     try {
       await onSubmitRePd(values.content.trim());
-      toast.success("RePD しました");
+      toast.success("RePDしました");
       form.reset({ content: "" });
       onOpenChange(false);
     } catch (caught) {
@@ -92,7 +93,7 @@ export function RePdComposer({
         <DialogHeader>
           <DialogTitle>RePDする</DialogTitle>
           <DialogDescription className="sr-only">
-            この PD への返信を投稿します。
+            このPDへの返信を投稿します。
           </DialogDescription>
         </DialogHeader>
 
@@ -112,7 +113,7 @@ export function RePdComposer({
                 className="min-h-32 resize-none text-base"
                 disabled={isPending}
                 id="repd-composer-content"
-                placeholder="この PD に感じたこと・気づいたことを返信しよう"
+                placeholder="このPDに感じたこと・気づいたことを返信しよう"
                 {...field}
               />
               <div className="flex items-center justify-between">
@@ -123,8 +124,10 @@ export function RePdComposer({
                 ) : (
                   <span aria-hidden="true" />
                 )}
+                <span aria-live="polite" className="sr-only">
+                  {counterAnnouncement(content)}
+                </span>
                 <span
-                  aria-live="polite"
                   className={cn(
                     "shrink-0 text-sm tabular-nums",
                     overLimit

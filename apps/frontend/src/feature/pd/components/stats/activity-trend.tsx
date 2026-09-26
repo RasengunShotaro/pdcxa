@@ -26,11 +26,11 @@ export function ActivityTrend({ data }: ActivityTrendProps) {
     <Card>
       <CardHeader>
         <CardTitle className="text-xl font-bold">投稿アクティビティ</CardTitle>
-        <CardDescription>日別の PD・RePD・いいねの推移</CardDescription>
+        <CardDescription>日別のPD・RePD・いいねの推移</CardDescription>
       </CardHeader>
       <CardContent>
         <ActivityBarChart
-          ariaLabel="日別の PD・RePD・いいねの積み上げ棒グラフ"
+          ariaLabel="日別のPD・RePD・いいねの件数を並べた棒グラフ"
           data={data}
           series={SERIES}
           xKey="shortDate"

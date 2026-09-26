@@ -14,12 +14,14 @@ interface PdTimelineProps {
   userName?: string;
   onCompose?: () => void;
   emptyState?: ReactNode;
+  showAuthor?: boolean;
 }
 
 export function PdTimeline({
   userName,
   onCompose,
   emptyState,
+  showAuthor = true,
 }: PdTimelineProps) {
   const {
     pds,
@@ -56,12 +58,12 @@ export function PdTimeline({
           onCompose ? (
             <Button onClick={onCompose} type="button">
               <MessageCirclePlus aria-hidden="true" className="size-4" />
-              最初の PD をしてみよう
+              最初のPDをしてみよう
             </Button>
           ) : undefined
         }
         icon={<MessageSquare aria-hidden="true" className="size-8" />}
-        message="まだ PD がありません"
+        message="まだPDがありません"
       />
     );
   }
@@ -71,7 +73,7 @@ export function PdTimeline({
       <ul className="space-y-4">
         {pds.map((pd) => (
           <li key={pd.id}>
-            <PdCard pd={pd} />
+            <PdCard pd={pd} showAuthor={showAuthor} />
           </li>
         ))}
       </ul>

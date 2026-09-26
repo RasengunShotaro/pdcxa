@@ -157,7 +157,7 @@ export const RePdEmpty: Story = {
     const canvas = within(canvasElement);
     await waitFor(() =>
       expect(
-        canvas.getByText("まだ RePD はありません。RePD してみよう!"),
+        canvas.getByText("まだRePDはありません。RePDしてみよう！"),
       ).toBeInTheDocument(),
     );
   },
@@ -180,7 +180,7 @@ export const NotFound: Story = {
     const canvas = within(canvasElement);
     await waitFor(() =>
       expect(
-        canvas.getByText("指定された PD が見つかりませんでした"),
+        canvas.getByText("指定されたPDが見つかりませんでした"),
       ).toBeInTheDocument(),
     );
   },
@@ -220,7 +220,7 @@ export const ReplyFromComposer: Story = {
     );
     await waitFor(() =>
       expect(
-        within(document.body).getByText("RePD しました"),
+        within(document.body).getByText("RePDしました"),
       ).toBeInTheDocument(),
     );
   },
