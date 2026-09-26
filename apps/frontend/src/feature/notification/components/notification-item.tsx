@@ -25,15 +25,26 @@ const KIND_ICON: Record<NotificationKind, LucideIcon> = {
 interface NotificationItemProps {
   item: NotificationItemType;
   onSelect?: () => void;
+  variant?: "cards" | "rows";
 }
 
-export function NotificationItem({ item, onSelect }: NotificationItemProps) {
+const ITEM_CLASS_NAME: Record<"cards" | "rows", string> = {
+  cards:
+    "flex items-start gap-3 rounded-xl border bg-card px-5 py-4 shadow-sm transition-[box-shadow,background-color] hover:bg-muted/40 hover:shadow-md",
+  rows: "flex items-start gap-3 px-4 py-3 transition-colors hover:bg-muted/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring/50",
+};
+
+export function NotificationItem({
+  item,
+  onSelect,
+  variant = "cards",
+}: NotificationItemProps) {
   const displayName = 行為者の表示名(item.actor);
   const Icon = KIND_ICON[item.kind];
 
   return (
     <Link
-      className="flex items-start gap-3 rounded-xl border bg-card px-5 py-4 shadow-sm transition-[box-shadow,background-color] hover:bg-muted/40 hover:shadow-md"
+      className={ITEM_CLASS_NAME[variant]}
       href={通知のリンク先(item)}
       onClick={onSelect}
     >
