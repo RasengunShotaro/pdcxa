@@ -9,7 +9,7 @@
   --color-background: var(--background);
   --color-bg-page: var(--bg-page);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-outfit), var(--font-line-seed-jp), sans-serif;
   --font-mono: var(--font-geist-mono);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);

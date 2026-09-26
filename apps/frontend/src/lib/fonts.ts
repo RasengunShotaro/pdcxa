@@ -1,20 +1,14 @@
-import localFont from "next/font/local";
+import { LINE_Seed_JP, Outfit } from "next/font/google";
 
-export const udShinGo = localFont({
-  src: [
-    {
-      path: "../../public/fonts/UDShinGo-Light.otf",
-      weight: "300",
-    },
-    {
-      path: "../../public/fonts/UDShinGo-Regular.otf",
-      weight: "400",
-    },
-    {
-      path: "../../public/fonts/UDShinGo-Bold.otf",
-      weight: "700",
-    },
-  ],
-  preload: true,
+export const outfit = Outfit({
+  subsets: ["latin"],
   display: "swap",
+  variable: "--font-outfit",
+});
+
+export const lineSeedJp = LINE_Seed_JP({
+  weight: ["400", "700"],
+  preload: false,
+  display: "swap",
+  variable: "--font-line-seed-jp",
 });

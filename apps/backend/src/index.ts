@@ -1,8 +1,8 @@
 import { clerkMiddleware } from "@clerk/hono";
 import { OpenAPIHono } from "@hono/zod-openapi";
 import type { MiddlewareHandler } from "hono";
-import { cors } from "hono/cors";
 import { HTTPException } from "hono/http-exception";
+import { CORSMiddleware } from "./lib/cors";
 import { ログイン中のユーザーIDを取得 } from "./lib/current-user";
 import { 境界エラーレスポンス } from "./lib/http-error";
 import { キャッシュ無効化Middleware } from "./lib/no-store";
@@ -30,12 +30,7 @@ export const ログイン状態Middleware: MiddlewareHandler = async (c, next) =
 const app = new OpenAPIHono();
 app.use("*", キャッシュ無効化Middleware);
 app.use("*", clerkMiddleware());
-app.use("*", async (c, next) => {
-  const corsMiddlewareHandler = cors({
-    origin: "*",
-  });
-  return corsMiddlewareHandler(c, next);
-});
+app.use("*", CORSMiddleware);
 app.use("*", ログイン状態Middleware);
 app.onError((エラー) => 境界エラーレスポンス(エラー));
 
