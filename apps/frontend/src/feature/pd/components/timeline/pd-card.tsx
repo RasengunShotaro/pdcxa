@@ -39,7 +39,7 @@ export function PdCard({ pd, showAuthor = true }: PdCardProps) {
           />
         ) : null}
 
-        <p className="whitespace-pre-wrap break-words text-sm text-body">
+        <p className="whitespace-pre-wrap break-words text-base text-body">
           <Linkify>{pd.content}</Linkify>
         </p>
 
