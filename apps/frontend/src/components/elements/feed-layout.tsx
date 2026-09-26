@@ -22,7 +22,7 @@ export function FeedLayout({
 
   return (
     <div
-      className="-mx-4 -my-6 grid flex-1 grid-cols-[1fr_minmax(0,37.5rem)_1fr]"
+      className="-mx-4 -my-6 grid flex-1 grid-cols-[1fr_minmax(0,42rem)_1fr]"
       data-feed-layout=""
     >
       <div className="col-start-2 flex min-w-0 flex-col bg-card sm:border-x sm:border-border">
