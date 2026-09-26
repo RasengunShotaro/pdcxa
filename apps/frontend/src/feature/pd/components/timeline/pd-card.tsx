@@ -7,7 +7,9 @@ import { PdBookmarkButton } from "./pd-bookmark-button";
 import { PdCardImage } from "./pd-card-image";
 import { PdLikeButton } from "./pd-like-button";
 import { PdLikersPopover } from "./pd-likers-popover";
+import { PdQuoteButton } from "./pd-quote-button";
 import { PdTimestamp } from "./pd-timestamp";
+import { QuotedPdCard } from "./quoted-pd-card";
 
 interface PdCardProps {
   pd: Pd;
@@ -46,6 +48,8 @@ export function PdCard({ pd, showAuthor = true }: PdCardProps) {
           imageFileName={pd.imageFileName}
         />
 
+        {pd.quotedPd ? <QuotedPdCard quotedPd={pd.quotedPd} /> : null}
+
         <div className="-ml-2 flex items-center gap-1 text-muted-foreground">
           {showAuthor ? null : (
             <PdTimestamp
@@ -69,6 +73,7 @@ export function PdCard({ pd, showAuthor = true }: PdCardProps) {
               likeUsers={pd.likeUsers}
             />
           </div>
+          <PdQuoteButton pd={pd} />
           <div className="mr-1 ml-auto">
             <PdBookmarkButton pd={pd} />
           </div>

@@ -124,10 +124,13 @@ describe("PdRepositoryLive", () => {
     userId: string;
     createdAt: Date;
     imageFileName: string | null;
+    quotedPdId?: string | null;
   }) =>
     Effect.runPromise(
       PdRepository.pipe(
-        Effect.flatMap((repo) => repo.作成する(newPd)),
+        Effect.flatMap((repo) =>
+          repo.作成する({ ...newPd, quotedPdId: newPd.quotedPdId ?? null }),
+        ),
         Effect.provide(レイヤー(ctx.db)),
       ),
     );
@@ -256,6 +259,73 @@ describe("PdRepositoryLive", () => {
       "fan1",
       "fan2",
     ]);
+  });
+
+  it("引用して作成した PD は引用元の本文と投稿者を持って返る", async () => {
+    await ctx.db.insert(pds).values({
+      id: ctx.pdId,
+      content: "引用元の本文",
+      createdAt: new Date("2026-03-12T00:00:00.000Z"),
+      userId: "original-author",
+    });
+
+    const created = await 作成する({
+      content: "今は逆の意見",
+      userId: "quoter",
+      createdAt: new Date("2026-06-26T00:00:00.000Z"),
+      imageFileName: null,
+      quotedPdId: ctx.pdId,
+    });
+
+    expect(created.quotedPd).toMatchObject({
+      id: ctx.pdId,
+      content: "引用元の本文",
+      userId: "original-author",
+    });
+  });
+
+  it("引用せずに作成した PD は引用元を持たない", async () => {
+    const created = await 作成する({
+      content: "ふつうの PD",
+      userId: "author",
+      createdAt: new Date("2026-06-26T00:00:00.000Z"),
+      imageFileName: null,
+      quotedPdId: null,
+    });
+
+    expect(created.quotedPd).toBeNull();
+  });
+
+  it("引用された PD は引用された回数を持つ", async () => {
+    await ctx.db.insert(pds).values({
+      id: ctx.pdId,
+      content: "引用元",
+      createdAt: new Date("2026-03-12T00:00:00.000Z"),
+      userId: "original-author",
+    });
+    await 作成する({
+      content: "引用 1",
+      userId: "a",
+      createdAt: new Date("2026-06-26T00:00:00.000Z"),
+      imageFileName: null,
+      quotedPdId: ctx.pdId,
+    });
+    await 作成する({
+      content: "引用 2",
+      userId: "b",
+      createdAt: new Date("2026-06-27T00:00:00.000Z"),
+      imageFileName: null,
+      quotedPdId: ctx.pdId,
+    });
+
+    const [original] = await Effect.runPromise(
+      PdRepository.pipe(
+        Effect.flatMap((repo) => repo.IDで取得する(ctx.pdId)),
+        Effect.provide(レイヤー(ctx.db)),
+      ),
+    );
+
+    expect(original.quoteCount).toBe(2);
   });
 
   const PDを用意する = async (count: number) => {

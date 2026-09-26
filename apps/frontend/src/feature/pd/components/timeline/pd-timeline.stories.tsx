@@ -17,6 +17,13 @@ const rawPd = (overrides: {
   isMyPd?: boolean;
   isBookmarked?: boolean;
   imageFileName?: string | null;
+  quotedPd?: {
+    id: string;
+    content: string;
+    createdAt: string;
+    userId: string;
+  } | null;
+  quoteCount?: number;
 }) => ({
   id: overrides.id,
   content: overrides.content,
@@ -28,6 +35,8 @@ const rawPd = (overrides: {
   likes: overrides.likes ?? [],
   isMyPd: overrides.isMyPd ?? false,
   isBookmarked: overrides.isBookmarked ?? false,
+  quotedPd: overrides.quotedPd ?? null,
+  quoteCount: overrides.quoteCount ?? 0,
 });
 
 const userDetail = (
@@ -135,6 +144,66 @@ export const BookmarkPd: Story = {
         canvas.getByRole("button", { name: "保存を外す" }),
       ).toHaveAttribute("aria-pressed", "true"),
     );
+  },
+};
+
+const quotingHandlers = [
+  http.get("*/pd", () =>
+    HttpResponse.json({
+      items: [
+        rawPd({
+          id: "pd-2",
+          content: "3 月にこう書いたけど、今は逆の意見",
+          userId: "u-hanako",
+          quotedPd: {
+            id: "pd-1",
+            content: "テストは後から書けば十分だと思う",
+            createdAt: "2026-03-12T00:00:00.000Z",
+            userId: "u-taro",
+          },
+        }),
+        rawPd({
+          id: "pd-1",
+          content: "テストは後から書けば十分だと思う",
+          userId: "u-taro",
+          quoteCount: 1,
+        }),
+      ],
+    }),
+  ),
+  userDetailsHandler(),
+];
+
+export const ShowsQuotedPd: Story = {
+  name: "引用した PD には引用元の投稿者と本文が埋め込まれ、引用元へ移動できる",
+  parameters: { msw: { handlers: quotingHandlers } },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    const quoted = await canvas.findByRole("link", {
+      name: /太郎 山田.*テストは後から書けば十分だと思う/,
+    });
+
+    expect(quoted).toHaveAttribute("href", "/pd/pd-1");
+  },
+};
+
+export const OpensQuoteComposer: Story = {
+  name: "引用ボタンを押すと引用元付きの投稿画面が開く",
+  parameters: { msw: { handlers: quotingHandlers } },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const quoteButton = await canvas.findByRole("button", {
+      name: "引用する（1件の引用）",
+    });
+
+    await userEvent.click(quoteButton);
+
+    const dialog = await within(canvasElement.ownerDocument.body).findByRole(
+      "dialog",
+      { name: "引用してPDする" },
+    );
+    expect(dialog).toHaveTextContent("テストは後から書けば十分だと思う");
   },
 };
 

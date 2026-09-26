@@ -1,0 +1,2 @@
+ALTER TABLE "pds" ADD COLUMN "quoted_pd_id" uuid;--> statement-breakpoint
+ALTER TABLE "pds" ADD CONSTRAINT "pds_quoted_pd_id_pds_id_fk" FOREIGN KEY ("quoted_pd_id") REFERENCES "public"."pds"("id") ON DELETE no action ON UPDATE no action;

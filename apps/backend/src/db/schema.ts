@@ -1,4 +1,5 @@
 import {
+  type AnyPgColumn,
   pgTable,
   primaryKey,
   timestamp,
@@ -13,6 +14,7 @@ export const pds = pgTable("pds", {
   createdAt: timestamp("created_at").notNull(),
   userId: varchar("user_id").notNull(),
   imageFileName: varchar("image_file_name"),
+  quotedPdId: uuid("quoted_pd_id").references((): AnyPgColumn => pds.id),
 });
 
 export const rePds = pgTable("repds", {

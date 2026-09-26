@@ -1,4 +1,5 @@
 import { and, desc, eq, gte, inArray, lte, sql } from "drizzle-orm";
+import { alias } from "drizzle-orm/pg-core";
 import { Effect, Layer } from "effect";
 import { pdBookmarks, pdLikes, pds as pdsSchema, rePds } from "#/db/schema";
 import { PdRepository } from "#/domain/pd/repository";
@@ -40,6 +41,17 @@ export const PdRepositoryLive = Layer.effect(
       .groupBy(pdLikes.targetPdId)
       .as("likes_details");
 
+    const quotesCountSubquery = db
+      .select({
+        pdId: pdsSchema.quotedPdId,
+        count: sql<number>`count(*)`.as("quote_count"),
+      })
+      .from(pdsSchema)
+      .groupBy(pdsSchema.quotedPdId)
+      .as("quotes_count");
+
+    const quotedPds = alias(pdsSchema, "quoted_pds");
+
     const createBaseQuery = () =>
       db
         .select({
@@ -51,6 +63,11 @@ export const PdRepositoryLive = Layer.effect(
           likeCount: likesCountSubquery.count,
           replyCount: repliesCountSubquery.count,
           likes: likesDetailsSubquery.userIds,
+          quoteCount: quotesCountSubquery.count,
+          quotedPdId: quotedPds.id,
+          quotedPdContent: quotedPds.content,
+          quotedPdCreatedAt: quotedPds.createdAt,
+          quotedPdUserId: quotedPds.userId,
         })
         .from(pdsSchema)
         .leftJoin(likesCountSubquery, eq(pdsSchema.id, likesCountSubquery.pdId))
@@ -61,7 +78,12 @@ export const PdRepositoryLive = Layer.effect(
         .leftJoin(
           likesDetailsSubquery,
           eq(pdsSchema.id, likesDetailsSubquery.pdId),
-        );
+        )
+        .leftJoin(
+          quotesCountSubquery,
+          eq(pdsSchema.id, quotesCountSubquery.pdId),
+        )
+        .leftJoin(quotedPds, eq(pdsSchema.quotedPdId, quotedPds.id));
 
     type QueryRow = Awaited<ReturnType<typeof createBaseQuery>>[number];
 
@@ -75,6 +97,19 @@ export const PdRepositoryLive = Layer.effect(
         likeCount: Number(row.likeCount ?? 0),
         replyCount: Number(row.replyCount ?? 0),
         likes: (row.likes ?? []).map((userId) => ({ userId })),
+        quoteCount: Number(row.quoteCount ?? 0),
+        quotedPd:
+          row.quotedPdId &&
+          row.quotedPdContent !== null &&
+          row.quotedPdCreatedAt &&
+          row.quotedPdUserId
+            ? {
+                id: row.quotedPdId,
+                content: row.quotedPdContent,
+                createdAt: row.quotedPdCreatedAt,
+                userId: row.quotedPdUserId,
+              }
+            : null,
       }));
 
     const 期間条件 = (range: { start: Date; end: Date }) =>
@@ -129,19 +164,11 @@ export const PdRepositoryLive = Layer.effect(
             const [inserted] = await db
               .insert(pdsSchema)
               .values(newPd)
-              .returning({
-                id: pdsSchema.id,
-                content: pdsSchema.content,
-                createdAt: pdsSchema.createdAt,
-                userId: pdsSchema.userId,
-                imageFileName: pdsSchema.imageFileName,
-              });
-            return {
-              ...inserted,
-              likeCount: 0,
-              replyCount: 0,
-              likes: [],
-            };
+              .returning({ id: pdsSchema.id });
+            const [created] = formatRows(
+              await createBaseQuery().where(eq(pdsSchema.id, inserted.id)),
+            );
+            return created;
           },
           catch: toDatabaseError,
         }),

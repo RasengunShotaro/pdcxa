@@ -22,5 +22,7 @@ export const RawPdMother = (override: Partial<RawPd>): RawPd => ({
   isMyPd: false,
   isBookmarked: false,
   imageFileName: null,
+  quotedPd: null,
+  quoteCount: 0,
   ...override,
 });

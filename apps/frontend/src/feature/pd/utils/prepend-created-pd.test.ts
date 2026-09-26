@@ -24,6 +24,8 @@ const aPd = (id: string): Pd => ({
   isMyPd: false,
   isBookmarked: false,
   imageFileName: null,
+  quotedPd: null,
+  quoteCount: 0,
   userDetail: {
     id: "author",
     userFullName: "投稿者",

@@ -6,6 +6,13 @@ export type UserDetail = {
   userName: string | null;
 };
 
+export type RawQuotedPd = {
+  id: string;
+  content: string;
+  createdAt: string;
+  userId: string;
+};
+
 export type RawPd = {
   id: string;
   content: string;
@@ -17,6 +24,16 @@ export type RawPd = {
   isMyPd: boolean;
   isBookmarked: boolean;
   imageFileName: string | null;
+  quotedPd: RawQuotedPd | null;
+  quoteCount: number;
+};
+
+export type QuotedPd = RawQuotedPd & {
+  userDetail: {
+    userFullName: string;
+    imageUrl: string;
+    userName: string;
+  };
 };
 
 export type LikeUser = {
@@ -26,7 +43,8 @@ export type LikeUser = {
   userName: string;
 };
 
-export type Pd = RawPd & {
+export type Pd = Omit<RawPd, "quotedPd"> & {
+  quotedPd: QuotedPd | null;
   userDetail: {
     id: string;
     userFullName: string;

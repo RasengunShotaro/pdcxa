@@ -15,8 +15,10 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Form } from "@/components/ui/form";
+import type { QuotedPd } from "@/feature/pd/types";
+import { 投稿失敗の表示を決める } from "@/feature/pd/utils/quote";
 import { useCreatePd } from "@/hooks/use-create-pd";
-import { errorDisplay } from "@/lib/error-message";
+import { QuotedPdCard } from "../timeline/quoted-pd-card";
 import { ComposerContentField } from "./composer-content-field";
 import {
   type ComposerSchema,
@@ -28,9 +30,10 @@ import { useComposerImage } from "./use-composer-image";
 interface PdComposerProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  quotedPd?: QuotedPd;
 }
 
-export function PdComposer({ open, onOpenChange }: PdComposerProps) {
+export function PdComposer({ open, onOpenChange, quotedPd }: PdComposerProps) {
   const form = useForm<ComposerSchema>({
     resolver: standardSchemaResolver(composerSchema),
     defaultValues: { content: "", image: undefined },
@@ -39,6 +42,7 @@ export function PdComposer({ open, onOpenChange }: PdComposerProps) {
 
   const { createPd, isPending } = useCreatePd();
   const [submitError, setSubmitError] = useState<unknown>(null);
+  const isQuoting = quotedPd !== undefined;
 
   const content = useWatch({ control: form.control, name: "content" }) ?? "";
   const {
@@ -61,15 +65,23 @@ export function PdComposer({ open, onOpenChange }: PdComposerProps) {
   const onSubmit = async (values: ComposerSchema) => {
     setSubmitError(null);
     try {
-      await createPd({ content: values.content.trim(), image: values.image });
-      toast.success("PDしました");
+      await createPd({
+        content: values.content.trim(),
+        image: values.image,
+        quotedPd,
+      });
+      toast.success(isQuoting ? "引用してPDしました" : "PDしました");
       form.reset({ content: "", image: undefined });
       onOpenChange(false);
     } catch (error) {
       setSubmitError(error);
-      toast.error(errorDisplay(error).message);
+      toast.error(投稿失敗の表示を決める({ error, isQuoting }).message);
     }
   };
+
+  const submitErrorDisplay = submitError
+    ? 投稿失敗の表示を決める({ error: submitError, isQuoting })
+    : null;
 
   const canSubmit = canSubmitContent(content) && !isPending;
 
@@ -83,7 +95,7 @@ export function PdComposer({ open, onOpenChange }: PdComposerProps) {
         }}
       >
         <DialogHeader>
-          <DialogTitle>PDする</DialogTitle>
+          <DialogTitle>{isQuoting ? "引用してPDする" : "PDする"}</DialogTitle>
           <DialogDescription className="sr-only">
             PDはタイムラインに公開されます。
           </DialogDescription>
@@ -96,6 +108,10 @@ export function PdComposer({ open, onOpenChange }: PdComposerProps) {
             onSubmit={form.handleSubmit(onSubmit)}
           >
             <ComposerContentField control={form.control} disabled={isPending} />
+
+            {quotedPd ? (
+              <QuotedPdCard linked={false} quotedPd={quotedPd} />
+            ) : null}
 
             <input
               accept="image/*"
@@ -135,17 +151,17 @@ export function PdComposer({ open, onOpenChange }: PdComposerProps) {
               </p>
             ) : null}
 
-            {submitError ? (
+            {submitErrorDisplay ? (
               <Alert
                 variant={
-                  errorDisplay(submitError).kind === "retryable"
+                  submitErrorDisplay.kind === "retryable"
                     ? "default"
                     : "destructive"
                 }
               >
                 <TriangleAlert />
                 <AlertDescription>
-                  {errorDisplay(submitError).message}
+                  {submitErrorDisplay.message}
                 </AlertDescription>
               </Alert>
             ) : null}

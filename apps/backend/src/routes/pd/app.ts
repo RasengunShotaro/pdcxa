@@ -15,6 +15,7 @@ import { PD週間統計を取得する } from "#/services/pd/fetch-weekly-stats"
 import { PDのブックマーク状態を更新する } from "#/services/pd/update-pd-bookmark";
 import { PDのいいね状態を更新する } from "#/services/pd/update-pd-like";
 import { jsonContent, messageSchema } from "../common/openapi";
+import { PDをレスポンス形式にする } from "./response";
 import {
   createGifPdFormSchema,
   createPdFormSchema,
@@ -28,6 +29,8 @@ import {
   pdItemSchema,
   weeklyStatsSchema,
 } from "./schema";
+
+const 引用元が見つからないメッセージ = "引用元のPDが見つかりません";
 
 const fetchPdRoute = createRoute({
   operationId: "fetchPds",
@@ -59,6 +62,10 @@ const createPdRoute = createRoute({
   },
   responses: {
     201: jsonContent(pdItemSchema, "作成成功"),
+    404: jsonContent(
+      messageSchema(引用元が見つからないメッセージ),
+      "引用元のPDが存在しない",
+    ),
   },
 });
 
@@ -73,6 +80,10 @@ const createGifPdRoute = createRoute({
   },
   responses: {
     201: jsonContent(pdItemSchema, "作成成功"),
+    404: jsonContent(
+      messageSchema(引用元が見つからないメッセージ),
+      "引用元のPDが存在しない",
+    ),
   },
 });
 
@@ -141,10 +152,7 @@ export const pdApp = new OpenAPIHono<Bindings>()
         Effect.map((result) =>
           c.json(
             {
-              items: result.items.map((item) => ({
-                ...item,
-                createdAt: item.createdAt.toISOString(),
-              })),
+              items: result.items.map(PDをレスポンス形式にする),
               nextCursor: result.nextCursor,
             },
             200,
@@ -165,14 +173,14 @@ export const pdApp = new OpenAPIHono<Bindings>()
     ),
   )
   .openapi(createPdRoute, async (c) => {
-    const { content, image } = c.req.valid("form");
+    const { content, image, quotedPdId } = c.req.valid("form");
 
     return runtime.runPromise(
-      PDを作成する({ content, image }).pipe(
-        Effect.map((created) =>
-          c.json(
-            { ...created, createdAt: created.createdAt.toISOString() },
-            201,
+      PDを作成する({ content, image, quotedPdId }).pipe(
+        Effect.map((created) => c.json(PDをレスポンス形式にする(created), 201)),
+        Effect.catchTag("QuotedPdNotFoundError", () =>
+          Effect.succeed(
+            c.json({ message: 引用元が見つからないメッセージ }, 404),
           ),
         ),
         Effect.tapError((error) => Effect.logError(error.message)),
@@ -182,14 +190,14 @@ export const pdApp = new OpenAPIHono<Bindings>()
     );
   })
   .openapi(createGifPdRoute, async (c) => {
-    const { content, image } = c.req.valid("form");
+    const { content, image, quotedPdId } = c.req.valid("form");
 
     return runtime.runPromise(
-      GIFを含むPDを作成する({ content, image }).pipe(
-        Effect.map((created) =>
-          c.json(
-            { ...created, createdAt: created.createdAt.toISOString() },
-            201,
+      GIFを含むPDを作成する({ content, image, quotedPdId }).pipe(
+        Effect.map((created) => c.json(PDをレスポンス形式にする(created), 201)),
+        Effect.catchTag("QuotedPdNotFoundError", () =>
+          Effect.succeed(
+            c.json({ message: 引用元が見つからないメッセージ }, 404),
           ),
         ),
         Effect.tapError((error) => Effect.logError(error.message)),
@@ -230,10 +238,7 @@ export const pdApp = new OpenAPIHono<Bindings>()
         Effect.map((result) =>
           c.json(
             {
-              items: result.items.map((item) => ({
-                ...item,
-                createdAt: item.createdAt.toISOString(),
-              })),
+              items: result.items.map(PDをレスポンス形式にする),
               nextCursor: result.nextCursor,
             },
             200,

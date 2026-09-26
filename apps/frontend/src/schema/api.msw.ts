@@ -32,19 +32,19 @@ export const getFetchUserDetailResponseMock = (): FetchUserDetail200 => ({"id":"
 
 export const getFetchUserDetailsResponseMock = (): FetchUserDetails200Item[] => ([{"id":"user_2abc","firstName":"太郎","lastName":"田中","imageUrl":"https://img.clerk.com/example.png","userName":"taro"}])
 
-export const getFetchPdsResponseMock = (): FetchPds200 => ({"items":[{"isMyPd":false,"isBookmarked":false,"likeCount":3,"replyCount":1,"likes":[{"userId":"user_2abc"}],"id":"0190d2c0-0000-7000-8000-000000000001","content":"今日学んだことを共有します","createdAt":"2026-06-24T00:00:00.000Z","userId":"user_2abc","imageFileName":null}]})
+export const getFetchPdsResponseMock = (): FetchPds200 => ({"items":[{"isMyPd":false,"isBookmarked":false,"quoteCount":0,"quotedPd":null,"likeCount":3,"replyCount":1,"likes":[{"userId":"user_2abc"}],"id":"0190d2c0-0000-7000-8000-000000000001","content":"今日学んだことを共有します","createdAt":"2026-06-24T00:00:00.000Z","userId":"user_2abc","imageFileName":null}]})
 
 export const getFetchWeeklyStatsResponseMock = (): FetchWeeklyStats200 => ({"range":{"start":"2026-06-18","end":"2026-06-24"},"totals":{"pdCount":20,"rePdCount":30,"likeCount":50,"activeAuthorCount":4,"averagePdPerAuthor":5},"daily":[{"date":"2026-06-24","pdCount":5,"rePdCount":8,"likeCount":12}],"rankings":[{"userId":"user_2abc","pdCount":5,"rePdCount":8,"likeCount":12}]})
 
-export const getCreatePdResponseMock = (): CreatePd201 => ({"isMyPd":false,"isBookmarked":false,"likeCount":3,"replyCount":1,"likes":[{"userId":"user_2abc"}],"id":"0190d2c0-0000-7000-8000-000000000001","content":"今日学んだことを共有します","createdAt":"2026-06-24T00:00:00.000Z","userId":"user_2abc","imageFileName":null})
+export const getCreatePdResponseMock = (): CreatePd201 => ({"isMyPd":false,"isBookmarked":false,"quoteCount":0,"quotedPd":null,"likeCount":3,"replyCount":1,"likes":[{"userId":"user_2abc"}],"id":"0190d2c0-0000-7000-8000-000000000001","content":"今日学んだことを共有します","createdAt":"2026-06-24T00:00:00.000Z","userId":"user_2abc","imageFileName":null})
 
-export const getCreateGifPdResponseMock = (): CreateGifPd201 => ({"isMyPd":false,"isBookmarked":false,"likeCount":3,"replyCount":1,"likes":[{"userId":"user_2abc"}],"id":"0190d2c0-0000-7000-8000-000000000001","content":"今日学んだことを共有します","createdAt":"2026-06-24T00:00:00.000Z","userId":"user_2abc","imageFileName":null})
+export const getCreateGifPdResponseMock = (): CreateGifPd201 => ({"isMyPd":false,"isBookmarked":false,"quoteCount":0,"quotedPd":null,"likeCount":3,"replyCount":1,"likes":[{"userId":"user_2abc"}],"id":"0190d2c0-0000-7000-8000-000000000001","content":"今日学んだことを共有します","createdAt":"2026-06-24T00:00:00.000Z","userId":"user_2abc","imageFileName":null})
 
 export const getMutatePdLikeResponseMock = (): MutatePdLike201 => ({"message":"いいね状態を更新しました"})
 
 export const getMutatePdBookmarkResponseMock = (): MutatePdBookmark200 => ({"message":"ブックマーク状態を更新しました"})
 
-export const getFetchBookmarkedPdsResponseMock = (): FetchBookmarkedPds200 => ({"items":[{"isMyPd":false,"isBookmarked":false,"likeCount":3,"replyCount":1,"likes":[{"userId":"user_2abc"}],"id":"0190d2c0-0000-7000-8000-000000000001","content":"今日学んだことを共有します","createdAt":"2026-06-24T00:00:00.000Z","userId":"user_2abc","imageFileName":null}]})
+export const getFetchBookmarkedPdsResponseMock = (): FetchBookmarkedPds200 => ({"items":[{"isMyPd":false,"isBookmarked":false,"quoteCount":0,"quotedPd":null,"likeCount":3,"replyCount":1,"likes":[{"userId":"user_2abc"}],"id":"0190d2c0-0000-7000-8000-000000000001","content":"今日学んだことを共有します","createdAt":"2026-06-24T00:00:00.000Z","userId":"user_2abc","imageFileName":null}]})
 
 export const getFetchPdImageResponseMock = () => ((() =>
               Uint8Array.from(

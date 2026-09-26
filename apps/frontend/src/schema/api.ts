@@ -19,10 +19,12 @@ import type {
 
 import type {
   CreateGifPd201,
+  CreateGifPd404,
   CreateGifPdBody,
   CreateInvitation200,
   CreateInvitationBody,
   CreatePd201,
+  CreatePd404,
   CreatePdBody,
   CreateRePd201,
   CreateRePdBody,
@@ -619,12 +621,19 @@ export type createPdResponse201 = {
   status: 201
 }
 
+export type createPdResponse404 = {
+  data: CreatePd404
+  status: 404
+}
+
 export type createPdResponseSuccess = (createPdResponse201) & {
   headers: Headers;
 };
-;
+export type createPdResponseError = (createPdResponse404) & {
+  headers: Headers;
+};
 
-export type createPdResponse = (createPdResponseSuccess)
+export type createPdResponse = (createPdResponseSuccess | createPdResponseError)
 
 export const getCreatePdUrl = () => {
 
@@ -638,6 +647,9 @@ export const createPd = async (createPdBody?: CreatePdBody, options?: Parameters
     const formData = new FormData();
 if(createPdBody?.content !== undefined) {
  formData.append(`content`, createPdBody.content);
+ }
+if(createPdBody?.quotedPdId !== undefined) {
+ formData.append(`quotedPdId`, createPdBody.quotedPdId);
  }
 if(createPdBody?.image !== undefined) {
  formData.append(`image`, createPdBody.image);
@@ -658,7 +670,7 @@ if(createPdBody?.image !== undefined) {
 
 export const getCreatePdMutationKey = () => ['createPd'] as const;
 
-export const getCreatePdMutationOptions = <TError = unknown,
+export const getCreatePdMutationOptions = <TError = CreatePd404,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createPd>>, TError,CreatePdMutationVariables, TContext>, request?: SecondParameter<typeof orvalFetch>}
 ): UseMutationOptions<Awaited<ReturnType<typeof createPd>>, TError,CreatePdMutationVariables, TContext> => {
 
@@ -687,10 +699,10 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
     export type CreatePdMutationResult = NonNullable<Awaited<ReturnType<typeof createPd>>>
     export type CreatePdMutationBody = CreatePdBody | undefined
-    export type CreatePdMutationError = unknown
+    export type CreatePdMutationError = CreatePd404
     export type CreatePdMutationVariables = {data?: CreatePdBody}
 
-    export const useCreatePd = <TError = unknown,
+    export const useCreatePd = <TError = CreatePd404,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createPd>>, TError,CreatePdMutationVariables, TContext>, request?: SecondParameter<typeof orvalFetch>}
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof createPd>>,
@@ -706,12 +718,19 @@ export type createGifPdResponse201 = {
   status: 201
 }
 
+export type createGifPdResponse404 = {
+  data: CreateGifPd404
+  status: 404
+}
+
 export type createGifPdResponseSuccess = (createGifPdResponse201) & {
   headers: Headers;
 };
-;
+export type createGifPdResponseError = (createGifPdResponse404) & {
+  headers: Headers;
+};
 
-export type createGifPdResponse = (createGifPdResponseSuccess)
+export type createGifPdResponse = (createGifPdResponseSuccess | createGifPdResponseError)
 
 export const getCreateGifPdUrl = () => {
 
@@ -725,6 +744,9 @@ export const createGifPd = async (createGifPdBody?: CreateGifPdBody, options?: P
     const formData = new FormData();
 if(createGifPdBody?.content !== undefined) {
  formData.append(`content`, createGifPdBody.content);
+ }
+if(createGifPdBody?.quotedPdId !== undefined) {
+ formData.append(`quotedPdId`, createGifPdBody.quotedPdId);
  }
 if(createGifPdBody?.image !== undefined) {
  formData.append(`image`, createGifPdBody.image);
@@ -745,7 +767,7 @@ if(createGifPdBody?.image !== undefined) {
 
 export const getCreateGifPdMutationKey = () => ['createGifPd'] as const;
 
-export const getCreateGifPdMutationOptions = <TError = unknown,
+export const getCreateGifPdMutationOptions = <TError = CreateGifPd404,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createGifPd>>, TError,CreateGifPdMutationVariables, TContext>, request?: SecondParameter<typeof orvalFetch>}
 ): UseMutationOptions<Awaited<ReturnType<typeof createGifPd>>, TError,CreateGifPdMutationVariables, TContext> => {
 
@@ -774,10 +796,10 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
     export type CreateGifPdMutationResult = NonNullable<Awaited<ReturnType<typeof createGifPd>>>
     export type CreateGifPdMutationBody = CreateGifPdBody | undefined
-    export type CreateGifPdMutationError = unknown
+    export type CreateGifPdMutationError = CreateGifPd404
     export type CreateGifPdMutationVariables = {data?: CreateGifPdBody}
 
-    export const useCreateGifPd = <TError = unknown,
+    export const useCreateGifPd = <TError = CreateGifPd404,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createGifPd>>, TError,CreateGifPdMutationVariables, TContext>, request?: SecondParameter<typeof orvalFetch>}
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof createGifPd>>,

@@ -22,6 +22,13 @@
       "when": 1790415487678,
       "tag": "0002_wide_queen_noir",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1790415959570,
+      "tag": "0003_lowly_ultimo",
+      "breakpoints": true
     }
   ]
 }

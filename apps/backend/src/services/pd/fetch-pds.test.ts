@@ -22,6 +22,8 @@ const rawPd = (over: Partial<RawPd>): RawPd => ({
   likeCount: 0,
   replyCount: 0,
   likes: [],
+  quotedPd: null,
+  quoteCount: 0,
   ...over,
 });
 
