@@ -7,13 +7,16 @@ interface FeedLayoutProps {
 
 export function FeedLayout({ children, aside }: FeedLayoutProps) {
   return (
-    <div className="-mx-4 -my-6 flex flex-1 justify-center gap-6 sm:mx-0">
-      <div className="flex w-full min-w-0 max-w-[600px] flex-col bg-card sm:border-x sm:border-border">
+    <div
+      className="-mx-4 -my-6 grid flex-1 grid-cols-1 2xl:grid-cols-[minmax(0,1fr)_600px_minmax(0,1fr)]"
+      data-feed-layout=""
+    >
+      <div className="mx-auto flex w-full min-w-0 max-w-[600px] flex-col bg-card sm:border-x sm:border-border 2xl:col-start-2">
         {children}
       </div>
       {aside ? (
-        <aside className="hidden w-[300px] shrink-0 pt-6 lg:block">
-          <div className="sticky top-6">{aside}</div>
+        <aside className="hidden min-w-0 pt-6 pl-6 2xl:block">
+          <div className="sticky top-6 w-full max-w-[250px]">{aside}</div>
         </aside>
       ) : null}
     </div>

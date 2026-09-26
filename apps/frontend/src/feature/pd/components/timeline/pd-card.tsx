@@ -58,22 +58,28 @@ export function PdCard({ pd, showAuthor = true }: PdCardProps) {
               href={detailHref}
             />
           )}
-          <Link
-            aria-label={`${pd.replyCount}件の返信を見る`}
-            className="inline-flex h-9 min-w-[72px] items-center gap-1.5 rounded-full px-2 text-xs tabular-nums transition-[color,background-color,translate] hover:-translate-y-px hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
-            href={detailHref}
-          >
-            <MessageCircle aria-hidden="true" className="size-[18px]" />
-            {pd.replyCount}
-          </Link>
-          <div className="flex min-w-[72px] items-center rounded-full transition-colors hover:bg-accent">
-            <PdLikeButton pd={pd} />
-            <PdLikersPopover
-              likeCount={pd.likeCount}
-              likeUsers={pd.likeUsers}
-            />
+          <div className="w-[72px]">
+            <Link
+              aria-label={`${pd.replyCount}件の返信を見る`}
+              className="inline-flex h-9 items-center gap-1.5 rounded-full px-2 text-xs tabular-nums transition-[color,background-color,translate] hover:-translate-y-px hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
+              href={detailHref}
+            >
+              <MessageCircle aria-hidden="true" className="size-[18px]" />
+              {pd.replyCount}
+            </Link>
           </div>
-          <PdQuoteButton pd={pd} />
+          <div className="w-[72px]">
+            <div className="inline-flex items-center rounded-full transition-colors hover:bg-accent">
+              <PdLikeButton pd={pd} />
+              <PdLikersPopover
+                likeCount={pd.likeCount}
+                likeUsers={pd.likeUsers}
+              />
+            </div>
+          </div>
+          <div className="w-[72px]">
+            <PdQuoteButton pd={pd} />
+          </div>
           <div className="mr-1 ml-auto">
             <PdBookmarkButton pd={pd} />
           </div>

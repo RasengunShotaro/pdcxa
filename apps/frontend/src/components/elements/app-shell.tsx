@@ -104,7 +104,7 @@ export function AppShell({
         </header>
         <div className="flex flex-1 flex-col overflow-y-auto bg-bg-page">
           <div
-            className="mx-auto flex w-full max-w-[1042px] flex-1 flex-col px-4 py-6"
+            className="mx-auto flex w-full max-w-[1042px] flex-1 flex-col px-4 py-6 has-[[data-feed-layout]]:max-w-none"
             id="main-content"
           >
             {children}

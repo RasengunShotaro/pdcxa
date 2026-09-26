@@ -29,7 +29,7 @@ export function RePdCard({ rePd }: RePdCardProps) {
         </p>
 
         <div className="-ml-2 flex items-center text-muted-foreground">
-          <div className="flex min-w-16 items-center rounded-full transition-colors hover:bg-accent">
+          <div className="inline-flex items-center rounded-full transition-colors hover:bg-accent">
             <RePdLikeButton rePd={rePd} />
             <PdLikersPopover
               likeCount={rePd.likeCount}
