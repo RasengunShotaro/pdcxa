@@ -40,6 +40,26 @@ export const Home: Story = {
   },
 };
 
+export const LongUnbreakableContent: Story = {
+  name: "1行に収まらない長い名前があっても画面の横幅からはみ出さない",
+  parameters: {
+    nextjs: { navigation: { pathname: "/" } },
+  },
+  args: {
+    children: (
+      <div className="flex min-w-0 items-center gap-3">
+        <p className="min-w-0 truncate">{"とても長い表示名".repeat(40)}</p>
+        <span className="ml-auto shrink-0">6月26日</span>
+      </div>
+    ),
+  },
+  play: async ({ canvasElement }) => {
+    const root = canvasElement.ownerDocument.documentElement;
+
+    await expect(root.scrollWidth).toBeLessThanOrEqual(root.clientWidth);
+  },
+};
+
 export const Stats: Story = {
   name: "統計ページでは現在地として統計を示す",
   parameters: {

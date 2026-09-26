@@ -83,7 +83,7 @@ export function AppShell({
         <SidebarRail />
       </Sidebar>
 
-      <SidebarInset>
+      <SidebarInset className="min-w-0">
         <header className="flex h-16 shrink-0 items-center gap-2 border-b bg-background transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
           <div className="flex items-center gap-2 px-4">
             <SidebarTrigger className="-ml-1 max-md:size-11" />
@@ -103,7 +103,10 @@ export function AppShell({
           </div>
         </header>
         <div className="flex flex-1 flex-col overflow-y-auto bg-bg-page">
-          <div className="mx-auto w-full max-w-2xl px-4 py-6" id="main-content">
+          <div
+            className="mx-auto w-full max-w-[1042px] px-4 py-6"
+            id="main-content"
+          >
             {children}
           </div>
         </div>
