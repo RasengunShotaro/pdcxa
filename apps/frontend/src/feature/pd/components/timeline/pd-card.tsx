@@ -1,4 +1,4 @@
-import { MessageCircle } from "lucide-react";
+import { MessageSquare } from "lucide-react";
 import Link from "next/link";
 import { Linkify } from "@/components/ui/linkify";
 import type { Pd } from "@/feature/pd/types";
@@ -58,17 +58,20 @@ export function PdCard({ pd, showAuthor = true }: PdCardProps) {
               href={detailHref}
             />
           )}
-          <div className="w-[72px]">
+          <div className="w-1/4">
             <Link
               aria-label={`${pd.replyCount}件の返信を見る`}
-              className="inline-flex h-9 items-center gap-1.5 rounded-full px-2 text-xs tabular-nums transition-[color,background-color,translate] hover:-translate-y-px hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
+              className="inline-flex h-9 items-center gap-1.5 rounded-full px-2 text-sm tabular-nums transition-[color,background-color,translate] hover:-translate-y-px hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
               href={detailHref}
             >
-              <MessageCircle aria-hidden="true" className="size-[18px]" />
+              <MessageSquare aria-hidden="true" className="size-5" />
               {pd.replyCount}
             </Link>
           </div>
-          <div className="w-[72px]">
+          <div className="w-1/4">
+            <PdQuoteButton pd={pd} />
+          </div>
+          <div className="w-1/4">
             <div className="inline-flex items-center rounded-full transition-colors hover:bg-accent">
               <PdLikeButton pd={pd} />
               <PdLikersPopover
@@ -76,9 +79,6 @@ export function PdCard({ pd, showAuthor = true }: PdCardProps) {
                 likeUsers={pd.likeUsers}
               />
             </div>
-          </div>
-          <div className="w-[72px]">
-            <PdQuoteButton pd={pd} />
           </div>
           <div className="mr-1 ml-auto">
             <PdBookmarkButton pd={pd} />

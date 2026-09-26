@@ -169,6 +169,10 @@
   * {
     @apply border-border outline-ring/50;
   }
+  /* デザイン案の基準幅 1280px で 16px（1280 × 1.25% = 16）。それより広い画面では比例して 20px まで拡大する */
+  html {
+    font-size: clamp(100%, 1.25vw, 125%);
+  }
   body {
     @apply bg-background text-foreground;
   }

@@ -27,7 +27,7 @@ export function PdBookmarkButton({ pd }: PdBookmarkButtonProps) {
       <Bookmark
         aria-hidden="true"
         className={cn(
-          "size-[18px]",
+          "size-5",
           isBookmarked &&
             "fill-primary-600 text-primary-600 dark:fill-primary-300 dark:text-primary-300",
         )}

@@ -10,5 +10,5 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return <div className="mx-auto w-full max-w-[600px]">{children}</div>;
+  return <div className="mx-auto w-full max-w-[37.5rem]">{children}</div>;
 }

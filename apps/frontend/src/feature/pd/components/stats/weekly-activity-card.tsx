@@ -35,7 +35,7 @@ export function WeeklyActivityCard() {
       aria-labelledby="weekly-activity-heading"
       className="rounded-xl border border-border bg-card p-6 shadow-sm"
     >
-      <div className="flex items-baseline justify-between gap-2 pb-3">
+      <div className="flex flex-col gap-0.5 pb-3">
         <h2
           className="text-sm font-bold text-foreground"
           id="weekly-activity-heading"
