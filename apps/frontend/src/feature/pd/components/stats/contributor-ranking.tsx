@@ -87,7 +87,7 @@ export function ContributorRanking({ rankings }: ContributorRankingProps) {
     <Card>
       <CardHeader>
         <CardTitle className="text-xl font-bold">投稿ランキング</CardTitle>
-        <CardDescription>PD 投稿数の多い順</CardDescription>
+        <CardDescription>PD投稿数の多い順</CardDescription>
       </CardHeader>
       <CardContent>
         {rankings.length === 0 ? (
@@ -97,15 +97,15 @@ export function ContributorRanking({ rankings }: ContributorRankingProps) {
             {rankings.map((row, index) => (
               <li className="flex items-center gap-3" key={row.userId}>
                 <RankBadge rank={index + 1} />
-                <ContributorIdentity row={row} />
-                <div className="ml-auto shrink-0 text-right">
-                  <p className="font-semibold tabular-nums text-foreground">
-                    {row.pdCount} PD
-                  </p>
-                  <p className="text-xs text-muted-foreground tabular-nums">
-                    いいね {row.likeCount} / RePD {row.rePdCount}
+                <div className="min-w-0 flex-1 space-y-1">
+                  <ContributorIdentity row={row} />
+                  <p className="pl-13 text-xs text-muted-foreground tabular-nums">
+                    いいね{row.likeCount}件 / RePD{row.rePdCount}件
                   </p>
                 </div>
+                <p className="shrink-0 font-semibold tabular-nums text-foreground">
+                  {row.pdCount} PD
+                </p>
               </li>
             ))}
           </ol>

@@ -6,8 +6,15 @@ import { InvitationView } from "./invitation-view";
 const meta: Meta<typeof InvitationView> = {
   title: "招待/InvitationView",
   component: InvitationView,
+  decorators: [
+    (Story) => (
+      <div className="mx-auto w-full max-w-2xl p-4">
+        <Story />
+      </div>
+    ),
+  ],
   parameters: {
-    layout: "centered",
+    layout: "fullscreen",
     msw: {
       handlers: [
         http.post("*/invitation/create", () =>
@@ -26,7 +33,7 @@ export const Default: Story = {
   name: "招待制の文脈とフォームを表示する",
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    expect(canvas.getByText("PDCXA に招待する")).toBeInTheDocument();
+    expect(canvas.getByText("PDCXAに招待する")).toBeInTheDocument();
     expect(canvas.getByText(/迷惑メールに振り分けられる/)).toBeInTheDocument();
   },
 };
@@ -45,7 +52,7 @@ export const SendShowsFeedback: Story = {
 
     await waitFor(() =>
       expect(
-        canvas.getByText("friend@example.com に招待を送信しました。"),
+        canvas.getByText("friend@example.comに招待を送信しました。"),
       ).toBeInTheDocument(),
     );
   },

@@ -78,7 +78,7 @@ export const InvitationForm = () => {
         {sentTo ? (
           <Alert role="status" variant="default">
             <CheckCircle2 />
-            <AlertDescription>{sentTo} に招待を送信しました。</AlertDescription>
+            <AlertDescription>{sentTo}に招待を送信しました。</AlertDescription>
           </Alert>
         ) : null}
 

@@ -24,11 +24,23 @@ export const SubmitSuccess: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
 
+    await userEvent.type(canvas.getByLabelText("ID"), "2");
     await userEvent.click(canvas.getByRole("button", { name: "保存する" }));
 
     await waitFor(() =>
       expect(inlineStatusText(canvasElement)).toBe("IDを変更しました"),
     );
+  },
+};
+
+export const SaveDisabledUntilChanged: Story = {
+  name: "IDを変更するまで保存ボタンを押せない",
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    await expect(
+      canvas.getByRole("button", { name: "保存する" }),
+    ).toBeDisabled();
   },
 };
 
@@ -56,6 +68,7 @@ export const HandleTakenShowsAlert: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
 
+    await userEvent.type(canvas.getByLabelText("ID"), "2");
     await userEvent.click(canvas.getByRole("button", { name: "保存する" }));
 
     await waitFor(() =>
@@ -76,6 +89,7 @@ export const InvalidCharacterShowsAlert: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
 
+    await userEvent.type(canvas.getByLabelText("ID"), "2");
     await userEvent.click(canvas.getByRole("button", { name: "保存する" }));
 
     await waitFor(() =>
@@ -96,6 +110,7 @@ export const ReverificationCancelledShowsNeutralNotice: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
 
+    await userEvent.type(canvas.getByLabelText("ID"), "2");
     await userEvent.click(canvas.getByRole("button", { name: "保存する" }));
 
     await waitFor(() =>
@@ -115,6 +130,7 @@ export const UpdateFailureShowsAlert: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
 
+    await userEvent.type(canvas.getByLabelText("ID"), "2");
     await userEvent.click(canvas.getByRole("button", { name: "保存する" }));
 
     await waitFor(() =>
