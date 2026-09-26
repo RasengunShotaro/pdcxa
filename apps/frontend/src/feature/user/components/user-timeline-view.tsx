@@ -18,7 +18,7 @@ export function UserTimelineView({ userName }: UserTimelineViewProps) {
 
   return (
     <FeedLayout aside={<RecentNotificationsCard />}>
-      <div className="space-y-4">
+      <div className="pb-6">
         <UserTimelineHeader
           imageUrl={detail?.imageUrl}
           userFullName={detail?.userFullName}

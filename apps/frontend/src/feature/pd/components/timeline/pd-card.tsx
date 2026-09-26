@@ -50,7 +50,7 @@ export function PdCard({ pd, showAuthor = true }: PdCardProps) {
 
         {pd.quotedPd ? <QuotedPdCard quotedPd={pd.quotedPd} /> : null}
 
-        <div className="-ml-2 flex items-center gap-1 text-muted-foreground">
+        <div className="-ml-2 flex items-center text-muted-foreground">
           {showAuthor ? null : (
             <PdTimestamp
               className="mr-2 ml-2"
@@ -60,13 +60,13 @@ export function PdCard({ pd, showAuthor = true }: PdCardProps) {
           )}
           <Link
             aria-label={`${pd.replyCount}件の返信を見る`}
-            className="inline-flex h-9 min-w-16 items-center gap-1.5 rounded-full px-2 text-sm tabular-nums transition-[color,background-color,translate] hover:-translate-y-px hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
+            className="inline-flex h-9 min-w-[72px] items-center gap-1.5 rounded-full px-2 text-xs tabular-nums transition-[color,background-color,translate] hover:-translate-y-px hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
             href={detailHref}
           >
             <MessageCircle aria-hidden="true" className="size-[18px]" />
             {pd.replyCount}
           </Link>
-          <div className="flex min-w-16 items-center rounded-full transition-colors hover:bg-accent">
+          <div className="flex min-w-[72px] items-center rounded-full transition-colors hover:bg-accent">
             <PdLikeButton pd={pd} />
             <PdLikersPopover
               likeCount={pd.likeCount}

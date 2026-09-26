@@ -1,5 +1,4 @@
 import type { ReactNode } from "react";
-import { cn } from "@/lib/utils";
 
 interface FeedLayoutProps {
   children: ReactNode;
@@ -8,31 +7,27 @@ interface FeedLayoutProps {
 
 export function FeedLayout({ children, aside }: FeedLayoutProps) {
   return (
-    <div className="flex justify-center gap-6">
-      <div className="w-full min-w-0 max-w-[600px]">{children}</div>
+    <div className="-mx-4 -my-6 flex flex-1 justify-center gap-6 sm:mx-0">
+      <div className="flex w-full min-w-0 max-w-[600px] flex-col bg-card sm:border-x sm:border-border">
+        {children}
+      </div>
       {aside ? (
-        <aside className="hidden w-[300px] shrink-0 lg:block">
-          <div className="sticky top-0">{aside}</div>
+        <aside className="hidden w-[300px] shrink-0 pt-6 lg:block">
+          <div className="sticky top-6">{aside}</div>
         </aside>
       ) : null}
     </div>
   );
 }
 
-interface FeedPanelProps {
+interface FeedSectionHeadingProps {
   children: ReactNode;
-  className?: string;
 }
 
-export function FeedPanel({ children, className }: FeedPanelProps) {
+export function FeedSectionHeading({ children }: FeedSectionHeadingProps) {
   return (
-    <div
-      className={cn(
-        "overflow-hidden rounded-xl border border-border bg-card shadow-sm",
-        className,
-      )}
-    >
+    <h2 className="flex items-baseline gap-2 border-b border-border px-4 py-3 text-sm font-bold text-foreground">
       {children}
-    </div>
+    </h2>
   );
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import { EmptyState } from "@/components/elements/empty-state";
-import { FeedPanel } from "@/components/elements/feed-layout";
+import { FeedSectionHeading } from "@/components/elements/feed-layout";
 import { ListError } from "@/components/elements/list-error";
 import { ListSkeleton } from "@/components/elements/list-skeleton";
 import type { RePd } from "@/feature/pd/types";
@@ -23,34 +23,36 @@ export function RePdSection({
   onRetry,
 }: RePdSectionProps) {
   return (
-    <section className="space-y-4">
-      <h2 className="font-bold text-foreground text-lg">
+    <section>
+      <FeedSectionHeading>
         RePD一覧
         {!isPending && !isError ? (
-          <span className="ml-2 text-base text-muted-foreground tabular-nums">
+          <span className="font-normal text-muted-foreground tabular-nums">
             {rePds.length}
           </span>
         ) : null}
-      </h2>
+      </FeedSectionHeading>
 
-      {isPending ? <ListSkeleton count={2} /> : null}
+      {isPending ? <ListSkeleton count={2} variant="rows" /> : null}
 
-      {isError ? <ListError error={error} onRetry={onRetry} /> : null}
+      {isError ? (
+        <div className="p-4">
+          <ListError error={error} onRetry={onRetry} />
+        </div>
+      ) : null}
 
       {!isPending && !isError && rePds.length === 0 ? (
         <EmptyState message="まだRePDはありません。RePDしてみよう！" />
       ) : null}
 
       {!isPending && !isError && rePds.length > 0 ? (
-        <FeedPanel>
-          <ul className="divide-y divide-border">
-            {rePds.map((rePd) => (
-              <li key={rePd.id}>
-                <RePdCard rePd={rePd} />
-              </li>
-            ))}
-          </ul>
-        </FeedPanel>
+        <ul className="divide-y divide-border border-b border-border">
+          {rePds.map((rePd) => (
+            <li key={rePd.id}>
+              <RePdCard rePd={rePd} />
+            </li>
+          ))}
+        </ul>
       ) : null}
     </section>
   );

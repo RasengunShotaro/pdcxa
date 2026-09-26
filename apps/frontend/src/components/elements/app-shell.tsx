@@ -24,7 +24,6 @@ import { ColorModeSwitcher } from "./color-mode-switcher";
 import { pageLabelForPath } from "./nav-items";
 import { NavUser } from "./nav-user";
 import { NotificationBell } from "./notification-bell";
-import { SidebarCollapseButton } from "./sidebar-collapse-button";
 
 interface AppShellProps {
   children: ReactNode;
@@ -80,21 +79,18 @@ export function AppShell({
         <SidebarContent>
           <AppSidebarNav />
         </SidebarContent>
-        <SidebarFooter>
-          <SidebarCollapseButton />
-          {userFooter}
-        </SidebarFooter>
+        <SidebarFooter>{userFooter}</SidebarFooter>
         <SidebarRail />
       </Sidebar>
 
       <SidebarInset className="min-w-0">
         <header className="flex h-16 shrink-0 items-center gap-2 border-b bg-background transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
           <div className="flex items-center gap-2 px-4">
-            <SidebarTrigger className="-ml-1 size-11 md:hidden" />
+            <SidebarTrigger className="-ml-1 max-md:size-11" />
             {currentLabel ? (
               <>
                 <Separator
-                  className="mx-1 data-[orientation=vertical]:h-6 md:hidden"
+                  className="mx-1 data-[orientation=vertical]:h-6"
                   orientation="vertical"
                 />
                 <span className="text-base font-medium">{currentLabel}</span>
@@ -108,7 +104,7 @@ export function AppShell({
         </header>
         <div className="flex flex-1 flex-col overflow-y-auto bg-bg-page">
           <div
-            className="mx-auto w-full max-w-[1042px] px-4 py-6"
+            className="mx-auto flex w-full max-w-[1042px] flex-1 flex-col px-4 py-6"
             id="main-content"
           >
             {children}

@@ -4,7 +4,7 @@ import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { EmptyState } from "@/components/elements/empty-state";
-import { FeedLayout, FeedPanel } from "@/components/elements/feed-layout";
+import { FeedLayout } from "@/components/elements/feed-layout";
 import { ListError } from "@/components/elements/list-error";
 import { ListSkeleton } from "@/components/elements/list-skeleton";
 import { Button } from "@/components/ui/button";
@@ -54,13 +54,17 @@ export function PdDetailView({ pdId }: PdDetailViewProps) {
 
   return (
     <FeedLayout aside={<RecentNotificationsCard />}>
-      <div className="space-y-6 pb-[calc(5.5rem+env(safe-area-inset-bottom))]">
-        <BackLink />
+      <div className="pb-[calc(5.5rem+env(safe-area-inset-bottom))]">
+        <div className="flex h-12 items-center border-b border-border px-4">
+          <BackLink />
+        </div>
 
-        {isPdPending ? <ListSkeleton count={1} /> : null}
+        {isPdPending ? <ListSkeleton count={1} variant="rows" /> : null}
 
         {!isPdPending && isPdError ? (
-          <ListError error={pdError} onRetry={() => refetchPd()} />
+          <div className="p-4">
+            <ListError error={pdError} onRetry={() => refetchPd()} />
+          </div>
         ) : null}
 
         {!isPdPending && !isPdError && !pd ? (
@@ -72,9 +76,9 @@ export function PdDetailView({ pdId }: PdDetailViewProps) {
 
         {!isPdPending && !isPdError && pd ? (
           <>
-            <FeedPanel>
+            <div className="border-b border-border">
               <PdCard pd={pd} />
-            </FeedPanel>
+            </div>
 
             <RePdSection
               error={rePdError}

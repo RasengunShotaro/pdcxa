@@ -2,7 +2,6 @@
 
 import { Loader2 } from "lucide-react";
 import type { ReactNode } from "react";
-import { FeedPanel } from "@/components/elements/feed-layout";
 import { ListError } from "@/components/elements/list-error";
 import { ListSkeleton } from "@/components/elements/list-skeleton";
 import { Button } from "@/components/ui/button";
@@ -42,11 +41,15 @@ export function PdList({
   });
 
   if (isPending && pds.length === 0) {
-    return <ListSkeleton count={4} />;
+    return <ListSkeleton count={4} variant="rows" />;
   }
 
   if (isError && pds.length === 0) {
-    return <ListError error={error} onRetry={onRetry} />;
+    return (
+      <div className="p-4">
+        <ListError error={error} onRetry={onRetry} />
+      </div>
+    );
   }
 
   if (pds.length === 0) {
@@ -54,21 +57,19 @@ export function PdList({
   }
 
   return (
-    <div className="space-y-4">
-      <FeedPanel>
-        <ul className="divide-y divide-border">
-          {pds.map((pd) => (
-            <li key={pd.id}>
-              <PdCard pd={pd} showAuthor={showAuthor} />
-            </li>
-          ))}
-        </ul>
-      </FeedPanel>
+    <div>
+      <ul className="divide-y divide-border border-b border-border">
+        {pds.map((pd) => (
+          <li key={pd.id}>
+            <PdCard pd={pd} showAuthor={showAuthor} />
+          </li>
+        ))}
+      </ul>
 
       <div aria-hidden="true" ref={sentinelRef} />
 
       {hasNextPage ? (
-        <div className="flex justify-center pb-4">
+        <div className="flex justify-center py-4">
           <Button
             disabled={isFetchingNextPage}
             onClick={onLoadMore}

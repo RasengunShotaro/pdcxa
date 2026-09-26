@@ -29,17 +29,17 @@ export function RecentNotificationsCard() {
   return (
     <section
       aria-labelledby="recent-notifications-heading"
-      className="rounded-xl border border-border bg-card p-4 shadow-sm"
+      className="rounded-xl border border-border bg-card p-6 shadow-sm"
     >
       <h2
-        className="px-2 pb-2 text-sm font-bold text-foreground"
+        className="pb-3 text-sm font-bold text-foreground"
         id="recent-notifications-heading"
       >
         最近の通知
       </h2>
 
       {isPending && recent.length === 0 ? (
-        <output aria-label="読み込み中" className="block space-y-3 px-2 py-1">
+        <output aria-label="読み込み中" className="block space-y-3 py-1">
           {["a", "b", "c"].map((id) => (
             <div className="flex items-center gap-3" key={id}>
               <Skeleton className="size-8 rounded-full" />
@@ -54,13 +54,13 @@ export function RecentNotificationsCard() {
       ) : null}
 
       {!isPending && !isError && recent.length === 0 ? (
-        <p className="px-2 py-4 text-sm text-muted-foreground">
+        <p className="py-2 text-xs text-muted-foreground">
           まだ反応はありません
         </p>
       ) : null}
 
       {recent.length > 0 ? (
-        <ul className="space-y-1">
+        <ul className="-mx-2 space-y-0.5">
           {recent.map((item) => {
             const displayName = 行為者の表示名(item.actor);
             return (
@@ -76,7 +76,7 @@ export function RecentNotificationsCard() {
                     </AvatarFallback>
                   </Avatar>
                   <span className="min-w-0 flex-1">
-                    <span className="line-clamp-2 text-sm text-body">
+                    <span className="line-clamp-2 text-xs leading-relaxed text-body">
                       <span className="font-bold text-foreground">
                         {displayName}
                       </span>
@@ -99,7 +99,7 @@ export function RecentNotificationsCard() {
       ) : null}
 
       <Link
-        className="mt-2 flex items-center justify-between rounded-lg px-2 py-2 text-sm font-medium text-primary-600 transition-colors hover:bg-accent dark:text-primary-300"
+        className="-mx-2 mt-2 flex items-center justify-between rounded-lg px-2 py-2 text-sm font-medium text-primary-600 transition-colors hover:bg-accent dark:text-primary-300"
         href="/notifications"
       >
         すべての通知を見る
