@@ -74,7 +74,7 @@ describe("ブックマークしたPD一覧を取得する", () => {
     expect(result.items.every((item) => item.isBookmarked)).toBe(true);
   });
 
-  it("一覧の取得にはログイン中ユーザーを使い、他のユーザーを指定する手段を持たない", async () => {
+  it("保存一覧はログイン中ユーザーの保存として取得する", async () => {
     const { layer, 一覧を取得したユーザー } = ブックマーク保存先({
       me: ["p1"],
     });

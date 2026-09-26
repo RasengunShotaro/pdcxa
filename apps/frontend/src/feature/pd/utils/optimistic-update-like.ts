@@ -6,7 +6,7 @@ import type {
 import { isPdDetailQueryKey } from "../api/query-keys";
 import type { LikeUser, Pd } from "../types";
 
-type InfinitePds = {
+export type InfinitePds = {
   items: Pd[];
   nextCursor?: string;
 };
@@ -14,6 +14,11 @@ type InfinitePds = {
 export type PdDetailSnapshot = Array<
   [QueryKey, InfiniteData<InfinitePds> | undefined]
 >;
+
+export const pdDetailQueryFilters = {
+  predicate: ({ queryKey }: { queryKey: QueryKey }) =>
+    isPdDetailQueryKey(queryKey),
+} as const;
 
 const togglePdLike = ({
   page,
@@ -62,24 +67,22 @@ export const optimisticUpdateLike = async ({
   myUserId: string;
   myLikeUser: LikeUser;
 }): Promise<{ previousQueries: PdDetailSnapshot }> => {
-  const filters = {
-    predicate: ({ queryKey }: { queryKey: QueryKey }) =>
-      isPdDetailQueryKey(queryKey),
-  } as const;
-
   const previousQueries =
-    queryClient.getQueriesData<InfiniteData<InfinitePds>>(filters);
+    queryClient.getQueriesData<InfiniteData<InfinitePds>>(pdDetailQueryFilters);
 
-  queryClient.setQueriesData<InfiniteData<InfinitePds>>(filters, (oldPages) => {
-    if (!oldPages) return oldPages;
+  queryClient.setQueriesData<InfiniteData<InfinitePds>>(
+    pdDetailQueryFilters,
+    (oldPages) => {
+      if (!oldPages) return oldPages;
 
-    return {
-      ...oldPages,
-      pages: oldPages.pages.map((oldPage) =>
-        togglePdLike({ page: oldPage, pd, myUserId, myLikeUser }),
-      ),
-    };
-  });
+      return {
+        ...oldPages,
+        pages: oldPages.pages.map((oldPage) =>
+          togglePdLike({ page: oldPage, pd, myUserId, myLikeUser }),
+        ),
+      };
+    },
+  );
 
   return { previousQueries };
 };

@@ -1,16 +1,9 @@
-import type {
-  InfiniteData,
-  QueryClient,
-  QueryKey,
-} from "@tanstack/react-query";
-import { isPdDetailQueryKey } from "../api/query-keys";
-import type { Pd } from "../types";
-import type { PdDetailSnapshot } from "./optimistic-update-like";
-
-type InfinitePds = {
-  items: Pd[];
-  nextCursor?: string;
-};
+import type { InfiniteData, QueryClient } from "@tanstack/react-query";
+import {
+  type InfinitePds,
+  type PdDetailSnapshot,
+  pdDetailQueryFilters,
+} from "./optimistic-update-like";
 
 interface Pdの保存状態を差し替えるInput {
   pages: InfiniteData<InfinitePds>;
@@ -45,18 +38,15 @@ export const optimisticUpdateBookmark = async ({
 }: OptimisticUpdateBookmarkInput): Promise<{
   previousQueries: PdDetailSnapshot;
 }> => {
-  const filters = {
-    predicate: ({ queryKey }: { queryKey: QueryKey }) =>
-      isPdDetailQueryKey(queryKey),
-  } as const;
-
-  await queryClient.cancelQueries(filters);
+  await queryClient.cancelQueries(pdDetailQueryFilters);
 
   const previousQueries =
-    queryClient.getQueriesData<InfiniteData<InfinitePds>>(filters);
+    queryClient.getQueriesData<InfiniteData<InfinitePds>>(pdDetailQueryFilters);
 
-  queryClient.setQueriesData<InfiniteData<InfinitePds>>(filters, (pages) =>
-    pages ? PDの保存状態を差し替える({ pages, pdId, bookmarked }) : pages,
+  queryClient.setQueriesData<InfiniteData<InfinitePds>>(
+    pdDetailQueryFilters,
+    (pages) =>
+      pages ? PDの保存状態を差し替える({ pages, pdId, bookmarked }) : pages,
   );
 
   return { previousQueries };

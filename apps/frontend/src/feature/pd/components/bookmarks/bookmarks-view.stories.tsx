@@ -3,7 +3,14 @@ import { HttpResponse, http } from "msw";
 import { expect, waitFor, within } from "storybook/test";
 import { BookmarksView } from "./bookmarks-view";
 
-const rawPd = (id: string, content: string) => ({
+interface RawQuotedPd {
+  id: string;
+  content: string;
+  createdAt: string;
+  userId: string;
+}
+
+const rawPd = (id: string, content: string, quotedPd?: RawQuotedPd) => ({
   id,
   content,
   userId: "u-taro",
@@ -14,6 +21,8 @@ const rawPd = (id: string, content: string) => ({
   likes: [],
   isMyPd: false,
   isBookmarked: true,
+  quotedPd: quotedPd ?? null,
+  quoteCount: 0,
 });
 
 const handlers = (items: ReturnType<typeof rawPd>[]) => [
@@ -58,6 +67,31 @@ export const Populated: Story = {
       "aria-pressed",
       "true",
     );
+  },
+};
+
+export const WithQuote: Story = {
+  name: "引用を含む保存した PD は引用元も埋め込んで並ぶ",
+  parameters: {
+    msw: {
+      handlers: handlers([
+        rawPd("pd-2", "今は逆の意見", {
+          id: "pd-1",
+          content: "テストは後から書けば十分だと思う",
+          createdAt: "2026-03-12T00:00:00.000Z",
+          userId: "u-taro",
+        }),
+      ]),
+    },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    const quoted = await canvas.findByRole("link", {
+      name: /テストは後から書けば十分だと思う/,
+    });
+
+    expect(quoted).toHaveAttribute("href", "/pd/pd-1");
   },
 };
 

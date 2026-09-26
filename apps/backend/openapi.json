@@ -1143,6 +1143,7 @@
           {
             "schema": {
               "type": "string",
+              "format": "uuid",
               "example": "0190d2c0-0000-7000-8000-000000000002"
             },
             "required": false,

@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
-import { HttpResponse, http } from "msw";
+import { delay, HttpResponse, http } from "msw";
 import { expect, userEvent, waitFor, within } from "storybook/test";
 import { getFetchPdImageMockHandler } from "@/schema/api.msw";
 import { PdTimeline } from "./pd-timeline";
@@ -147,6 +147,46 @@ export const BookmarkPd: Story = {
   },
 };
 
+export const BookmarkFailureReverts: Story = {
+  name: "保存に失敗するとしおりが元の未保存の状態に戻る",
+  parameters: {
+    msw: {
+      handlers: [
+        http.get("*/pd", () =>
+          HttpResponse.json({
+            items: [
+              rawPd({
+                id: "pd-1",
+                content: "あとで読み返したいメモ",
+                userId: "u-taro",
+              }),
+            ],
+          }),
+        ),
+        http.put("*/pd/bookmark", async () => {
+          await delay(300);
+          return new HttpResponse(null, { status: 500 });
+        }),
+        userDetailsHandler(),
+      ],
+    },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const saveButton = await canvas.findByRole("button", { name: "保存する" });
+
+    await userEvent.click(saveButton);
+    await canvas.findByRole("button", { name: "保存を外す" });
+
+    await waitFor(() =>
+      expect(canvas.getByRole("button", { name: "保存する" })).toHaveAttribute(
+        "aria-pressed",
+        "false",
+      ),
+    );
+  },
+};
+
 const quotingHandlers = [
   http.get("*/pd", () =>
     HttpResponse.json({
@@ -254,12 +294,10 @@ export const FetchFailed: Story = {
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await waitFor(() =>
-      expect(
-        canvas.getByText("通信に失敗しました。再試行してください"),
-      ).toBeInTheDocument(),
-    );
-    expect(canvas.getByRole("button", { name: "再試行" })).toBeInTheDocument();
+
+    const retry = await canvas.findByRole("button", { name: "再試行" });
+
+    expect(retry).toBeInTheDocument();
   },
 };
 

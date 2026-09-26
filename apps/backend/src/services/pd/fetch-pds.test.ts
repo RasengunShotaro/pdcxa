@@ -33,6 +33,7 @@ const テスト環境 = (params: {
   ユーザー詳細?: UserDetail;
   一覧スパイ?: (input: { userId?: string; cursor?: string }) => void;
   ブックマーク済み?: (userId: string) => string[];
+  閲覧者?: string;
 }) =>
   Layer.mergeAll(
     Layer.succeed(PdRepository, {
@@ -63,7 +64,7 @@ const テスト環境 = (params: {
           : Effect.fail(new UserNotFoundError({ userName })),
       ユーザーID一覧で取得する: 未使用,
     }),
-    Layer.succeed(AuthContext, { userId: "u1" }),
+    Layer.succeed(AuthContext, { userId: params.閲覧者 ?? "u1" }),
     Layer.succeed(ClerkClientPort, ダミーClerk),
   );
 
@@ -95,7 +96,8 @@ describe("PD一覧を取得する", () => {
         items: [rawPd({ id: "p1" }), rawPd({ id: "p2" })],
         nextCursor: undefined,
       },
-      ブックマーク済み: (userId) => (userId === "u1" ? ["p2"] : ["p1"]),
+      閲覧者: "viewer",
+      ブックマーク済み: (userId) => (userId === "viewer" ? ["p2"] : ["p1"]),
     });
 
     const result = await Effect.runPromise(

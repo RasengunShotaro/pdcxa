@@ -66,7 +66,7 @@ export const mutatePdBookmarkSchema = z
 
 export const fetchBookmarkedPdQuerySchema = z.object({
   cursor: z
-    .string()
+    .uuid()
     .optional()
     .openapi({ example: "0190d2c0-0000-7000-8000-000000000002" }),
 });
@@ -104,11 +104,13 @@ const quotedPdSchema = z
   })
   .openapi({ example: quotedPdExample });
 
+const 引用なし: typeof quotedPdExample | null = null;
+
 const pdItemExample = {
   isMyPd: false,
   isBookmarked: false,
   quoteCount: 0,
-  quotedPd: null as typeof quotedPdExample | null,
+  quotedPd: 引用なし,
   likeCount: 3,
   replyCount: 1,
   likes: [pdLikeExample],
