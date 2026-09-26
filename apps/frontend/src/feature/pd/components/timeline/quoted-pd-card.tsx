@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import type { QuotedPd } from "@/feature/pd/types";
+import { 著者の名前を決める } from "@/feature/pd/utils/author-display";
 import {
   formatAbsoluteDateTime,
   formatDateTime,
@@ -15,6 +16,7 @@ interface QuotedPdCardProps {
 
 export function QuotedPdCard({ quotedPd, linked = true }: QuotedPdCardProps) {
   const { userDetail } = quotedPd;
+  const { name, handle } = 著者の名前を決める(userDetail);
   const body = (
     <>
       <span className="flex min-w-0 items-center gap-1.5 text-xs leading-[1.4]">
@@ -24,12 +26,12 @@ export function QuotedPdCard({ quotedPd, linked = true }: QuotedPdCardProps) {
             {avatarInitials(userDetail.userFullName)}
           </AvatarFallback>
         </Avatar>
-        <span className="truncate font-bold text-foreground">
-          {userDetail.userFullName}
+        <span className="min-w-0 truncate font-bold text-foreground">
+          {name}
         </span>
-        {userDetail.userName ? (
-          <span className="min-w-0 shrink truncate text-muted-foreground">
-            @{userDetail.userName}
+        {handle ? (
+          <span className="min-w-0 truncate text-muted-foreground">
+            @{handle}
           </span>
         ) : null}
         <span aria-hidden="true" className="shrink-0 text-muted-foreground">
@@ -51,7 +53,7 @@ export function QuotedPdCard({ quotedPd, linked = true }: QuotedPdCardProps) {
   );
 
   const className =
-    "mt-1.5 flex flex-col gap-1 rounded-lg border border-border px-3 py-2.5";
+    "mt-1.5 flex min-w-0 flex-col gap-1 rounded-lg border border-border px-3 py-2.5";
 
   if (!linked) {
     return <div className={className}>{body}</div>;

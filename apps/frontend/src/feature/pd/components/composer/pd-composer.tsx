@@ -104,7 +104,7 @@ export function PdComposer({ open, onOpenChange, quotedPd }: PdComposerProps) {
         <Form {...form}>
           <form
             aria-busy={isPending}
-            className="space-y-4"
+            className="min-w-0 space-y-4"
             onSubmit={form.handleSubmit(onSubmit)}
           >
             <ComposerContentField control={form.control} disabled={isPending} />

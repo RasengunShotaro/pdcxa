@@ -73,7 +73,7 @@ export function PdDetailView({ pdId }: PdDetailViewProps) {
         {!isPdPending && !isPdError && pd ? (
           <>
             <div className="border-b border-border">
-              <PdCard pd={pd} />
+              <PdCard clampBody={false} pd={pd} />
             </div>
 
             <RePdSection

@@ -170,3 +170,32 @@ export const SubmitFailureKeepsDraft: Story = {
     ).toBeInTheDocument();
   },
 };
+
+export const QuoteWithLongAuthor: Story = {
+  name: "引用元の名前やハンドルが極端に長くてもダイアログの幅に収まる",
+  render: () => (
+    <PdComposer
+      onOpenChange={() => {}}
+      open
+      quotedPd={{
+        id: "0190d2c0-0000-7000-8000-00000000000a",
+        content: "あ".repeat(200),
+        createdAt: "2026-06-24T00:00:00.000Z",
+        userId: "user_long",
+        userDetail: {
+          userFullName:
+            "寿限無寿限無五劫の擦り切れ海砂利水魚の水行末雲来末風来末食う寝る処に住む処やぶら小路の藪柑子",
+          userName:
+            "a_very_long_username_that_hits_the_sixty_four_character_limit_x",
+          imageUrl: "",
+        },
+      }}
+    />
+  ),
+  play: async () => {
+    const dialog = getDialog();
+    await within(dialog).findByRole("textbox");
+
+    expect(dialog.scrollWidth).toBeLessThanOrEqual(dialog.clientWidth);
+  },
+};

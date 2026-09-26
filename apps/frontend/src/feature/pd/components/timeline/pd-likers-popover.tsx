@@ -8,6 +8,8 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import type { LikeUser } from "@/feature/pd/types";
+import { 著者の名前を決める } from "@/feature/pd/utils/author-display";
+import { 件数を短く表す } from "@/feature/pd/utils/format-count";
 import { avatarInitials } from "./avatar-initials";
 
 interface PdLikersPopoverProps {
@@ -36,7 +38,7 @@ export function PdLikersPopover({
           type="button"
           variant="ghost"
         >
-          {likeCount}
+          {件数を短く表す(likeCount)}
         </Button>
       </PopoverTrigger>
       <PopoverContent align="start" className="w-64 p-2">
@@ -57,9 +59,9 @@ export function PdLikersPopover({
               </Avatar>
               <span className="min-w-0">
                 <span className="block truncate text-sm font-medium text-foreground">
-                  {user.userFullName || "名前未設定"}
+                  {著者の名前を決める(user).name}
                 </span>
-                {user.userName ? (
+                {著者の名前を決める(user).handle ? (
                   <span className="block truncate text-xs text-muted-foreground">
                     @{user.userName}
                   </span>

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { 著者の名前を決める } from "@/feature/pd/utils/author-display";
 import { avatarInitials } from "./avatar-initials";
 import { PdTimestamp } from "./pd-timestamp";
 
@@ -47,23 +48,25 @@ export function PdAuthorLine({
   createdAt,
   href,
 }: PdAuthorLineProps) {
+  const { name, handle } = 著者の名前を決める({ userFullName, userName });
+
   return (
     <div className="flex min-w-0 items-baseline gap-1 text-sm leading-normal">
       {userName ? (
         <Link
-          className="truncate font-bold text-foreground underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
+          className="min-w-0 truncate font-bold text-foreground underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
           href={`/user/${userName}`}
         >
-          {userFullName}
+          {name}
         </Link>
       ) : (
-        <span className="truncate font-bold text-foreground">
-          {userFullName}
+        <span className="min-w-0 truncate font-bold text-foreground">
+          {name}
         </span>
       )}
-      {userName ? (
+      {handle ? (
         <span className="min-w-0 shrink truncate text-muted-foreground">
-          @{userName}
+          @{handle}
         </span>
       ) : null}
       <span aria-hidden="true" className="shrink-0 text-muted-foreground">

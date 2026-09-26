@@ -1,6 +1,6 @@
-import { Linkify } from "@/components/ui/linkify";
 import type { RePd } from "@/feature/pd/types";
 import { PdAuthorLine, PdAvatar } from "../timeline/pd-author";
+import { PdBody } from "../timeline/pd-body";
 import { PdLikersPopover } from "../timeline/pd-likers-popover";
 import { RePdLikeButton } from "./repd-like-button";
 
@@ -17,18 +17,16 @@ export function RePdCard({ rePd }: RePdCardProps) {
         userName={rePd.userDetail.userName}
       />
 
-      <div className="min-w-0 flex-1 space-y-1">
+      <div className="flex min-w-0 flex-1 flex-col gap-0.5">
         <PdAuthorLine
           createdAt={rePd.createdAt}
           userFullName={rePd.userDetail.userFullName}
           userName={rePd.userDetail.userName}
         />
 
-        <p className="whitespace-pre-wrap break-words text-sm text-body">
-          <Linkify>{rePd.content}</Linkify>
-        </p>
+        <PdBody content={rePd.content} />
 
-        <div className="-ml-2 flex items-center text-muted-foreground">
+        <div className="-ml-2 mt-0.5 flex items-center text-muted-foreground">
           <div className="inline-flex items-center rounded-full transition-colors hover:bg-accent">
             <RePdLikeButton rePd={rePd} />
             <PdLikersPopover

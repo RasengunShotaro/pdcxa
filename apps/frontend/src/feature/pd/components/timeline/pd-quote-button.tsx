@@ -4,6 +4,7 @@ import { Repeat2 } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import type { Pd } from "@/feature/pd/types";
+import { 件数を短く表す } from "@/feature/pd/utils/format-count";
 import { PDを引用元にする } from "@/feature/pd/utils/quote";
 import { PdComposer } from "../composer/pd-composer";
 
@@ -29,7 +30,7 @@ export function PdQuoteButton({ pd }: PdQuoteButtonProps) {
         variant="ghost"
       >
         <Repeat2 aria-hidden="true" className="size-4.5" />
-        {pd.quoteCount > 0 ? pd.quoteCount : null}
+        {pd.quoteCount > 0 ? 件数を短く表す(pd.quoteCount) : null}
       </Button>
       {open ? (
         <PdComposer

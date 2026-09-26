@@ -59,3 +59,13 @@ export const ハンドル無し: Story = {
     expect(canvas.queryByRole("link")).not.toBeInTheDocument();
   },
 };
+
+export const 名前が空: Story = {
+  name: "名前が空ならハンドルを名前として一度だけ出す",
+  args: { userFullName: "" },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    expect(canvas.getAllByText("@taro")).toHaveLength(1);
+  },
+};

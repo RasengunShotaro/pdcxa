@@ -1,8 +1,9 @@
 import { MessageSquare } from "lucide-react";
 import Link from "next/link";
-import { Linkify } from "@/components/ui/linkify";
 import type { Pd } from "@/feature/pd/types";
+import { 件数を短く表す } from "@/feature/pd/utils/format-count";
 import { PdAuthorLine, PdAvatar } from "./pd-author";
+import { PdBody } from "./pd-body";
 import { PdBookmarkButton } from "./pd-bookmark-button";
 import { PdCardImage } from "./pd-card-image";
 import { PdLikeButton } from "./pd-like-button";
@@ -14,9 +15,14 @@ import { QuotedPdCard } from "./quoted-pd-card";
 interface PdCardProps {
   pd: Pd;
   showAuthor?: boolean;
+  clampBody?: boolean;
 }
 
-export function PdCard({ pd, showAuthor = true }: PdCardProps) {
+export function PdCard({
+  pd,
+  showAuthor = true,
+  clampBody = true,
+}: PdCardProps) {
   const detailHref = `/pd/${pd.id}`;
 
   return (
@@ -39,9 +45,7 @@ export function PdCard({ pd, showAuthor = true }: PdCardProps) {
           />
         ) : null}
 
-        <p className="whitespace-pre-wrap break-words text-sm text-body">
-          <Linkify>{pd.content}</Linkify>
-        </p>
+        <PdBody clamp={clampBody} content={pd.content} />
 
         <PdCardImage
           alt={`${pd.userDetail.userFullName}さんが投稿した画像`}
@@ -65,7 +69,7 @@ export function PdCard({ pd, showAuthor = true }: PdCardProps) {
               href={detailHref}
             >
               <MessageSquare aria-hidden="true" className="size-4.5" />
-              {pd.replyCount}
+              {件数を短く表す(pd.replyCount)}
             </Link>
           </div>
           <div className="w-1/4">

@@ -9,6 +9,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { fetchDetailedPdWeeklyStats } from "@/feature/pd/api/pd/fetch-detailed-weekly-stats";
 import { weeklyStatsQueryKey } from "@/feature/pd/api/query-keys";
 import { avatarInitials } from "@/feature/pd/components/timeline/avatar-initials";
+import { 件数を短く表す } from "@/feature/pd/utils/format-count";
 import {
   formatRangeLabel,
   hasNoActivity,
@@ -72,8 +73,11 @@ export function WeeklyActivityCard() {
                 key={item.label}
               >
                 <dt className="text-xs text-muted-foreground">{item.label}</dt>
-                <dd className="text-base leading-normal font-bold text-foreground tabular-nums">
-                  {item.value}
+                <dd
+                  className="truncate text-base leading-normal font-bold text-foreground tabular-nums"
+                  title={item.value.toLocaleString("ja-JP")}
+                >
+                  {件数を短く表す(item.value)}
                 </dd>
               </div>
             ))}
@@ -108,7 +112,7 @@ export function WeeklyActivityCard() {
                       {name}
                     </span>
                     <span className="shrink-0 text-xs text-muted-foreground tabular-nums">
-                      {row.pdCount} PD
+                      {件数を短く表す(row.pdCount)} PD
                     </span>
                   </>
                 );

@@ -56,7 +56,7 @@ export function NotificationItem({
       </Avatar>
 
       <div className="min-w-0 flex-1">
-        <p className="text-base text-body">
+        <p className="line-clamp-2 break-words text-sm text-body">
           <span className="font-semibold text-foreground">{displayName}</span>
           <span className="text-muted-foreground">
             さんが{通知の行為文言(item.kind)}
