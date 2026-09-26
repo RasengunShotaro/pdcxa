@@ -3,6 +3,7 @@
 import { Loader2, MessageCirclePlus, MessageSquare } from "lucide-react";
 import type { ReactNode } from "react";
 import { EmptyState } from "@/components/elements/empty-state";
+import { FeedPanel } from "@/components/elements/feed-layout";
 import { ListError } from "@/components/elements/list-error";
 import { ListSkeleton } from "@/components/elements/list-skeleton";
 import { Button } from "@/components/ui/button";
@@ -70,13 +71,15 @@ export function PdTimeline({
 
   return (
     <div className="space-y-4">
-      <ul className="space-y-4">
-        {pds.map((pd) => (
-          <li key={pd.id}>
-            <PdCard pd={pd} showAuthor={showAuthor} />
-          </li>
-        ))}
-      </ul>
+      <FeedPanel>
+        <ul className="divide-y divide-border">
+          {pds.map((pd) => (
+            <li key={pd.id}>
+              <PdCard pd={pd} showAuthor={showAuthor} />
+            </li>
+          ))}
+        </ul>
+      </FeedPanel>
 
       <div aria-hidden="true" ref={sentinelRef} />
 

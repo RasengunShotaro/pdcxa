@@ -1,6 +1,7 @@
 "use client";
 
 import { EmptyState } from "@/components/elements/empty-state";
+import { FeedPanel } from "@/components/elements/feed-layout";
 import { ListError } from "@/components/elements/list-error";
 import { ListSkeleton } from "@/components/elements/list-skeleton";
 import type { RePd } from "@/feature/pd/types";
@@ -23,7 +24,7 @@ export function RePdSection({
 }: RePdSectionProps) {
   return (
     <section className="space-y-4">
-      <h2 className="font-bold text-foreground text-xl">
+      <h2 className="font-bold text-foreground text-lg">
         RePD一覧
         {!isPending && !isError ? (
           <span className="ml-2 text-base text-muted-foreground tabular-nums">
@@ -41,11 +42,15 @@ export function RePdSection({
       ) : null}
 
       {!isPending && !isError && rePds.length > 0 ? (
-        <div className="space-y-4">
-          {rePds.map((rePd) => (
-            <RePdCard key={rePd.id} rePd={rePd} />
-          ))}
-        </div>
+        <FeedPanel>
+          <ul className="divide-y divide-border">
+            {rePds.map((rePd) => (
+              <li key={rePd.id}>
+                <RePdCard rePd={rePd} />
+              </li>
+            ))}
+          </ul>
+        </FeedPanel>
       ) : null}
     </section>
   );

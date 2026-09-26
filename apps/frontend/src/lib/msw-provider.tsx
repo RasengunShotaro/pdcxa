@@ -15,8 +15,8 @@ export function MswProvider({ children }: { children: ReactNode }) {
     let cancelled = false;
     (async () => {
       try {
-        const { worker } = await import("@/mocks/browser");
-        await worker.start({ onUnhandledRequest: "bypass" });
+        const { startWorker } = await import("@/mocks/browser");
+        await startWorker();
       } catch (error) {
         console.error("MSW worker の起動に失敗しました", error);
       }

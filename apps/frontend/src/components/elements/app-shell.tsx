@@ -24,6 +24,7 @@ import { ColorModeSwitcher } from "./color-mode-switcher";
 import { pageLabelForPath } from "./nav-items";
 import { NavUser } from "./nav-user";
 import { NotificationBell } from "./notification-bell";
+import { SidebarCollapseButton } from "./sidebar-collapse-button";
 
 interface AppShellProps {
   children: ReactNode;
@@ -79,18 +80,21 @@ export function AppShell({
         <SidebarContent>
           <AppSidebarNav />
         </SidebarContent>
-        <SidebarFooter>{userFooter}</SidebarFooter>
+        <SidebarFooter>
+          <SidebarCollapseButton />
+          {userFooter}
+        </SidebarFooter>
         <SidebarRail />
       </Sidebar>
 
       <SidebarInset className="min-w-0">
         <header className="flex h-16 shrink-0 items-center gap-2 border-b bg-background transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
           <div className="flex items-center gap-2 px-4">
-            <SidebarTrigger className="-ml-1 max-md:size-11" />
+            <SidebarTrigger className="-ml-1 size-11 md:hidden" />
             {currentLabel ? (
               <>
                 <Separator
-                  className="mx-1 data-[orientation=vertical]:h-6"
+                  className="mx-1 data-[orientation=vertical]:h-6 md:hidden"
                   orientation="vertical"
                 />
                 <span className="text-base font-medium">{currentLabel}</span>

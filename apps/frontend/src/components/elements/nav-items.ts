@@ -6,11 +6,19 @@ export interface NavItem {
   icon: LucideIcon;
 }
 
-export const NAV_ITEMS: readonly NavItem[] = [
+export const PRIMARY_NAV_ITEMS: readonly NavItem[] = [
   { href: "/", label: "ホーム", icon: Home },
   { href: "/notifications", label: "通知", icon: Bell },
+];
+
+export const SECONDARY_NAV_ITEMS: readonly NavItem[] = [
   { href: "/stats", label: "統計", icon: BarChart3 },
   { href: "/invitation", label: "招待", icon: Mail },
+];
+
+export const NAV_ITEMS: readonly NavItem[] = [
+  ...PRIMARY_NAV_ITEMS,
+  ...SECONDARY_NAV_ITEMS,
 ];
 
 interface IsNavItemActiveInput {
