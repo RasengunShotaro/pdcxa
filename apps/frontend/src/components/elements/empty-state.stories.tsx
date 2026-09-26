@@ -17,27 +17,25 @@ type Story = StoryObj<typeof EmptyState>;
 export const MessageOnly: Story = {
   name: "メッセージだけの空状態を表示する",
   args: {
-    message: "まだ RePd はありません",
+    message: "まだRePDはありません",
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await expect(
-      canvas.getByText("まだ RePd はありません"),
-    ).toBeInTheDocument();
+    await expect(canvas.getByText("まだRePDはありません")).toBeInTheDocument();
   },
 };
 
 export const WithCallToAction: Story = {
   name: "空状態から最初の投稿へ誘導する",
   args: {
-    message: "まだ PD がありません",
-    action: <Button>最初の PD をしてみよう</Button>,
+    message: "まだPDがありません",
+    action: <Button>最初のPDをしてみよう</Button>,
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await expect(canvas.getByText("まだ PD がありません")).toBeInTheDocument();
+    await expect(canvas.getByText("まだPDがありません")).toBeInTheDocument();
     await expect(
-      canvas.getByRole("button", { name: "最初の PD をしてみよう" }),
+      canvas.getByRole("button", { name: "最初のPDをしてみよう" }),
     ).toBeInTheDocument();
   },
 };

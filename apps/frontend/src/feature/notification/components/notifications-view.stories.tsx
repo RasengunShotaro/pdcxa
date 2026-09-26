@@ -93,10 +93,10 @@ export const Populated: Story = {
       expect(canvas.getByText("花子 鈴木")).toBeInTheDocument(),
     );
     await expect(
-      canvas.getByText("さんがあなたの PD に RePd しました"),
+      canvas.getByText("さんがあなたのPDにRePDしました"),
     ).toBeInTheDocument();
     await expect(
-      canvas.getByText("さんがあなたの PD にいいねしました"),
+      canvas.getByText("さんがあなたのPDにいいねしました"),
     ).toBeInTheDocument();
   },
 };

@@ -103,10 +103,7 @@ export function AppShell({
           </div>
         </header>
         <div className="flex flex-1 flex-col overflow-y-auto bg-bg-page">
-          <div
-            className="mx-auto w-full max-w-[1042px] px-4 py-6"
-            id="main-content"
-          >
+          <div className="mx-auto w-full max-w-2xl px-4 py-6" id="main-content">
             {children}
           </div>
         </div>

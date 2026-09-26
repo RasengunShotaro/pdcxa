@@ -12,7 +12,7 @@ interface RePdCardProps {
 export function RePdCard({ rePd }: RePdCardProps) {
   return (
     <article>
-      <Card className="gap-2 px-4 py-4 transition-shadow hover:shadow-md">
+      <Card className="gap-2 px-4 pt-4 pb-2">
         <PdAuthor
           createdAt={rePd.createdAt}
           imageUrl={rePd.userDetail.imageUrl}
@@ -24,7 +24,7 @@ export function RePdCard({ rePd }: RePdCardProps) {
           <Linkify>{rePd.content}</Linkify>
         </p>
 
-        <div className="flex items-center justify-end pt-1 text-muted-foreground">
+        <div className="-mr-2 flex items-center justify-end text-muted-foreground">
           <div className="flex items-center rounded-full transition-colors hover:bg-accent">
             <RePdLikeButton rePd={rePd} />
             <PdLikersPopover

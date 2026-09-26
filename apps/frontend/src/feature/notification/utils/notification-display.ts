@@ -16,9 +16,9 @@ export const 行為者の表示名 = (actor: NotificationActor): string => {
 };
 
 const 行為文言: Record<NotificationKind, string> = {
-  pdLike: "あなたの PD にいいねしました",
-  rePdLike: "あなたの RePd にいいねしました",
-  rePd: "あなたの PD に RePd しました",
+  pdLike: "あなたのPDにいいねしました",
+  rePdLike: "あなたのRePDにいいねしました",
+  rePd: "あなたのPDにRePDしました",
 };
 
 export const 通知の行為文言 = (kind: NotificationKind): string =>

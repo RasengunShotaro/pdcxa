@@ -2,7 +2,10 @@ import { Heart, type LucideIcon, MessageSquare } from "lucide-react";
 import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { avatarInitials } from "@/feature/pd/components/timeline/avatar-initials";
-import { formatDateTime } from "@/feature/pd/utils/format-datetime";
+import {
+  formatAbsoluteDateTime,
+  formatDateTime,
+} from "@/feature/pd/utils/format-datetime";
 import type {
   NotificationItem as NotificationItemType,
   NotificationKind,
@@ -54,6 +57,8 @@ export function NotificationItem({ item, onSelect }: NotificationItemProps) {
         <time
           className="mt-1 block text-xs text-muted-foreground"
           dateTime={item.createdAt}
+          suppressHydrationWarning
+          title={formatAbsoluteDateTime(item.createdAt)}
         >
           {formatDateTime(item.createdAt)}
         </time>

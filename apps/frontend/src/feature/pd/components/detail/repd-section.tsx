@@ -24,7 +24,7 @@ export function RePdSection({
   return (
     <section className="space-y-4">
       <h2 className="font-bold text-foreground text-xl">
-        RePD 一覧
+        RePD一覧
         {!isPending && !isError ? (
           <span className="ml-2 text-base text-muted-foreground tabular-nums">
             {rePds.length}
@@ -37,7 +37,7 @@ export function RePdSection({
       {isError ? <ListError error={error} onRetry={onRetry} /> : null}
 
       {!isPending && !isError && rePds.length === 0 ? (
-        <EmptyState message="まだ RePD はありません。RePD してみよう!" />
+        <EmptyState message="まだRePDはありません。RePDしてみよう！" />
       ) : null}
 
       {!isPending && !isError && rePds.length > 0 ? (

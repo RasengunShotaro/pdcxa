@@ -50,10 +50,16 @@ describe("行為者の表示名", () => {
 });
 
 describe("通知の行為文言", () => {
-  it("種別ごとの文言を返す", () => {
-    expect(通知の行為文言("pdLike")).toBe("あなたの PD にいいねしました");
-    expect(通知の行為文言("rePdLike")).toBe("あなたの RePd にいいねしました");
-    expect(通知の行為文言("rePd")).toBe("あなたの PD に RePd しました");
+  it("PDへのいいねを知らせる", () => {
+    expect(通知の行為文言("pdLike")).toBe("あなたのPDにいいねしました");
+  });
+
+  it("RePDへのいいねを知らせる", () => {
+    expect(通知の行為文言("rePdLike")).toBe("あなたのRePDにいいねしました");
+  });
+
+  it("PDへの返信を知らせる", () => {
+    expect(通知の行為文言("rePd")).toBe("あなたのPDにRePDしました");
   });
 });
 

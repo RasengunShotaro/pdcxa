@@ -1,13 +1,14 @@
 import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { formatDateTime } from "@/feature/pd/utils/format-datetime";
 import { avatarInitials } from "./avatar-initials";
+import { PdTimestamp } from "./pd-timestamp";
 
 interface PdAuthorProps {
   userFullName: string;
   userName: string;
   imageUrl: string;
   createdAt: string;
+  href?: string;
 }
 
 export function PdAuthor({
@@ -15,6 +16,7 @@ export function PdAuthor({
   userName,
   imageUrl,
   createdAt,
+  href,
 }: PdAuthorProps) {
   const avatar = (
     <Avatar className="size-10">
@@ -54,12 +56,11 @@ export function PdAuthor({
           {name}
         </div>
       )}
-      <time
-        className="ml-auto shrink-0 self-start text-sm text-muted-foreground"
-        dateTime={createdAt}
-      >
-        {formatDateTime(createdAt)}
-      </time>
+      <PdTimestamp
+        className="ml-auto shrink-0 self-start"
+        createdAt={createdAt}
+        href={href}
+      />
     </div>
   );
 }
