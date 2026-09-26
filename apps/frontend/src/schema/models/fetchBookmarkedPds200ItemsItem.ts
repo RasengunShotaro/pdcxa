@@ -1,11 +1,11 @@
-import type { FetchPds200ItemsItemLikesItem } from './fetchPds200ItemsItemLikesItem';
+import type { FetchBookmarkedPds200ItemsItemLikesItem } from './fetchBookmarkedPds200ItemsItemLikesItem';
 
-export type FetchPds200ItemsItem = {
+export type FetchBookmarkedPds200ItemsItem = {
   isMyPd: boolean;
   isBookmarked: boolean;
   likeCount: number;
   replyCount: number;
-  likes: FetchPds200ItemsItemLikesItem[];
+  likes: FetchBookmarkedPds200ItemsItemLikesItem[];
   id: string;
   content: string;
   createdAt: string;

@@ -49,6 +49,18 @@ export const rePdLikes = pgTable(
   (table) => [primaryKey({ columns: [table.targetRePdId, table.userId] })],
 );
 
+export const pdBookmarks = pgTable(
+  "pd_bookmarks",
+  {
+    targetPdId: uuid("target_pd_id")
+      .notNull()
+      .references(() => pds.id),
+    userId: varchar("user_id").notNull(),
+    createdAt: timestamp("created_at").notNull().defaultNow(),
+  },
+  (table) => [primaryKey({ columns: [table.targetPdId, table.userId] })],
+);
+
 export const notificationSeen = pgTable("notification_seen", {
   userId: varchar("user_id").primaryKey(),
   lastSeenAt: timestamp("last_notifications_seen_at").notNull(),

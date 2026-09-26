@@ -26,5 +26,5 @@ export const PDを作成する = ({
       imageFileName,
     });
 
-    return { ...created, isMyPd: true };
+    return { ...created, isMyPd: true, isBookmarked: false };
   });

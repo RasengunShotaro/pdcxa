@@ -20,6 +20,7 @@ export type PdPage = {
 
 export type PdDetail = RawPd & {
   readonly isMyPd: boolean;
+  readonly isBookmarked: boolean;
 };
 
 export type PdDetailPage = {

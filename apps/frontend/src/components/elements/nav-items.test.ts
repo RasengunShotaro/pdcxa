@@ -32,6 +32,10 @@ describe("現在地のラベルを解決する", () => {
     expect(pageLabelForPath("/stats")).toBe("統計");
   });
 
+  it("保存した PD のページでは保存を返す", () => {
+    expect(pageLabelForPath("/bookmarks")).toBe("保存");
+  });
+
   it("ホームではホームを返す", () => {
     expect(pageLabelForPath("/")).toBe("ホーム");
   });

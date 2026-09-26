@@ -44,6 +44,26 @@ export const mutatePdLikeSchema = z.object({
   pdId: z.string().openapi({ example: "0190d2c0-0000-7000-8000-000000000001" }),
 });
 
+const mutatePdBookmarkExample = {
+  pdId: "0190d2c0-0000-7000-8000-000000000001",
+  bookmarked: true,
+};
+export const mutatePdBookmarkSchema = z
+  .object({
+    pdId: z.uuid().openapi({ example: mutatePdBookmarkExample.pdId }),
+    bookmarked: z
+      .boolean()
+      .openapi({ example: mutatePdBookmarkExample.bookmarked }),
+  })
+  .openapi({ example: mutatePdBookmarkExample });
+
+export const fetchBookmarkedPdQuerySchema = z.object({
+  cursor: z
+    .string()
+    .optional()
+    .openapi({ example: "0190d2c0-0000-7000-8000-000000000002" }),
+});
+
 export const fetchPdImageParamSchema = z.object({
   fileName: z.string().openapi({
     param: { name: "fileName", in: "path" },
@@ -64,6 +84,7 @@ const pdLikeSchema = z
 
 const pdItemExample = {
   isMyPd: false,
+  isBookmarked: false,
   likeCount: 3,
   replyCount: 1,
   likes: [pdLikeExample],
@@ -76,6 +97,7 @@ const pdItemExample = {
 export const pdItemSchema = z
   .object({
     isMyPd: z.boolean().openapi({ example: pdItemExample.isMyPd }),
+    isBookmarked: z.boolean().openapi({ example: pdItemExample.isBookmarked }),
     likeCount: z.number().openapi({ example: pdItemExample.likeCount }),
     replyCount: z.number().openapi({ example: pdItemExample.replyCount }),
     likes: z.array(pdLikeSchema).openapi({ example: pdItemExample.likes }),

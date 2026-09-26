@@ -258,6 +258,10 @@
                             "type": "boolean",
                             "example": false
                           },
+                          "isBookmarked": {
+                            "type": "boolean",
+                            "example": false
+                          },
                           "likeCount": {
                             "type": "number",
                             "example": 3
@@ -313,6 +317,7 @@
                         },
                         "required": [
                           "isMyPd",
+                          "isBookmarked",
                           "likeCount",
                           "replyCount",
                           "likes",
@@ -324,6 +329,7 @@
                         ],
                         "example": {
                           "isMyPd": false,
+                          "isBookmarked": false,
                           "likeCount": 3,
                           "replyCount": 1,
                           "likes": [
@@ -341,6 +347,7 @@
                       "example": [
                         {
                           "isMyPd": false,
+                          "isBookmarked": false,
                           "likeCount": 3,
                           "replyCount": 1,
                           "likes": [
@@ -368,6 +375,7 @@
                     "items": [
                       {
                         "isMyPd": false,
+                        "isBookmarked": false,
                         "likeCount": 3,
                         "replyCount": 1,
                         "likes": [
@@ -631,6 +639,10 @@
                       "type": "boolean",
                       "example": false
                     },
+                    "isBookmarked": {
+                      "type": "boolean",
+                      "example": false
+                    },
                     "likeCount": {
                       "type": "number",
                       "example": 3
@@ -686,6 +698,7 @@
                   },
                   "required": [
                     "isMyPd",
+                    "isBookmarked",
                     "likeCount",
                     "replyCount",
                     "likes",
@@ -697,6 +710,7 @@
                   ],
                   "example": {
                     "isMyPd": false,
+                    "isBookmarked": false,
                     "likeCount": 3,
                     "replyCount": 1,
                     "likes": [
@@ -757,6 +771,10 @@
                       "type": "boolean",
                       "example": false
                     },
+                    "isBookmarked": {
+                      "type": "boolean",
+                      "example": false
+                    },
                     "likeCount": {
                       "type": "number",
                       "example": 3
@@ -812,6 +830,7 @@
                   },
                   "required": [
                     "isMyPd",
+                    "isBookmarked",
                     "likeCount",
                     "replyCount",
                     "likes",
@@ -823,6 +842,7 @@
                   ],
                   "example": {
                     "isMyPd": false,
+                    "isBookmarked": false,
                     "likeCount": 3,
                     "replyCount": 1,
                     "likes": [
@@ -882,6 +902,234 @@
                   ],
                   "example": {
                     "message": "いいね状態を更新しました"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pd/bookmark": {
+      "put": {
+        "operationId": "mutatePdBookmark",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "pdId": {
+                    "type": "string",
+                    "format": "uuid",
+                    "example": "0190d2c0-0000-7000-8000-000000000001"
+                  },
+                  "bookmarked": {
+                    "type": "boolean",
+                    "example": true
+                  }
+                },
+                "required": [
+                  "pdId",
+                  "bookmarked"
+                ],
+                "example": {
+                  "pdId": "0190d2c0-0000-7000-8000-000000000001",
+                  "bookmarked": true
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "更新成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "ブックマーク状態を更新しました"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "example": {
+                    "message": "ブックマーク状態を更新しました"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pd/bookmarks": {
+      "get": {
+        "operationId": "fetchBookmarkedPds",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "example": "0190d2c0-0000-7000-8000-000000000002"
+            },
+            "required": false,
+            "name": "cursor",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ブックマークしたPD一覧",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "isMyPd": {
+                            "type": "boolean",
+                            "example": false
+                          },
+                          "isBookmarked": {
+                            "type": "boolean",
+                            "example": false
+                          },
+                          "likeCount": {
+                            "type": "number",
+                            "example": 3
+                          },
+                          "replyCount": {
+                            "type": "number",
+                            "example": 1
+                          },
+                          "likes": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "userId": {
+                                  "type": "string",
+                                  "example": "user_2abc"
+                                }
+                              },
+                              "required": [
+                                "userId"
+                              ],
+                              "example": {
+                                "userId": "user_2abc"
+                              }
+                            },
+                            "example": [
+                              {
+                                "userId": "user_2abc"
+                              }
+                            ]
+                          },
+                          "id": {
+                            "type": "string",
+                            "example": "0190d2c0-0000-7000-8000-000000000001"
+                          },
+                          "content": {
+                            "type": "string",
+                            "example": "今日学んだことを共有します"
+                          },
+                          "createdAt": {
+                            "type": "string",
+                            "example": "2026-06-24T00:00:00.000Z"
+                          },
+                          "userId": {
+                            "type": "string",
+                            "example": "user_2abc"
+                          },
+                          "imageFileName": {
+                            "type": "string",
+                            "nullable": true,
+                            "example": null
+                          }
+                        },
+                        "required": [
+                          "isMyPd",
+                          "isBookmarked",
+                          "likeCount",
+                          "replyCount",
+                          "likes",
+                          "id",
+                          "content",
+                          "createdAt",
+                          "userId",
+                          "imageFileName"
+                        ],
+                        "example": {
+                          "isMyPd": false,
+                          "isBookmarked": false,
+                          "likeCount": 3,
+                          "replyCount": 1,
+                          "likes": [
+                            {
+                              "userId": "user_2abc"
+                            }
+                          ],
+                          "id": "0190d2c0-0000-7000-8000-000000000001",
+                          "content": "今日学んだことを共有します",
+                          "createdAt": "2026-06-24T00:00:00.000Z",
+                          "userId": "user_2abc",
+                          "imageFileName": null
+                        }
+                      },
+                      "example": [
+                        {
+                          "isMyPd": false,
+                          "isBookmarked": false,
+                          "likeCount": 3,
+                          "replyCount": 1,
+                          "likes": [
+                            {
+                              "userId": "user_2abc"
+                            }
+                          ],
+                          "id": "0190d2c0-0000-7000-8000-000000000001",
+                          "content": "今日学んだことを共有します",
+                          "createdAt": "2026-06-24T00:00:00.000Z",
+                          "userId": "user_2abc",
+                          "imageFileName": null
+                        }
+                      ]
+                    },
+                    "nextCursor": {
+                      "type": "string",
+                      "example": "0190d2c0-0000-7000-8000-000000000002"
+                    }
+                  },
+                  "required": [
+                    "items"
+                  ],
+                  "example": {
+                    "items": [
+                      {
+                        "isMyPd": false,
+                        "isBookmarked": false,
+                        "likeCount": 3,
+                        "replyCount": 1,
+                        "likes": [
+                          {
+                            "userId": "user_2abc"
+                          }
+                        ],
+                        "id": "0190d2c0-0000-7000-8000-000000000001",
+                        "content": "今日学んだことを共有します",
+                        "createdAt": "2026-06-24T00:00:00.000Z",
+                        "userId": "user_2abc",
+                        "imageFileName": null
+                      }
+                    ]
                   }
                 }
               }

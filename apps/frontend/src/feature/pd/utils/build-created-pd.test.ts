@@ -12,6 +12,7 @@ const aCreatedPd = (overrides: Partial<RawPd> = {}): RawPd => ({
   replyCount: 0,
   likes: [],
   isMyPd: true,
+  isBookmarked: false,
   imageFileName: null,
   ...overrides,
 });

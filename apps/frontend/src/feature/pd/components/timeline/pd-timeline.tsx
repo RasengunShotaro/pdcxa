@@ -1,15 +1,11 @@
 "use client";
 
-import { Loader2, MessageCirclePlus, MessageSquare } from "lucide-react";
+import { MessageCirclePlus, MessageSquare } from "lucide-react";
 import type { ReactNode } from "react";
 import { EmptyState } from "@/components/elements/empty-state";
-import { FeedPanel } from "@/components/elements/feed-layout";
-import { ListError } from "@/components/elements/list-error";
-import { ListSkeleton } from "@/components/elements/list-skeleton";
 import { Button } from "@/components/ui/button";
 import { usePd } from "@/hooks/use-pd";
-import { PdCard } from "./pd-card";
-import { useInfiniteScroll } from "./use-infinite-scroll";
+import { PdList } from "./pd-list";
 
 interface PdTimelineProps {
   userName?: string;
@@ -35,69 +31,33 @@ export function PdTimeline({
     refetch,
   } = usePd({ userName });
 
-  const sentinelRef = useInfiniteScroll({
-    hasNextPage,
-    isFetchingNextPage,
-    onLoadMore: fetchNextPage,
-  });
-
-  if (isPending && pds.length === 0) {
-    return <ListSkeleton count={4} />;
-  }
-
-  if (isError && pds.length === 0) {
-    return <ListError error={error} onRetry={() => refetch()} />;
-  }
-
-  if (pds.length === 0) {
-    if (emptyState !== undefined) {
-      return <>{emptyState}</>;
-    }
-    return (
-      <EmptyState
-        action={
-          onCompose ? (
-            <Button onClick={onCompose} type="button">
-              <MessageCirclePlus aria-hidden="true" className="size-4" />
-              最初のPDをしてみよう
-            </Button>
-          ) : undefined
-        }
-        icon={<MessageSquare aria-hidden="true" className="size-8" />}
-        message="まだPDがありません"
-      />
-    );
-  }
-
   return (
-    <div className="space-y-4">
-      <FeedPanel>
-        <ul className="divide-y divide-border">
-          {pds.map((pd) => (
-            <li key={pd.id}>
-              <PdCard pd={pd} showAuthor={showAuthor} />
-            </li>
-          ))}
-        </ul>
-      </FeedPanel>
-
-      <div aria-hidden="true" ref={sentinelRef} />
-
-      {hasNextPage ? (
-        <div className="flex justify-center pb-4">
-          <Button
-            disabled={isFetchingNextPage}
-            onClick={() => fetchNextPage()}
-            type="button"
-            variant="outline"
-          >
-            {isFetchingNextPage ? (
-              <Loader2 aria-hidden="true" className="size-4 animate-spin" />
-            ) : null}
-            さらに読む
-          </Button>
-        </div>
-      ) : null}
-    </div>
+    <PdList
+      emptyState={
+        emptyState ?? (
+          <EmptyState
+            action={
+              onCompose ? (
+                <Button onClick={onCompose} type="button">
+                  <MessageCirclePlus aria-hidden="true" className="size-4" />
+                  最初のPDをしてみよう
+                </Button>
+              ) : undefined
+            }
+            icon={<MessageSquare aria-hidden="true" className="size-8" />}
+            message="まだPDがありません"
+          />
+        )
+      }
+      error={error}
+      hasNextPage={hasNextPage}
+      isError={isError}
+      isFetchingNextPage={isFetchingNextPage}
+      isPending={isPending}
+      onLoadMore={() => fetchNextPage()}
+      onRetry={() => refetch()}
+      pds={pds}
+      showAuthor={showAuthor}
+    />
   );
 }

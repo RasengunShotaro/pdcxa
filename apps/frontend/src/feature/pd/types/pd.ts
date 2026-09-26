@@ -15,6 +15,7 @@ export type RawPd = {
   replyCount: number;
   likes: { userId: string }[];
   isMyPd: boolean;
+  isBookmarked: boolean;
   imageFileName: string | null;
 };
 

@@ -22,6 +22,7 @@ const aPd = (id: string): Pd => ({
   replyCount: 0,
   likes: [],
   isMyPd: false,
+  isBookmarked: false,
   imageFileName: null,
   userDetail: {
     id: "author",

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Linkify } from "@/components/ui/linkify";
 import type { Pd } from "@/feature/pd/types";
 import { PdAuthorLine, PdAvatar } from "./pd-author";
+import { PdBookmarkButton } from "./pd-bookmark-button";
 import { PdCardImage } from "./pd-card-image";
 import { PdLikeButton } from "./pd-like-button";
 import { PdLikersPopover } from "./pd-likers-popover";
@@ -67,6 +68,9 @@ export function PdCard({ pd, showAuthor = true }: PdCardProps) {
               likeCount={pd.likeCount}
               likeUsers={pd.likeUsers}
             />
+          </div>
+          <div className="mr-1 ml-auto">
+            <PdBookmarkButton pd={pd} />
           </div>
         </div>
       </div>

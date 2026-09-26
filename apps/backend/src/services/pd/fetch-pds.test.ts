@@ -30,6 +30,7 @@ const テスト環境 = (params: {
   byId?: RawPd[];
   ユーザー詳細?: UserDetail;
   一覧スパイ?: (input: { userId?: string; cursor?: string }) => void;
+  ブックマーク済み?: (userId: string) => string[];
 }) =>
   Layer.mergeAll(
     Layer.succeed(PdRepository, {
@@ -42,6 +43,14 @@ const テスト環境 = (params: {
       IDで取得する: () => Effect.succeed(params.byId ?? []),
       作成する: 未使用,
       いいねをトグルする: 未使用,
+      ブックマーク状態を設定する: 未使用,
+      ブックマーク済みのPDIDを絞り込む: ({ userId, pdIds }) =>
+        Effect.succeed(
+          (params.ブックマーク済み?.(userId) ?? []).filter((id) =>
+            pdIds.includes(id),
+          ),
+        ),
+      ブックマークしたPD一覧を取得する: 未使用,
       日毎の集計を取得する: 未使用,
       投稿者別集計を取得する: 未使用,
     }),
@@ -75,6 +84,27 @@ describe("PD一覧を取得する", () => {
     expect(result.items.map((i) => ({ id: i.id, isMyPd: i.isMyPd }))).toEqual([
       { id: "p1", isMyPd: true },
       { id: "p2", isMyPd: false },
+    ]);
+  });
+
+  it("ログイン中ユーザーがブックマークした PD だけを保存済みとして示す", async () => {
+    const layer = テスト環境({
+      page: {
+        items: [rawPd({ id: "p1" }), rawPd({ id: "p2" })],
+        nextCursor: undefined,
+      },
+      ブックマーク済み: (userId) => (userId === "u1" ? ["p2"] : ["p1"]),
+    });
+
+    const result = await Effect.runPromise(
+      PD一覧を取得する({}).pipe(Effect.provide(layer)),
+    );
+
+    expect(
+      result.items.map((i) => ({ id: i.id, isBookmarked: i.isBookmarked })),
+    ).toEqual([
+      { id: "p1", isBookmarked: false },
+      { id: "p2", isBookmarked: true },
     ]);
   });
 

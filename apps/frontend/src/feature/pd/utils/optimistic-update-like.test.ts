@@ -18,6 +18,7 @@ const aPd = (overrides: Partial<Pd> = {}): Pd => ({
   replyCount: 0,
   likes: [{ userId: "other" }],
   isMyPd: false,
+  isBookmarked: false,
   imageFileName: null,
   userDetail: {
     id: "author",

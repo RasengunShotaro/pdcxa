@@ -15,6 +15,13 @@
       "when": 1782349657678,
       "tag": "0001_strange_ben_urich",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1790415487678,
+      "tag": "0002_wide_queen_noir",
+      "breakpoints": true
     }
   ]
 }

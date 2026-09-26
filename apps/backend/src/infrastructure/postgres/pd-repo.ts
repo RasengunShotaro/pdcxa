@@ -1,6 +1,6 @@
-import { and, desc, eq, gte, lte, sql } from "drizzle-orm";
+import { and, desc, eq, gte, inArray, lte, sql } from "drizzle-orm";
 import { Effect, Layer } from "effect";
-import { pdLikes, pds as pdsSchema, rePds } from "#/db/schema";
+import { pdBookmarks, pdLikes, pds as pdsSchema, rePds } from "#/db/schema";
 import { PdRepository } from "#/domain/pd/repository";
 import type { RawPd } from "#/domain/pd/types";
 import { toDatabaseError } from "../error-mapping";
@@ -170,6 +170,82 @@ export const PdRepositoryLive = Layer.effect(
           },
           catch: toDatabaseError,
         }).pipe(Effect.asVoid),
+
+      ブックマーク状態を設定する: ({ pdId, userId, bookmarked }) =>
+        Effect.tryPromise({
+          try: async () => {
+            if (bookmarked) {
+              await db
+                .insert(pdBookmarks)
+                .values({ targetPdId: pdId, userId })
+                .onConflictDoNothing();
+              return;
+            }
+            await db
+              .delete(pdBookmarks)
+              .where(
+                and(
+                  eq(pdBookmarks.targetPdId, pdId),
+                  eq(pdBookmarks.userId, userId),
+                ),
+              );
+          },
+          catch: toDatabaseError,
+        }),
+
+      ブックマーク済みのPDIDを絞り込む: ({ userId, pdIds }) =>
+        pdIds.length === 0
+          ? Effect.succeed([])
+          : Effect.tryPromise({
+              try: async () => {
+                const rows = await db
+                  .select({ pdId: pdBookmarks.targetPdId })
+                  .from(pdBookmarks)
+                  .where(
+                    and(
+                      eq(pdBookmarks.userId, userId),
+                      inArray(pdBookmarks.targetPdId, [...pdIds]),
+                    ),
+                  );
+                return rows.map((row) => row.pdId);
+              },
+              catch: toDatabaseError,
+            }),
+
+      ブックマークしたPD一覧を取得する: ({ userId, cursor }) =>
+        Effect.tryPromise({
+          try: async () => {
+            const conditions = cursor
+              ? [
+                  sql`(${pdBookmarks.createdAt}, ${pdBookmarks.targetPdId}) < (SELECT created_at, target_pd_id FROM pd_bookmarks WHERE user_id = ${userId} AND target_pd_id = ${cursor})`,
+                ]
+              : [];
+
+            const results = await createBaseQuery()
+              .innerJoin(
+                pdBookmarks,
+                and(
+                  eq(pdBookmarks.targetPdId, pdsSchema.id),
+                  eq(pdBookmarks.userId, userId),
+                ),
+              )
+              .where(and(...conditions))
+              .orderBy(
+                desc(pdBookmarks.createdAt),
+                desc(pdBookmarks.targetPdId),
+              )
+              .limit(PAGE_SIZE + 1);
+
+            const hasNextPage = results.length > PAGE_SIZE;
+            const items = formatRows(results.slice(0, PAGE_SIZE));
+
+            return {
+              items,
+              nextCursor: hasNextPage ? items[items.length - 1]?.id : undefined,
+            };
+          },
+          catch: toDatabaseError,
+        }),
 
       日毎の集計を取得する: (range) =>
         Effect.tryPromise({

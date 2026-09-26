@@ -20,6 +20,7 @@ export const RawPdMother = (override: Partial<RawPd>): RawPd => ({
   replyCount: 0,
   likes: [],
   isMyPd: false,
+  isBookmarked: false,
   imageFileName: null,
   ...override,
 });

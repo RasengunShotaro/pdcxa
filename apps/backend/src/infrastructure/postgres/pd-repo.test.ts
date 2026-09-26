@@ -10,7 +10,7 @@ import {
   expect,
   it,
 } from "vitest";
-import { pdLikes, pds } from "#/db/schema";
+import { pdBookmarks, pdLikes, pds } from "#/db/schema";
 import { PdRepository } from "#/domain/pd/repository";
 import type { DbClient as DrizzleDb } from "#/lib/db";
 import {
@@ -256,5 +256,164 @@ describe("PdRepositoryLive", () => {
       "fan1",
       "fan2",
     ]);
+  });
+
+  const PDを用意する = async (count: number) => {
+    const ids = Array.from({ length: count }, () => uuidv7());
+    const base = new Date("2026-06-26T00:00:00.000Z");
+    await ctx.db.insert(pds).values(
+      ids.map((id, index) => ({
+        id,
+        content: `PD ${index}`,
+        createdAt: new Date(base.getTime() + index * 1000),
+        userId: "author",
+      })),
+    );
+    return ids;
+  };
+
+  const ブックマーク状態を設定する = (params: {
+    pdId: string;
+    userId: string;
+    bookmarked: boolean;
+  }) =>
+    Effect.runPromise(
+      PdRepository.pipe(
+        Effect.flatMap((repo) => repo.ブックマーク状態を設定する(params)),
+        Effect.provide(レイヤー(ctx.db)),
+      ),
+    );
+
+  const ブックマークしたPD一覧を取得する = (params: {
+    userId: string;
+    cursor?: string;
+  }) =>
+    Effect.runPromise(
+      PdRepository.pipe(
+        Effect.flatMap((repo) => repo.ブックマークしたPD一覧を取得する(params)),
+        Effect.provide(レイヤー(ctx.db)),
+      ),
+    );
+
+  it("ブックマークした PD が保存した PD の一覧に現れる", async () => {
+    const [pdId] = await PDを用意する(1);
+
+    await ブックマーク状態を設定する({ pdId, userId: "me", bookmarked: true });
+
+    const result = await ブックマークしたPD一覧を取得する({ userId: "me" });
+    expect(result.items.map((item) => item.id)).toEqual([pdId]);
+  });
+
+  it("同じ PD を二度ブックマークしても一覧には一件だけ現れる", async () => {
+    const [pdId] = await PDを用意する(1);
+    await ブックマーク状態を設定する({ pdId, userId: "me", bookmarked: true });
+
+    await ブックマーク状態を設定する({ pdId, userId: "me", bookmarked: true });
+
+    const result = await ブックマークしたPD一覧を取得する({ userId: "me" });
+    expect(result.items).toHaveLength(1);
+  });
+
+  it("ブックマークを外した PD は一覧から消える", async () => {
+    const [pdId] = await PDを用意する(1);
+    await ブックマーク状態を設定する({ pdId, userId: "me", bookmarked: true });
+
+    await ブックマーク状態を設定する({ pdId, userId: "me", bookmarked: false });
+
+    const result = await ブックマークしたPD一覧を取得する({ userId: "me" });
+    expect(result.items).toHaveLength(0);
+  });
+
+  it("他のユーザーがブックマークした PD は自分の一覧に現れない", async () => {
+    const [mine, others] = await PDを用意する(2);
+    await ブックマーク状態を設定する({
+      pdId: mine,
+      userId: "me",
+      bookmarked: true,
+    });
+
+    await ブックマーク状態を設定する({
+      pdId: others,
+      userId: "someone",
+      bookmarked: true,
+    });
+
+    const result = await ブックマークしたPD一覧を取得する({ userId: "me" });
+    expect(result.items.map((item) => item.id)).toEqual([mine]);
+  });
+
+  it("保存した PD は投稿日時ではなく保存した日時の新しい順に並ぶ", async () => {
+    const [older, newer] = await PDを用意する(2);
+    await ctx.db.insert(pdBookmarks).values([
+      {
+        targetPdId: newer,
+        userId: "me",
+        createdAt: new Date("2026-07-01T00:00:00.000Z"),
+      },
+      {
+        targetPdId: older,
+        userId: "me",
+        createdAt: new Date("2026-07-02T00:00:00.000Z"),
+      },
+    ]);
+
+    const result = await ブックマークしたPD一覧を取得する({ userId: "me" });
+
+    expect(result.items.map((item) => item.id)).toEqual([older, newer]);
+  });
+
+  it("保存日時が同じ PD が一ページを超えても全件をページングで取得できる", async () => {
+    const total = 25;
+    const ids = await PDを用意する(total);
+    const sameInstant = new Date("2026-07-01T00:00:00.000Z");
+    await ctx.db.insert(pdBookmarks).values(
+      ids.map((targetPdId) => ({
+        targetPdId,
+        userId: "me",
+        createdAt: sameInstant,
+      })),
+    );
+
+    const collected: string[] = [];
+    let cursor: string | undefined;
+    for (let page = 0; page < total + 1; page += 1) {
+      const result = await ブックマークしたPD一覧を取得する({
+        userId: "me",
+        cursor,
+      });
+      collected.push(...result.items.map((item) => item.id));
+      if (!result.nextCursor) break;
+      cursor = result.nextCursor;
+    }
+
+    expect([...collected].sort()).toEqual([...ids].sort());
+  });
+
+  it("渡した PD のうち自分がブックマークしたものだけを返す", async () => {
+    const [bookmarked, notBookmarked, othersBookmark] = await PDを用意する(3);
+    await ブックマーク状態を設定する({
+      pdId: bookmarked,
+      userId: "me",
+      bookmarked: true,
+    });
+    await ブックマーク状態を設定する({
+      pdId: othersBookmark,
+      userId: "someone",
+      bookmarked: true,
+    });
+
+    const result = await Effect.runPromise(
+      PdRepository.pipe(
+        Effect.flatMap((repo) =>
+          repo.ブックマーク済みのPDIDを絞り込む({
+            userId: "me",
+            pdIds: [bookmarked, notBookmarked, othersBookmark],
+          }),
+        ),
+        Effect.provide(レイヤー(ctx.db)),
+      ),
+    );
+
+    expect(result).toEqual([bookmarked]);
   });
 });

@@ -15,6 +15,7 @@ const rawPd = (overrides: {
   likes?: RawLike[];
   replyCount?: number;
   isMyPd?: boolean;
+  isBookmarked?: boolean;
   imageFileName?: string | null;
 }) => ({
   id: overrides.id,
@@ -26,6 +27,7 @@ const rawPd = (overrides: {
   replyCount: overrides.replyCount ?? 0,
   likes: overrides.likes ?? [],
   isMyPd: overrides.isMyPd ?? false,
+  isBookmarked: overrides.isBookmarked ?? false,
 });
 
 const userDetail = (
@@ -96,6 +98,43 @@ export const Populated: Story = {
     expect(
       canvas.getByRole("link", { name: "2件の返信を見る" }),
     ).toHaveAttribute("href", "/pd/pd-1");
+  },
+};
+
+export const BookmarkPd: Story = {
+  name: "しおりを押すと PD が保存済みになる",
+  parameters: {
+    msw: {
+      handlers: [
+        http.get("*/pd", () =>
+          HttpResponse.json({
+            items: [
+              rawPd({
+                id: "pd-1",
+                content: "あとで読み返したいメモ",
+                userId: "u-taro",
+              }),
+            ],
+          }),
+        ),
+        http.put("*/pd/bookmark", () =>
+          HttpResponse.json({ message: "ブックマーク状態を更新しました" }),
+        ),
+        userDetailsHandler(),
+      ],
+    },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const saveButton = await canvas.findByRole("button", { name: "保存する" });
+
+    await userEvent.click(saveButton);
+
+    await waitFor(() =>
+      expect(
+        canvas.getByRole("button", { name: "保存を外す" }),
+      ).toHaveAttribute("aria-pressed", "true"),
+    );
   },
 };
 
