@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Providers } from "@/lib/providers";
 import "./globals.css";
-import { lineSeedJp } from "@/lib/fonts";
+import { lineSeedJp, outfit } from "@/lib/fonts";
 
 export const metadata: Metadata = {
   title: "PDCXA",
@@ -14,7 +14,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html className={lineSeedJp.className} lang="ja" suppressHydrationWarning>
+    <html
+      className={`${outfit.variable} ${lineSeedJp.variable}`}
+      lang="ja"
+      suppressHydrationWarning
+    >
       <head>
         <meta name="darkreader-lock" />
       </head>
