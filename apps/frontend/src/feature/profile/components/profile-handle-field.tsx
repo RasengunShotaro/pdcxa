@@ -2,7 +2,7 @@
 
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { Check, Loader2 } from "lucide-react";
-import { useState } from "react";
+import { useId, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -67,11 +67,15 @@ export function ProfileHandleField({
     defaultValues,
   });
 
+  const { isDirty, isSubmitting } = form.formState;
+  const saveHintId = useId();
+
   const handleSubmit = async (value: HandleFormSchema) => {
     setFeedback({ status: "idle" });
     try {
       const result = await onSubmit(value.handle);
       if (result.ok) {
+        form.reset(value);
         setFeedback({ status: "success" });
         toast.success("IDを変更しました");
         return;
@@ -97,7 +101,7 @@ export function ProfileHandleField({
           name="handle"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>ID</FormLabel>
+              <FormLabel className="sr-only">ID</FormLabel>
               <div className="relative">
                 <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
                   @
@@ -135,13 +139,18 @@ export function ProfileHandleField({
           {feedback.status === "cancelled" && CANCELLED_MESSAGE}
         </p>
 
-        <div className="flex justify-end">
-          <Button disabled={form.formState.isSubmitting} type="submit">
-            {form.formState.isSubmitting ? (
-              <Loader2 className="animate-spin" />
-            ) : (
-              <Check />
-            )}
+        <div className="flex flex-col items-end gap-2 sm:flex-row sm:items-center sm:justify-end sm:gap-3">
+          {isDirty ? null : (
+            <p className="text-sm text-muted-foreground" id={saveHintId}>
+              IDを変更すると保存できます
+            </p>
+          )}
+          <Button
+            aria-describedby={isDirty ? undefined : saveHintId}
+            disabled={!isDirty || isSubmitting}
+            type="submit"
+          >
+            {isSubmitting ? <Loader2 className="animate-spin" /> : <Check />}
             保存する
           </Button>
         </div>

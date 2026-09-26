@@ -11,10 +11,10 @@ export function StatsSkeleton() {
         <Skeleton className="h-4 w-48" />
       </div>
 
-      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-4">
         {kpis.map((key) => (
           <Card key={key}>
-            <CardContent className="space-y-2 p-5">
+            <CardContent className="space-y-2 p-4 sm:p-5">
               <Skeleton className="h-4 w-20" />
               <Skeleton className="h-8 w-16" />
               <Skeleton className="h-4 w-24" />

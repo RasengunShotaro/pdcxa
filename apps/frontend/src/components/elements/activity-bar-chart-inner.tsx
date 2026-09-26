@@ -64,13 +64,12 @@ export default function ActivityBarChartInner({
             cursor={{ fillOpacity: 0.1 }}
           />
           <ChartLegend content={<ChartLegendContent />} />
-          {series.map((s, index) => (
+          {series.map((s) => (
             <Bar
               dataKey={s.key}
               fill={s.color}
               key={s.key}
-              radius={index === series.length - 1 ? [4, 4, 0, 0] : [0, 0, 0, 0]}
-              stackId="activity"
+              radius={[4, 4, 0, 0]}
             />
           ))}
         </BarChart>

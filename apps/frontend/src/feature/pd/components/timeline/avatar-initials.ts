@@ -1,9 +1,8 @@
-export const avatarInitials = (fullName: string): string => {
-  const parts = fullName.trim().split(/\s+/).filter(Boolean);
-  if (parts.length === 0) return "?";
-  return parts
-    .slice(0, 2)
-    .map((part) => [...part][0])
-    .join("")
-    .toUpperCase();
+const graphemeSegmenter = new Intl.Segmenter("ja", { granularity: "grapheme" });
+
+export const avatarInitials = (displayName: string): string => {
+  const trimmed = displayName.trim();
+  const [first] = graphemeSegmenter.segment(trimmed);
+  if (!first) return "?";
+  return first.segment.toUpperCase();
 };

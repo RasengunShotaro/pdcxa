@@ -1,6 +1,6 @@
 "use client";
 
-import { Card, CardContent, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useCurrentUser } from "@/lib/auth/use-current-user";
@@ -35,70 +35,67 @@ export function ProfileView() {
   const { updateProfileHandle } = useUpdateProfileHandle();
 
   return (
-    <div className="mx-auto w-full max-w-2xl">
-      <Card>
-        <CardContent className="space-y-4">
-          <CardTitle className="text-xl font-bold">プロフィール設定</CardTitle>
-          <Separator />
-          {user ? (
-            <>
-              <section
-                aria-labelledby="profile-picture-heading"
-                className="space-y-4"
+    <Card>
+      <CardContent className="space-y-4">
+        <h1 className="sr-only">プロフィール</h1>
+        {user ? (
+          <>
+            <section
+              aria-labelledby="profile-picture-heading"
+              className="space-y-4"
+            >
+              <h2
+                className="text-base font-medium text-muted-foreground"
+                id="profile-picture-heading"
               >
-                <h2
-                  className="text-base font-medium text-muted-foreground"
-                  id="profile-picture-heading"
-                >
-                  プロフィール画像
-                </h2>
-                <ProfilePictureField
-                  displayName={user.fullName ?? "ユーザー"}
-                  imageUrl={user.imageUrl}
-                  onUpload={updateProfilePicture}
-                />
-              </section>
-              <Separator />
-              <section
-                aria-labelledby="profile-name-heading"
-                className="space-y-4"
+                プロフィール画像
+              </h2>
+              <ProfilePictureField
+                displayName={user.fullName ?? "ユーザー"}
+                imageUrl={user.imageUrl}
+                onUpload={updateProfilePicture}
+              />
+            </section>
+            <Separator />
+            <section
+              aria-labelledby="profile-name-heading"
+              className="space-y-4"
+            >
+              <h2
+                className="text-base font-medium text-muted-foreground"
+                id="profile-name-heading"
               >
-                <h2
-                  className="text-base font-medium text-muted-foreground"
-                  id="profile-name-heading"
-                >
-                  表示名
-                </h2>
-                <ProfileNameField
-                  defaultValues={{
-                    firstName: user.firstName ?? "",
-                    lastName: user.lastName ?? "",
-                  }}
-                  onSubmit={updateProfileName}
-                />
-              </section>
-              <Separator />
-              <section
-                aria-labelledby="profile-handle-heading"
-                className="space-y-4"
+                表示名
+              </h2>
+              <ProfileNameField
+                defaultValues={{
+                  firstName: user.firstName ?? "",
+                  lastName: user.lastName ?? "",
+                }}
+                onSubmit={updateProfileName}
+              />
+            </section>
+            <Separator />
+            <section
+              aria-labelledby="profile-handle-heading"
+              className="space-y-4"
+            >
+              <h2
+                className="text-base font-medium text-muted-foreground"
+                id="profile-handle-heading"
               >
-                <h2
-                  className="text-base font-medium text-muted-foreground"
-                  id="profile-handle-heading"
-                >
-                  ID
-                </h2>
-                <ProfileHandleField
-                  defaultValues={{ handle: user.userName ?? "" }}
-                  onSubmit={updateProfileHandle}
-                />
-              </section>
-            </>
-          ) : (
-            <ProfileSkeleton />
-          )}
-        </CardContent>
-      </Card>
-    </div>
+                ID
+              </h2>
+              <ProfileHandleField
+                defaultValues={{ handle: user.userName ?? "" }}
+                onSubmit={updateProfileHandle}
+              />
+            </section>
+          </>
+        ) : (
+          <ProfileSkeleton />
+        )}
+      </CardContent>
+    </Card>
   );
 }

@@ -83,7 +83,7 @@ const meta: Meta<typeof StatsView> = {
   component: StatsView,
   decorators: [
     (Story) => (
-      <div className="w-[760px] max-w-full p-4">
+      <div className="w-full max-w-2xl p-4">
         <Story />
       </div>
     ),
@@ -109,7 +109,7 @@ export const Populated: Story = {
     await waitFor(() =>
       expect(canvas.getByText("PD投稿数")).toBeInTheDocument(),
     );
-    expect(canvas.getByText("1日平均 2.9件")).toBeInTheDocument();
+    expect(canvas.getByText("1日平均2.9件")).toBeInTheDocument();
     expect(canvas.getByText("太郎 山田")).toBeInTheDocument();
     expect(canvas.getByText("@taro")).toBeInTheDocument();
   },

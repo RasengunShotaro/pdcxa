@@ -17,13 +17,13 @@ describe("表示名フォームのバリデーション", () => {
     expect(result.success).toBe(true);
   });
 
-  it("空のFirst Nameを拒否する", () => {
+  it("空の表示名（前）を拒否する", () => {
     const result = v.safeParse(nameFormSchema, aName({ firstName: "" }));
 
     expect(result.success).toBe(false);
   });
 
-  it("11文字以上のLast Nameを拒否する", () => {
+  it("11文字以上の表示名（後）を拒否する", () => {
     const result = v.safeParse(
       nameFormSchema,
       aName({ lastName: "a".repeat(11) }),
