@@ -39,7 +39,7 @@ export function PdCard({ pd, showAuthor = true }: PdCardProps) {
           />
         ) : null}
 
-        <p className="whitespace-pre-wrap break-words text-base text-body">
+        <p className="whitespace-pre-wrap break-words text-sm text-body">
           <Linkify>{pd.content}</Linkify>
         </p>
 
@@ -61,10 +61,10 @@ export function PdCard({ pd, showAuthor = true }: PdCardProps) {
           <div className="w-1/4">
             <Link
               aria-label={`${pd.replyCount}件の返信を見る`}
-              className="inline-flex h-9 items-center gap-1.5 rounded-full px-2 text-sm tabular-nums transition-[color,background-color,translate] hover:-translate-y-px hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
+              className="inline-flex h-9 items-center gap-1.5 rounded-full px-2 text-xs tabular-nums transition-[color,background-color,translate] hover:-translate-y-px hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
               href={detailHref}
             >
-              <MessageSquare aria-hidden="true" className="size-5" />
+              <MessageSquare aria-hidden="true" className="size-4.5" />
               {pd.replyCount}
             </Link>
           </div>

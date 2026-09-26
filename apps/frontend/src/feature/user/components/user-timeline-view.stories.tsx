@@ -81,7 +81,7 @@ export const Populated: Story = {
       expect(canvas.getByText("太郎のメモです")).toBeInTheDocument(),
     );
     const heading = canvas.getByRole("heading", {
-      level: 1,
+      level: 2,
       name: "太郎 山田",
     });
     expect(heading.parentElement).toHaveTextContent("@taro");
@@ -98,7 +98,10 @@ export const AuthorNotRepeated: Story = {
       expect(canvas.getByText("太郎のメモです")).toBeInTheDocument(),
     );
 
-    expect(canvas.getAllByText("太郎 山田")).toHaveLength(1);
+    const posts = canvas.getAllByRole("article");
+    expect(
+      posts.filter((post) => post.textContent?.includes("太郎 山田")),
+    ).toHaveLength(0);
   },
 };
 

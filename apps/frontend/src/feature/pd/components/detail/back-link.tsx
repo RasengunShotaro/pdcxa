@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronLeft } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { MouseEvent } from "react";
@@ -25,12 +25,13 @@ export function BackLink() {
 
   return (
     <Link
-      className="inline-flex items-center gap-1 rounded-sm text-sm text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
+      aria-label="戻る"
+      className="-ml-2 inline-flex size-10 shrink-0 items-center justify-center rounded-full text-foreground transition-[background-color,translate] hover:-translate-y-px hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
       href="/"
       onClick={handleClick}
+      title="戻る"
     >
-      <ChevronLeft aria-hidden="true" className="size-4" />
-      戻る
+      <ArrowLeft aria-hidden="true" className="size-5" />
     </Link>
   );
 }

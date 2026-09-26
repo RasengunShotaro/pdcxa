@@ -53,12 +53,8 @@ export function PdDetailView({ pdId }: PdDetailViewProps) {
   } = useRePd(pdId);
 
   return (
-    <FeedLayout aside={<WeeklyActivityCard />}>
+    <FeedLayout aside={<WeeklyActivityCard />} leading={<BackLink />}>
       <div className="pb-[calc(5.5rem+env(safe-area-inset-bottom))]">
-        <div className="flex h-12 items-center border-b border-border px-4">
-          <BackLink />
-        </div>
-
         {isPdPending ? <ListSkeleton count={1} variant="rows" /> : null}
 
         {!isPdPending && isPdError ? (

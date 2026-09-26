@@ -5,36 +5,51 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
-import { Separator } from "@/components/ui/separator";
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
   SidebarHeader,
   SidebarInset,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
   SidebarProvider,
   SidebarRail,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { AppSidebarNav } from "./app-sidebar-nav";
-import { ColorModeSwitcher } from "./color-mode-switcher";
 import { pageLabelForPath } from "./nav-items";
 import { NavUser } from "./nav-user";
-import { NotificationBell } from "./notification-bell";
+import { SidebarCollapseButton } from "./sidebar-collapse-button";
 
 interface AppShellProps {
   children: ReactNode;
   userFooter?: ReactNode;
-  headerActions?: ReactNode;
+}
+
+function BrandLink() {
+  return (
+    <Link
+      className="flex items-center gap-2 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
+      href="/"
+    >
+      <span className="flex size-7 shrink-0 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+        <MessagesSquare aria-hidden="true" className="size-4" />
+      </span>
+      <Image
+        alt="PDCXA"
+        className="h-5 w-auto group-data-[collapsible=icon]:hidden dark:invert"
+        height={20}
+        priority
+        src="/pdcxa.svg"
+        unoptimized
+        width={74}
+      />
+    </Link>
+  );
 }
 
 export function AppShell({
   children,
   userFooter = <NavUser />,
-  headerActions = <NotificationBell />,
 }: AppShellProps) {
   const pathname = usePathname();
   const currentLabel = pageLabelForPath(pathname);
@@ -49,64 +64,37 @@ export function AppShell({
       </a>
 
       <Sidebar collapsible="icon">
-        <SidebarHeader>
-          <SidebarMenu>
-            <SidebarMenuItem>
-              <SidebarMenuButton
-                asChild
-                className="transition-[color,background-color,transform] hover:-translate-y-px active:translate-y-0"
-                size="lg"
-                tooltip="PDCXA"
-              >
-                <Link href="/">
-                  <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-                    <MessagesSquare className="size-4" />
-                  </div>
-                  <Image
-                    alt="PDCXA"
-                    className="h-7 w-auto group-data-[collapsible=icon]:hidden dark:invert"
-                    height={28}
-                    priority
-                    src="/pdcxa.svg"
-                    unoptimized
-                    width={103}
-                  />
-                </Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          </SidebarMenu>
+        <SidebarHeader className="h-16 justify-center border-b border-sidebar-border px-4 group-data-[collapsible=icon]:px-2">
+          <BrandLink />
         </SidebarHeader>
         <SidebarContent>
           <AppSidebarNav />
         </SidebarContent>
-        <SidebarFooter>{userFooter}</SidebarFooter>
+        <SidebarFooter className="border-t border-sidebar-border">
+          <SidebarCollapseButton />
+          {userFooter}
+        </SidebarFooter>
         <SidebarRail />
       </Sidebar>
 
       <SidebarInset className="min-w-0">
-        <header className="flex h-16 shrink-0 items-center gap-2 border-b bg-background transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
-          <div className="flex items-center gap-2 px-4">
-            <SidebarTrigger className="-ml-1 max-md:size-11" />
-            {currentLabel ? (
-              <>
-                <Separator
-                  className="mx-1 data-[orientation=vertical]:h-6"
-                  orientation="vertical"
-                />
-                <span className="text-base font-medium">{currentLabel}</span>
-              </>
-            ) : null}
-          </div>
-          <div className="ml-auto flex items-center gap-1 px-4">
-            {headerActions}
-            <ColorModeSwitcher />
-          </div>
+        <header className="flex h-14 shrink-0 items-center gap-2 border-b bg-background px-2 md:hidden">
+          <SidebarTrigger className="size-11" />
+          <BrandLink />
         </header>
         <div className="flex flex-1 flex-col overflow-y-auto bg-bg-page">
           <div
-            className="mx-auto flex w-full max-w-[65.125rem] flex-1 flex-col px-4 py-6 has-[[data-feed-layout]]:max-w-none"
+            className="mx-auto flex w-full max-w-[65.125rem] flex-1 flex-col px-4 py-6 has-[[data-narrow-page]]:max-w-[37.5rem] has-[[data-feed-layout]]:max-w-none has-[[data-feed-layout]]:[&>[data-page-title]]:hidden"
             id="main-content"
           >
+            {currentLabel ? (
+              <h1
+                className="mb-6 text-2xl font-bold text-foreground"
+                data-page-title=""
+              >
+                {currentLabel}
+              </h1>
+            ) : null}
             {children}
           </div>
         </div>

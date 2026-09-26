@@ -3,6 +3,7 @@
 import { MessageSquare } from "lucide-react";
 import { EmptyState } from "@/components/elements/empty-state";
 import { FeedLayout } from "@/components/elements/feed-layout";
+import { BackLink } from "@/feature/pd/components/detail/back-link";
 import { WeeklyActivityCard } from "@/feature/pd/components/stats/weekly-activity-card";
 import { PdTimeline } from "@/feature/pd/components/timeline/pd-timeline";
 import { usePd } from "@/hooks/use-pd";
@@ -17,7 +18,11 @@ export function UserTimelineView({ userName }: UserTimelineViewProps) {
   const detail = pds[0]?.userDetail;
 
   return (
-    <FeedLayout aside={<WeeklyActivityCard />}>
+    <FeedLayout
+      aside={<WeeklyActivityCard />}
+      leading={<BackLink />}
+      title={detail?.userFullName || `@${userName}`}
+    >
       <div className="pb-6">
         <UserTimelineHeader
           imageUrl={detail?.imageUrl}

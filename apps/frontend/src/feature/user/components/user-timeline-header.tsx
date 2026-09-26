@@ -25,9 +25,9 @@ export function UserTimelineHeader({
         </AvatarFallback>
       </Avatar>
       <div className="min-w-0">
-        <h1 className="truncate text-xl font-bold text-foreground">
+        <h2 className="truncate text-xl font-bold text-foreground">
           {heading}
-        </h1>
+        </h2>
         {hasFullName ? (
           <p className="truncate text-sm text-muted-foreground">@{userName}</p>
         ) : null}

@@ -72,7 +72,7 @@ export function WeeklyActivityCard() {
                 key={item.label}
               >
                 <dt className="text-xs text-muted-foreground">{item.label}</dt>
-                <dd className="text-lg font-bold text-foreground tabular-nums">
+                <dd className="text-base leading-normal font-bold text-foreground tabular-nums">
                   {item.value}
                 </dd>
               </div>

@@ -24,7 +24,7 @@ export function RePdCard({ rePd }: RePdCardProps) {
           userName={rePd.userDetail.userName}
         />
 
-        <p className="whitespace-pre-wrap break-words text-base text-body">
+        <p className="whitespace-pre-wrap break-words text-sm text-body">
           <Linkify>{rePd.content}</Linkify>
         </p>
 

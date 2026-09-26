@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
-import { expect, within } from "storybook/test";
+import { expect, userEvent, within } from "storybook/test";
 import { AppShell } from "./app-shell";
 
 const meta: Meta<typeof AppShell> = {
@@ -10,7 +10,6 @@ const meta: Meta<typeof AppShell> = {
   },
   args: {
     userFooter: <span>U</span>,
-    headerActions: <span>🔔</span>,
     children: <p>メインコンテンツ</p>,
   },
 };
@@ -57,6 +56,38 @@ export const LongUnbreakableContent: Story = {
     const root = canvasElement.ownerDocument.documentElement;
 
     await expect(root.scrollWidth).toBeLessThanOrEqual(root.clientWidth);
+  },
+};
+
+export const CollapseSidebar: Story = {
+  name: "サイドバー下部のボタンでサイドバーを閉じられる",
+  parameters: {
+    nextjs: { navigation: { pathname: "/" } },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    await userEvent.click(
+      canvas.getByRole("button", { name: "サイドバーを閉じる" }),
+    );
+
+    await expect(
+      canvas.getByRole("button", { name: "サイドバーを開く" }),
+    ).toHaveAttribute("aria-expanded", "false");
+  },
+};
+
+export const PageTitle: Story = {
+  name: "列を持たない画面ではページ名を見出しとして出す",
+  parameters: {
+    nextjs: { navigation: { pathname: "/stats" } },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    await expect(
+      canvas.getByRole("heading", { level: 1, name: "統計" }),
+    ).toBeVisible();
   },
 };
 

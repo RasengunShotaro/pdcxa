@@ -31,7 +31,7 @@ export function PdLikeButton({ pd }: PdLikeButtonProps) {
       <Heart
         aria-hidden="true"
         className={cn(
-          "size-5 transition-transform duration-150 motion-reduce:transition-none",
+          "size-4.5 transition-transform duration-150 motion-reduce:transition-none",
           isLiked
             ? "scale-110 fill-primary text-primary"
             : "scale-100 text-muted-foreground",
