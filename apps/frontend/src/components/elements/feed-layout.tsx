@@ -21,25 +21,26 @@ export function FeedLayout({
   const heading = title ?? pageLabelForPath(pathname);
 
   return (
-    <div className="-mx-4 -my-6 flex flex-1" data-feed-layout="">
-      <div className="flex w-full min-w-0 md:ml-[max(1.5rem,calc(50vw-18.75rem-var(--sidebar-width)))] md:group-has-data-[collapsible=icon]/sidebar-wrapper:ml-[max(1.5rem,calc(50vw-18.75rem-var(--sidebar-width-icon)))]">
-        <div className="flex w-full min-w-0 max-w-[37.5rem] flex-col bg-card sm:border-x sm:border-border max-md:mx-auto">
-          {heading ? (
-            <header className="sticky top-0 z-10 flex h-16 shrink-0 items-center gap-2 border-b border-border bg-card/90 px-4 backdrop-blur">
-              {leading}
-              <h1 className="truncate text-[1.25rem] leading-snug font-bold text-foreground">
-                {heading}
-              </h1>
-            </header>
-          ) : null}
-          {children}
-        </div>
-        {aside ? (
-          <aside className="hidden w-[20.25rem] shrink-0 pt-6 pl-6 xl:block">
-            <div className="sticky top-6">{aside}</div>
-          </aside>
+    <div
+      className="-mx-4 -my-6 grid flex-1 grid-cols-[1fr_minmax(0,37.5rem)_1fr]"
+      data-feed-layout=""
+    >
+      <div className="col-start-2 flex min-w-0 flex-col bg-card sm:border-x sm:border-border">
+        {heading ? (
+          <header className="sticky top-0 z-10 flex h-16 shrink-0 items-center gap-2 border-b border-border bg-card/90 px-4 backdrop-blur">
+            {leading}
+            <h1 className="truncate text-[1.25rem] leading-[1.4] font-bold text-foreground">
+              {heading}
+            </h1>
+          </header>
         ) : null}
+        {children}
       </div>
+      {aside ? (
+        <aside className="col-start-3 hidden w-[20.175rem] px-6 pt-6 box-content xl:block">
+          <div className="sticky top-6 flex flex-col gap-4">{aside}</div>
+        </aside>
+      ) : null}
     </div>
   );
 }

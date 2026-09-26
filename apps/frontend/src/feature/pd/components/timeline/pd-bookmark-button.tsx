@@ -17,7 +17,7 @@ export function PdBookmarkButton({ pd }: PdBookmarkButtonProps) {
     <Button
       aria-label={isBookmarked ? "保存を外す" : "保存する"}
       aria-pressed={isBookmarked}
-      className="size-9 rounded-full text-muted-foreground transition-[color,background-color,translate] hover:-translate-y-px hover:bg-accent"
+      className="size-8 rounded-full text-muted-foreground transition-[color,background-color,translate] hover:-translate-y-px hover:bg-accent"
       onClick={toggleBookmark}
       size="icon"
       title={isBookmarked ? "保存を外す" : "保存する"}

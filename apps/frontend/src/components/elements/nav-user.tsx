@@ -48,27 +48,28 @@ export function NavUser() {
   );
 
   return (
-    <SidebarMenu>
+    <SidebarMenu className="group-data-[collapsible=icon]:items-center">
       <SidebarMenuItem>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
-              className="h-14 data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+              aria-label={displayName}
+              className="h-auto gap-3 rounded-lg p-2 data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground group-data-[collapsible=icon]:size-12! group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:p-2!"
               size="lg"
               tooltip={displayName}
             >
               {avatar}
-              <span className="flex min-w-0 flex-1 flex-col text-left leading-snug">
-                <span className="truncate text-sm font-medium text-foreground">
+              <span className="flex min-w-0 flex-1 flex-col text-left group-data-[collapsible=icon]:hidden">
+                <span className="truncate text-sm leading-[1.4] font-medium text-foreground">
                   {displayName}
                 </span>
                 {user?.userName ? (
-                  <span className="truncate text-xs text-muted-foreground">
+                  <span className="truncate text-xs leading-[1.4] text-slate-500 dark:text-slate-400">
                     @{user.userName}
                   </span>
                 ) : null}
               </span>
-              <ChevronsUpDown className="ml-auto size-4 text-muted-foreground" />
+              <ChevronsUpDown className="ml-auto size-4 text-muted-foreground group-data-[collapsible=icon]:hidden" />
             </SidebarMenuButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent

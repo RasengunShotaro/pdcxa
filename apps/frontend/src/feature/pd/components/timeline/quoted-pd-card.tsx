@@ -17,7 +17,7 @@ export function QuotedPdCard({ quotedPd, linked = true }: QuotedPdCardProps) {
   const { userDetail } = quotedPd;
   const body = (
     <>
-      <span className="flex min-w-0 items-center gap-1.5 text-sm leading-normal">
+      <span className="flex min-w-0 items-center gap-1.5 text-xs leading-[1.4]">
         <Avatar className="size-5 shrink-0">
           <AvatarImage alt="" src={userDetail.imageUrl} />
           <AvatarFallback className="bg-primary-50 text-[10px] font-medium text-primary-600 dark:bg-primary/15 dark:text-primary-300">
@@ -51,7 +51,7 @@ export function QuotedPdCard({ quotedPd, linked = true }: QuotedPdCardProps) {
   );
 
   const className =
-    "mt-1 flex flex-col gap-1 rounded-lg border border-border px-3 py-2.5";
+    "mt-1.5 flex flex-col gap-1 rounded-lg border border-border px-3 py-2.5";
 
   if (!linked) {
     return <div className={className}>{body}</div>;

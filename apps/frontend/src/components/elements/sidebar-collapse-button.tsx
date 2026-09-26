@@ -19,11 +19,12 @@ export function SidebarCollapseButton() {
   const label = expanded ? "サイドバーを閉じる" : "サイドバーを開く";
 
   return (
-    <SidebarMenu>
+    <SidebarMenu className="group-data-[collapsible=icon]:items-center">
       <SidebarMenuItem>
         <SidebarMenuButton
           aria-expanded={expanded}
-          className="h-10 text-sm font-medium text-muted-foreground transition-[color,background-color,translate] hover:-translate-y-px hover:bg-muted active:translate-y-0 [&>svg]:size-5"
+          aria-label={label}
+          className="h-10 gap-3 rounded-lg px-4 text-sm font-medium text-slate-500 transition-[color,background-color,translate] hover:-translate-y-px hover:bg-muted active:translate-y-0 group-data-[collapsible=icon]:size-10! group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:p-0! dark:text-slate-400 [&>svg]:size-5"
           onClick={toggleSidebar}
           tooltip={label}
           type="button"
@@ -33,7 +34,7 @@ export function SidebarCollapseButton() {
           ) : (
             <PanelLeftOpen aria-hidden="true" />
           )}
-          <span>{label}</span>
+          <span className="group-data-[collapsible=icon]:hidden">{label}</span>
         </SidebarMenuButton>
       </SidebarMenuItem>
     </SidebarMenu>

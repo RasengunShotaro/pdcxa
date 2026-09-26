@@ -22,7 +22,7 @@ export function PdQuoteButton({ pd }: PdQuoteButtonProps) {
             ? `引用する（${pd.quoteCount}件の引用）`
             : "引用する"
         }
-        className="h-9 gap-1.5 rounded-full px-2 text-xs text-muted-foreground tabular-nums transition-[color,background-color,translate] hover:-translate-y-px hover:bg-accent hover:text-foreground"
+        className="h-8 gap-1.5 rounded-full px-2 text-xs text-muted-foreground tabular-nums transition-[color,background-color,translate] hover:-translate-y-px hover:bg-accent hover:text-foreground"
         onClick={() => setOpen(true)}
         title="引用する"
         type="button"

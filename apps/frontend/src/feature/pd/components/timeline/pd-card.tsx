@@ -29,7 +29,7 @@ export function PdCard({ pd, showAuthor = true }: PdCardProps) {
         />
       ) : null}
 
-      <div className="min-w-0 flex-1 space-y-1">
+      <div className="flex min-w-0 flex-1 flex-col gap-0.5">
         {showAuthor ? (
           <PdAuthorLine
             createdAt={pd.createdAt}
@@ -50,7 +50,7 @@ export function PdCard({ pd, showAuthor = true }: PdCardProps) {
 
         {pd.quotedPd ? <QuotedPdCard quotedPd={pd.quotedPd} /> : null}
 
-        <div className="-ml-2 flex items-center text-muted-foreground">
+        <div className="-ml-2 mt-0.5 flex items-center text-muted-foreground">
           {showAuthor ? null : (
             <PdTimestamp
               className="mr-2 ml-2"
@@ -61,7 +61,7 @@ export function PdCard({ pd, showAuthor = true }: PdCardProps) {
           <div className="w-1/4">
             <Link
               aria-label={`${pd.replyCount}件の返信を見る`}
-              className="inline-flex h-9 items-center gap-1.5 rounded-full px-2 text-xs tabular-nums transition-[color,background-color,translate] hover:-translate-y-px hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
+              className="inline-flex h-8 items-center gap-1.5 rounded-full px-2 text-xs tabular-nums transition-[color,background-color,translate] hover:-translate-y-px hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
               href={detailHref}
             >
               <MessageSquare aria-hidden="true" className="size-4.5" />
@@ -80,7 +80,7 @@ export function PdCard({ pd, showAuthor = true }: PdCardProps) {
               />
             </div>
           </div>
-          <div className="mr-1 ml-auto">
+          <div className="ml-auto">
             <PdBookmarkButton pd={pd} />
           </div>
         </div>
