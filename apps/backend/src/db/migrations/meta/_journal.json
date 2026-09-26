@@ -19,15 +19,8 @@
     {
       "idx": 2,
       "version": "7",
-      "when": 1790415487678,
-      "tag": "0002_wide_queen_noir",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1790415959570,
-      "tag": "0003_lowly_ultimo",
+      "when": 1790417823326,
+      "tag": "0002_lonely_silver_surfer",
       "breakpoints": true
     }
   ]

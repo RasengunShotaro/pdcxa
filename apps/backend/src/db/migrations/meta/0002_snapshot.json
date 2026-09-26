@@ -1,5 +1,5 @@
 {
-  "id": "15e266c8-67b2-4666-91ea-ffe47d002aa4",
+  "id": "b9f3f0ce-36e8-426f-8840-6f635a7d9f82",
   "prevId": "c7cc66d2-2d8c-4d74-99d3-d72ba719868d",
   "version": "7",
   "dialect": "postgresql",
@@ -53,7 +53,35 @@
           "default": "now()"
         }
       },
-      "indexes": {},
+      "indexes": {
+        "pd_bookmarks_user_id_saved_idx": {
+          "name": "pd_bookmarks_user_id_saved_idx",
+          "columns": [
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "created_at",
+              "isExpression": false,
+              "asc": false,
+              "nulls": "first"
+            },
+            {
+              "expression": "target_pd_id",
+              "isExpression": false,
+              "asc": false,
+              "nulls": "first"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
       "foreignKeys": {
         "pd_bookmarks_target_pd_id_pds_id_fk": {
           "name": "pd_bookmarks_target_pd_id_pds_id_fk",
@@ -156,10 +184,42 @@
           "type": "varchar",
           "primaryKey": false,
           "notNull": false
+        },
+        "quoted_pd_id": {
+          "name": "quoted_pd_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
         }
       },
-      "indexes": {},
-      "foreignKeys": {},
+      "indexes": {
+        "pds_quoted_pd_id_idx": {
+          "name": "pds_quoted_pd_id_idx",
+          "columns": [
+            {
+              "expression": "quoted_pd_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "pds_quoted_pd_id_pds_id_fk": {
+          "name": "pds_quoted_pd_id_pds_id_fk",
+          "tableFrom": "pds",
+          "tableTo": "pds",
+          "columnsFrom": ["quoted_pd_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "policies": {},

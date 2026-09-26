@@ -66,9 +66,15 @@ export const mutatePdBookmarkSchema = z
 
 export const fetchBookmarkedPdQuerySchema = z.object({
   cursor: z
-    .uuid()
+    .string()
+    .regex(
+      /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}(\.\d{1,6})?\|[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/,
+    )
     .optional()
-    .openapi({ example: "0190d2c0-0000-7000-8000-000000000002" }),
+    .openapi({
+      example:
+        "2026-07-01 00:00:00.123456|0190d2c0-0000-7000-8000-000000000002",
+    }),
 });
 
 export const fetchPdImageParamSchema = z.object({

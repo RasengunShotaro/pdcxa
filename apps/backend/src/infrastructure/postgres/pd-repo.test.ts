@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import { Effect, Layer } from "effect";
 import { uuidv7 } from "uuidv7";
 import {
@@ -457,6 +457,57 @@ describe("PdRepositoryLive", () => {
     }
 
     expect([...collected].sort()).toEqual([...ids].sort());
+  });
+
+  it("続き位置にした PD の保存が外されても、残りの保存した PD を続きとして取得できる", async () => {
+    const total = 25;
+    const ids = await PDを用意する(total);
+    const base = new Date("2026-07-01T00:00:00.000Z");
+    await ctx.db.insert(pdBookmarks).values(
+      ids.map((targetPdId, index) => ({
+        targetPdId,
+        userId: "me",
+        createdAt: new Date(base.getTime() + index * 1000),
+      })),
+    );
+    const firstPage = await ブックマークしたPD一覧を取得する({ userId: "me" });
+    const lastOfFirstPage = firstPage.items[firstPage.items.length - 1].id;
+    await ブックマーク状態を設定する({
+      pdId: lastOfFirstPage,
+      userId: "me",
+      bookmarked: false,
+    });
+
+    const secondPage = await ブックマークしたPD一覧を取得する({
+      userId: "me",
+      cursor: firstPage.nextCursor,
+    });
+
+    expect(secondPage.items).toHaveLength(total - firstPage.items.length);
+  });
+
+  it("マイクロ秒まで違う保存日時でも、続きの取得で重複も欠落もしない", async () => {
+    const ids = await PDを用意する(21);
+    await ctx.db.execute(
+      sql.raw(
+        `INSERT INTO pd_bookmarks (target_pd_id, user_id, created_at) VALUES ${ids
+          .map(
+            (id, index) =>
+              `('${id}', 'me', '2026-07-01 00:00:00.${String(index * 7 + 1).padStart(6, "0")}')`,
+          )
+          .join(", ")}`,
+      ),
+    );
+
+    const firstPage = await ブックマークしたPD一覧を取得する({ userId: "me" });
+    const secondPage = await ブックマークしたPD一覧を取得する({
+      userId: "me",
+      cursor: firstPage.nextCursor,
+    });
+
+    expect(
+      [...firstPage.items, ...secondPage.items].map((item) => item.id).sort(),
+    ).toEqual([...ids].sort());
   });
 
   it("渡した PD のうち自分がブックマークしたものだけを返す", async () => {

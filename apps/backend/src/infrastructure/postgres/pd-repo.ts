@@ -5,6 +5,10 @@ import { pdBookmarks, pdLikes, pds as pdsSchema, rePds } from "#/db/schema";
 import { PdRepository } from "#/domain/pd/repository";
 import type { RawPd } from "#/domain/pd/types";
 import { toDatabaseError } from "../error-mapping";
+import {
+  保存一覧の続き位置を作る,
+  保存一覧の続き位置を読む,
+} from "./bookmark-cursor";
 import { DbClient } from "./client";
 
 const PAGE_SIZE = 20;
@@ -242,33 +246,49 @@ export const PdRepositoryLive = Layer.effect(
       ブックマークしたPD一覧を取得する: ({ userId, cursor }) =>
         Effect.tryPromise({
           try: async () => {
-            const conditions = cursor
+            const 続き位置 = 保存一覧の続き位置を読む(cursor);
+            const conditions = 続き位置
               ? [
-                  sql`(${pdBookmarks.createdAt}, ${pdBookmarks.targetPdId}) < (SELECT created_at, target_pd_id FROM pd_bookmarks WHERE user_id = ${userId} AND target_pd_id = ${cursor})`,
+                  sql`(${pdBookmarks.createdAt}, ${pdBookmarks.targetPdId}) < (${続き位置.savedAt}::timestamp, ${続き位置.pdId}::uuid)`,
                 ]
               : [];
 
-            const results = await createBaseQuery()
-              .innerJoin(
-                pdBookmarks,
-                and(
-                  eq(pdBookmarks.targetPdId, pdsSchema.id),
-                  eq(pdBookmarks.userId, userId),
-                ),
-              )
-              .where(and(...conditions))
+            const bookmarks = await db
+              .select({
+                pdId: pdBookmarks.targetPdId,
+                savedAt: sql<string>`${pdBookmarks.createdAt}::text`,
+              })
+              .from(pdBookmarks)
+              .where(and(eq(pdBookmarks.userId, userId), ...conditions))
               .orderBy(
                 desc(pdBookmarks.createdAt),
                 desc(pdBookmarks.targetPdId),
               )
               .limit(PAGE_SIZE + 1);
 
-            const hasNextPage = results.length > PAGE_SIZE;
-            const items = formatRows(results.slice(0, PAGE_SIZE));
+            const page = bookmarks.slice(0, PAGE_SIZE);
+            const lastBookmark = page[page.length - 1];
+            const rows =
+              page.length === 0
+                ? []
+                : await createBaseQuery().where(
+                    inArray(
+                      pdsSchema.id,
+                      page.map((bookmark) => bookmark.pdId),
+                    ),
+                  );
+            const rowById = new Map(rows.map((row) => [row.id, row]));
+            const orderedRows = page.flatMap((bookmark) => {
+              const row = rowById.get(bookmark.pdId);
+              return row ? [row] : [];
+            });
 
             return {
-              items,
-              nextCursor: hasNextPage ? items[items.length - 1]?.id : undefined,
+              items: formatRows(orderedRows),
+              nextCursor:
+                bookmarks.length > PAGE_SIZE && lastBookmark
+                  ? 保存一覧の続き位置を作る(lastBookmark)
+                  : undefined,
             };
           },
           catch: toDatabaseError,

@@ -1,5 +1,6 @@
 import {
   type AnyPgColumn,
+  index,
   pgTable,
   primaryKey,
   timestamp,
@@ -8,14 +9,18 @@ import {
 } from "drizzle-orm/pg-core";
 import { uuidv7 } from "uuidv7";
 
-export const pds = pgTable("pds", {
-  id: uuid("id").primaryKey().$defaultFn(uuidv7),
-  content: varchar("content").notNull(),
-  createdAt: timestamp("created_at").notNull(),
-  userId: varchar("user_id").notNull(),
-  imageFileName: varchar("image_file_name"),
-  quotedPdId: uuid("quoted_pd_id").references((): AnyPgColumn => pds.id),
-});
+export const pds = pgTable(
+  "pds",
+  {
+    id: uuid("id").primaryKey().$defaultFn(uuidv7),
+    content: varchar("content").notNull(),
+    createdAt: timestamp("created_at").notNull(),
+    userId: varchar("user_id").notNull(),
+    imageFileName: varchar("image_file_name"),
+    quotedPdId: uuid("quoted_pd_id").references((): AnyPgColumn => pds.id),
+  },
+  (table) => [index("pds_quoted_pd_id_idx").on(table.quotedPdId)],
+);
 
 export const rePds = pgTable("repds", {
   id: uuid("id").primaryKey().$defaultFn(uuidv7),
@@ -60,7 +65,14 @@ export const pdBookmarks = pgTable(
     userId: varchar("user_id").notNull(),
     createdAt: timestamp("created_at").notNull().defaultNow(),
   },
-  (table) => [primaryKey({ columns: [table.targetPdId, table.userId] })],
+  (table) => [
+    primaryKey({ columns: [table.targetPdId, table.userId] }),
+    index("pd_bookmarks_user_id_saved_idx").on(
+      table.userId,
+      table.createdAt.desc().nullsFirst(),
+      table.targetPdId.desc().nullsFirst(),
+    ),
+  ],
 );
 
 export const notificationSeen = pgTable("notification_seen", {
