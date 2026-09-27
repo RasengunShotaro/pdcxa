@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
+import { Separator } from "@/components/ui/separator";
 import {
   Sidebar,
   SidebarContent,
@@ -79,9 +80,21 @@ export function AppShell({
         </Sidebar>
 
         <SidebarInset className="min-w-0 bg-bg-page">
-          <header className="flex h-14 shrink-0 items-center gap-2 border-b bg-background px-2 md:hidden">
+          <header className="sticky top-0 z-20 flex h-14 shrink-0 items-center gap-2 border-b bg-background px-2 md:hidden">
             <SidebarTrigger className="size-11" />
-            <BrandLink />
+            {currentLabel ? (
+              <>
+                <Separator
+                  className="mx-1 data-[orientation=vertical]:h-6"
+                  orientation="vertical"
+                />
+                <h1 className="truncate text-base font-medium text-foreground">
+                  {currentLabel}
+                </h1>
+              </>
+            ) : (
+              <BrandLink />
+            )}
           </header>
           <div className="flex flex-1 flex-col overflow-y-auto bg-bg-page">
             <div
@@ -90,7 +103,7 @@ export function AppShell({
             >
               {currentLabel ? (
                 <h1
-                  className="mb-6 text-2xl font-bold text-foreground"
+                  className="mb-6 hidden text-2xl font-bold text-foreground md:block"
                   data-page-title=""
                 >
                   {currentLabel}

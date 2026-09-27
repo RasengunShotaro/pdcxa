@@ -27,7 +27,7 @@ export function FeedLayout({
     >
       <div className="col-start-2 flex min-w-0 flex-col bg-card sm:border-x sm:border-border">
         {heading ? (
-          <header className="sticky top-0 z-10 flex h-16 shrink-0 items-center gap-2 border-b border-border bg-card/90 px-4 backdrop-blur">
+          <header className="sticky top-0 z-10 hidden h-16 shrink-0 items-center md:flex gap-2 border-b border-border bg-card/90 px-4 backdrop-blur">
             {leading}
             <h1 className="truncate text-[1.25rem] leading-[1.4] font-bold text-foreground">
               {heading}
