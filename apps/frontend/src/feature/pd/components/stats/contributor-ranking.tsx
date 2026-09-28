@@ -11,6 +11,7 @@ import {
 import { avatarInitials } from "@/feature/pd/components/timeline/avatar-initials";
 import type { PdWeeklyStatsDetailed } from "@/feature/pd/types/stats";
 import { 投稿者の表示名 } from "@/feature/pd/utils/stats-derive";
+import { ランキング行の出現を遅らせる秒数を決める } from "./ranking-reveal";
 
 type RankingRow = PdWeeklyStatsDetailed["rankings"][number];
 
@@ -95,7 +96,16 @@ export function ContributorRanking({ rankings }: ContributorRankingProps) {
         ) : (
           <ol className="-mx-2 space-y-1">
             {rankings.map((row, index) => (
-              <li key={row.userId}>
+              <li
+                className="animate-in fade-in slide-in-from-top-1 duration-200 ease-out fill-mode-backwards"
+                key={row.userId}
+                style={{
+                  animationDelay: `${ランキング行の出現を遅らせる秒数を決める({
+                    index,
+                    count: rankings.length,
+                  })}s`,
+                }}
+              >
                 <ContributorRow rank={index + 1} row={row} />
               </li>
             ))}

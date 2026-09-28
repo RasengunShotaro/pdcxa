@@ -1,5 +1,6 @@
 "use client";
 
+import { useReducedMotionConfig } from "motion/react";
 import {
   Bar,
   BarChart,
@@ -31,6 +32,8 @@ export interface ActivityBarChartProps {
   height?: number;
 }
 
+const BAR_GROW_DURATION_MS = 300;
+
 export default function ActivityBarChartInner({
   data,
   series,
@@ -38,6 +41,7 @@ export default function ActivityBarChartInner({
   ariaLabel,
   height = 280,
 }: ActivityBarChartProps) {
+  const shouldReduceMotion = useReducedMotionConfig();
   const config: ChartConfig = Object.fromEntries(
     series.map((s) => [s.key, { label: s.label, color: s.color }]),
   );
@@ -66,8 +70,11 @@ export default function ActivityBarChartInner({
           <ChartLegend content={<ChartLegendContent />} />
           {series.map((s) => (
             <Bar
+              animationDuration={BAR_GROW_DURATION_MS}
+              animationEasing="ease-out"
               dataKey={s.key}
               fill={s.color}
+              isAnimationActive={!shouldReduceMotion}
               key={s.key}
               radius={[4, 4, 0, 0]}
             />
