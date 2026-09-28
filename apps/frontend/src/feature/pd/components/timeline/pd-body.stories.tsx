@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
-import { expect, userEvent, within } from "storybook/test";
+import { expect, userEvent, waitFor, within } from "storybook/test";
 import { PdBody } from "./pd-body";
 
 const MANY_LINES = Array.from({ length: 40 }, (_, i) => `${i + 1}行目`).join(
@@ -39,8 +39,8 @@ export const LongBody: Story = {
     await expect(
       canvas.queryByRole("button", { name: "続きを読む" }),
     ).not.toBeInTheDocument();
+    await waitFor(() => expect(body.scrollHeight).toBe(body.clientHeight));
     await expect(body.clientHeight).toBeGreaterThan(clampedHeight);
-    await expect(body.scrollHeight).toBe(body.clientHeight);
   },
 };
 
