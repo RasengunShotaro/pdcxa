@@ -1,5 +1,6 @@
 "use client";
 
+import { AnimatedCount } from "@/components/elements/animated-count";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -24,7 +25,7 @@ export function PdLikersPopover({
   if (likeCount === 0) {
     return (
       <span className="inline-flex h-8 items-center pr-2 pl-1 text-xs text-muted-foreground tabular-nums">
-        0
+        <AnimatedCount value={0} />
       </span>
     );
   }
@@ -38,7 +39,7 @@ export function PdLikersPopover({
           type="button"
           variant="ghost"
         >
-          {件数を短く表す(likeCount)}
+          <AnimatedCount format={件数を短く表す} value={likeCount} />
         </Button>
       </PopoverTrigger>
       <PopoverContent align="start" className="w-64 p-2">
