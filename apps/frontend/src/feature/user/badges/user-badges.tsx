@@ -47,9 +47,13 @@ function UserBadge({ badgeId }: UserBadgeProps) {
   return (
     <Tooltip>
       <TooltipTrigger asChild>
-        <Badge className={className} tabIndex={0} variant="glow">
+        <Badge
+          className={cn("max-md:px-1", className)}
+          tabIndex={0}
+          variant="glow"
+        >
           <Icon aria-hidden="true" className={cn("size-3.5", iconClassName)} />
-          {label}
+          <span className="sr-only md:not-sr-only">{label}</span>
         </Badge>
       </TooltipTrigger>
       <TooltipContent>{description}</TooltipContent>
