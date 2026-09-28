@@ -5,6 +5,8 @@ import { FeedSectionHeading } from "@/components/elements/feed-layout";
 import { ListError } from "@/components/elements/list-error";
 import { ListSkeleton } from "@/components/elements/list-skeleton";
 import type { RePd } from "@/feature/pd/types";
+import { InsertedListItem } from "../timeline/inserted-list-item";
+import { useInsertedRowIds } from "../timeline/use-inserted-row-ids";
 import { RePdCard } from "./repd-card";
 
 interface RePdSectionProps {
@@ -22,6 +24,12 @@ export function RePdSection({
   error,
   onRetry,
 }: RePdSectionProps) {
+  const insertedIds = useInsertedRowIds({
+    ids: rePds.map((rePd) => rePd.id),
+    isReady: !isPending && !isError,
+    position: "anywhere",
+  });
+
   return (
     <section>
       <FeedSectionHeading>
@@ -48,9 +56,12 @@ export function RePdSection({
       {!isPending && !isError && rePds.length > 0 ? (
         <ul className="divide-y divide-border border-b border-border">
           {rePds.map((rePd) => (
-            <li key={rePd.id}>
+            <InsertedListItem
+              isInserted={insertedIds.has(rePd.id)}
+              key={rePd.id}
+            >
               <RePdCard rePd={rePd} />
-            </li>
+            </InsertedListItem>
           ))}
         </ul>
       ) : null}

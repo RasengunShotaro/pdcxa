@@ -6,8 +6,10 @@ import { ListError } from "@/components/elements/list-error";
 import { ListSkeleton } from "@/components/elements/list-skeleton";
 import { Button } from "@/components/ui/button";
 import type { Pd } from "@/feature/pd/types";
+import { InsertedListItem } from "./inserted-list-item";
 import { PdCard } from "./pd-card";
 import { useInfiniteScroll } from "./use-infinite-scroll";
+import { useInsertedRowIds } from "./use-inserted-row-ids";
 
 interface PdListProps {
   pds: Pd[];
@@ -39,6 +41,11 @@ export function PdList({
     isFetchingNextPage,
     onLoadMore,
   });
+  const insertedIds = useInsertedRowIds({
+    ids: pds.map((pd) => pd.id),
+    isReady: !isPending,
+    position: "head",
+  });
 
   if (isPending && pds.length === 0) {
     return <ListSkeleton count={4} variant="rows" />;
@@ -60,9 +67,9 @@ export function PdList({
     <div>
       <ul className="divide-y divide-border border-b border-border">
         {pds.map((pd) => (
-          <li key={pd.id}>
+          <InsertedListItem isInserted={insertedIds.has(pd.id)} key={pd.id}>
             <PdCard pd={pd} showAuthor={showAuthor} />
-          </li>
+          </InsertedListItem>
         ))}
       </ul>
 
