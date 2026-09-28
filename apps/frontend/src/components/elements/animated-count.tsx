@@ -1,6 +1,6 @@
 "use client";
 
-import { AnimatePresence, motion, type Variants } from "motion/react";
+import { AnimatePresence, m, type Variants } from "motion/react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import {
@@ -66,7 +66,7 @@ export function AnimatedCount({
         initial={false}
         mode="popLayout"
       >
-        <motion.span
+        <m.span
           animate="center"
           custom={tracked.direction}
           exit="exit"
@@ -76,7 +76,7 @@ export function AnimatedCount({
           variants={variants}
         >
           {label}
-        </motion.span>
+        </m.span>
       </AnimatePresence>
     </span>
   );
