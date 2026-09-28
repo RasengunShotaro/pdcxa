@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { ThemeProvider } from "next-themes";
 import type { ReactNode } from "react";
+import { MotionProvider } from "@/components/elements/motion-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { AUTH_MOCKING } from "@/lib/auth/mocking";
 import { MswProvider } from "@/lib/msw-provider";
@@ -48,7 +49,9 @@ export function Providers({ children }: { children: ReactNode }) {
         themes={["light", "dark", "legacy"]}
       >
         <Toaster position="top-center" />
-        <MswProvider>{children}</MswProvider>
+        <MotionProvider>
+          <MswProvider>{children}</MswProvider>
+        </MotionProvider>
       </ThemeProvider>
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>

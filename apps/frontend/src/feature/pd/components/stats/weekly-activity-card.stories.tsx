@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { HttpResponse, http } from "msw";
-import { expect, within } from "storybook/test";
+import { expect, waitFor, within } from "storybook/test";
 import { WeeklyActivityCard } from "./weekly-activity-card";
 
 const range = { start: "2026-06-19", end: "2026-06-25" };
@@ -90,9 +90,11 @@ export const Populated: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
 
-    const pdCount = await canvas.findByText("20");
+    const pdLabel = await canvas.findByText("PD", { selector: "dt" });
 
-    expect(pdCount.previousElementSibling).toHaveTextContent("PD");
+    await waitFor(() =>
+      expect(pdLabel.nextElementSibling).toHaveTextContent(/^20$/),
+    );
   },
 };
 

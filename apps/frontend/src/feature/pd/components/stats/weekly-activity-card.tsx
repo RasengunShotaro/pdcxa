@@ -3,6 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
+import { CountUpNumber } from "@/components/elements/count-up-number";
 import { ListError } from "@/components/elements/list-error";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -77,7 +78,7 @@ export function WeeklyActivityCard() {
                   className="truncate text-base leading-normal font-bold text-foreground tabular-nums"
                   title={item.value.toLocaleString("ja-JP")}
                 >
-                  {件数を短く表す(item.value)}
+                  <CountUpNumber format={件数を短く表す} value={item.value} />
                 </dd>
               </div>
             ))}

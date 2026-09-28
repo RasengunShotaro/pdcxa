@@ -1,6 +1,7 @@
 "use client";
 
 import { Heart } from "lucide-react";
+import { PopOnActivate } from "@/components/elements/pop-on-activate";
 import { Button } from "@/components/ui/button";
 import type { Pd } from "@/feature/pd/types";
 import { usePdLike } from "@/hooks/use-pd-like";
@@ -28,15 +29,15 @@ export function PdLikeButton({ pd }: PdLikeButtonProps) {
       type="button"
       variant="ghost"
     >
-      <Heart
-        aria-hidden="true"
-        className={cn(
-          "size-4.5 transition-transform duration-150 motion-reduce:transition-none",
-          isLiked
-            ? "scale-110 fill-primary text-primary"
-            : "scale-100 text-muted-foreground",
-        )}
-      />
+      <PopOnActivate active={isLiked} ripple>
+        <Heart
+          aria-hidden="true"
+          className={cn(
+            "size-4.5 transition-[color,fill] duration-150",
+            isLiked ? "fill-primary text-primary" : "text-muted-foreground",
+          )}
+        />
+      </PopOnActivate>
     </Button>
   );
 }

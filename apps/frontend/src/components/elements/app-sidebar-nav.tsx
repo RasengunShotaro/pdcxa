@@ -15,6 +15,7 @@ import {
   PRIMARY_NAV_ITEMS,
   SECONDARY_NAV_ITEMS,
 } from "./nav-items";
+import { UnreadBadge } from "./unread-badge";
 
 interface NavItemListProps {
   items: readonly NavItem[];
@@ -50,11 +51,8 @@ function NavItemList({
                 <Icon aria-hidden="true" />
                 <span className="inline-flex items-center gap-1.5 group-data-[collapsible=icon]:hidden">
                   {label}
-                  {showUnread ? (
-                    <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-red-50 px-1.5 text-xs font-medium text-red-600 dark:bg-red-500/15 dark:text-red-300">
-                      {unreadCount > 99 ? "99+" : unreadCount}
-                      <span className="sr-only">件の未読の通知</span>
-                    </span>
+                  {href === "/notifications" ? (
+                    <UnreadBadge count={unreadCount} />
                   ) : null}
                 </span>
                 {showUnread ? (

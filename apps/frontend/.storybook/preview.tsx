@@ -3,6 +3,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { setupWorker } from "msw/browser";
 import { mswLoader } from "msw-storybook-addon/csf3";
 import { useState } from "react";
+import { MotionProvider } from "../src/components/elements/motion-provider";
 import { Toaster } from "../src/components/ui/sonner";
 import "../src/app/globals.css";
 
@@ -27,7 +28,9 @@ const preview: Preview = {
       );
       return (
         <QueryClientProvider client={queryClient}>
-          <Story />
+          <MotionProvider>
+            <Story />
+          </MotionProvider>
           <Toaster position="top-center" />
         </QueryClientProvider>
       );
