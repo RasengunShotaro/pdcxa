@@ -1,6 +1,10 @@
 "use client";
 
-import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  infiniteQueryOptions,
+  useInfiniteQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import {
   fetchNotifications,
   getFetchNotificationsQueryKey,
@@ -8,6 +12,18 @@ import {
   useMarkNotificationsSeen,
 } from "@/schema/api";
 import type { NotificationItem } from "../types";
+
+export const notificationsQueryOptions = () =>
+  infiniteQueryOptions({
+    queryKey: [...getFetchNotificationsQueryKey(), "infinite"],
+    queryFn: ({ pageParam, signal }) =>
+      fetchNotifications(pageParam ? { cursor: pageParam } : undefined, {
+        signal,
+      }),
+    initialPageParam: undefined as string | undefined,
+    getNextPageParam: (lastPage) => lastPage.data.nextCursor,
+    refetchOnMount: true,
+  });
 
 export const useNotifications = () => {
   const queryClient = useQueryClient();
@@ -21,16 +37,7 @@ export const useNotifications = () => {
     isError,
     error,
     refetch,
-  } = useInfiniteQuery({
-    queryKey: [...getFetchNotificationsQueryKey(), "infinite"],
-    queryFn: ({ pageParam, signal }) =>
-      fetchNotifications(pageParam ? { cursor: pageParam } : undefined, {
-        signal,
-      }),
-    initialPageParam: undefined as string | undefined,
-    getNextPageParam: (lastPage) => lastPage.data.nextCursor,
-    refetchOnMount: true,
-  });
+  } = useInfiniteQuery(notificationsQueryOptions());
 
   const { mutate: markSeen } = useMarkNotificationsSeen({
     mutation: {

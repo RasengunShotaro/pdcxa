@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  infiniteQueryOptions,
   useInfiniteQuery,
   useMutation,
   useQueryClient,
@@ -11,13 +12,23 @@ import { pdDetailQueryKey, pdRootQueryKey } from "@/feature/pd/api/query-keys";
 import type { Pd } from "@/feature/pd/types";
 import { legacyDelay } from "@/utils/legacy-delay";
 
-export const usePd = ({
-  pdId,
-  userName,
-}: {
+interface PdQueryTarget {
   pdId?: string;
   userName?: string;
-}) => {
+}
+
+export const pdListQueryOptions = ({ pdId, userName }: PdQueryTarget) =>
+  infiniteQueryOptions({
+    queryKey: pdDetailQueryKey({ pdId, userName }),
+    queryFn: async ({ pageParam: cursor }) => {
+      await legacyDelay();
+      return await fetchDetailedPds({ pdId, userName, cursor });
+    },
+    initialPageParam: undefined as string | undefined,
+    getNextPageParam: (lastPage) => lastPage.nextCursor,
+  });
+
+export const usePd = ({ pdId, userName }: PdQueryTarget) => {
   const queryClient = useQueryClient();
 
   const {
@@ -29,15 +40,7 @@ export const usePd = ({
     isError,
     error,
     refetch,
-  } = useInfiniteQuery({
-    queryKey: pdDetailQueryKey({ pdId, userName }),
-    queryFn: async ({ pageParam: cursor }) => {
-      await legacyDelay();
-      return await fetchDetailedPds({ pdId, userName, cursor });
-    },
-    initialPageParam: undefined as string | undefined,
-    getNextPageParam: (lastPage) => lastPage.nextCursor,
-  });
+  } = useInfiniteQuery(pdListQueryOptions({ pdId, userName }));
 
   const {
     mutateAsync: createNewPd,

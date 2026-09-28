@@ -2,9 +2,8 @@
 
 import { Loader2 } from "lucide-react";
 import { useEffect } from "react";
-import { FeedLayout } from "@/components/elements/feed-layout";
+import { FeedTabPanel } from "@/components/elements/feed-tab-panel";
 import { Button } from "@/components/ui/button";
-import { WeeklyActivityCard } from "@/feature/pd/components/stats/weekly-activity-card";
 import { useInfiniteScroll } from "@/feature/pd/components/timeline/use-infinite-scroll";
 import { useNotifications } from "../hooks/use-notifications";
 import { NotificationListBody } from "./notification-list-body";
@@ -33,7 +32,7 @@ export function NotificationsView() {
   });
 
   return (
-    <FeedLayout aside={<WeeklyActivityCard />}>
+    <FeedTabPanel>
       <NotificationListBody
         error={error}
         isError={isError}
@@ -63,6 +62,6 @@ export function NotificationsView() {
           ) : null}
         </>
       ) : null}
-    </FeedLayout>
+    </FeedTabPanel>
   );
 }
