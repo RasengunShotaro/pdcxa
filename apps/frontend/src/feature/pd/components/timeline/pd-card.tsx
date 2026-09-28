@@ -1,5 +1,6 @@
 import { MessageSquare } from "lucide-react";
 import Link from "next/link";
+import { ViewTransition } from "react";
 import type { Pd } from "@/feature/pd/types";
 import { 件数を短く表す } from "@/feature/pd/utils/format-count";
 import { PdAuthorLine, PdAvatar } from "./pd-author";
@@ -10,6 +11,7 @@ import { PdLikeButton } from "./pd-like-button";
 import { PdLikersPopover } from "./pd-likers-popover";
 import { PdQuoteButton } from "./pd-quote-button";
 import { PdTimestamp } from "./pd-timestamp";
+import { pd詳細へ移る共有要素の名前 } from "./pd-view-transition-name";
 import { QuotedPdCard } from "./quoted-pd-card";
 
 interface PdCardProps {
@@ -18,7 +20,19 @@ interface PdCardProps {
   clampBody?: boolean;
 }
 
-export function PdCard({
+export function PdCard(props: PdCardProps) {
+  return (
+    <ViewTransition
+      default="none"
+      name={pd詳細へ移る共有要素の名前(props.pd.id)}
+      share="pd-morph"
+    >
+      <PdCardContent {...props} />
+    </ViewTransition>
+  );
+}
+
+function PdCardContent({
   pd,
   showAuthor = true,
   clampBody = true,

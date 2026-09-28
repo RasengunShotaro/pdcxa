@@ -1,6 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
-import { HttpResponse, http } from "msw";
+import { useQueryClient } from "@tanstack/react-query";
+import { delay, HttpResponse, http } from "msw";
+import { type ReactNode, useState } from "react";
 import { expect, userEvent, waitFor, within } from "storybook/test";
+import { pdDetailQueryKey } from "@/feature/pd/api/query-keys";
+import type { Pd } from "@/feature/pd/types";
 import { PdDetailView } from "./pd-detail-view";
 
 interface RawLike {
@@ -113,6 +117,73 @@ export const Populated: Story = {
     );
     await waitFor(() =>
       expect(canvas.getByText("とても参考になりました")).toBeInTheDocument(),
+    );
+    expect(
+      canvas.getByRole("button", { name: "RePDする" }),
+    ).toBeInTheDocument();
+  },
+};
+
+const listedPd: Pd = {
+  id: "pd-1",
+  content: "一覧で読み込み済みの投稿",
+  createdAt: "2026-06-24T00:00:00.000Z",
+  userId: "u-taro",
+  likeCount: 0,
+  replyCount: 0,
+  likes: [],
+  isMyPd: false,
+  isBookmarked: false,
+  imageFileName: null,
+  quotedPd: null,
+  quoteCount: 0,
+  userDetail: {
+    id: "u-taro",
+    userFullName: "山田 太郎",
+    imageUrl: "",
+    userName: "taro",
+  },
+  likeUserNames: [],
+  likeUsers: [],
+};
+
+function SeedHomeTimeline({ children }: { children: ReactNode }) {
+  const queryClient = useQueryClient();
+  useState(() =>
+    queryClient.setQueryData(pdDetailQueryKey(), {
+      pages: [{ items: [listedPd], nextCursor: undefined }],
+      pageParams: [undefined],
+    }),
+  );
+  return <>{children}</>;
+}
+
+export const ShowsListedPdWhileFetching: Story = {
+  name: "一覧で読み込み済みの PD は取得を待たずに表示する",
+  decorators: [
+    (Story) => (
+      <SeedHomeTimeline>
+        <Story />
+      </SeedHomeTimeline>
+    ),
+  ],
+  parameters: {
+    msw: {
+      handlers: [
+        userDetailsHandler(),
+        http.get("*/pd", async () => {
+          await delay("infinite");
+          return HttpResponse.json({ items: [], nextCursor: null });
+        }),
+        repdsOk(),
+      ],
+    },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    await waitFor(() =>
+      expect(canvas.getByText("一覧で読み込み済みの投稿")).toBeInTheDocument(),
     );
     expect(
       canvas.getByRole("button", { name: "RePDする" }),

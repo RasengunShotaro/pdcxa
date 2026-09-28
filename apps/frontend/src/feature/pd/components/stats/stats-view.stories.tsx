@@ -118,6 +118,28 @@ export const Populated: Story = {
   },
 };
 
+export const CountsUpToTotals: Story = {
+  name: "KPIの数値は数え上げた後に今週の合計で止まる",
+  parameters: Populated.parameters,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const kpiValue = async (label: string) =>
+      (await canvas.findByText(label, { selector: "p" })).nextElementSibling;
+
+    const pd = await kpiValue("PD投稿数");
+    const rePd = await kpiValue("RePD数");
+    const like = await kpiValue("いいね");
+    const author = await kpiValue("アクティブ投稿者");
+
+    await waitFor(() => {
+      expect(pd).toHaveTextContent(/^20$/);
+      expect(rePd).toHaveTextContent(/^8$/);
+      expect(like).toHaveTextContent(/^30$/);
+      expect(author).toHaveTextContent(/^3$/);
+    });
+  },
+};
+
 export const QuietWeek: Story = {
   name: "静かな週でもゼロ除算せずランキングは空状態を出す",
   parameters: {

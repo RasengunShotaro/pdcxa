@@ -1,6 +1,7 @@
 "use client";
 
 import { Bookmark } from "lucide-react";
+import { PopOnActivate } from "@/components/elements/pop-on-activate";
 import { Button } from "@/components/ui/button";
 import type { Pd } from "@/feature/pd/types";
 import { usePdBookmark } from "@/hooks/use-pd-bookmark";
@@ -24,14 +25,16 @@ export function PdBookmarkButton({ pd }: PdBookmarkButtonProps) {
       type="button"
       variant="ghost"
     >
-      <Bookmark
-        aria-hidden="true"
-        className={cn(
-          "size-4.5",
-          isBookmarked &&
-            "fill-primary-600 text-primary-600 dark:fill-primary-300 dark:text-primary-300",
-        )}
-      />
+      <PopOnActivate active={isBookmarked}>
+        <Bookmark
+          aria-hidden="true"
+          className={cn(
+            "size-4.5 transition-[color,fill] duration-150",
+            isBookmarked &&
+              "fill-primary-600 text-primary-600 dark:fill-primary-300 dark:text-primary-300",
+          )}
+        />
+      </PopOnActivate>
     </Button>
   );
 }

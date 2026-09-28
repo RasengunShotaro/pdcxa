@@ -235,3 +235,27 @@
     scroll-behavior: auto !important;
   }
 }
+
+::view-transition-group(root) {
+  animation-duration: 200ms;
+}
+
+::view-transition-group(.pd-morph) {
+  animation-duration: 300ms;
+  animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+::view-transition-old(.pd-morph),
+::view-transition-new(.pd-morph) {
+  height: 100%;
+  object-fit: none;
+  object-position: top left;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}

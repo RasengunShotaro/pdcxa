@@ -14,8 +14,10 @@ import { useRePd } from "@/hooks/use-repd";
 import { ComposeFab } from "../composer/compose-fab";
 import { PdCard } from "../timeline/pd-card";
 import { BackLink } from "./back-link";
+import { PD詳細の表示状態を決める } from "./pd-detail-state";
 import { RePdComposer } from "./repd-composer";
 import { RePdSection } from "./repd-section";
+import { useListedPd } from "./use-listed-pd";
 
 interface PdDetailViewProps {
   pdId: string;
@@ -40,7 +42,13 @@ export function PdDetailView({ pdId }: PdDetailViewProps) {
     error: pdError,
     refetch: refetchPd,
   } = usePd({ pdId });
-  const pd = pds[0];
+  const listedPd = useListedPd(pdId);
+  const state = PD詳細の表示状態を決める({
+    fetchedPd: pds[0],
+    cachedPd: listedPd,
+    isPending: isPdPending,
+    isError: isPdError,
+  });
 
   const {
     rePds,
@@ -55,25 +63,27 @@ export function PdDetailView({ pdId }: PdDetailViewProps) {
   return (
     <FeedLayout aside={<WeeklyActivityCard />} leading={<BackLink />}>
       <div className="pb-[calc(5.5rem+env(safe-area-inset-bottom))]">
-        {isPdPending ? <ListSkeleton count={1} variant="rows" /> : null}
+        {state.kind === "loading" ? (
+          <ListSkeleton count={1} variant="rows" />
+        ) : null}
 
-        {!isPdPending && isPdError ? (
+        {state.kind === "error" ? (
           <div className="p-4">
             <ListError error={pdError} onRetry={() => refetchPd()} />
           </div>
         ) : null}
 
-        {!isPdPending && !isPdError && !pd ? (
+        {state.kind === "notFound" ? (
           <EmptyState
             action={backToHome}
             message="指定されたPDが見つかりませんでした"
           />
         ) : null}
 
-        {!isPdPending && !isPdError && pd ? (
+        {state.kind === "ready" ? (
           <>
             <div className="border-b border-border">
-              <PdCard clampBody={false} pd={pd} />
+              <PdCard clampBody={false} pd={state.pd} />
             </div>
 
             <RePdSection
