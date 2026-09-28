@@ -1,6 +1,6 @@
 "use client";
 
-import { MotionConfig } from "motion/react";
+import { domMax, LazyMotion, MotionConfig } from "motion/react";
 import type { ReactNode } from "react";
 
 interface MotionProviderProps {
@@ -8,5 +8,9 @@ interface MotionProviderProps {
 }
 
 export function MotionProvider({ children }: MotionProviderProps) {
-  return <MotionConfig reducedMotion="user">{children}</MotionConfig>;
+  return (
+    <LazyMotion features={domMax}>
+      <MotionConfig reducedMotion="user">{children}</MotionConfig>
+    </LazyMotion>
+  );
 }
