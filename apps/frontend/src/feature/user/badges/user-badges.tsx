@@ -1,0 +1,58 @@
+import { Badge } from "@/components/ui/badge";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { cn } from "@/lib/utils";
+import {
+  BADGE_CATALOG,
+  type BadgeId,
+  表示するバッジに絞る,
+} from "./badge-catalog";
+
+interface UserBadgesProps {
+  badgeIds: readonly string[];
+}
+
+export function UserBadges({ badgeIds }: UserBadgesProps) {
+  const badges = 表示するバッジに絞る(badgeIds);
+
+  if (badges.length === 0) {
+    return null;
+  }
+
+  return (
+    <span className="inline-flex shrink-0 items-center gap-1 self-center">
+      {badges.map((badgeId) => (
+        <UserBadge badgeId={badgeId} key={badgeId} />
+      ))}
+    </span>
+  );
+}
+
+interface UserBadgeProps {
+  badgeId: BadgeId;
+}
+
+function UserBadge({ badgeId }: UserBadgeProps) {
+  const {
+    label,
+    description,
+    icon: Icon,
+    className,
+    iconClassName,
+  } = BADGE_CATALOG[badgeId];
+
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <Badge className={className} tabIndex={0} variant="glow">
+          <Icon aria-hidden="true" className={cn("size-3.5", iconClassName)} />
+          {label}
+        </Badge>
+      </TooltipTrigger>
+      <TooltipContent>{description}</TooltipContent>
+    </Tooltip>
+  );
+}

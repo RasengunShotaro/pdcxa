@@ -35,7 +35,19 @@ describe("RePdを詳細化する", () => {
       userFullName: "花子 鈴木",
       imageUrl: "https://example.com/hanako.jpg",
       userName: "hanako",
+      badges: [],
     });
+  });
+
+  test("投稿者に付いているバッジを RePd の投稿者情報に載せる", () => {
+    const rawRePds = [RawRePdMother({ userId: "user-1" })];
+    const userDetails = [
+      UserDetailMother({ id: "user-1", badges: ["originator"] }),
+    ];
+
+    const [result] = RePdを詳細化する(rawRePds, userDetails);
+
+    expect(result.userDetail.badges).toEqual(["originator"]);
   });
 
   test("いいねユーザーをアバター用 likeUsers と名前 likeUserNames の両方に詳細化する", () => {
@@ -80,6 +92,7 @@ describe("RePdを詳細化する", () => {
       userFullName: "",
       imageUrl: "",
       userName: "",
+      badges: [],
     });
   });
 });

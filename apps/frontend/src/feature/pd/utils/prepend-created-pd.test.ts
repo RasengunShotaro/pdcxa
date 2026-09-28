@@ -31,6 +31,7 @@ const aPd = (id: string): Pd => ({
     userFullName: "投稿者",
     imageUrl: "",
     userName: "author",
+    badges: [],
   },
   likeUserNames: [],
   likeUsers: [],

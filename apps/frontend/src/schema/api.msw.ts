@@ -28,9 +28,9 @@ import type {
 
 export const getCreateInvitationResponseMock = (): CreateInvitation200 => ({"message":"招待を作成しました"})
 
-export const getFetchUserDetailResponseMock = (): FetchUserDetail200 => ({"id":"user_2abc","firstName":"太郎","lastName":"田中","imageUrl":"https://img.clerk.com/example.png","userName":"taro"})
+export const getFetchUserDetailResponseMock = (): FetchUserDetail200 => ({"id":"user_2abc","firstName":"太郎","lastName":"田中","imageUrl":"https://img.clerk.com/example.png","userName":"taro","badges":["originator"]})
 
-export const getFetchUserDetailsResponseMock = (): FetchUserDetails200Item[] => ([{"id":"user_2abc","firstName":"太郎","lastName":"田中","imageUrl":"https://img.clerk.com/example.png","userName":"taro"}])
+export const getFetchUserDetailsResponseMock = (): FetchUserDetails200Item[] => ([{"id":"user_2abc","firstName":"太郎","lastName":"田中","imageUrl":"https://img.clerk.com/example.png","userName":"taro","badges":["originator"]}])
 
 export const getFetchPdsResponseMock = (): FetchPds200 => ({"items":[{"isMyPd":false,"isBookmarked":false,"quoteCount":0,"quotedPd":null,"likeCount":3,"replyCount":1,"likes":[{"userId":"user_2abc"}],"id":"0190d2c0-0000-7000-8000-000000000001","content":"今日学んだことを共有します","createdAt":"2026-06-24T00:00:00.000Z","userId":"user_2abc","imageFileName":null}]})
 

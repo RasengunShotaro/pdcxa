@@ -43,6 +43,7 @@ const userDetails = [
     lastName: "山田",
     userName: "taro",
     imageUrl: "",
+    badges: [],
   },
   {
     id: "u2",
@@ -50,6 +51,7 @@ const userDetails = [
     lastName: "鈴木",
     userName: "hanako",
     imageUrl: "",
+    badges: [],
   },
   {
     id: "u3",
@@ -57,6 +59,7 @@ const userDetails = [
     lastName: null,
     userName: "guest",
     imageUrl: "",
+    badges: [],
   },
 ];
 

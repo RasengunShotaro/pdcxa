@@ -4,6 +4,7 @@ import { ClerkClientPort } from "#/domain/clerk/client";
 import { UserNotFoundError } from "#/domain/errors";
 import { type UserDetail, UserDirectory } from "#/domain/user/service";
 import { toClerkError } from "../error-mapping";
+import { 公開メタデータからバッジを取り出す } from "./user-badges";
 
 const toUserDetail = (user: User): UserDetail => ({
   id: user.id,
@@ -11,6 +12,7 @@ const toUserDetail = (user: User): UserDetail => ({
   lastName: user.lastName,
   imageUrl: user.imageUrl,
   userName: user.username,
+  badges: 公開メタデータからバッジを取り出す(user.publicMetadata),
 });
 
 export const UserDirectoryLive = Layer.succeed(UserDirectory, {

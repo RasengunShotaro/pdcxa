@@ -1,16 +1,19 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { avatarInitials } from "@/feature/pd/components/timeline/avatar-initials";
+import { UserBadges } from "@/feature/user/badges/user-badges";
 
 interface UserTimelineHeaderProps {
   userName: string;
   userFullName?: string;
   imageUrl?: string;
+  badges?: readonly string[];
 }
 
 export function UserTimelineHeader({
   userName,
   userFullName,
   imageUrl,
+  badges = [],
 }: UserTimelineHeaderProps) {
   const hasFullName = userFullName !== undefined && userFullName.length > 0;
   const heading = hasFullName ? userFullName : `@${userName}`;
@@ -25,9 +28,12 @@ export function UserTimelineHeader({
         </AvatarFallback>
       </Avatar>
       <div className="min-w-0">
-        <h2 className="truncate text-xl font-bold text-foreground">
-          {heading}
-        </h2>
+        <div className="flex min-w-0 items-center gap-2">
+          <h2 className="truncate text-xl font-bold text-foreground">
+            {heading}
+          </h2>
+          <UserBadges badgeIds={badges} />
+        </div>
         {hasFullName ? (
           <p className="truncate text-sm text-muted-foreground">@{userName}</p>
         ) : null}

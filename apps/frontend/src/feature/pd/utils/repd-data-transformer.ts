@@ -29,6 +29,7 @@ export const RePdを詳細化する = (
         userFullName,
         imageUrl: userDetail?.imageUrl ?? "",
         userName: userDetail?.userName ?? "",
+        badges: userDetail?.badges ?? [],
       },
       likeUserNames,
       likeUsers,

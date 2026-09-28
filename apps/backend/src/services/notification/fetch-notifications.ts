@@ -13,6 +13,7 @@ const 不明な行為者 = (userId: string): UserDetail => ({
   lastName: null,
   imageUrl: "",
   userName: null,
+  badges: [],
 });
 
 export const 通知に行為者を紐付ける = (

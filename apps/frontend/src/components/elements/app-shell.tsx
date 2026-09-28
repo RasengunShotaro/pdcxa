@@ -32,17 +32,17 @@ function BrandLink() {
       className="flex items-center gap-2 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
       href="/"
     >
-      <span className="flex size-7 shrink-0 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-        <MessagesSquare aria-hidden="true" className="size-4" />
+      <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+        <MessagesSquare aria-hidden="true" className="size-5" />
       </span>
       <Image
         alt="PDCXA"
-        className="h-5 w-auto group-data-[collapsible=icon]:hidden dark:invert"
-        height={20}
+        className="h-7 w-auto group-data-[collapsible=icon]:hidden dark:invert"
+        height={28}
         priority
         src="/pdcxa.svg"
         unoptimized
-        width={74}
+        width={104}
       />
     </Link>
   );

@@ -100,6 +100,15 @@
                       "type": "string",
                       "nullable": true,
                       "example": "taro"
+                    },
+                    "badges": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "example": [
+                        "originator"
+                      ]
                     }
                   },
                   "required": [
@@ -107,14 +116,18 @@
                     "firstName",
                     "lastName",
                     "imageUrl",
-                    "userName"
+                    "userName",
+                    "badges"
                   ],
                   "example": {
                     "id": "user_2abc",
                     "firstName": "太郎",
                     "lastName": "田中",
                     "imageUrl": "https://img.clerk.com/example.png",
-                    "userName": "taro"
+                    "userName": "taro",
+                    "badges": [
+                      "originator"
+                    ]
                   }
                 }
               }
@@ -176,6 +189,15 @@
                         "type": "string",
                         "nullable": true,
                         "example": "taro"
+                      },
+                      "badges": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        },
+                        "example": [
+                          "originator"
+                        ]
                       }
                     },
                     "required": [
@@ -183,14 +205,18 @@
                       "firstName",
                       "lastName",
                       "imageUrl",
-                      "userName"
+                      "userName",
+                      "badges"
                     ],
                     "example": {
                       "id": "user_2abc",
                       "firstName": "太郎",
                       "lastName": "田中",
                       "imageUrl": "https://img.clerk.com/example.png",
-                      "userName": "taro"
+                      "userName": "taro",
+                      "badges": [
+                        "originator"
+                      ]
                     }
                   },
                   "example": [
@@ -199,7 +225,10 @@
                       "firstName": "太郎",
                       "lastName": "田中",
                       "imageUrl": "https://img.clerk.com/example.png",
-                      "userName": "taro"
+                      "userName": "taro",
+                      "badges": [
+                        "originator"
+                      ]
                     }
                   ]
                 }

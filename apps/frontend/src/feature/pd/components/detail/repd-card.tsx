@@ -19,6 +19,7 @@ export function RePdCard({ rePd }: RePdCardProps) {
 
       <div className="flex min-w-0 flex-1 flex-col gap-0.5">
         <PdAuthorLine
+          badges={rePd.userDetail.badges}
           createdAt={rePd.createdAt}
           userFullName={rePd.userDetail.userFullName}
           userName={rePd.userDetail.userName}

@@ -121,6 +121,7 @@ describe("PD一覧を取得する", () => {
         lastName: null,
         imageUrl: "https://img/x.png",
         userName: "taro",
+        badges: [],
       },
       一覧スパイ: (input) => {
         受け取ったuserId = input.userId;

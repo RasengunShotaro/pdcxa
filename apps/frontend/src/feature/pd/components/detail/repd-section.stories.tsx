@@ -20,6 +20,7 @@ const aRePd = (overrides: { id: string; content: string }): RePd => ({
     userFullName: "花子 鈴木",
     imageUrl: "",
     userName: "hanako",
+    badges: [],
   },
   likeUserNames: [],
   likeUsers: [],

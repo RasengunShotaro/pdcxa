@@ -133,6 +133,17 @@ describe("PDを詳細化する（引用）", () => {
 });
 
 describe("PDを詳細化する", () => {
+  test("投稿者に付いているバッジを PD の投稿者情報に載せる", () => {
+    const rawPds = [RawPdMother({ userId: "user-1" })];
+    const userDetails = [
+      UserDetailMother({ id: "user-1", badges: ["originator"] }),
+    ];
+
+    const [result] = PDを詳細化する(rawPds, userDetails);
+
+    expect(result.userDetail.badges).toEqual(["originator"]);
+  });
+
   test("正しく詳細化される", () => {
     const rawPds = [
       RawPdMother({
@@ -175,6 +186,7 @@ describe("PDを詳細化する", () => {
           userFullName: "田中1 太郎1",
           imageUrl: "https://example.com/avatar1.jpg",
           userName: "user1",
+          badges: [],
         },
         likeUserNames: ["田中2 太郎2", "田中3 太郎3"],
         likeUsers: [
@@ -227,6 +239,7 @@ describe("PDを詳細化する", () => {
           userFullName: "",
           imageUrl: "",
           userName: "",
+          badges: [],
         },
         likeUserNames: [""],
         likeUsers: [
@@ -285,6 +298,7 @@ describe("PDを詳細化する", () => {
           userFullName: "次郎",
           imageUrl: userDetails[1].imageUrl || "",
           userName: "user2",
+          badges: [],
         },
         likeUserNames: ["三郎", ""],
         likeUsers: [
@@ -349,6 +363,7 @@ describe("PDを詳細化する", () => {
           userFullName: "田中1 太郎1",
           imageUrl: userDetails[0].imageUrl || "",
           userName: "user1",
+          badges: [],
         },
         likeUserNames: [],
         likeUsers: [],
@@ -360,6 +375,7 @@ describe("PDを詳細化する", () => {
           userFullName: "田中2 太郎2",
           imageUrl: userDetails[1].imageUrl || "",
           userName: "user2",
+          badges: [],
         },
         likeUserNames: ["田中3 太郎3"],
         likeUsers: [
@@ -408,6 +424,7 @@ describe("PDを詳細化する", () => {
           userFullName: "田中1 太郎1",
           imageUrl: userDetails[0].imageUrl || "",
           userName: "user1",
+          badges: [],
         },
         likeUserNames: [],
         likeUsers: [],
@@ -419,6 +436,7 @@ describe("PDを詳細化する", () => {
           userFullName: "田中1 太郎1",
           imageUrl: userDetails[0].imageUrl || "",
           userName: "user1",
+          badges: [],
         },
         likeUserNames: ["田中2 太郎2"],
         likeUsers: [

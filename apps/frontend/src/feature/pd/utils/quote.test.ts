@@ -21,6 +21,7 @@ const aPd = (overrides: Partial<Pd> = {}): Pd => ({
     userFullName: "佐藤 陽",
     imageUrl: "https://example.com/hinata.png",
     userName: "hinata",
+    badges: [],
   },
   likeUserNames: [],
   likeUsers: [],

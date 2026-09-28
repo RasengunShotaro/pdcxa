@@ -142,6 +142,7 @@ const listedPd: Pd = {
     userFullName: "山田 太郎",
     imageUrl: "",
     userName: "taro",
+    badges: [],
   },
   likeUserNames: [],
   likeUsers: [],

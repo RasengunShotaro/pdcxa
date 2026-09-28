@@ -22,6 +22,7 @@ const userDetailExample = {
   lastName: "田中" as string | null,
   imageUrl: "https://img.clerk.com/example.png",
   userName: "taro" as string | null,
+  badges: ["originator"],
 };
 
 export const userDetailSchema = z
@@ -40,6 +41,7 @@ export const userDetailSchema = z
       .string()
       .nullable()
       .openapi({ example: userDetailExample.userName }),
+    badges: z.array(z.string()).openapi({ example: userDetailExample.badges }),
   })
   .openapi({ example: userDetailExample });
 

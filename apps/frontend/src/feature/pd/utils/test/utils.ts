@@ -8,6 +8,7 @@ export const UserDetailMother = (
   lastName: "太郎",
   imageUrl: "https://example.com/avatar.jpg",
   userName: "user1",
+  badges: [],
   ...override,
 });
 

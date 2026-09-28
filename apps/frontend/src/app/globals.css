@@ -82,6 +82,47 @@
   --text-3xl--line-height: 1.4;
 }
 
+@property --glow-ring-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes glow-ring-spin {
+  to {
+    --glow-ring-angle: 360deg;
+  }
+}
+
+@utility glow-ring {
+  border-color: transparent;
+  background:
+    linear-gradient(
+        to bottom right,
+        color-mix(in srgb, var(--glow-tint) 10%, var(--background)),
+        color-mix(in srgb, var(--glow-tint) 22%, var(--background))
+      )
+      padding-box,
+    conic-gradient(
+        from var(--glow-ring-angle),
+        var(--glow-1),
+        var(--glow-2),
+        var(--glow-3),
+        var(--glow-4),
+        var(--glow-1)
+      )
+      border-box;
+  animation: glow-ring-spin 4s linear infinite;
+}
+
+@utility glow-aurora {
+  --glow-tint: var(--color-cyan-400);
+  --glow-1: var(--color-emerald-300);
+  --glow-2: var(--color-cyan-400);
+  --glow-3: var(--color-sky-400);
+  --glow-4: var(--color-lime-200);
+}
+
 :root {
   --radius: 0.5rem;
   --background: oklch(1 0 0);
