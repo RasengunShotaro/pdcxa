@@ -81,3 +81,20 @@ export const DoesNotReplayOnUpdate: Story = {
     expect(count).toHaveTextContent(/^2,234$/);
   },
 };
+
+export const JumpsWhenChangedMidway: Story = {
+  name: "数え上げの途中で件数が変わると0から数え直さず新しい件数をすぐ出す",
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    await userEvent.click(canvas.getByRole("button", { name: "増やす" }));
+
+    await waitFor(
+      () =>
+        expect(canvas.getByRole("status", { name: "件数" })).toHaveTextContent(
+          /^2,234$/,
+        ),
+      { timeout: 200 },
+    );
+  },
+};

@@ -15,12 +15,21 @@ const EASE_OUT: [number, number, number, number] = [0, 0, 0.2, 1];
 export function CountUpNumber({ value, format = String }: CountUpNumberProps) {
   const shouldReduceMotion = useReducedMotionConfig();
   const [latest, setLatest] = useState<number | "settled">(0);
+  const firstTargetRef = useRef<number | null>(null);
   const settledRef = useRef(false);
 
   useEffect(() => {
-    if (settledRef.current || shouldReduceMotion) {
+    if (shouldReduceMotion) {
       return;
     }
+    const targetChanged =
+      firstTargetRef.current !== null && firstTargetRef.current !== value;
+    if (settledRef.current || targetChanged) {
+      settledRef.current = true;
+      setLatest("settled");
+      return;
+    }
+    firstTargetRef.current = value;
     const controls = animate(0, value, {
       duration: COUNT_UP_DURATION_SECONDS,
       ease: EASE_OUT,
