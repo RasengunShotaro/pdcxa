@@ -1,5 +1,6 @@
 import { MOCK_USER_ID } from "@/lib/auth/mock-user";
 import { getPdcxaApiMock } from "@/schema/api.msw";
+import { 画面遷移はモックせずに通す } from "./page-request";
 
 const base64Url = (value: object): string =>
   btoa(JSON.stringify(value))
@@ -15,4 +16,4 @@ export const MOCK_ID_TOKEN = [
   "mock",
 ].join(".");
 
-export const handlers = getPdcxaApiMock();
+export const handlers = [画面遷移はモックせずに通す, ...getPdcxaApiMock()];

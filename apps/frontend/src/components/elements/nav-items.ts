@@ -31,6 +31,39 @@ export const NAV_ITEMS: readonly NavItem[] = [
   ...SECONDARY_NAV_ITEMS,
 ];
 
+export interface FeedTab {
+  href: string;
+  label: string;
+}
+
+export const TIMELINE_TABS: readonly FeedTab[] = [
+  { href: "/", label: "ホーム" },
+  { href: "/notifications", label: "通知" },
+];
+
+export type TabDirection = "tab-forward" | "tab-back";
+
+interface TabDirectionInput {
+  tabs: readonly FeedTab[];
+  pathname: string;
+  href: string;
+}
+
+export const タブを切り替える向き = ({
+  tabs,
+  pathname,
+  href,
+}: TabDirectionInput): TabDirection | undefined => {
+  const currentIndex = tabs.findIndex((tab) =>
+    isNavItemActive({ pathname, href: tab.href }),
+  );
+  const nextIndex = tabs.findIndex((tab) => tab.href === href);
+  if (currentIndex === -1 || nextIndex === -1 || currentIndex === nextIndex) {
+    return undefined;
+  }
+  return nextIndex > currentIndex ? "tab-forward" : "tab-back";
+};
+
 interface IsNavItemActiveInput {
   pathname: string;
   href: string;

@@ -1,5 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { isNavItemActive, NAV_ITEMS, pageLabelForPath } from "./nav-items";
+import {
+  isNavItemActive,
+  NAV_ITEMS,
+  pageLabelForPath,
+  TIMELINE_TABS,
+  タブを切り替える向き,
+} from "./nav-items";
 
 describe("ナビ項目が現在地かどうかを判定する", () => {
   it("ホームではホームを現在地として示す", () => {
@@ -60,5 +66,43 @@ describe("現在地のラベルを解決する", () => {
 describe("サイドバーのナビ項目", () => {
   it("プロフィールへはサイドバーから直接進める", () => {
     expect(NAV_ITEMS.some((item) => item.href === "/profile")).toBe(true);
+  });
+});
+
+describe("タブを切り替える向きを決める", () => {
+  it("右にあるタブへ移るときは右から入る向きにする", () => {
+    expect(
+      タブを切り替える向き({
+        tabs: TIMELINE_TABS,
+        pathname: "/",
+        href: "/notifications",
+      }),
+    ).toBe("tab-forward");
+  });
+
+  it("左にあるタブへ移るときは左から入る向きにする", () => {
+    expect(
+      タブを切り替える向き({
+        tabs: TIMELINE_TABS,
+        pathname: "/notifications",
+        href: "/",
+      }),
+    ).toBe("tab-back");
+  });
+
+  it("選択中のタブをもう一度押したときは動かさない", () => {
+    expect(
+      タブを切り替える向き({ tabs: TIMELINE_TABS, pathname: "/", href: "/" }),
+    ).toBeUndefined();
+  });
+
+  it("タブに無いページから移るときは動かさない", () => {
+    expect(
+      タブを切り替える向き({
+        tabs: TIMELINE_TABS,
+        pathname: "/stats",
+        href: "/notifications",
+      }),
+    ).toBeUndefined();
   });
 });

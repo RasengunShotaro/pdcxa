@@ -252,6 +252,47 @@
   object-position: top left;
 }
 
+::view-transition-group(.feed-tab-indicator) {
+  animation-duration: 250ms;
+  animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+::view-transition-old(.tab-forward),
+::view-transition-old(.tab-back) {
+  animation:
+    150ms ease-in both feed-tab-fade reverse,
+    250ms cubic-bezier(0.4, 0, 0.2, 1) both feed-tab-slide reverse;
+}
+
+::view-transition-new(.tab-forward),
+::view-transition-new(.tab-back) {
+  animation:
+    200ms ease-out 50ms both feed-tab-fade,
+    250ms cubic-bezier(0.4, 0, 0.2, 1) both feed-tab-slide;
+}
+
+::view-transition-old(.tab-forward),
+::view-transition-new(.tab-back) {
+  --feed-tab-offset: -3rem;
+}
+
+::view-transition-new(.tab-forward),
+::view-transition-old(.tab-back) {
+  --feed-tab-offset: 3rem;
+}
+
+@keyframes feed-tab-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes feed-tab-slide {
+  from {
+    translate: var(--feed-tab-offset);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   ::view-transition-group(*),
   ::view-transition-old(*),

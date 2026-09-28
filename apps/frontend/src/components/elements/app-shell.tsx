@@ -96,7 +96,7 @@ export function AppShell({
               <BrandLink />
             )}
           </header>
-          <div className="flex flex-1 flex-col overflow-y-auto bg-bg-page">
+          <div className="flex flex-1 flex-col bg-bg-page">
             <div
               className="mx-auto flex w-full max-w-[65.125rem] flex-1 flex-col px-4 py-6 has-[[data-narrow-page]]:max-w-[42rem] has-[[data-feed-layout]]:max-w-none has-[[data-feed-layout]]:[&>[data-page-title]]:hidden"
               id="main-content"

@@ -2,13 +2,16 @@
 
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
-import { pageLabelForPath } from "./nav-items";
+import { cn } from "@/lib/utils";
+import { FeedTabs } from "./feed-tabs";
+import { type FeedTab, pageLabelForPath } from "./nav-items";
 
 interface FeedLayoutProps {
   children: ReactNode;
   aside?: ReactNode;
   title?: string;
   leading?: ReactNode;
+  tabs?: readonly FeedTab[];
 }
 
 export function FeedLayout({
@@ -16,6 +19,7 @@ export function FeedLayout({
   aside,
   title,
   leading,
+  tabs,
 }: FeedLayoutProps) {
   const pathname = usePathname();
   const heading = title ?? pageLabelForPath(pathname);
@@ -27,11 +31,22 @@ export function FeedLayout({
     >
       <div className="col-start-2 flex min-w-0 flex-col bg-card sm:border-x sm:border-border">
         {heading ? (
-          <header className="sticky top-0 z-10 hidden h-16 shrink-0 items-center md:flex gap-2 border-b border-border bg-card/90 px-4 backdrop-blur">
+          <header
+            className={cn(
+              "sticky top-0 z-10 hidden h-16 shrink-0 items-center md:flex gap-2 border-b border-border bg-card/90 backdrop-blur",
+              tabs ? "px-0" : "px-4",
+            )}
+          >
             {leading}
-            <h1 className="truncate text-[1.25rem] leading-[1.4] font-bold text-foreground">
+            <h1
+              className={cn(
+                "truncate text-[1.25rem] leading-[1.4] font-bold text-foreground",
+                tabs && "sr-only",
+              )}
+            >
               {heading}
             </h1>
+            {tabs ? <FeedTabs tabs={tabs} /> : null}
           </header>
         ) : null}
         {children}
