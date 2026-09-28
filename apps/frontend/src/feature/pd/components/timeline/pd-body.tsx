@@ -35,6 +35,9 @@ export function PdBody({ content, clamp = true }: PdBodyProps) {
         className={cn(
           "whitespace-pre-wrap break-words text-sm text-body",
           clamped && "line-clamp-8",
+          clamped && overflowing && "h-[8lh]",
+          expanded &&
+            "overflow-hidden transition-[height] duration-300 ease-out [interpolate-size:allow-keywords]",
         )}
         ref={ref}
       >
