@@ -8,4 +8,5 @@ export type FetchUserDetails200Item = {
   imageUrl: string;
   /** @nullable */
   userName: string | null;
+  badges: string[];
 };

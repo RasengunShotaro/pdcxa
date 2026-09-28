@@ -24,6 +24,7 @@ export const 作成したPDを詳細化する = ({
       userFullName,
       imageUrl: user?.imageUrl ?? "",
       userName: user?.userName ?? "",
+      badges: [],
     },
     likeUserNames: [],
     likeUsers: [],

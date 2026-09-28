@@ -16,6 +16,7 @@ const RePdMother = (override: Partial<RePd>): RePd => ({
     userFullName: "投稿 者",
     imageUrl: "",
     userName: "author",
+    badges: [],
   },
   likeUserNames: [],
   likeUsers: [],

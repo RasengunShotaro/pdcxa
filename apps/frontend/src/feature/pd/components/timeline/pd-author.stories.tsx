@@ -7,6 +7,7 @@ interface PdAuthorPreviewProps {
   userName: string;
   imageUrl: string;
   createdAt: string;
+  badges?: readonly string[];
 }
 
 function PdAuthorPreview(props: PdAuthorPreviewProps) {
@@ -67,5 +68,46 @@ export const 名前が空: Story = {
     const canvas = within(canvasElement);
 
     expect(canvas.getAllByText("@taro")).toHaveLength(1);
+  },
+};
+
+export const バッジあり: Story = {
+  name: "バッジを持つ投稿者は名前の横にバッジを出す",
+  args: {
+    userFullName: "モーター 好男",
+    userName: "i_love_motor",
+    badges: ["originator"],
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    expect(canvas.getByText("初代様")).toBeInTheDocument();
+  },
+};
+
+export const 長い名前とIDのバッジあり: Story = {
+  name: "名前と ID が長くてもバッジは省略せずに残す",
+  args: {
+    userFullName: "モーターをこよなく愛する好男・ザ・ファースト・オブ・PDCXA",
+    userName: "i_love_motor_forever_and_ever_since_powerapps",
+    badges: ["originator"],
+  },
+  decorators: [
+    (Story) => (
+      <div className="flex flex-col gap-6">
+        <div className="w-[600px] rounded-lg border border-border p-3">
+          <Story />
+        </div>
+        <div className="w-[360px] rounded-lg border border-border p-3">
+          <Story />
+        </div>
+      </div>
+    ),
+  ],
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const [badge] = canvas.getAllByText("初代様");
+
+    expect(badge.scrollWidth).toBeLessThanOrEqual(badge.clientWidth);
   },
 };

@@ -4,6 +4,7 @@ export type UserDetail = {
   lastName: string | null;
   imageUrl: string;
   userName: string | null;
+  badges: string[];
 };
 
 export type RawQuotedPd = {
@@ -50,6 +51,7 @@ export type Pd = Omit<RawPd, "quotedPd"> & {
     userFullName: string;
     imageUrl: string;
     userName: string;
+    badges: string[];
   };
   likeUserNames: string[];
   likeUsers: LikeUser[];
@@ -72,6 +74,7 @@ export type RePd = RawRePd & {
     userFullName: string;
     imageUrl: string;
     userName: string;
+    badges: string[];
   };
   likeUserNames: string[];
   likeUsers: LikeUser[];

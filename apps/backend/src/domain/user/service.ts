@@ -8,6 +8,7 @@ export type UserDetail = {
   readonly lastName: string | null;
   readonly imageUrl: string;
   readonly userName: string | null;
+  readonly badges: string[];
 };
 
 export class UserDirectory extends Context.Tag("UserDirectory")<

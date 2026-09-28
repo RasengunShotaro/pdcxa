@@ -25,6 +25,7 @@ export function UserTimelineView({ userName }: UserTimelineViewProps) {
     >
       <div className="pb-6">
         <UserTimelineHeader
+          badges={detail?.badges}
           imageUrl={detail?.imageUrl}
           userFullName={detail?.userFullName}
           userName={userName}

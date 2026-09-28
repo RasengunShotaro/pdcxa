@@ -32,6 +32,7 @@ const USERS = [
     lastName: "山田",
     imageUrl: "",
     userName: "taro",
+    badges: ["originator"],
   },
 ];
 
@@ -80,11 +81,10 @@ export const Populated: Story = {
     await waitFor(() =>
       expect(canvas.getByText("太郎のメモです")).toBeInTheDocument(),
     );
-    const heading = canvas.getByRole("heading", {
-      level: 2,
-      name: "太郎 山田",
-    });
-    expect(heading.parentElement).toHaveTextContent("@taro");
+    expect(
+      canvas.getByRole("heading", { level: 2, name: "太郎 山田" }),
+    ).toBeInTheDocument();
+    expect(canvas.getByText("@taro")).toBeInTheDocument();
     expect(canvas.getByText("もう一件の投稿")).toBeInTheDocument();
   },
 };
@@ -102,6 +102,16 @@ export const AuthorNotRepeated: Story = {
     expect(
       posts.filter((post) => post.textContent?.includes("太郎 山田")),
     ).toHaveLength(0);
+  },
+};
+
+export const WithBadge: Story = {
+  name: "バッジを持つユーザーのページではヘッダーにバッジを出す",
+  parameters: Populated.parameters,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    await waitFor(() => expect(canvas.getByText("初代様")).toBeInTheDocument());
   },
 };
 

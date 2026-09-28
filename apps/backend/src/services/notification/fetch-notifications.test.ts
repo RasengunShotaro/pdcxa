@@ -18,6 +18,7 @@ const ユーザー = (id: string): UserDetail => ({
   lastName: "田中",
   imageUrl: "https://example.com/a.png",
   userName: "taro",
+  badges: [],
 });
 
 describe("通知に行為者を紐付ける", () => {
@@ -40,6 +41,7 @@ describe("通知に行為者を紐付ける", () => {
       lastName: null,
       imageUrl: "",
       userName: null,
+      badges: [],
     });
   });
 });
