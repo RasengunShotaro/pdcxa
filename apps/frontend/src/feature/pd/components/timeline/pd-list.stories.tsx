@@ -24,6 +24,7 @@ const aPd = (overrides: { id: string; content: string }): Pd => ({
     userFullName: "太郎 山田",
     imageUrl: "",
     userName: "taro",
+    badges: [],
   },
   likeUserNames: [],
   likeUsers: [],
