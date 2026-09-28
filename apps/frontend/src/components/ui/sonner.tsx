@@ -35,7 +35,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
       theme={theme === "legacy" ? "light" : (theme as ToasterProps["theme"])}
       toastOptions={{
         classNames: {
-          default: "!text-xl justify-center !w-fit whitespace-pre-wrap",
+          toast: "!text-xl justify-center !w-fit whitespace-pre-wrap",
           description: "!text-sm !text-muted-foreground",
         },
       }}
