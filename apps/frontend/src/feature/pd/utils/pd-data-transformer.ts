@@ -30,6 +30,7 @@ const 引用元を詳細化する = (
       userFullName: ユーザーのフルネームをフォーマットする(author),
       imageUrl: author?.imageUrl ?? "",
       userName: author?.userName ?? "",
+      badges: author?.badges ?? [],
     },
   };
 };

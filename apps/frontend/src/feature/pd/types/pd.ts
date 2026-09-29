@@ -34,6 +34,7 @@ export type QuotedPd = RawQuotedPd & {
     userFullName: string;
     imageUrl: string;
     userName: string;
+    badges: string[];
   };
 };
 

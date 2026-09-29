@@ -41,8 +41,25 @@ describe("PDを引用元にする", () => {
         userFullName: "佐藤 陽",
         imageUrl: "https://example.com/hinata.png",
         userName: "hinata",
+        badges: [],
       },
     });
+  });
+
+  test("引用元の投稿者のバッジを引き継ぐ", () => {
+    const pd = aPd({
+      userDetail: {
+        id: "hinata",
+        userFullName: "佐藤 陽",
+        imageUrl: "https://example.com/hinata.png",
+        userName: "hinata",
+        badges: ["originator"],
+      },
+    });
+
+    const result = PDを引用元にする(pd);
+
+    expect(result.userDetail.badges).toEqual(["originator"]);
   });
 });
 

@@ -6,6 +6,7 @@ import {
   formatAbsoluteDateTime,
   formatDateTime,
 } from "@/feature/pd/utils/format-datetime";
+import { UserBadges } from "@/feature/user/badges/user-badges";
 import { cn } from "@/lib/utils";
 import { avatarInitials } from "./avatar-initials";
 
@@ -29,6 +30,7 @@ export function QuotedPdCard({ quotedPd, linked = true }: QuotedPdCardProps) {
         <span className="min-w-0 truncate font-bold text-foreground">
           {name}
         </span>
+        <UserBadges badgeIds={userDetail.badges} focusable={!linked} />
         {handle ? (
           <span className="min-w-0 truncate text-muted-foreground">
             @{handle}

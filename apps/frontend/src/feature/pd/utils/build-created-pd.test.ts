@@ -91,6 +91,7 @@ describe("作成したPDを詳細化する", () => {
           userFullName: "佐藤 陽",
           imageUrl: "",
           userName: "hinata",
+          badges: [],
         },
       },
     });
