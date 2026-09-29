@@ -127,8 +127,30 @@ describe("PDを詳細化する（引用）", () => {
         userFullName: "陽 佐藤",
         imageUrl: "https://example.com/hinata.jpg",
         userName: "hinata",
+        badges: [],
       },
     });
+  });
+
+  test("引用元の投稿者に付いているバッジを引用元の投稿者情報に載せる", () => {
+    const rawPds = [
+      RawPdMother({
+        userId: "user-1",
+        quotedPd: {
+          id: "pd-0",
+          content: "引用元",
+          createdAt: "2026-03-12T00:00:00.000Z",
+          userId: "user-9",
+        },
+      }),
+    ];
+    const userDetails = [
+      UserDetailMother({ id: "user-9", badges: ["originator"] }),
+    ];
+
+    const result = PDを詳細化する(rawPds, userDetails);
+
+    expect(result[0].quotedPd?.userDetail.badges).toEqual(["originator"]);
   });
 });
 

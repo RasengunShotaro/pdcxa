@@ -188,6 +188,7 @@ export const QuoteWithLongAuthor: Story = {
           userName:
             "a_very_long_username_that_hits_the_sixty_four_character_limit_x",
           imageUrl: "",
+          badges: [],
         },
       }}
     />

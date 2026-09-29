@@ -11,6 +11,7 @@ export const PDを引用元にする = (pd: Pd): QuotedPd => ({
     userFullName: pd.userDetail.userFullName,
     imageUrl: pd.userDetail.imageUrl,
     userName: pd.userDetail.userName,
+    badges: pd.userDetail.badges,
   },
 });
 
