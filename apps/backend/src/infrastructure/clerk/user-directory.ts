@@ -35,7 +35,7 @@ export const UserDirectoryLive = Layer.succeed(UserDirectory, {
   ユーザーID一覧で取得する: (userIds) =>
     Effect.gen(function* () {
       const clerk = yield* ClerkClientPort;
-      const limit = userIds.length < 500 ? userIds.length : 500;
+      const limit = Math.min(userIds.length, 500);
 
       const list = yield* Effect.tryPromise({
         try: () => clerk.users.getUserList({ userId: [...userIds], limit }),

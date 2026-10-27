@@ -36,7 +36,7 @@ routes → services → domain ← infrastructure ← lib
 
 | 層             | 役割                                   | 依存先           | 主な API                              |
 | -------------- | -------------------------------------- | ---------------- | ------------------------------------- |
-| domain         | Service Tag、エラー型、純粋型定義      | (なし)           | `Context.Tag`, `Data.TaggedError`     |
+| domain         | Service Tag、エラー型、純粋型定義      | (なし)           | `Context.Service`, `Data.TaggedError` |
 | services       | ユースケース、層間オーケストレーション | domain           | `Effect.gen`, `yield*`                |
 | infrastructure | 外部 API / DB の具象実装               | domain, lib      | `Layer.succeed`, `Effect.tryPromise`  |
 | routes         | Hono ルート、Effect 実行と HTTP 変換   | services, domain | `Effect.runPromise`, `Effect.provide` |
@@ -48,10 +48,10 @@ routes → services → domain ← infrastructure ← lib
 
 ```typescript
 // domain/auth/principal.ts
-export class AuthContext extends Context.Tag("AuthContext")<
+export class AuthContext extends Context.Service<
   AuthContext,
   Principal
->() {}
+>()("AuthContext") {}
 
 // services/projects/get-project.ts — service の引数に tenantId を含めない
 export const プロジェクトを取得する = (projectId: ProjectId) =>
@@ -83,7 +83,7 @@ app.openapi(spec, async (c) => {
 
 ## domain: Service Tag とエラー型
 
-`Context.Tag` で Service interface、`Data.TaggedError` でエラー型を定義する。**domain は他の層を import しない**。
+`Context.Service` で Service interface、`Data.TaggedError` でエラー型を定義する。**domain は他の層を import しない**。
 
 ```typescript
 import { Context, Data, type Effect } from "effect";
@@ -98,7 +98,7 @@ export class DatabaseError extends Data.TaggedError("DatabaseError")<{
   message: string;
 }> {}
 
-export class SessionRepository extends Context.Tag("SessionRepository")<
+export class SessionRepository extends Context.Service<
   SessionRepository,
   {
     readonly 作成する: (
@@ -111,7 +111,7 @@ export class SessionRepository extends Context.Tag("SessionRepository")<
       sessionId: string,
     ) => Effect.Effect<Session, SessionNotFoundError | DatabaseError>;
   }
->() {}
+>()("SessionRepository") {}
 ```
 
 ## infrastructure: Layer.succeed
@@ -188,7 +188,7 @@ export const セッションを作成する = (userId: string) =>
 
 ## routes: Effect.runPromise + Effect.provide
 
-Hono ルート内で `Effect.runPromise` 実行。`Effect.provide(appLayer)` で Layer を注入。エラーは `Effect.catchTag` で個別ハンドリング、残りを `Effect.catchAll`。
+Hono ルート内で `Effect.runPromise` 実行。`Effect.provide(appLayer)` で Layer を注入。エラーは `Effect.catchTag` で個別ハンドリング、残りを `Effect.catch`。
 
 ```typescript
 sessions.get("/:id", async (c) => {
@@ -198,7 +198,7 @@ sessions.get("/:id", async (c) => {
       Effect.catchTag("SessionNotFoundError", () =>
         Effect.succeed(c.json({ error: "Not found" }, 404)),
       ),
-      Effect.catchAll((error) =>
+      Effect.catch((error) =>
         Effect.succeed(c.json({ error: error.message }, 500)),
       ),
       Effect.provide(appLayer),
@@ -215,13 +215,13 @@ sessions.get("/:id", async (c) => {
 
 ## エラーで分岐するなら `catchTag` / `catchTags`
 
-エラー種別で挙動を変える場合は **必ず `Effect.catchTag` か `Effect.catchTags`** を使う。`runPromiseExit` で `Exit.cause` を `Cause.failureOption` で剥いて `_tag` を文字列比較するな (型安全性も Effect の旨味も捨てる)。
+エラー種別で挙動を変える場合は **必ず `Effect.catchTag` か `Effect.catchTags`** を使う。`runPromiseExit` で `Exit.cause` を `Cause.findErrorOption` で剥いて `_tag` を文字列比較するな (型安全性も Effect の旨味も捨てる)。
 
 ```typescript
 // WRONG: Cause / Exit を生で触って分岐
 const exit = await Effect.runPromiseExit(program);
 if (exit._tag === "Failure") {
-  const failureOpt = Cause.failureOption(exit.cause);
+  const failureOpt = Cause.findErrorOption(exit.cause);
   if (Option.isSome(failureOpt) && failureOpt.value._tag === "FooError") {
     /* ... */
   }

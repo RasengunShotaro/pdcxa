@@ -2,9 +2,7 @@ import { Context, type Effect } from "effect";
 import type { DatabaseError } from "../errors";
 import type { NotificationPage } from "./types";
 
-export class NotificationRepository extends Context.Tag(
-  "NotificationRepository",
-)<
+export class NotificationRepository extends Context.Service<
   NotificationRepository,
   {
     readonly 既読時刻を取得する: (
@@ -23,4 +21,4 @@ export class NotificationRepository extends Context.Tag(
       readonly seenAt: Date;
     }) => Effect.Effect<void, DatabaseError>;
   }
->() {}
+>()("NotificationRepository") {}

@@ -7,7 +7,7 @@ export type StoredImage = {
   readonly contentType: string;
 };
 
-export class StorageService extends Context.Tag("StorageService")<
+export class StorageService extends Context.Service<
   StorageService,
   {
     readonly 画像を圧縮してアップロードする: (params: {
@@ -22,4 +22,4 @@ export class StorageService extends Context.Tag("StorageService")<
       readonly fileName: string;
     }) => Effect.Effect<StoredImage | null, StorageError, R2Storage>;
   }
->() {}
+>()("StorageService") {}

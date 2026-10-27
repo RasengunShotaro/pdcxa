@@ -1,5 +1,5 @@
 // Rule B (infra) + Rule C fixture。infra は provide/run 禁止・service/route/handler import 禁止。
-// Layer.*・生IO・Context.Tag は infra では許可。
+// Layer.*・生IO・Context.Service は infra では許可。
 import { Context, Effect, Layer } from "effect";
 // rule C: infra → service の import は禁止
 import { svc } from "../services/svc.ts";
@@ -16,7 +16,7 @@ export const ok1 = Layer.effect(svc, eff);
 export const ok2 = Layer.provide(L, L);
 export const ok3 = Effect.tryPromise(() => Promise.resolve(1));
 export const ok4 = Effect.try(() => 1);
-export class Client extends Context.Tag("Client")<
+export class Client extends Context.Service<
   Client,
   { readonly n: number }
->() {}
+>()("Client") {}

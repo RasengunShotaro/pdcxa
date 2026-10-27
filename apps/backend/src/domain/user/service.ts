@@ -11,7 +11,7 @@ export type UserDetail = {
   readonly badges: string[];
 };
 
-export class UserDirectory extends Context.Tag("UserDirectory")<
+export class UserDirectory extends Context.Service<
   UserDirectory,
   {
     readonly ユーザー名で取得する: (
@@ -25,4 +25,4 @@ export class UserDirectory extends Context.Tag("UserDirectory")<
       userIds: readonly string[],
     ) => Effect.Effect<UserDetail[], ClerkError, ClerkClientPort>;
   }
->() {}
+>()("UserDirectory") {}

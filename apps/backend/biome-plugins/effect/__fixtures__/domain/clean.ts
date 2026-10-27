@@ -2,11 +2,11 @@
 import { Context, Effect, type Layer, Schema } from "effect";
 import { Other } from "./sibling.ts";
 
-// Context.Tag による domain ポート定義は許可
-export class Port extends Context.Tag("Port")<
+// Context.Service による domain ポート定義は許可
+export class Port extends Context.Service<
   Port,
   { readonly read: () => Effect.Effect<number> }
->() {}
+>()("Port") {}
 
 // Schema によるモデル定義は許可
 export const Model = Schema.Struct({ id: Schema.String });

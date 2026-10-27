@@ -1,7 +1,7 @@
 import type { ClerkClient } from "@clerk/backend";
 import { Context } from "effect";
 
-export class ClerkClientPort extends Context.Tag("ClerkClientPort")<
+export class ClerkClientPort extends Context.Service<
   ClerkClientPort,
   ClerkClient
->() {}
+>()("ClerkClientPort") {}

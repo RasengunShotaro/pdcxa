@@ -9,7 +9,7 @@ import type {
   集計期間,
 } from "./types";
 
-export class PdRepository extends Context.Tag("PdRepository")<
+export class PdRepository extends Context.Service<
   PdRepository,
   {
     readonly 一覧を取得する: (params: {
@@ -44,4 +44,4 @@ export class PdRepository extends Context.Tag("PdRepository")<
       range: 集計期間,
     ) => Effect.Effect<投稿者別集計群, DatabaseError>;
   }
->() {}
+>()("PdRepository") {}
