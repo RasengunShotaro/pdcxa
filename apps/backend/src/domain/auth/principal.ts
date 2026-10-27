@@ -4,7 +4,6 @@ export type Principal = {
   readonly userId: string;
 };
 
-export class AuthContext extends Context.Tag("AuthContext")<
-  AuthContext,
-  Principal
->() {}
+export class AuthContext extends Context.Service<AuthContext, Principal>()(
+  "AuthContext",
+) {}

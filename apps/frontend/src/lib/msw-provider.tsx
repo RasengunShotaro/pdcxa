@@ -8,7 +8,8 @@ export function MswProvider({ children }: { children: ReactNode }) {
   const [ready, setReady] = useState(!MOCKING_ENABLED);
 
   useEffect(() => {
-    if (!MOCKING_ENABLED) {
+    // msw 3 の msw/browser は node 条件で export が null。typeof window で SSR バンドルから import を外さないと next build が解決に失敗する
+    if (!MOCKING_ENABLED || typeof window === "undefined") {
       return;
     }
 

@@ -2,7 +2,7 @@ import { Context, type Effect } from "effect";
 import type { DatabaseError } from "../errors";
 import type { NewRePd, RawRePd } from "./types";
 
-export class RePdRepository extends Context.Tag("RePdRepository")<
+export class RePdRepository extends Context.Service<
   RePdRepository,
   {
     readonly PD配下を取得する: (
@@ -14,4 +14,4 @@ export class RePdRepository extends Context.Tag("RePdRepository")<
       readonly userId: string;
     }) => Effect.Effect<void, DatabaseError>;
   }
->() {}
+>()("RePdRepository") {}

@@ -1,4 +1,4 @@
-import { Effect, Either, Layer } from "effect";
+import { Effect, Layer, Result } from "effect";
 import { describe, expect, it } from "vitest";
 import { PdRepository } from "#/domain/pd/repository";
 import type { RawPd } from "#/domain/pd/types";
@@ -35,7 +35,7 @@ const 既存のPD = (ids: string[]) =>
 
 const 確かめる = (quotedPdId: string | undefined, ids: string[]) =>
   Effect.runPromise(
-    Effect.either(
+    Effect.result(
       引用元のPDを確かめる(quotedPdId).pipe(Effect.provide(既存のPD(ids))),
     ),
   );
@@ -44,19 +44,19 @@ describe("引用元のPDを確かめる", () => {
   it("引用しないときは引用元なしとして通す", async () => {
     const result = await 確かめる(undefined, []);
 
-    expect(result).toEqual(Either.right(null));
+    expect(result).toEqual(Result.succeed(null));
   });
 
   it("存在する PD を引用するときはその PD を引用元にする", async () => {
     const result = await 確かめる("pd-1", ["pd-1"]);
 
-    expect(result).toEqual(Either.right("pd-1"));
+    expect(result).toEqual(Result.succeed("pd-1"));
   });
 
   it("存在しない PD を引用しようとすると引用元が見つからない失敗になる", async () => {
     const result = await 確かめる("pd-missing", ["pd-1"]);
 
-    expect(Either.isLeft(result) && result.left._tag).toBe(
+    expect(Result.isFailure(result) && result.failure._tag).toBe(
       "QuotedPdNotFoundError",
     );
   });

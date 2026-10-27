@@ -146,7 +146,7 @@ expect(f(1)).toBe(123);
 
 **ここでいう「モック」とは**: `vi.fn()` / `jest.fn()` 等で外部 SDK・グローバル関数 (`fetch`, `Date.now` 等)・副作用持ち実装を **直接捕獲する** こと、および **`vi.stubGlobal` でブラウザ global (`matchMedia` / `ResizeObserver` / `navigator` 等) を monkeypatch する** ことを指す。
 
-**「モック」に **含まれない** もの**: domain で定義した interface / `Context.Tag` (Effect-TS) / DI コンテナの差替は **正規の DI 注入** であり §5 の対象外。`Layer.succeed(SomeRepository, { ... })` でテスト用実装を差し込むのは、interface に対するもう 1 つの実装を提供しているだけ。これらは §9 (factory で構築) のルールが適用される。
+**「モック」に **含まれない** もの**: domain で定義した interface / `Context.Service` (Effect-TS) / DI コンテナの差替は **正規の DI 注入** であり §5 の対象外。`Layer.succeed(SomeRepository, { ... })` でテスト用実装を差し込むのは、interface に対するもう 1 つの実装を提供しているだけ。これらは §9 (factory で構築) のルールが適用される。
 
 「`fetch` を mock しないと書けない」「`as unknown as SDKClient` がないと書けない」テストは、ほぼ実装詳細テスト。次のいずれか:
 
@@ -310,7 +310,7 @@ it("テナント識別子は Principal にそのまま乗る", () => {
 
   const result = claimsToPrincipal(claims);
 
-  expect(Either.getOrThrow(result).tenantId).toBe("acme"); // input acme → 期待値 acme
+  expect(Result.getOrThrow(result).tenantId).toBe("acme"); // input acme → 期待値 acme
 });
 
 // WRONG: トップレベル fixture から値が漏れていて、it だけでは追えない
@@ -319,7 +319,7 @@ const 揃った認証情報 = { /* ... */ "custom:tenant_id": "tenant-a" /* ... 
 it("...", () => {
   const result = claimsToPrincipal(揃った認証情報);
 
-  expect(Either.getOrThrow(result).tenantId).toBe("tenant-a"); // なぜ tenant-a？
+  expect(Result.getOrThrow(result).tenantId).toBe("tenant-a"); // なぜ tenant-a？
 });
 ```
 
@@ -390,10 +390,10 @@ DB / 外部 API を扱う層では 2 種類のロジックが混ざる:
 // infrastructure/postgres/project-mapper.ts ← 純粋変換
 export const toProject = (
   row: ProjectRow,
-): Either.Either<Project, RepositoryError> =>
+): Result.Result<Project, RepositoryError> =>
   isProjectStructure(row.structure)
-    ? Either.right({ /* ... */ })
-    : Either.left(
+    ? Result.succeed({ /* ... */ })
+    : Result.fail(
         new RepositoryError({ message: `不正な structure: ${row.structure}` }),
       );
 

@@ -129,11 +129,11 @@ describe("Effect-TS オニオン Linter の発火を pin する", () => {
     `);
   });
 
-  it("domain clean: Context.Tag/Schema/gen/fail/型注釈の Layer 参照は発火しない", () => {
+  it("domain clean: Context.Service/Schema/gen/fail/型注釈の Layer 参照は発火しない", () => {
     expect(lines("domain/clean.ts")).toEqual([]);
   });
 
-  it("rule B(infra) + rule C: provide/run と service import が発火し、Layer.*/生IO/Context.Tag は発火しない", () => {
+  it("rule B(infra) + rule C: provide/run と service import が発火し、Layer.*/生IO/Context.Service は発火しない", () => {
     expect(lines("infrastructure/violations.ts")).toMatchInlineSnapshot(`
       [
         "L5 [lint/style/noRestrictedImports] infra 層が import してよいのは domain のみ。service / route / handler への依存は禁止(内向き依存のみ)。",
