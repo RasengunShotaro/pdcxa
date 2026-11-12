@@ -23,14 +23,14 @@
     "test": "vitest"
   },
   "dependencies": {
-    "@clerk/backend": "^3.26.2",
-    "@clerk/hono": "^0.1.93",
+    "@clerk/backend": "^3.27.0",
+    "@clerk/hono": "^0.1.98",
     "@hono/zod-openapi": "^1.6.3",
     "@neondatabase/serverless": "^1.2.0",
     "dayjs": "^1.11.23",
     "drizzle-orm": "^0.45.4",
-    "effect": "^4.0.6",
-    "hono": "^4.13.13",
+    "effect": "^4.1.2",
+    "hono": "^4.13.17",
     "uuidv7": "^1.2.1",
     "wasm-image-optimization": "^2.0.13",
     "zod": "^4.6.7"
@@ -38,10 +38,10 @@
   "devDependencies": {
     "@pdcxa/common-dev-packages": "workspace:*",
     "@types/pg": "^8.23.1",
-    "dotenv": "^18.0.9",
+    "dotenv": "^18.0.10",
     "drizzle-kit": "^0.31.11",
     "pg": "^8.23.1",
-    "postgres": "^3.4.9",
+    "postgres": "^4.1.0",
     "vitest": "^4.1.12"
   }
 }
