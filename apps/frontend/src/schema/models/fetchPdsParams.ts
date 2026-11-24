@@ -1,6 +1,6 @@
 
 export type FetchPdsParams = {
-pdId?: string;
-userName?: string;
-cursor?: string;
+  pdId?: string;
+  userName?: string;
+  cursor?: string;
 };

@@ -1,7 +1,5 @@
 
 export type FetchUserDetailsParams = {
-/**
- * @nullable
- */
-userIds?: string[] | null;
+  /** @nullable */
+  userIds?: string[] | null;
 };

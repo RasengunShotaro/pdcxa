@@ -1,4 +1,4 @@
 
 export type FetchRePdsParams = {
-pdId: string;
+  pdId: string;
 };

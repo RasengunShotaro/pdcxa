@@ -1,4 +1,4 @@
 
 export type FetchUserDetailParams = {
-userName: string;
+  userName: string;
 };
