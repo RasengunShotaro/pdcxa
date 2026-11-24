@@ -12,6 +12,7 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { useObjectUrl } from "@/hooks/use-object-url";
 import { useFetchPdImage } from "@/schema/api";
+import { ImageViewer } from "../image-viewer/image-viewer";
 
 interface PdCardImageProps {
   imageFileName: string | null;
@@ -62,17 +63,12 @@ export function PdCardImage({ imageFileName, alt }: PdCardImageProps) {
           />
         </button>
       </DialogTrigger>
-      <DialogContent className="max-w-3xl p-2">
+      <DialogContent className="flex h-[85vh] flex-col gap-2 p-3 sm:max-w-5xl">
         <DialogTitle className="sr-only">{alt}</DialogTitle>
         <DialogDescription className="sr-only">
           {alt}の拡大表示
         </DialogDescription>
-        {/* biome-ignore lint/performance/noImgElement: backend が配信する R2 画像を ObjectURL で表示するため next/image は使えない */}
-        <img
-          alt={alt}
-          className="max-h-[80vh] w-full rounded-lg object-contain"
-          src={src}
-        />
+        <ImageViewer alt={alt} src={src} />
       </DialogContent>
     </Dialog>
   );
