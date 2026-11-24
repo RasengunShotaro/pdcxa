@@ -3,14 +3,20 @@ import {
   http
 } from 'msw';
 import type {
+  HttpResponseResolver,
+  PathParams,
   RequestHandlerOptions
 } from 'msw';
 
 import type {
   CreateGifPd201,
+  CreateGifPdBody,
   CreateInvitation200,
+  CreateInvitationBody,
   CreatePd201,
+  CreatePdBody,
   CreateRePd201,
+  CreateRePdBody,
   FetchBookmarkedPds200,
   FetchNotificationUnreadCount200,
   FetchNotifications200,
@@ -21,8 +27,11 @@ import type {
   FetchWeeklyStats200,
   MarkNotificationsSeen200,
   MutatePdBookmark200,
+  MutatePdBookmarkBody,
   MutatePdLike201,
-  MutateRePdLike201
+  MutatePdLikeBody,
+  MutateRePdLike201,
+  MutateRePdLikeBody
 } from './models';
 
 
@@ -67,8 +76,8 @@ export const getFetchNotificationsResponseMock = (): FetchNotifications200 => ({
 export const getMarkNotificationsSeenResponseMock = (): MarkNotificationsSeen200 => ({"ok":true})
 
 
-export const getCreateInvitationMockHandler = (overrideResponse?: CreateInvitation200 | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<CreateInvitation200> | CreateInvitation200), options?: RequestHandlerOptions) => {
-  return http.post('*/invitation/create', async (info: Parameters<Parameters<typeof http.post>[1]>[0]) => {
+export const getCreateInvitationMockHandler = (overrideResponse?: CreateInvitation200 | ((info: Parameters<HttpResponseResolver<PathParams, CreateInvitationBody>>[0]) => Promise<CreateInvitation200> | CreateInvitation200), options?: RequestHandlerOptions) => {
+  return http.post<PathParams, CreateInvitationBody>('*/invitation/create', async (info: Parameters<HttpResponseResolver<PathParams, CreateInvitationBody>>[0]) => {
 
 
     return HttpResponse.json(overrideResponse !== undefined
@@ -79,8 +88,8 @@ export const getCreateInvitationMockHandler = (overrideResponse?: CreateInvitati
   }, options)
 }
 
-export const getFetchUserDetailMockHandler = (overrideResponse?: FetchUserDetail200 | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<FetchUserDetail200> | FetchUserDetail200), options?: RequestHandlerOptions) => {
-  return http.get('*/user/detail', async (info: Parameters<Parameters<typeof http.get>[1]>[0]) => {
+export const getFetchUserDetailMockHandler = (overrideResponse?: FetchUserDetail200 | ((info: Parameters<HttpResponseResolver>[0]) => Promise<FetchUserDetail200> | FetchUserDetail200), options?: RequestHandlerOptions) => {
+  return http.get('*/user/detail', async (info: Parameters<HttpResponseResolver>[0]) => {
 
 
     return HttpResponse.json(overrideResponse !== undefined
@@ -91,8 +100,8 @@ export const getFetchUserDetailMockHandler = (overrideResponse?: FetchUserDetail
   }, options)
 }
 
-export const getFetchUserDetailsMockHandler = (overrideResponse?: FetchUserDetails200Item[] | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<FetchUserDetails200Item[]> | FetchUserDetails200Item[]), options?: RequestHandlerOptions) => {
-  return http.get('*/user/details', async (info: Parameters<Parameters<typeof http.get>[1]>[0]) => {
+export const getFetchUserDetailsMockHandler = (overrideResponse?: FetchUserDetails200Item[] | ((info: Parameters<HttpResponseResolver>[0]) => Promise<FetchUserDetails200Item[]> | FetchUserDetails200Item[]), options?: RequestHandlerOptions) => {
+  return http.get('*/user/details', async (info: Parameters<HttpResponseResolver>[0]) => {
 
 
     return HttpResponse.json(overrideResponse !== undefined
@@ -103,8 +112,8 @@ export const getFetchUserDetailsMockHandler = (overrideResponse?: FetchUserDetai
   }, options)
 }
 
-export const getFetchPdsMockHandler = (overrideResponse?: FetchPds200 | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<FetchPds200> | FetchPds200), options?: RequestHandlerOptions) => {
-  return http.get('*/pd', async (info: Parameters<Parameters<typeof http.get>[1]>[0]) => {
+export const getFetchPdsMockHandler = (overrideResponse?: FetchPds200 | ((info: Parameters<HttpResponseResolver>[0]) => Promise<FetchPds200> | FetchPds200), options?: RequestHandlerOptions) => {
+  return http.get('*/pd', async (info: Parameters<HttpResponseResolver>[0]) => {
 
 
     return HttpResponse.json(overrideResponse !== undefined
@@ -115,8 +124,8 @@ export const getFetchPdsMockHandler = (overrideResponse?: FetchPds200 | ((info: 
   }, options)
 }
 
-export const getFetchWeeklyStatsMockHandler = (overrideResponse?: FetchWeeklyStats200 | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<FetchWeeklyStats200> | FetchWeeklyStats200), options?: RequestHandlerOptions) => {
-  return http.get('*/pd/stats/weekly', async (info: Parameters<Parameters<typeof http.get>[1]>[0]) => {
+export const getFetchWeeklyStatsMockHandler = (overrideResponse?: FetchWeeklyStats200 | ((info: Parameters<HttpResponseResolver>[0]) => Promise<FetchWeeklyStats200> | FetchWeeklyStats200), options?: RequestHandlerOptions) => {
+  return http.get('*/pd/stats/weekly', async (info: Parameters<HttpResponseResolver>[0]) => {
 
 
     return HttpResponse.json(overrideResponse !== undefined
@@ -127,8 +136,8 @@ export const getFetchWeeklyStatsMockHandler = (overrideResponse?: FetchWeeklySta
   }, options)
 }
 
-export const getCreatePdMockHandler = (overrideResponse?: CreatePd201 | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<CreatePd201> | CreatePd201), options?: RequestHandlerOptions) => {
-  return http.post('*/pd/create', async (info: Parameters<Parameters<typeof http.post>[1]>[0]) => {
+export const getCreatePdMockHandler = (overrideResponse?: CreatePd201 | ((info: Parameters<HttpResponseResolver<PathParams, CreatePdBody>>[0]) => Promise<CreatePd201> | CreatePd201), options?: RequestHandlerOptions) => {
+  return http.post<PathParams, CreatePdBody>('*/pd/create', async (info: Parameters<HttpResponseResolver<PathParams, CreatePdBody>>[0]) => {
 
 
     return HttpResponse.json(overrideResponse !== undefined
@@ -139,8 +148,8 @@ export const getCreatePdMockHandler = (overrideResponse?: CreatePd201 | ((info: 
   }, options)
 }
 
-export const getCreateGifPdMockHandler = (overrideResponse?: CreateGifPd201 | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<CreateGifPd201> | CreateGifPd201), options?: RequestHandlerOptions) => {
-  return http.post('*/pd/create-gif', async (info: Parameters<Parameters<typeof http.post>[1]>[0]) => {
+export const getCreateGifPdMockHandler = (overrideResponse?: CreateGifPd201 | ((info: Parameters<HttpResponseResolver<PathParams, CreateGifPdBody>>[0]) => Promise<CreateGifPd201> | CreateGifPd201), options?: RequestHandlerOptions) => {
+  return http.post<PathParams, CreateGifPdBody>('*/pd/create-gif', async (info: Parameters<HttpResponseResolver<PathParams, CreateGifPdBody>>[0]) => {
 
 
     return HttpResponse.json(overrideResponse !== undefined
@@ -151,8 +160,8 @@ export const getCreateGifPdMockHandler = (overrideResponse?: CreateGifPd201 | ((
   }, options)
 }
 
-export const getMutatePdLikeMockHandler = (overrideResponse?: MutatePdLike201 | ((info: Parameters<Parameters<typeof http.put>[1]>[0]) => Promise<MutatePdLike201> | MutatePdLike201), options?: RequestHandlerOptions) => {
-  return http.put('*/pd/like', async (info: Parameters<Parameters<typeof http.put>[1]>[0]) => {
+export const getMutatePdLikeMockHandler = (overrideResponse?: MutatePdLike201 | ((info: Parameters<HttpResponseResolver<PathParams, MutatePdLikeBody>>[0]) => Promise<MutatePdLike201> | MutatePdLike201), options?: RequestHandlerOptions) => {
+  return http.put<PathParams, MutatePdLikeBody>('*/pd/like', async (info: Parameters<HttpResponseResolver<PathParams, MutatePdLikeBody>>[0]) => {
 
 
     return HttpResponse.json(overrideResponse !== undefined
@@ -163,8 +172,8 @@ export const getMutatePdLikeMockHandler = (overrideResponse?: MutatePdLike201 | 
   }, options)
 }
 
-export const getMutatePdBookmarkMockHandler = (overrideResponse?: MutatePdBookmark200 | ((info: Parameters<Parameters<typeof http.put>[1]>[0]) => Promise<MutatePdBookmark200> | MutatePdBookmark200), options?: RequestHandlerOptions) => {
-  return http.put('*/pd/bookmark', async (info: Parameters<Parameters<typeof http.put>[1]>[0]) => {
+export const getMutatePdBookmarkMockHandler = (overrideResponse?: MutatePdBookmark200 | ((info: Parameters<HttpResponseResolver<PathParams, MutatePdBookmarkBody>>[0]) => Promise<MutatePdBookmark200> | MutatePdBookmark200), options?: RequestHandlerOptions) => {
+  return http.put<PathParams, MutatePdBookmarkBody>('*/pd/bookmark', async (info: Parameters<HttpResponseResolver<PathParams, MutatePdBookmarkBody>>[0]) => {
 
 
     return HttpResponse.json(overrideResponse !== undefined
@@ -175,8 +184,8 @@ export const getMutatePdBookmarkMockHandler = (overrideResponse?: MutatePdBookma
   }, options)
 }
 
-export const getFetchBookmarkedPdsMockHandler = (overrideResponse?: FetchBookmarkedPds200 | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<FetchBookmarkedPds200> | FetchBookmarkedPds200), options?: RequestHandlerOptions) => {
-  return http.get('*/pd/bookmarks', async (info: Parameters<Parameters<typeof http.get>[1]>[0]) => {
+export const getFetchBookmarkedPdsMockHandler = (overrideResponse?: FetchBookmarkedPds200 | ((info: Parameters<HttpResponseResolver>[0]) => Promise<FetchBookmarkedPds200> | FetchBookmarkedPds200), options?: RequestHandlerOptions) => {
+  return http.get('*/pd/bookmarks', async (info: Parameters<HttpResponseResolver>[0]) => {
 
 
     return HttpResponse.json(overrideResponse !== undefined
@@ -187,8 +196,8 @@ export const getFetchBookmarkedPdsMockHandler = (overrideResponse?: FetchBookmar
   }, options)
 }
 
-export const getFetchPdImageMockHandler = (overrideResponse?: Blob | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<Blob> | Blob), options?: RequestHandlerOptions) => {
-  return http.get('*/pd/image/:fileName', async (info: Parameters<Parameters<typeof http.get>[1]>[0]) => {
+export const getFetchPdImageMockHandler = (overrideResponse?: Blob | ((info: Parameters<HttpResponseResolver<{ fileName: string }>>[0]) => Promise<Blob> | Blob), options?: RequestHandlerOptions) => {
+  return http.get<{ fileName: string }>('*/pd/image/:fileName', async (info: Parameters<HttpResponseResolver<{ fileName: string }>>[0]) => {
 
   const binaryBody = overrideResponse !== undefined
     ? (typeof overrideResponse === "function" ? await overrideResponse(info) : overrideResponse)
@@ -200,8 +209,8 @@ export const getFetchPdImageMockHandler = (overrideResponse?: Blob | ((info: Par
   }, options)
 }
 
-export const getFetchRePdsMockHandler = (overrideResponse?: FetchRePds200Item[] | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<FetchRePds200Item[]> | FetchRePds200Item[]), options?: RequestHandlerOptions) => {
-  return http.get('*/repd', async (info: Parameters<Parameters<typeof http.get>[1]>[0]) => {
+export const getFetchRePdsMockHandler = (overrideResponse?: FetchRePds200Item[] | ((info: Parameters<HttpResponseResolver>[0]) => Promise<FetchRePds200Item[]> | FetchRePds200Item[]), options?: RequestHandlerOptions) => {
+  return http.get('*/repd', async (info: Parameters<HttpResponseResolver>[0]) => {
 
 
     return HttpResponse.json(overrideResponse !== undefined
@@ -212,8 +221,8 @@ export const getFetchRePdsMockHandler = (overrideResponse?: FetchRePds200Item[] 
   }, options)
 }
 
-export const getCreateRePdMockHandler = (overrideResponse?: CreateRePd201 | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<CreateRePd201> | CreateRePd201), options?: RequestHandlerOptions) => {
-  return http.post('*/repd/create', async (info: Parameters<Parameters<typeof http.post>[1]>[0]) => {
+export const getCreateRePdMockHandler = (overrideResponse?: CreateRePd201 | ((info: Parameters<HttpResponseResolver<PathParams, CreateRePdBody>>[0]) => Promise<CreateRePd201> | CreateRePd201), options?: RequestHandlerOptions) => {
+  return http.post<PathParams, CreateRePdBody>('*/repd/create', async (info: Parameters<HttpResponseResolver<PathParams, CreateRePdBody>>[0]) => {
 
 
     return HttpResponse.json(overrideResponse !== undefined
@@ -224,8 +233,8 @@ export const getCreateRePdMockHandler = (overrideResponse?: CreateRePd201 | ((in
   }, options)
 }
 
-export const getMutateRePdLikeMockHandler = (overrideResponse?: MutateRePdLike201 | ((info: Parameters<Parameters<typeof http.put>[1]>[0]) => Promise<MutateRePdLike201> | MutateRePdLike201), options?: RequestHandlerOptions) => {
-  return http.put('*/repd/like', async (info: Parameters<Parameters<typeof http.put>[1]>[0]) => {
+export const getMutateRePdLikeMockHandler = (overrideResponse?: MutateRePdLike201 | ((info: Parameters<HttpResponseResolver<PathParams, MutateRePdLikeBody>>[0]) => Promise<MutateRePdLike201> | MutateRePdLike201), options?: RequestHandlerOptions) => {
+  return http.put<PathParams, MutateRePdLikeBody>('*/repd/like', async (info: Parameters<HttpResponseResolver<PathParams, MutateRePdLikeBody>>[0]) => {
 
 
     return HttpResponse.json(overrideResponse !== undefined
@@ -236,8 +245,8 @@ export const getMutateRePdLikeMockHandler = (overrideResponse?: MutateRePdLike20
   }, options)
 }
 
-export const getFetchNotificationUnreadCountMockHandler = (overrideResponse?: FetchNotificationUnreadCount200 | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<FetchNotificationUnreadCount200> | FetchNotificationUnreadCount200), options?: RequestHandlerOptions) => {
-  return http.get('*/notifications/unread-count', async (info: Parameters<Parameters<typeof http.get>[1]>[0]) => {
+export const getFetchNotificationUnreadCountMockHandler = (overrideResponse?: FetchNotificationUnreadCount200 | ((info: Parameters<HttpResponseResolver>[0]) => Promise<FetchNotificationUnreadCount200> | FetchNotificationUnreadCount200), options?: RequestHandlerOptions) => {
+  return http.get('*/notifications/unread-count', async (info: Parameters<HttpResponseResolver>[0]) => {
 
 
     return HttpResponse.json(overrideResponse !== undefined
@@ -248,8 +257,8 @@ export const getFetchNotificationUnreadCountMockHandler = (overrideResponse?: Fe
   }, options)
 }
 
-export const getFetchNotificationsMockHandler = (overrideResponse?: FetchNotifications200 | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<FetchNotifications200> | FetchNotifications200), options?: RequestHandlerOptions) => {
-  return http.get('*/notifications', async (info: Parameters<Parameters<typeof http.get>[1]>[0]) => {
+export const getFetchNotificationsMockHandler = (overrideResponse?: FetchNotifications200 | ((info: Parameters<HttpResponseResolver>[0]) => Promise<FetchNotifications200> | FetchNotifications200), options?: RequestHandlerOptions) => {
+  return http.get('*/notifications', async (info: Parameters<HttpResponseResolver>[0]) => {
 
 
     return HttpResponse.json(overrideResponse !== undefined
@@ -260,8 +269,8 @@ export const getFetchNotificationsMockHandler = (overrideResponse?: FetchNotific
   }, options)
 }
 
-export const getMarkNotificationsSeenMockHandler = (overrideResponse?: MarkNotificationsSeen200 | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<MarkNotificationsSeen200> | MarkNotificationsSeen200), options?: RequestHandlerOptions) => {
-  return http.post('*/notifications/seen', async (info: Parameters<Parameters<typeof http.post>[1]>[0]) => {
+export const getMarkNotificationsSeenMockHandler = (overrideResponse?: MarkNotificationsSeen200 | ((info: Parameters<HttpResponseResolver>[0]) => Promise<MarkNotificationsSeen200> | MarkNotificationsSeen200), options?: RequestHandlerOptions) => {
+  return http.post('*/notifications/seen', async (info: Parameters<HttpResponseResolver>[0]) => {
 
 
     return HttpResponse.json(overrideResponse !== undefined

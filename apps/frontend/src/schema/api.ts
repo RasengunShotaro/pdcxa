@@ -57,6 +57,26 @@ import { orvalFetch } from '../lib/orval-fetcher';
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 
+const getHeaders = (...sources: (RequestInit['headers'] | Record<string, string | undefined>)[]) => {
+  const seen = new Set<string>();
+  const layers: [string, string | readonly string[]][][] = [];
+  for (const source of sources.reverse()) {
+    if (!source) continue;
+    const entries = source instanceof Headers
+      ? source.entries()
+      : Symbol.iterator in source
+        ? Array.from(source as Iterable<Iterable<string>>, (entry) => Array.from(entry) as [string, string])
+        : Object.entries<string | readonly string[] | undefined>(source);
+    const layer: [string, string | readonly string[]][] = [];
+    for (const [name, value] of entries) {
+      if (value !== undefined && !seen.has(name.toLowerCase())) layer.push([name, value]);
+    }
+    for (const [name] of layer) seen.add(name.toLowerCase());
+    layers.push(layer);
+  }
+  return Object.fromEntries(layers.reverse().flat()) as Extract<RequestInit['headers'], Record<string, unknown>>;
+};
+
 
 const withQueryKey = <T extends object, K>(query: T, queryKey: K): T & { queryKey: K } => {
   const result = { queryKey } as T & { queryKey: K };
@@ -95,25 +115,11 @@ export const getCreateInvitationUrl = () => {
 
 export const createInvitation = async (createInvitationBody?: CreateInvitationBody, options?: Parameters<typeof orvalFetch>[1]): Promise<createInvitationResponse> => {
 
-    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
-    if (!h) return {};
-    if (h instanceof Headers) return Object.fromEntries(h.entries());
-    if (Symbol.iterator in h) {
-      return Object.fromEntries(
-        Array.from(h as Iterable<Iterable<string>>, (entry) => Array.from(entry) as [string, string]),
-      );
-    }
-    const headers: Record<string, string | readonly string[]> = {};
-    for (const [name, value] of Object.entries<string | readonly string[] | undefined>(h)) {
-      if (value !== undefined) headers[name] = value;
-    }
-    return headers;
-  };
-return orvalFetch<createInvitationResponse>(getCreateInvitationUrl(),
+  return orvalFetch<createInvitationResponse>(getCreateInvitationUrl(),
   {
     ...options,
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+    headers: getHeaders({ 'Content-Type': 'application/json' }, options?.headers),
     body: JSON.stringify(createInvitationBody)
   }
 );}
@@ -262,7 +268,6 @@ export function useFetchUserDetail<TData = Awaited<ReturnType<typeof fetchUserDe
  params: FetchUserDetailParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof fetchUserDetail>>, TError, TData>>, request?: SecondParameter<typeof orvalFetch>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-
 export function useFetchUserDetail<TData = Awaited<ReturnType<typeof fetchUserDetail>>, TError = unknown>(
  params: FetchUserDetailParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof fetchUserDetail>>, TError, TData>>, request?: SecondParameter<typeof orvalFetch>}
  , queryClient?: QueryClient
@@ -376,7 +381,6 @@ export function useFetchUserDetails<TData = Awaited<ReturnType<typeof fetchUserD
  params?: FetchUserDetailsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof fetchUserDetails>>, TError, TData>>, request?: SecondParameter<typeof orvalFetch>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-
 export function useFetchUserDetails<TData = Awaited<ReturnType<typeof fetchUserDetails>>, TError = unknown>(
  params?: FetchUserDetailsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof fetchUserDetails>>, TError, TData>>, request?: SecondParameter<typeof orvalFetch>}
  , queryClient?: QueryClient
@@ -490,7 +494,6 @@ export function useFetchPds<TData = Awaited<ReturnType<typeof fetchPds>>, TError
  params?: FetchPdsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof fetchPds>>, TError, TData>>, request?: SecondParameter<typeof orvalFetch>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-
 export function useFetchPds<TData = Awaited<ReturnType<typeof fetchPds>>, TError = unknown>(
  params?: FetchPdsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof fetchPds>>, TError, TData>>, request?: SecondParameter<typeof orvalFetch>}
  , queryClient?: QueryClient
@@ -597,7 +600,6 @@ export function useFetchWeeklyStats<TData = Awaited<ReturnType<typeof fetchWeekl
   options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof fetchWeeklyStats>>, TError, TData>>, request?: SecondParameter<typeof orvalFetch>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-
 export function useFetchWeeklyStats<TData = Awaited<ReturnType<typeof fetchWeeklyStats>>, TError = unknown>(
   options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof fetchWeeklyStats>>, TError, TData>>, request?: SecondParameter<typeof orvalFetch>}
  , queryClient?: QueryClient
@@ -644,7 +646,8 @@ export const getCreatePdUrl = () => {
 }
 
 export const createPd = async (createPdBody?: CreatePdBody, options?: Parameters<typeof orvalFetch>[1]): Promise<createPdResponse> => {
-    const formData = new FormData();
+    const formData = createPdBody === undefined ? undefined : (() => {
+const formData = new FormData();
 if(createPdBody?.content !== undefined) {
  formData.append(`content`, createPdBody.content);
  }
@@ -654,14 +657,22 @@ if(createPdBody?.quotedPdId !== undefined) {
 if(createPdBody?.image !== undefined) {
  formData.append(`image`, createPdBody.image);
  }
+return formData;
+})();
 
-  return orvalFetch<createPdResponse>(getCreatePdUrl(),
-  {
+  const requestInit: { body?: unknown } & NonNullable<Parameters<typeof orvalFetch>[1]> = {
     ...options,
     method: 'POST'
-    ,
-    body: formData
+
+
+  };
+  if (formData === undefined) {
+    delete requestInit.body;
+  } else {
+    requestInit.body = formData;
   }
+  return orvalFetch<createPdResponse>(getCreatePdUrl(),
+  requestInit
 );}
 
 
@@ -741,7 +752,8 @@ export const getCreateGifPdUrl = () => {
 }
 
 export const createGifPd = async (createGifPdBody?: CreateGifPdBody, options?: Parameters<typeof orvalFetch>[1]): Promise<createGifPdResponse> => {
-    const formData = new FormData();
+    const formData = createGifPdBody === undefined ? undefined : (() => {
+const formData = new FormData();
 if(createGifPdBody?.content !== undefined) {
  formData.append(`content`, createGifPdBody.content);
  }
@@ -751,14 +763,22 @@ if(createGifPdBody?.quotedPdId !== undefined) {
 if(createGifPdBody?.image !== undefined) {
  formData.append(`image`, createGifPdBody.image);
  }
+return formData;
+})();
 
-  return orvalFetch<createGifPdResponse>(getCreateGifPdUrl(),
-  {
+  const requestInit: { body?: unknown } & NonNullable<Parameters<typeof orvalFetch>[1]> = {
     ...options,
     method: 'POST'
-    ,
-    body: formData
+
+
+  };
+  if (formData === undefined) {
+    delete requestInit.body;
+  } else {
+    requestInit.body = formData;
   }
+  return orvalFetch<createGifPdResponse>(getCreateGifPdUrl(),
+  requestInit
 );}
 
 
@@ -832,25 +852,11 @@ export const getMutatePdLikeUrl = () => {
 
 export const mutatePdLike = async (mutatePdLikeBody?: MutatePdLikeBody, options?: Parameters<typeof orvalFetch>[1]): Promise<mutatePdLikeResponse> => {
 
-    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
-    if (!h) return {};
-    if (h instanceof Headers) return Object.fromEntries(h.entries());
-    if (Symbol.iterator in h) {
-      return Object.fromEntries(
-        Array.from(h as Iterable<Iterable<string>>, (entry) => Array.from(entry) as [string, string]),
-      );
-    }
-    const headers: Record<string, string | readonly string[]> = {};
-    for (const [name, value] of Object.entries<string | readonly string[] | undefined>(h)) {
-      if (value !== undefined) headers[name] = value;
-    }
-    return headers;
-  };
-return orvalFetch<mutatePdLikeResponse>(getMutatePdLikeUrl(),
+  return orvalFetch<mutatePdLikeResponse>(getMutatePdLikeUrl(),
   {
     ...options,
     method: 'PUT',
-    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+    headers: getHeaders({ 'Content-Type': 'application/json' }, options?.headers),
     body: JSON.stringify(mutatePdLikeBody)
   }
 );}
@@ -926,25 +932,11 @@ export const getMutatePdBookmarkUrl = () => {
 
 export const mutatePdBookmark = async (mutatePdBookmarkBody?: MutatePdBookmarkBody, options?: Parameters<typeof orvalFetch>[1]): Promise<mutatePdBookmarkResponse> => {
 
-    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
-    if (!h) return {};
-    if (h instanceof Headers) return Object.fromEntries(h.entries());
-    if (Symbol.iterator in h) {
-      return Object.fromEntries(
-        Array.from(h as Iterable<Iterable<string>>, (entry) => Array.from(entry) as [string, string]),
-      );
-    }
-    const headers: Record<string, string | readonly string[]> = {};
-    for (const [name, value] of Object.entries<string | readonly string[] | undefined>(h)) {
-      if (value !== undefined) headers[name] = value;
-    }
-    return headers;
-  };
-return orvalFetch<mutatePdBookmarkResponse>(getMutatePdBookmarkUrl(),
+  return orvalFetch<mutatePdBookmarkResponse>(getMutatePdBookmarkUrl(),
   {
     ...options,
     method: 'PUT',
-    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+    headers: getHeaders({ 'Content-Type': 'application/json' }, options?.headers),
     body: JSON.stringify(mutatePdBookmarkBody)
   }
 );}
@@ -1093,7 +1085,6 @@ export function useFetchBookmarkedPds<TData = Awaited<ReturnType<typeof fetchBoo
  params?: FetchBookmarkedPdsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof fetchBookmarkedPds>>, TError, TData>>, request?: SecondParameter<typeof orvalFetch>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-
 export function useFetchBookmarkedPds<TData = Awaited<ReturnType<typeof fetchBookmarkedPds>>, TError = unknown>(
  params?: FetchBookmarkedPdsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof fetchBookmarkedPds>>, TError, TData>>, request?: SecondParameter<typeof orvalFetch>}
  , queryClient?: QueryClient
@@ -1200,7 +1191,6 @@ export function useFetchPdImage<TData = Awaited<ReturnType<typeof fetchPdImage>>
  fileName: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof fetchPdImage>>, TError, TData>>, request?: SecondParameter<typeof orvalFetch>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-
 export function useFetchPdImage<TData = Awaited<ReturnType<typeof fetchPdImage>>, TError = unknown>(
  fileName: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof fetchPdImage>>, TError, TData>>, request?: SecondParameter<typeof orvalFetch>}
  , queryClient?: QueryClient
@@ -1314,7 +1304,6 @@ export function useFetchRePds<TData = Awaited<ReturnType<typeof fetchRePds>>, TE
  params: FetchRePdsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof fetchRePds>>, TError, TData>>, request?: SecondParameter<typeof orvalFetch>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-
 export function useFetchRePds<TData = Awaited<ReturnType<typeof fetchRePds>>, TError = unknown>(
  params: FetchRePdsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof fetchRePds>>, TError, TData>>, request?: SecondParameter<typeof orvalFetch>}
  , queryClient?: QueryClient
@@ -1355,25 +1344,11 @@ export const getCreateRePdUrl = () => {
 
 export const createRePd = async (createRePdBody?: CreateRePdBody, options?: Parameters<typeof orvalFetch>[1]): Promise<createRePdResponse> => {
 
-    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
-    if (!h) return {};
-    if (h instanceof Headers) return Object.fromEntries(h.entries());
-    if (Symbol.iterator in h) {
-      return Object.fromEntries(
-        Array.from(h as Iterable<Iterable<string>>, (entry) => Array.from(entry) as [string, string]),
-      );
-    }
-    const headers: Record<string, string | readonly string[]> = {};
-    for (const [name, value] of Object.entries<string | readonly string[] | undefined>(h)) {
-      if (value !== undefined) headers[name] = value;
-    }
-    return headers;
-  };
-return orvalFetch<createRePdResponse>(getCreateRePdUrl(),
+  return orvalFetch<createRePdResponse>(getCreateRePdUrl(),
   {
     ...options,
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+    headers: getHeaders({ 'Content-Type': 'application/json' }, options?.headers),
     body: JSON.stringify(createRePdBody)
   }
 );}
@@ -1449,25 +1424,11 @@ export const getMutateRePdLikeUrl = () => {
 
 export const mutateRePdLike = async (mutateRePdLikeBody?: MutateRePdLikeBody, options?: Parameters<typeof orvalFetch>[1]): Promise<mutateRePdLikeResponse> => {
 
-    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
-    if (!h) return {};
-    if (h instanceof Headers) return Object.fromEntries(h.entries());
-    if (Symbol.iterator in h) {
-      return Object.fromEntries(
-        Array.from(h as Iterable<Iterable<string>>, (entry) => Array.from(entry) as [string, string]),
-      );
-    }
-    const headers: Record<string, string | readonly string[]> = {};
-    for (const [name, value] of Object.entries<string | readonly string[] | undefined>(h)) {
-      if (value !== undefined) headers[name] = value;
-    }
-    return headers;
-  };
-return orvalFetch<mutateRePdLikeResponse>(getMutateRePdLikeUrl(),
+  return orvalFetch<mutateRePdLikeResponse>(getMutateRePdLikeUrl(),
   {
     ...options,
     method: 'PUT',
-    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+    headers: getHeaders({ 'Content-Type': 'application/json' }, options?.headers),
     body: JSON.stringify(mutateRePdLikeBody)
   }
 );}
@@ -1609,7 +1570,6 @@ export function useFetchNotificationUnreadCount<TData = Awaited<ReturnType<typeo
   options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof fetchNotificationUnreadCount>>, TError, TData>>, request?: SecondParameter<typeof orvalFetch>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-
 export function useFetchNotificationUnreadCount<TData = Awaited<ReturnType<typeof fetchNotificationUnreadCount>>, TError = unknown>(
   options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof fetchNotificationUnreadCount>>, TError, TData>>, request?: SecondParameter<typeof orvalFetch>}
  , queryClient?: QueryClient
@@ -1723,7 +1683,6 @@ export function useFetchNotifications<TData = Awaited<ReturnType<typeof fetchNot
  params?: FetchNotificationsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof fetchNotifications>>, TError, TData>>, request?: SecondParameter<typeof orvalFetch>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-
 export function useFetchNotifications<TData = Awaited<ReturnType<typeof fetchNotifications>>, TError = unknown>(
  params?: FetchNotificationsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof fetchNotifications>>, TError, TData>>, request?: SecondParameter<typeof orvalFetch>}
  , queryClient?: QueryClient
