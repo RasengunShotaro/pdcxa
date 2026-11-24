@@ -24,7 +24,7 @@
   },
   "dependencies": {
     "@clerk/backend": "^3.31.3",
-    "@clerk/hono": "^0.1.105",
+    "@clerk/hono": "^0.1.106",
     "@hono/zod-openapi": "^1.6.3",
     "@neondatabase/serverless": "^1.2.1",
     "dayjs": "^1.11.23",
