@@ -10,14 +10,15 @@ interface RePdCardProps {
 
 export function RePdCard({ rePd }: RePdCardProps) {
   return (
-    <article className="flex gap-3 px-4 pt-3 pb-1">
+    <article className="relative flex gap-3 py-3.5 after:absolute after:top-[54px] after:-bottom-2 after:left-[16.5px] after:hidden after:w-px after:bg-line group-[:not(:last-child)]/row:after:block">
       <PdAvatar
         imageUrl={rePd.userDetail.imageUrl}
+        size="reply"
         userFullName={rePd.userDetail.userFullName}
         userName={rePd.userDetail.userName}
       />
 
-      <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+      <div className="flex min-w-0 flex-1 flex-col">
         <PdAuthorLine
           badges={rePd.userDetail.badges}
           createdAt={rePd.createdAt}
@@ -25,10 +26,10 @@ export function RePdCard({ rePd }: RePdCardProps) {
           userName={rePd.userDetail.userName}
         />
 
-        <PdBody content={rePd.content} />
+        <PdBody className="mt-0.5" content={rePd.content} />
 
-        <div className="-ml-2 mt-0.5 flex items-center text-muted-foreground">
-          <div className="inline-flex items-center rounded-full transition-colors hover:bg-accent">
+        <div className="-ml-2.5 mt-0.5 flex items-center text-ink-3">
+          <div className="inline-flex items-center rounded-[18px] transition-colors hover:bg-fill">
             <RePdLikeButton rePd={rePd} />
             <PdLikersPopover
               likeCount={rePd.likeCount}

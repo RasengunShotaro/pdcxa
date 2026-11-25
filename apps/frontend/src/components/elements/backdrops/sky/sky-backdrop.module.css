@@ -1,0 +1,58 @@
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  background-color: #6ea3e6;
+  background-image: linear-gradient(
+    to bottom,
+    #2f6fd0 0%,
+    #5a93e2 40%,
+    #9cc3f0 78%,
+    #cfe2f7 100%
+  );
+}
+
+:global(html.dark) .backdrop {
+  background-color: #0d142c;
+  background-image: linear-gradient(
+    to bottom,
+    #0b1024 0%,
+    #0e152f 45%,
+    #17223f 80%,
+    #263354 94%,
+    #4a3f5c 100%
+  );
+}
+
+:global(html.reduce-transparency) .backdrop {
+  background-image: none;
+}
+
+.canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 600ms ease-out;
+}
+
+.canvas[data-ready="true"] {
+  opacity: 1;
+}
+
+:global(html.reduce-transparency) .canvas {
+  display: none;
+}
+
+:global(html.reduce-motion) .canvas {
+  transition: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .canvas {
+    transition: none;
+  }
+}

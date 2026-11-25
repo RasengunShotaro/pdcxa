@@ -2,7 +2,6 @@
 
 import { Loader2 } from "lucide-react";
 import { useEffect } from "react";
-import { FeedTabPanel } from "@/components/elements/feed-tab-panel";
 import { Button } from "@/components/ui/button";
 import { useInfiniteScroll } from "@/feature/pd/components/timeline/use-infinite-scroll";
 import { useNotifications } from "../hooks/use-notifications";
@@ -32,7 +31,7 @@ export function NotificationsView() {
   });
 
   return (
-    <FeedTabPanel>
+    <div>
       <NotificationListBody
         error={error}
         isError={isError}
@@ -48,6 +47,7 @@ export function NotificationsView() {
           {hasNextPage ? (
             <div className="flex justify-center py-4">
               <Button
+                className="rounded-full"
                 disabled={isFetchingNextPage}
                 onClick={() => fetchNextPage()}
                 type="button"
@@ -62,6 +62,6 @@ export function NotificationsView() {
           ) : null}
         </>
       ) : null}
-    </FeedTabPanel>
+    </div>
   );
 }

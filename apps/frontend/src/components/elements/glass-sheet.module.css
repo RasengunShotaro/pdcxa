@@ -1,0 +1,98 @@
+.sheet {
+  --sheet-radius: 30px;
+  --sheet-pad: 14px;
+  --sheet-top: oklch(0.985 0.006 240 / 0.96);
+  --sheet-bottom: oklch(0.965 0.012 240 / 0.94);
+  --sheet-edge-strong: oklch(1 0 0 / 0.95);
+  --sheet-edge-weak: oklch(1 0 0 / 0.2);
+  --sheet-gloss: oklch(1 0 0 / 0.4);
+  --sheet-outline: oklch(0.3 0.05 250 / 0.16);
+
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  width: min(440px, calc(100vw - 24px));
+  max-width: none;
+  max-height: calc(100dvh - 48px);
+  padding: var(--sheet-pad);
+  overflow-y: auto;
+  border: 0;
+  border-radius: var(--sheet-radius);
+  background: linear-gradient(180deg, var(--sheet-top), var(--sheet-bottom));
+  box-shadow:
+    0 0 0 0.5px var(--sheet-outline),
+    0 18px 36px -24px oklch(0.2 0.06 250 / 0.5);
+  color: var(--ink);
+  font-feature-settings: "palt";
+  -webkit-backdrop-filter: blur(18px) saturate(1.8);
+  backdrop-filter: blur(18px) saturate(1.8);
+}
+
+:global(html.dark) .sheet {
+  --sheet-top: oklch(0.27 0.045 262 / 0.96);
+  --sheet-bottom: oklch(0.19 0.04 264 / 0.95);
+  --sheet-edge-strong: oklch(1 0 0 / 0.34);
+  --sheet-edge-weak: oklch(1 0 0 / 0.05);
+  --sheet-gloss: oklch(1 0 0 / 0.08);
+  --sheet-outline: oklch(0 0 0 / 0.5);
+}
+
+.sheet::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  padding: 1px;
+  border-radius: inherit;
+  background: linear-gradient(
+    155deg,
+    var(--sheet-edge-strong),
+    var(--sheet-edge-weak) 38%,
+    var(--sheet-edge-weak) 64%,
+    var(--sheet-edge-strong)
+  );
+  mask:
+    linear-gradient(#000 0 0) content-box exclude,
+    linear-gradient(#000 0 0);
+  pointer-events: none;
+}
+
+.sheet::after {
+  content: "";
+  position: absolute;
+  inset: 1px 1px auto;
+  z-index: -1;
+  height: 180px;
+  border-radius: calc(var(--sheet-radius) - 1px) calc(var(--sheet-radius) - 1px)
+    0 0;
+  background: linear-gradient(180deg, var(--sheet-gloss), transparent);
+  pointer-events: none;
+}
+
+.sheet > button:last-child {
+  top: 22px;
+  right: 22px;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--sheet-group);
+  color: var(--ink);
+  opacity: 1;
+}
+
+:global(html.reduce-transparency) .sheet {
+  background: var(--surface-solid);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .sheet {
+    background: var(--surface-solid);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}

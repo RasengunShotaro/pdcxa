@@ -6,6 +6,11 @@ import { Button } from "@/components/ui/button";
 import type { Pd } from "@/feature/pd/types";
 import { usePdBookmark } from "@/hooks/use-pd-bookmark";
 import { cn } from "@/lib/utils";
+import {
+  PD_ACTION_CLASS,
+  PD_ACTION_ICON_CLASS,
+  PD_ACTION_PRESSED_ICON_CLASS,
+} from "./pd-action-style";
 
 interface PdBookmarkButtonProps {
   pd: Pd;
@@ -18,9 +23,8 @@ export function PdBookmarkButton({ pd }: PdBookmarkButtonProps) {
     <Button
       aria-label={isBookmarked ? "保存を外す" : "保存する"}
       aria-pressed={isBookmarked}
-      className="size-8 rounded-full text-muted-foreground transition-[color,background-color,translate] hover:-translate-y-px hover:bg-accent"
+      className={PD_ACTION_CLASS}
       onClick={toggleBookmark}
-      size="icon"
       title={isBookmarked ? "保存を外す" : "保存する"}
       type="button"
       variant="ghost"
@@ -29,9 +33,9 @@ export function PdBookmarkButton({ pd }: PdBookmarkButtonProps) {
         <Bookmark
           aria-hidden="true"
           className={cn(
-            "size-4.5 transition-[color,fill] duration-150",
-            isBookmarked &&
-              "fill-primary-600 text-primary-600 dark:fill-primary-300 dark:text-primary-300",
+            PD_ACTION_ICON_CLASS,
+            "transition-[color,fill] duration-150",
+            isBookmarked && PD_ACTION_PRESSED_ICON_CLASS,
           )}
         />
       </PopOnActivate>

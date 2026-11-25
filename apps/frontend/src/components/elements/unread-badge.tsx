@@ -50,7 +50,7 @@ export function UnreadBadge({ count }: UnreadBadgeProps) {
       {count > 0 ? (
         <m.span
           animate={{ scale: 1, opacity: 1 }}
-          className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-red-50 px-1.5 text-xs font-medium text-red-600 dark:bg-red-500/15 dark:text-red-300"
+          className="inline-flex h-[18px] min-w-[18px] items-center justify-center rounded-[9px] bg-brand px-[5px] text-[0.6875rem] leading-none font-bold text-on-brand tabular-nums"
           exit={{
             scale: 0,
             opacity: 0,

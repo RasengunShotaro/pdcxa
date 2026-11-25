@@ -12,6 +12,7 @@ import { 作成したPDを詳細化する } from "@/feature/pd/utils/build-creat
 import { PDをタイムラインに楽観追加する } from "@/feature/pd/utils/prepend-created-pd";
 import { resizeImage } from "@/feature/pd/utils/resize-image";
 import { useCurrentUser } from "@/lib/auth/use-current-user";
+import { getFetchFootprintQueryKey } from "@/schema/api";
 
 interface CreatePdInput {
   content: string;
@@ -38,6 +39,7 @@ export const useCreatePd = () => {
         pd: 作成したPDを詳細化する({ created, user, quotedFrom: quotedPd }),
       });
       queryClient.invalidateQueries({ queryKey: weeklyStatsQueryKey() });
+      queryClient.invalidateQueries({ queryKey: getFetchFootprintQueryKey() });
       if (quotedPd) {
         queryClient.invalidateQueries({ queryKey: pdRootQueryKey() });
       }

@@ -1,6 +1,5 @@
 "use client";
 
-import { EmptyState } from "@/components/elements/empty-state";
 import { FeedSectionHeading } from "@/components/elements/feed-layout";
 import { ListError } from "@/components/elements/list-error";
 import { ListSkeleton } from "@/components/elements/list-skeleton";
@@ -35,26 +34,32 @@ export function RePdSection({
       <FeedSectionHeading>
         RePD一覧
         {!isPending && !isError ? (
-          <span className="font-normal text-muted-foreground tabular-nums">
+          <span className="text-[0.875rem] font-normal text-ink-3 tabular-nums">
             {rePds.length}
           </span>
         ) : null}
       </FeedSectionHeading>
 
-      {isPending ? <ListSkeleton count={2} variant="rows" /> : null}
+      {isPending ? (
+        <div className="-mx-5.5">
+          <ListSkeleton count={2} variant="rows" />
+        </div>
+      ) : null}
 
       {isError ? (
-        <div className="p-4">
+        <div className="py-4">
           <ListError error={error} onRetry={onRetry} />
         </div>
       ) : null}
 
       {!isPending && !isError && rePds.length === 0 ? (
-        <EmptyState message="まだRePDはありません。RePDしてみよう！" />
+        <p className="pt-[22px] pb-1.5 text-[0.875rem] text-ink-3">
+          まだRePDはありません。RePDしてみよう！
+        </p>
       ) : null}
 
       {!isPending && !isError && rePds.length > 0 ? (
-        <ul className="divide-y divide-border border-b border-border">
+        <ul className="mt-1.5 flex flex-col">
           {rePds.map((rePd) => (
             <InsertedListItem
               isInserted={insertedIds.has(rePd.id)}

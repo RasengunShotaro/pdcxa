@@ -1,46 +1,45 @@
-import { MessageSquare } from "lucide-react";
 import Link from "next/link";
-import { ViewTransition } from "react";
 import type { Pd } from "@/feature/pd/types";
-import { 件数を短く表す } from "@/feature/pd/utils/format-count";
+import { cn } from "@/lib/utils";
+import { PdActions } from "./pd-actions";
 import { PdAuthorLine, PdAvatar } from "./pd-author";
 import { PdBody } from "./pd-body";
-import { PdBookmarkButton } from "./pd-bookmark-button";
 import { PdCardImage } from "./pd-card-image";
-import { PdLikeButton } from "./pd-like-button";
-import { PdLikersPopover } from "./pd-likers-popover";
-import { PdQuoteButton } from "./pd-quote-button";
 import { PdTimestamp } from "./pd-timestamp";
-import { pd詳細へ移る共有要素の名前 } from "./pd-view-transition-name";
 import { QuotedPdCard } from "./quoted-pd-card";
 
 interface PdCardProps {
   pd: Pd;
   showAuthor?: boolean;
-  clampBody?: boolean;
+  density?: "compact" | "comfortable";
+  selected?: boolean;
 }
 
-export function PdCard(props: PdCardProps) {
-  return (
-    <ViewTransition
-      default="none"
-      name={pd詳細へ移る共有要素の名前(props.pd.id)}
-      share="pd-morph"
-    >
-      <PdCardContent {...props} />
-    </ViewTransition>
-  );
-}
-
-function PdCardContent({
+export function PdCard({
   pd,
   showAuthor = true,
-  clampBody = true,
+  density = "comfortable",
+  selected = false,
 }: PdCardProps) {
   const detailHref = `/pd/${pd.id}`;
+  const isCompact = density === "compact";
 
   return (
-    <article className="flex gap-3 px-4 pt-3 pb-1">
+    <article
+      className={cn(
+        "relative flex gap-3 rounded-2xl px-3.5 py-3.5 transition-colors before:pointer-events-none before:absolute before:top-0 before:right-3.5 before:h-px before:bg-line hover:bg-row-hover group-first/row:before:hidden",
+        showAuthor ? "before:left-[66px]" : "before:left-3.5",
+        selected &&
+          "wide:bg-fill-hover wide:before:hidden wide:hover:bg-fill-hover",
+      )}
+      data-selected={selected}
+    >
+      <Link
+        aria-hidden="true"
+        className="absolute inset-0 rounded-[inherit]"
+        href={detailHref}
+        tabIndex={-1}
+      />
       {showAuthor ? (
         <PdAvatar
           imageUrl={pd.userDetail.imageUrl}
@@ -49,7 +48,7 @@ function PdCardContent({
         />
       ) : null}
 
-      <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+      <div className="flex min-w-0 flex-1 flex-col">
         {showAuthor ? (
           <PdAuthorLine
             badges={pd.userDetail.badges}
@@ -58,51 +57,34 @@ function PdCardContent({
             userFullName={pd.userDetail.userFullName}
             userName={pd.userDetail.userName}
           />
-        ) : null}
+        ) : (
+          <PdTimestamp
+            className="relative z-[1] self-start text-[0.8125rem] text-ink-3 tabular-nums"
+            createdAt={pd.createdAt}
+            href={detailHref}
+          />
+        )}
 
-        <PdBody clamp={clampBody} content={pd.content} />
+        <PdBody
+          className={cn(
+            "mt-1",
+            isCompact
+              ? "text-[0.9063rem] leading-[1.7]"
+              : "text-[0.9688rem] leading-[1.85]",
+          )}
+          content={pd.content}
+          lines={isCompact ? 3 : 8}
+        />
 
         <PdCardImage
           alt={`${pd.userDetail.userFullName}さんが投稿した画像`}
           imageFileName={pd.imageFileName}
+          shape={isCompact ? "row" : "wide"}
         />
 
         {pd.quotedPd ? <QuotedPdCard quotedPd={pd.quotedPd} /> : null}
 
-        <div className="-ml-2 mt-0.5 flex items-center text-muted-foreground">
-          {showAuthor ? null : (
-            <PdTimestamp
-              className="mr-2 ml-2"
-              createdAt={pd.createdAt}
-              href={detailHref}
-            />
-          )}
-          <div className="w-1/4">
-            <Link
-              aria-label={`${pd.replyCount}件の返信を見る`}
-              className="inline-flex h-8 items-center gap-1.5 rounded-full px-2 text-xs tabular-nums transition-[color,background-color,translate] hover:-translate-y-px hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
-              href={detailHref}
-            >
-              <MessageSquare aria-hidden="true" className="size-4.5" />
-              {件数を短く表す(pd.replyCount)}
-            </Link>
-          </div>
-          <div className="w-1/4">
-            <PdQuoteButton pd={pd} />
-          </div>
-          <div className="w-1/4">
-            <div className="inline-flex items-center rounded-full transition-colors hover:bg-accent">
-              <PdLikeButton pd={pd} />
-              <PdLikersPopover
-                likeCount={pd.likeCount}
-                likeUsers={pd.likeUsers}
-              />
-            </div>
-          </div>
-          <div className="ml-auto">
-            <PdBookmarkButton pd={pd} />
-          </div>
-        </div>
+        <PdActions className="mt-2" pd={pd} />
       </div>
     </article>
   );

@@ -5,6 +5,10 @@ import {
   pageLabelForPath,
   TIMELINE_TABS,
   タブを切り替える向き,
+  一覧に出すタブを決める,
+  殻の見出しを決める,
+  画面の種類を決める,
+  開いているPDのIDを求める,
 } from "./nav-items";
 
 describe("ナビ項目が現在地かどうかを判定する", () => {
@@ -38,8 +42,8 @@ describe("現在地のラベルを解決する", () => {
     expect(pageLabelForPath("/stats")).toBe("統計");
   });
 
-  it("保存した PD のページでは保存した PD を返す", () => {
-    expect(pageLabelForPath("/bookmarks")).toBe("保存した PD");
+  it("保存済みのタブのページでは保存済みを返す", () => {
+    expect(pageLabelForPath("/bookmarks")).toBe("保存済み");
   });
 
   it("ホームではホームを返す", () => {
@@ -64,8 +68,22 @@ describe("現在地のラベルを解決する", () => {
 });
 
 describe("サイドバーのナビ項目", () => {
-  it("プロフィールへはサイドバーから直接進める", () => {
-    expect(NAV_ITEMS.some((item) => item.href === "/profile")).toBe(true);
+  it("プロフィールはサイドバーに並べず、左下のユーザーメニューから開く", () => {
+    expect(NAV_ITEMS.some((item) => item.href === "/profile")).toBe(false);
+  });
+
+  it("保存済みは通知と同じく、サイドバーからも開ける", () => {
+    expect(NAV_ITEMS.some((item) => item.href === "/bookmarks")).toBe(true);
+  });
+});
+
+describe("タイムラインのタブ", () => {
+  it("ホーム・通知・保存済みの順に並ぶ", () => {
+    expect(TIMELINE_TABS.map((tab) => tab.label)).toEqual([
+      "ホーム",
+      "通知",
+      "保存済み",
+    ]);
   });
 });
 
@@ -104,5 +122,60 @@ describe("タブを切り替える向きを決める", () => {
         href: "/notifications",
       }),
     ).toBeUndefined();
+  });
+});
+
+describe("画面の種類を決める", () => {
+  it("ホームは一覧の画面として扱う", () => {
+    expect(画面の種類を決める("/")).toBe("timeline");
+  });
+
+  it("保存済みは一覧の画面として扱う", () => {
+    expect(画面の種類を決める("/bookmarks")).toBe("timeline");
+  });
+
+  it("PD を開いているときは詳細の画面として扱う", () => {
+    expect(画面の種類を決める("/pd/abc")).toBe("detail");
+  });
+
+  it("統計は単独のページとして扱う", () => {
+    expect(画面の種類を決める("/stats")).toBe("page");
+  });
+});
+
+describe("殻の見出しを決める", () => {
+  it("統計ではページ名を見出しにする", () => {
+    expect(殻の見出しを決める("/stats")).toBe("統計");
+  });
+
+  it("ユーザーのページでは、ページ側がユーザー名を見出しにするので出さない", () => {
+    expect(殻の見出しを決める("/user/taro")).toBeUndefined();
+  });
+});
+
+describe("開いているPDのIDを求める", () => {
+  it("PD を開いているときはその PD を指す", () => {
+    expect(開いているPDのIDを求める("/pd/0190a1b2")).toBe("0190a1b2");
+  });
+
+  it("一覧だけを見ているときは開いている PD が無い", () => {
+    expect(開いているPDのIDを求める("/notifications")).toBeNull();
+  });
+});
+
+describe("一覧に出すタブを決める", () => {
+  it("タブの画面ではそのタブの一覧を出す", () => {
+    expect(
+      一覧に出すタブを決める({ pathname: "/bookmarks", lastTabHref: "/" }),
+    ).toBe("/bookmarks");
+  });
+
+  it("PD を開いている間は直前に見ていたタブの一覧を残す", () => {
+    expect(
+      一覧に出すタブを決める({
+        pathname: "/pd/abc",
+        lastTabHref: "/notifications",
+      }),
+    ).toBe("/notifications");
   });
 });

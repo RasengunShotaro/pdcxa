@@ -1,119 +1,130 @@
 "use client";
 
-import { MessagesSquare } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
-import { Separator } from "@/components/ui/separator";
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarHeader,
-  SidebarInset,
-  SidebarProvider,
-  SidebarRail,
-  SidebarTrigger,
-} from "@/components/ui/sidebar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { BackLink } from "@/feature/pd/components/detail/back-link";
+import { avatarInitials } from "@/feature/pd/components/timeline/avatar-initials";
+import { AppearancePreferencesSync } from "@/feature/settings/components/appearance-preferences-sync";
+import { useCurrentUser } from "@/lib/auth/use-current-user";
+import { cn } from "@/lib/utils";
+import { AppBackdrop } from "./app-backdrop/app-backdrop";
+import { AppSheetsProvider, useAppSheets } from "./app-sheets";
+import styles from "./app-shell.module.css";
 import { AppSidebarNav } from "./app-sidebar-nav";
-import { pageLabelForPath } from "./nav-items";
+import { FeedTabs } from "./feed-tabs";
+import { LiquidGlass } from "./liquid-glass/liquid-glass";
+import { MobileBar } from "./mobile-bar";
+import {
+  TIMELINE_TABS,
+  殻の見出しを決める,
+  画面の種類を決める,
+} from "./nav-items";
 import { NavUser } from "./nav-user";
-import { SidebarCollapseButton } from "./sidebar-collapse-button";
+import { 今日の日付を見出しにする } from "./today-label";
 
 interface AppShellProps {
   children: ReactNode;
   userFooter?: ReactNode;
+  backdrop?: ReactNode;
 }
 
-function BrandLink() {
+function MobileSettingsButton() {
+  const { user } = useCurrentUser();
+  const { openSheet } = useAppSheets();
+  const displayName = user?.fullName ?? "ユーザー";
+
   return (
-    <Link
-      className="flex items-center gap-2 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
-      href="/"
+    <button
+      aria-label="設定"
+      className={styles.me}
+      onClick={() => openSheet("settings")}
+      type="button"
     >
-      <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-        <MessagesSquare aria-hidden="true" className="size-5" />
-      </span>
-      <Image
-        alt="PDCXA"
-        className="h-7 w-auto group-data-[collapsible=icon]:hidden dark:invert"
-        height={28}
-        priority
-        src="/pdcxa.svg"
-        unoptimized
-        width={104}
-      />
-    </Link>
+      <Avatar className="size-10">
+        <AvatarImage alt="" src={user?.imageUrl} />
+        <AvatarFallback className="bg-surface-solid text-sm font-bold text-ink">
+          {avatarInitials(displayName)}
+        </AvatarFallback>
+      </Avatar>
+    </button>
   );
 }
 
 export function AppShell({
   children,
   userFooter = <NavUser />,
+  backdrop = <AppBackdrop />,
 }: AppShellProps) {
   const pathname = usePathname();
-  const currentLabel = pageLabelForPath(pathname);
+  const screen = 画面の種類を決める(pathname);
+  const heading = 殻の見出しを決める(pathname);
 
   return (
-    <div className="min-h-svh bg-bg-page">
-      <SidebarProvider>
+    <div className={cn("app-ambient", styles.app)} data-screen={screen}>
+      {backdrop}
+      <AppearancePreferencesSync />
+      <AppSheetsProvider>
         <a
-          className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:rounded-lg focus:bg-sidebar focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:text-primary focus:shadow-md"
+          className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:rounded-lg focus:bg-surface-solid focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:text-ink focus:shadow-md"
           href="#main-content"
         >
           コンテンツへスキップ
         </a>
 
-        <Sidebar collapsible="icon">
-          <SidebarHeader className="h-16 flex-row items-center gap-2 border-b border-sidebar-border px-5 py-0 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0">
-            <BrandLink />
-          </SidebarHeader>
-          <SidebarContent>
-            <AppSidebarNav />
-          </SidebarContent>
-          <SidebarFooter className="gap-1 border-t border-sidebar-border p-3 group-data-[collapsible=icon]:px-0">
-            <SidebarCollapseButton />
-            {userFooter}
-          </SidebarFooter>
-          <SidebarRail />
-        </Sidebar>
+        <div className={styles.frame}>
+          <Link className={styles.brand} href="/">
+            <Image
+              alt="PDCXA"
+              className={styles.logo}
+              height={32}
+              priority
+              src="/pdcxa.svg"
+              unoptimized
+              width={118}
+            />
+          </Link>
+          <MobileSettingsButton />
 
-        <SidebarInset className="min-w-0 bg-bg-page">
-          <header className="sticky top-0 z-20 flex h-14 shrink-0 items-center gap-2 border-b bg-background px-2 md:hidden">
-            <SidebarTrigger className="size-11" />
-            {currentLabel ? (
-              <>
-                <Separator
-                  className="mx-1 data-[orientation=vertical]:h-6"
-                  orientation="vertical"
-                />
-                <h1 className="truncate text-base font-medium text-foreground">
-                  {currentLabel}
-                </h1>
-              </>
+          <header className={styles.tools}>
+            {screen === "page" ? (
+              heading ? (
+                <h1 className={styles.title}>{heading}</h1>
+              ) : null
             ) : (
-              <BrandLink />
+              <>
+                <h1 className="sr-only">{heading}</h1>
+                <div className={styles.tabs}>
+                  <FeedTabs tabs={TIMELINE_TABS} />
+                </div>
+              </>
             )}
-          </header>
-          <div className="flex flex-1 flex-col bg-bg-page">
-            <div
-              className="mx-auto flex w-full max-w-[65.125rem] flex-1 flex-col px-4 py-6 has-[[data-narrow-page]]:max-w-[42rem] has-[[data-feed-layout]]:max-w-none has-[[data-feed-layout]]:[&>[data-page-title]]:hidden"
-              id="main-content"
-            >
-              {currentLabel ? (
-                <h1
-                  className="mb-6 hidden text-2xl font-bold text-foreground md:block"
-                  data-page-title=""
-                >
-                  {currentLabel}
-                </h1>
-              ) : null}
-              {children}
+            <div className={styles.back}>
+              <BackLink withLabel />
             </div>
+            <p className={styles.today} suppressHydrationWarning>
+              {今日の日付を見出しにする(new Date())}
+            </p>
+          </header>
+
+          <div className={styles.rail}>
+            <LiquidGlass bezel={22} radius={24} strength={80} />
+            <AppSidebarNav />
+            <div className={styles.railEnd}>{userFooter}</div>
           </div>
-        </SidebarInset>
-      </SidebarProvider>
+
+          <div
+            className={cn(styles.surface, "surface-material")}
+            id="main-content"
+          >
+            {children}
+          </div>
+        </div>
+
+        <MobileBar />
+      </AppSheetsProvider>
     </div>
   );
 }

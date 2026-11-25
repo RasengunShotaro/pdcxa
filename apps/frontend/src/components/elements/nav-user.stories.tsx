@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { expect, userEvent, waitFor, within } from "storybook/test";
-import { SidebarProvider } from "@/components/ui/sidebar";
+import { AppSheetsProvider } from "./app-sheets";
 import { NavUser } from "./nav-user";
 
 const meta: Meta<typeof NavUser> = {
@@ -9,9 +9,11 @@ const meta: Meta<typeof NavUser> = {
   parameters: { layout: "centered" },
   decorators: [
     (Story) => (
-      <SidebarProvider>
-        <Story />
-      </SidebarProvider>
+      <AppSheetsProvider>
+        <div className="w-60 pt-40">
+          <Story />
+        </div>
+      </AppSheetsProvider>
     ),
   ],
 };
@@ -34,10 +36,41 @@ export const OpensMenu: Story = {
       ).toBeInTheDocument(),
     );
     await expect(
-      menu.getByRole("menuitem", { name: "プロフィール設定" }),
-    ).toHaveAttribute("href", "/profile");
-    await expect(
       menu.getByRole("menuitem", { name: "ログアウト" }),
     ).toBeInTheDocument();
+  },
+};
+
+export const OpensSettings: Story = {
+  name: "ユーザーカードのメニューから設定を開ける",
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const body = within(document.body);
+
+    await userEvent.click(canvas.getByRole("button", { name: /Dev User/ }));
+    await userEvent.click(await body.findByRole("menuitem", { name: "設定" }));
+
+    await waitFor(() =>
+      expect(body.getByRole("dialog", { name: "設定" })).toBeInTheDocument(),
+    );
+  },
+};
+
+export const OpensProfile: Story = {
+  name: "ユーザーカードのメニューから、画面を移らずにプロフィール設定のシートを開ける",
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const body = within(document.body);
+
+    await userEvent.click(canvas.getByRole("button", { name: /Dev User/ }));
+    await userEvent.click(
+      await body.findByRole("menuitem", { name: "プロフィール設定" }),
+    );
+
+    await waitFor(() =>
+      expect(
+        body.getByRole("dialog", { name: "プロフィール設定" }),
+      ).toBeInTheDocument(),
+    );
   },
 };

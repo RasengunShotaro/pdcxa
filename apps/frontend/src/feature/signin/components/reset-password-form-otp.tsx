@@ -24,10 +24,18 @@ import {
 import { PasswordInput } from "@/components/ui/password-input";
 import type { SignInFlow } from "@/lib/auth/types";
 import { useSignInFlow } from "@/lib/auth/use-sign-in";
+import { アプリへ入る演出を始める } from "../transition/enter-app-transition";
 import {
   type ResetPasswordFormSchema,
   resetPasswordFormSchema,
 } from "../types/reset-form";
+import {
+  LOGIN_ALERT_CLASS,
+  LOGIN_FIELD_CLASS,
+  LOGIN_LABEL_CLASS,
+  LOGIN_OTP_SLOT_CLASS,
+  LOGIN_SUBMIT_CLASS,
+} from "./login-scene/login-field";
 
 const RESET_FAILED = "問題が発生しました";
 const RESET_FAILED_DETAIL = "再度お試しください";
@@ -81,6 +89,7 @@ export function ResetPasswordOtpForm({ flow }: ResetPasswordOtpFormProps) {
         await signIn.finalize({
           navigate: ({ decorateUrl }) => {
             const url = decorateUrl("/");
+            アプリへ入る演出を始める();
             if (url.startsWith("http")) {
               window.location.href = url;
             } else {
@@ -106,10 +115,13 @@ export function ResetPasswordOtpForm({ flow }: ResetPasswordOtpFormProps) {
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>新しいパスワード</FormLabel>
+              <FormLabel className={LOGIN_LABEL_CLASS}>
+                新しいパスワード
+              </FormLabel>
               <FormControl>
                 <PasswordInput
                   autoComplete="new-password"
+                  className={LOGIN_FIELD_CLASS}
                   placeholder="8文字以上のパスワード"
                   {...field}
                 />
@@ -123,10 +135,13 @@ export function ResetPasswordOtpForm({ flow }: ResetPasswordOtpFormProps) {
           name="confirmPassword"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>新しいパスワード再入力</FormLabel>
+              <FormLabel className={LOGIN_LABEL_CLASS}>
+                新しいパスワード再入力
+              </FormLabel>
               <FormControl>
                 <PasswordInput
                   autoComplete="new-password"
+                  className={LOGIN_FIELD_CLASS}
                   placeholder="同じパスワードをもう一度"
                   {...field}
                 />
@@ -140,7 +155,7 @@ export function ResetPasswordOtpForm({ flow }: ResetPasswordOtpFormProps) {
           name="code"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>確認コード</FormLabel>
+              <FormLabel className={LOGIN_LABEL_CLASS}>確認コード</FormLabel>
               <FormControl>
                 <InputOTP
                   aria-label="確認コード（6桁）"
@@ -149,12 +164,12 @@ export function ResetPasswordOtpForm({ flow }: ResetPasswordOtpFormProps) {
                   {...field}
                 >
                   <InputOTPGroup>
-                    <InputOTPSlot index={0} />
-                    <InputOTPSlot index={1} />
-                    <InputOTPSlot index={2} />
-                    <InputOTPSlot index={3} />
-                    <InputOTPSlot index={4} />
-                    <InputOTPSlot index={5} />
+                    <InputOTPSlot className={LOGIN_OTP_SLOT_CLASS} index={0} />
+                    <InputOTPSlot className={LOGIN_OTP_SLOT_CLASS} index={1} />
+                    <InputOTPSlot className={LOGIN_OTP_SLOT_CLASS} index={2} />
+                    <InputOTPSlot className={LOGIN_OTP_SLOT_CLASS} index={3} />
+                    <InputOTPSlot className={LOGIN_OTP_SLOT_CLASS} index={4} />
+                    <InputOTPSlot className={LOGIN_OTP_SLOT_CLASS} index={5} />
                   </InputOTPGroup>
                 </InputOTP>
               </FormControl>
@@ -164,13 +179,17 @@ export function ResetPasswordOtpForm({ flow }: ResetPasswordOtpFormProps) {
         />
 
         {hasError ? (
-          <Alert variant="destructive">
+          <Alert className={LOGIN_ALERT_CLASS} variant="destructive">
             <TriangleAlert />
             <AlertDescription>{RESET_FAILED_DETAIL}</AlertDescription>
           </Alert>
         ) : null}
 
-        <Button className="w-full" disabled={isPending} type="submit">
+        <Button
+          className={LOGIN_SUBMIT_CLASS}
+          disabled={isPending}
+          type="submit"
+        >
           {isPending ? (
             <Loader2 aria-hidden="true" className="size-4 animate-spin" />
           ) : (

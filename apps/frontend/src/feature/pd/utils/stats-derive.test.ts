@@ -7,6 +7,7 @@ import {
   toActivityChartData,
   上位の投稿者を選ぶ,
   投稿者の表示名,
+  最多に対する割合を求める,
 } from "./stats-derive";
 
 const baseTotals: PdWeeklyStats["totals"] = {
@@ -145,5 +146,19 @@ describe("上位の投稿者を選ぶ", () => {
     const result = 上位の投稿者を選ぶ({ rankings, limit: 3 });
 
     expect(result.map((row) => row.userId)).toEqual(["a"]);
+  });
+});
+
+describe("最多に対する割合を求める", () => {
+  it("最多の人は棒をいっぱいまで伸ばす", () => {
+    expect(最多に対する割合を求める({ value: 8, max: 8 })).toBe(100);
+  });
+
+  it("最多の半分の人は棒を半分まで伸ばす", () => {
+    expect(最多に対する割合を求める({ value: 4, max: 8 })).toBe(50);
+  });
+
+  it("誰も投稿していないときは棒を伸ばさない", () => {
+    expect(最多に対する割合を求める({ value: 0, max: 0 })).toBe(0);
   });
 });

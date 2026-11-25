@@ -12,6 +12,8 @@ interface PdTimelineProps {
   onCompose?: () => void;
   emptyState?: ReactNode;
   showAuthor?: boolean;
+  density?: "compact" | "comfortable";
+  highlightsOpenPd?: boolean;
 }
 
 export function PdTimeline({
@@ -19,6 +21,8 @@ export function PdTimeline({
   onCompose,
   emptyState,
   showAuthor = true,
+  density = "comfortable",
+  highlightsOpenPd = false,
 }: PdTimelineProps) {
   const {
     pds,
@@ -33,12 +37,17 @@ export function PdTimeline({
 
   return (
     <PdList
+      density={density}
       emptyState={
         emptyState ?? (
           <EmptyState
             action={
               onCompose ? (
-                <Button onClick={onCompose} type="button">
+                <Button
+                  className="rounded-full"
+                  onClick={onCompose}
+                  type="button"
+                >
                   <MessageCirclePlus aria-hidden="true" className="size-4" />
                   最初のPDをしてみよう
                 </Button>
@@ -51,6 +60,7 @@ export function PdTimeline({
       }
       error={error}
       hasNextPage={hasNextPage}
+      highlightsOpenPd={highlightsOpenPd}
       isError={isError}
       isFetchingNextPage={isFetchingNextPage}
       isPending={isPending}

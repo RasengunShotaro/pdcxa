@@ -2,20 +2,35 @@ import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { 著者の名前を決める } from "@/feature/pd/utils/author-display";
 import { UserBadges } from "@/feature/user/badges/user-badges";
+import { cn } from "@/lib/utils";
 import { avatarInitials } from "./avatar-initials";
 import { PdTimestamp } from "./pd-timestamp";
+
+type AvatarSize = "reply" | "row" | "detail";
+
+const AVATAR_SIZE_CLASS: Record<AvatarSize, string> = {
+  reply: "size-[34px]",
+  row: "size-10",
+  detail: "size-12",
+};
 
 interface PdAvatarProps {
   userFullName: string;
   userName: string;
   imageUrl: string;
+  size?: AvatarSize;
 }
 
-export function PdAvatar({ userFullName, userName, imageUrl }: PdAvatarProps) {
+export function PdAvatar({
+  userFullName,
+  userName,
+  imageUrl,
+  size = "row",
+}: PdAvatarProps) {
   const avatar = (
-    <Avatar className="size-10">
+    <Avatar className={AVATAR_SIZE_CLASS[size]}>
       <AvatarImage alt="" src={imageUrl} />
-      <AvatarFallback className="bg-primary-50 text-sm font-medium text-primary-600 dark:bg-primary/15 dark:text-primary-300">
+      <AvatarFallback className="bg-brand-soft text-sm font-bold text-ink">
         {avatarInitials(userFullName)}
       </AvatarFallback>
     </Avatar>
@@ -28,10 +43,44 @@ export function PdAvatar({ userFullName, userName, imageUrl }: PdAvatarProps) {
   return (
     <Link
       aria-label={`${userFullName}さんのページ`}
-      className="shrink-0 rounded-full transition-[opacity,translate] hover:-translate-y-px hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
+      className="relative z-[1] h-fit shrink-0 rounded-full transition-[opacity,translate] hover:-translate-y-px hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
       href={`/user/${userName}`}
     >
       {avatar}
+    </Link>
+  );
+}
+
+interface PdAuthorNameProps {
+  userFullName: string;
+  userName: string;
+  className?: string;
+}
+
+export function PdAuthorName({
+  userFullName,
+  userName,
+  className,
+}: PdAuthorNameProps) {
+  const { name } = 著者の名前を決める({ userFullName, userName });
+  const nameClassName = cn(
+    "min-w-0 truncate text-[0.9375rem] font-bold text-ink",
+    className,
+  );
+
+  if (!userName) {
+    return <span className={nameClassName}>{name}</span>;
+  }
+
+  return (
+    <Link
+      className={cn(
+        nameClassName,
+        "relative z-[1] underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50",
+      )}
+      href={`/user/${userName}`}
+    >
+      {name}
     </Link>
   );
 }
@@ -51,32 +100,22 @@ export function PdAuthorLine({
   href,
   badges = [],
 }: PdAuthorLineProps) {
-  const { name, handle } = 著者の名前を決める({ userFullName, userName });
+  const { handle } = 著者の名前を決める({ userFullName, userName });
 
   return (
-    <div className="flex min-w-0 items-center gap-1 text-sm leading-normal">
-      {userName ? (
-        <Link
-          className="min-w-0 truncate font-bold text-foreground underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
-          href={`/user/${userName}`}
-        >
-          {name}
-        </Link>
-      ) : (
-        <span className="min-w-0 truncate font-bold text-foreground">
-          {name}
-        </span>
-      )}
-      <UserBadges badgeIds={badges} />
-      {handle ? (
-        <span className="min-w-10 shrink-[2] truncate text-muted-foreground">
-          @{handle}
-        </span>
-      ) : null}
-      <span aria-hidden="true" className="shrink-0 text-muted-foreground">
-        ·
+    <div className="flex min-w-0 items-baseline gap-2 text-[0.8125rem] leading-[1.4] text-ink-3">
+      <PdAuthorName userFullName={userFullName} userName={userName} />
+      <span className="relative z-[1] inline-flex shrink-0 self-center empty:hidden">
+        <UserBadges badgeIds={badges} />
       </span>
-      <PdTimestamp className="shrink-0" createdAt={createdAt} href={href} />
+      {handle ? (
+        <span className="min-w-10 shrink-[2] truncate">@{handle}</span>
+      ) : null}
+      <PdTimestamp
+        className="relative z-[1] ml-auto shrink-0 text-[0.8125rem] text-ink-3 tabular-nums"
+        createdAt={createdAt}
+        href={href}
+      />
     </div>
   );
 }

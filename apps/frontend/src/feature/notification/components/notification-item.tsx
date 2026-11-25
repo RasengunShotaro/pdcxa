@@ -30,8 +30,8 @@ interface NotificationItemProps {
 
 const ITEM_CLASS_NAME: Record<"cards" | "rows", string> = {
   cards:
-    "flex items-start gap-3 rounded-xl border bg-card px-5 py-4 shadow-sm transition-[box-shadow,background-color] hover:bg-muted/40 hover:shadow-md",
-  rows: "flex items-start gap-3 px-4 py-3 transition-colors hover:bg-muted/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring/50",
+    "flex items-start gap-3.5 rounded-2xl bg-fill px-5 py-4 transition-colors hover:bg-fill-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50",
+  rows: "relative flex items-start gap-3.5 rounded-2xl px-3.5 py-4 transition-colors before:pointer-events-none before:absolute before:top-0 before:right-3.5 before:left-[64px] before:h-px before:bg-line hover:bg-row-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring/50 group-first/row:before:hidden",
 };
 
 export function NotificationItem({
@@ -48,25 +48,23 @@ export function NotificationItem({
       href={通知のリンク先(item)}
       onClick={onSelect}
     >
-      <Avatar className="size-10 shrink-0">
+      <Avatar className="size-9 shrink-0">
         <AvatarImage alt="" src={item.actor.imageUrl} />
-        <AvatarFallback className="bg-primary/10 text-sm font-medium text-primary">
+        <AvatarFallback className="bg-brand-soft text-xs font-bold text-ink">
           {avatarInitials(displayName)}
         </AvatarFallback>
       </Avatar>
 
       <div className="min-w-0 flex-1">
-        <p className="line-clamp-2 break-words text-sm text-body">
-          <span className="font-semibold text-foreground">{displayName}</span>
-          <span className="text-muted-foreground">
-            さんが{通知の行為文言(item.kind)}
-          </span>
+        <p className="line-clamp-2 break-words text-[0.9375rem] leading-[1.7] text-ink">
+          <span className="font-bold">{displayName}</span>
+          <span>さんが{通知の行為文言(item.kind)}</span>
         </p>
-        <p className="mt-0.5 truncate text-sm text-muted-foreground">
+        <p className="truncate text-[0.8438rem] leading-[1.6] text-ink-3">
           「{item.excerpt}」
         </p>
         <time
-          className="mt-1 block text-xs text-muted-foreground"
+          className="mt-0.5 block text-[0.8125rem] text-ink-3 tabular-nums"
           dateTime={item.createdAt}
           suppressHydrationWarning
           title={formatAbsoluteDateTime(item.createdAt)}
@@ -75,10 +73,7 @@ export function NotificationItem({
         </time>
       </div>
 
-      <Icon
-        aria-hidden="true"
-        className="mt-1 size-5 shrink-0 text-muted-foreground"
-      />
+      <Icon aria-hidden="true" className="mt-1 size-4 shrink-0 text-ink-3" />
     </Link>
   );
 }

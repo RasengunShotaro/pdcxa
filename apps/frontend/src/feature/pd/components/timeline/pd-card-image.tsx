@@ -11,15 +11,28 @@ import {
 } from "@/components/ui/dialog";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useObjectUrl } from "@/hooks/use-object-url";
+import { cn } from "@/lib/utils";
 import { useFetchPdImage } from "@/schema/api";
 import { ImageViewer } from "../image-viewer/image-viewer";
+
+type ImageShape = "row" | "wide";
+
+const SHAPE_CLASS: Record<ImageShape, string> = {
+  row: "mt-3 aspect-[5/2] rounded-xl",
+  wide: "mt-5 aspect-video rounded-[22px]",
+};
 
 interface PdCardImageProps {
   imageFileName: string | null;
   alt: string;
+  shape?: ImageShape;
 }
 
-export function PdCardImage({ imageFileName, alt }: PdCardImageProps) {
+export function PdCardImage({
+  imageFileName,
+  alt,
+  shape = "row",
+}: PdCardImageProps) {
   const { data, isPending, error } = useFetchPdImage(imageFileName ?? "", {
     query: { enabled: Boolean(imageFileName) },
   });
@@ -30,16 +43,22 @@ export function PdCardImage({ imageFileName, alt }: PdCardImageProps) {
   if (!imageFileName) return null;
 
   const hasError = Boolean(error) || failed;
+  const frameClassName = cn("w-full overflow-hidden", SHAPE_CLASS[shape]);
 
   if ((isPending || (imageBlob && !src)) && !hasError) {
-    return <Skeleton className="mx-auto h-48 w-full max-w-xs rounded-lg" />;
+    return <Skeleton className={frameClassName} />;
   }
 
   if (hasError) {
     return (
-      <div className="mx-auto flex h-32 w-full max-w-xs flex-col items-center justify-center gap-2 rounded-lg border border-border bg-muted text-muted-foreground">
+      <div
+        className={cn(
+          frameClassName,
+          "flex flex-col items-center justify-center gap-2 bg-fill text-ink-3",
+        )}
+      >
         <ImageOff aria-hidden="true" className="size-6" />
-        <span className="text-sm">画像を読み込めませんでした</span>
+        <span className="text-[0.8125rem]">画像を読み込めませんでした</span>
       </div>
     );
   }
@@ -51,13 +70,16 @@ export function PdCardImage({ imageFileName, alt }: PdCardImageProps) {
       <DialogTrigger asChild>
         <button
           aria-label={`${alt}を拡大表示`}
-          className="mx-auto block w-fit cursor-zoom-in rounded-lg transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
+          className={cn(
+            frameClassName,
+            "relative z-[1] block cursor-zoom-in bg-fill transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50",
+          )}
           type="button"
         >
           {/* biome-ignore lint/performance/noImgElement: backend が配信する R2 画像を ObjectURL で表示するため next/image は使えない */}
           <img
             alt={alt}
-            className="max-h-80 w-auto rounded-lg border border-border object-contain"
+            className="size-full object-cover"
             onError={() => setFailed(true)}
             src={src}
           />

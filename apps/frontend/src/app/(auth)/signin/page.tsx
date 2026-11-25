@@ -1,14 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { LoginSheet } from "@/feature/signin/components/login-scene/login-sheet";
 import { SignInForm } from "@/feature/signin/components/signin-form";
 import { getCurrentUser } from "@/lib/auth/server";
 
@@ -18,26 +11,20 @@ export default async function SignInPage() {
   if (user) redirect("/");
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="text-2xl">ログイン</CardTitle>
-        <CardDescription>
-          メールアドレスとパスワードを入力してください。
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="grid gap-4">
-        <span className="py-1" />
-        <SignInForm />
-      </CardContent>
-      <CardFooter className="flex flex-wrap items-center justify-end gap-2">
+    <LoginSheet
+      description="メールアドレスとパスワードを入力してください。"
+      footer={
         <Link
           aria-label="Reset password"
-          className="text-sm text-primary underline-offset-4 transition-colors hover:underline"
+          className="justify-self-end px-1 text-sm underline decoration-foreground/40 underline-offset-4 transition-colors hover:decoration-foreground"
           href="/signin/reset-password"
         >
           パスワードを忘れた場合
         </Link>
-      </CardFooter>
-    </Card>
+      }
+      title="ログイン"
+    >
+      <SignInForm />
+    </LoginSheet>
   );
 }

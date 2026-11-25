@@ -2,60 +2,48 @@
 
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
-import { cn } from "@/lib/utils";
-import { FeedTabs } from "./feed-tabs";
-import { type FeedTab, pageLabelForPath } from "./nav-items";
+import { 画面の種類を決める } from "./nav-items";
 
-interface FeedLayoutProps {
+const PANE_SCROLL_CLASS =
+  "min-h-0 min-w-0 [scrollbar-color:var(--line)_transparent] [scrollbar-width:thin] wide:overflow-y-auto wide:overscroll-contain";
+
+interface FeedSurfaceProps {
+  list: ReactNode;
   children: ReactNode;
-  aside?: ReactNode;
-  title?: string;
-  leading?: ReactNode;
-  tabs?: readonly FeedTab[];
 }
 
-export function FeedLayout({
-  children,
-  aside,
-  title,
-  leading,
-  tabs,
-}: FeedLayoutProps) {
+export function FeedSurface({ list, children }: FeedSurfaceProps) {
   const pathname = usePathname();
-  const heading = title ?? pageLabelForPath(pathname);
+  const view = 画面の種類を決める(pathname) === "detail" ? "detail" : "list";
 
   return (
     <div
-      className="-mx-4 -my-6 grid flex-1 grid-cols-[1fr_minmax(0,42rem)_1fr]"
-      data-feed-layout=""
+      className="group/feed grid min-h-0 min-w-0 flex-1 wide:grid-cols-[var(--list-width,400px)_minmax(0,1fr)]"
+      data-view={view}
     >
-      <div className="col-start-2 flex min-w-0 flex-col bg-card sm:border-x sm:border-border">
-        {heading ? (
-          <header
-            className={cn(
-              "sticky top-0 z-10 hidden h-16 shrink-0 items-center md:flex gap-2 border-b border-border bg-card/90 backdrop-blur",
-              tabs ? "px-0" : "px-4",
-            )}
-          >
-            {leading}
-            <h1
-              className={cn(
-                "truncate text-[1.25rem] leading-[1.4] font-bold text-foreground",
-                tabs && "sr-only",
-              )}
-            >
-              {heading}
-            </h1>
-            {tabs ? <FeedTabs tabs={tabs} /> : null}
-          </header>
-        ) : null}
+      <section
+        aria-label="タイムライン"
+        className={`${PANE_SCROLL_CLASS} py-2 max-wide:pb-28 max-wide:group-data-[view=detail]/feed:hidden`}
+      >
+        {list}
+      </section>
+      <div
+        className={`${PANE_SCROLL_CLASS} flex flex-col border-line px-6 pt-6 wide:border-l max-wide:min-h-[calc(100dvh-140px)] max-wide:px-4 max-wide:pt-4 max-wide:group-data-[view=list]/feed:hidden`}
+      >
         {children}
       </div>
-      {aside ? (
-        <aside className="col-start-3 hidden w-[20.175rem] px-6 pt-6 box-content xl:block">
-          <div className="sticky top-6 flex flex-col gap-4">{aside}</div>
-        </aside>
-      ) : null}
+    </div>
+  );
+}
+
+interface SinglePaneProps {
+  children: ReactNode;
+}
+
+export function SinglePane({ children }: SinglePaneProps) {
+  return (
+    <div className={`${PANE_SCROLL_CLASS} flex-1 p-6 max-wide:p-4`}>
+      <div className="max-wide:pb-28">{children}</div>
     </div>
   );
 }
@@ -66,7 +54,7 @@ interface FeedSectionHeadingProps {
 
 export function FeedSectionHeading({ children }: FeedSectionHeadingProps) {
   return (
-    <h2 className="flex items-baseline gap-2 border-b border-border px-4 py-3 text-sm font-bold text-foreground">
+    <h2 className="mt-[26px] flex items-baseline gap-2 text-[1rem] leading-normal font-bold text-ink">
       {children}
     </h2>
   );

@@ -5,12 +5,26 @@ import { Button } from "@/components/ui/button";
 import { Linkify } from "@/components/ui/linkify";
 import { cn } from "@/lib/utils";
 
+type ClampLines = 3 | 8;
+
 interface PdBodyProps {
   content: string;
   clamp?: boolean;
+  lines?: ClampLines;
+  className?: string;
 }
 
-export function PdBody({ content, clamp = true }: PdBodyProps) {
+const CLAMP_CLASS: Record<ClampLines, { clamp: string; height: string }> = {
+  3: { clamp: "line-clamp-3", height: "h-[3lh]" },
+  8: { clamp: "line-clamp-8", height: "h-[8lh]" },
+};
+
+export function PdBody({
+  content,
+  clamp = true,
+  lines = 8,
+  className,
+}: PdBodyProps) {
   const ref = useRef<HTMLParagraphElement>(null);
   const [expanded, setExpanded] = useState(false);
   const [overflowing, setOverflowing] = useState(false);
@@ -33,9 +47,10 @@ export function PdBody({ content, clamp = true }: PdBodyProps) {
     <>
       <p
         className={cn(
-          "whitespace-pre-wrap break-words text-sm text-body",
-          clamped && "line-clamp-8",
-          clamped && overflowing && "h-[8lh]",
+          "whitespace-pre-wrap break-words text-[0.9375rem] leading-[1.8] text-ink [overflow-wrap:anywhere]",
+          className,
+          clamped && CLAMP_CLASS[lines].clamp,
+          clamped && overflowing && CLAMP_CLASS[lines].height,
           expanded &&
             "overflow-hidden transition-[height] duration-300 ease-out [interpolate-size:allow-keywords]",
         )}
@@ -45,7 +60,7 @@ export function PdBody({ content, clamp = true }: PdBodyProps) {
       </p>
       {clamped && overflowing ? (
         <Button
-          className="h-auto self-start p-0 text-sm text-primary-600 dark:text-primary-300"
+          className="relative z-[1] h-auto self-start p-0 text-[0.8125rem] font-bold text-brand-ink"
           onClick={() => setExpanded(true)}
           type="button"
           variant="link"

@@ -1,30 +1,28 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { expect, within } from "storybook/test";
 import { AppShell } from "./app-shell";
-import { FeedLayout } from "./feed-layout";
-import { TIMELINE_TABS } from "./nav-items";
+import { FeedSurface } from "./feed-layout";
 
 const PD_LABELS = Array.from({ length: 40 }, (_, index) => `PD ${index + 1}`);
 
 function LongFeed() {
   return (
-    <AppShell userFooter={<span>U</span>}>
-      <FeedLayout
-        aside={<p className="h-40 rounded-lg border p-4">今週の活動</p>}
-        tabs={TIMELINE_TABS}
-      >
-        {PD_LABELS.map((label) => (
-          <p className="h-24 border-b border-border px-4 py-3" key={label}>
+    <AppShell backdrop={null} userFooter={<span>U</span>}>
+      <FeedSurface
+        list={PD_LABELS.map((label) => (
+          <p className="h-24 px-4 py-3" key={label}>
             {label}
           </p>
         ))}
-      </FeedLayout>
+      >
+        <p>開いているPDの詳細</p>
+      </FeedSurface>
     </AppShell>
   );
 }
 
 const meta: Meta<typeof LongFeed> = {
-  title: "共通/FeedLayout",
+  title: "共通/FeedSurface",
   component: LongFeed,
   parameters: {
     layout: "fullscreen",
@@ -65,19 +63,20 @@ export const TabsStayOnScroll: Story = {
 
     await scrollFeedDown(canvasElement);
 
-    await expect(Math.round(tabs.getBoundingClientRect().top)).toBe(0);
+    const top = tabs.getBoundingClientRect().top;
+    await expect(top >= 0 && top < 48).toBe(true);
   },
 };
 
-export const AsideStaysOnScroll: Story = {
-  name: "下へスクロールしても右列の今週の活動は画面内に残る",
+export const DetailStaysOnScroll: Story = {
+  name: "一覧を下へスクロールしても、開いている PD の詳細は画面内に残る",
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    const aside = canvas.getByText("今週の活動");
+    const detail = canvas.getByText("開いているPDの詳細");
 
     await scrollFeedDown(canvasElement);
 
-    await expect(aside.getBoundingClientRect().top).toBeGreaterThanOrEqual(0);
+    await expect(detail.getBoundingClientRect().top).toBeGreaterThanOrEqual(0);
   },
 };
 
@@ -107,7 +106,7 @@ export const NotificationsTabIsCurrent: Story = {
       canvas.getByRole("navigation", { name: "タイムラインの切り替え" }),
     );
 
-    await expect(tabs.getByRole("link", { name: "通知" })).toHaveAttribute(
+    await expect(tabs.getByRole("link", { name: /^通知/ })).toHaveAttribute(
       "aria-current",
       "page",
     );
