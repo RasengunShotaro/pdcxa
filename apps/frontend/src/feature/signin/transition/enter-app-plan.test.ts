@@ -20,7 +20,7 @@ describe("アプリのレールの位置を求める", () => {
     const rail = アプリのレールの位置を求める({ width: 1440, height: 900 });
 
     expect(rail).toEqual({
-      left: 24,
+      left: 16,
       top: 80,
       width: 240,
       height: 796,
@@ -31,7 +31,7 @@ describe("アプリのレールの位置を求める", () => {
   it("アプリの最大幅より広い画面では、中央寄せされた枠の左端に合わせる", () => {
     const rail = アプリのレールの位置を求める({ width: 1920, height: 1080 });
 
-    expect(rail?.left).toBe(264);
+    expect(rail?.left).toBe(256);
   });
 
   it("レールを出さないスマホ幅では位置を返さない", () => {

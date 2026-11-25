@@ -1,6 +1,7 @@
 .app {
   --margin: 24px;
-  --gutter: 24px;
+  --side-margin: 16px;
+  --gutter: 16px;
   --rail-width: 240px;
   --list-width: 400px;
   --header-height: 80px;
@@ -37,7 +38,7 @@
   max-width: 1440px;
   height: 100dvh;
   margin: 0 auto;
-  padding: 0 var(--margin) var(--margin);
+  padding: 0 var(--side-margin) var(--margin);
 }
 
 .surface {

@@ -73,7 +73,6 @@ export function PdCard({
               : "text-[0.9688rem] leading-[1.85]",
           )}
           content={pd.content}
-          lines={isCompact ? 3 : 8}
         />
 
         <PdCardImage

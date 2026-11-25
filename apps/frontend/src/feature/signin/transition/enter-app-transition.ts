@@ -422,6 +422,17 @@ const 演出を流す = async ({
 };
 
 export const アプリへ入る演出を始める = (): void => {
+  try {
+    演出を組み立てて流す();
+  } catch (error: unknown) {
+    console.warn("アプリへ入る演出を始められませんでした", error);
+    document.querySelector(OVERLAY_SELECTOR)?.remove();
+    const sheet = document.querySelector<HTMLElement>(SHEET_SELECTOR);
+    delete sheet?.dataset.leaving;
+  }
+};
+
+const 演出を組み立てて流す = (): void => {
   const photo = document.querySelector<HTMLElement>(PHOTO_SELECTOR);
   if (!photo || document.querySelector(OVERLAY_SELECTOR)) {
     return;
