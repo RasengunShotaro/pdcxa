@@ -2,14 +2,32 @@
 
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
-import { useDefaultLayout } from "react-resizable-panels";
+import type { Layout, LayoutChangedMeta } from "react-resizable-panels";
 import {
   ResizableHandle,
   ResizablePanel,
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
-import { 一覧と詳細の幅の保存先 } from "./feed-layout-storage";
+import {
+  type 一覧と詳細の幅,
+  一覧と詳細の幅を保存する形にする,
+} from "./feed-layout-cookie";
 import { 画面の種類を決める } from "./nav-items";
+
+const 一覧と詳細の幅を覚える = (layout: Layout, meta: LayoutChangedMeta) => {
+  const { list, detail } = meta.requestedLayout ?? layout;
+  if (list === undefined || detail === undefined) {
+    return;
+  }
+  window.cookieStore
+    ?.set(
+      一覧と詳細の幅を保存する形にする({
+        layout: { list, detail },
+        now: Date.now(),
+      }),
+    )
+    .catch(() => undefined);
+};
 
 const PANE_SCROLL_CLASS =
   "min-h-0 min-w-0 [scrollbar-color:var(--line)_transparent] [scrollbar-width:thin] wide:overflow-y-auto wide:overscroll-contain";
@@ -19,23 +37,19 @@ const PANEL_CLASS = "flex min-h-0 min-w-0 flex-col max-wide:contents!";
 interface FeedSurfaceProps {
   list: ReactNode;
   children: ReactNode;
+  savedLayout?: 一覧と詳細の幅;
 }
 
-export function FeedSurface({ list, children }: FeedSurfaceProps) {
+export function FeedSurface({ list, children, savedLayout }: FeedSurfaceProps) {
   const pathname = usePathname();
   const view = 画面の種類を決める(pathname) === "detail" ? "detail" : "list";
-  const { defaultLayout, onLayoutChanged } = useDefaultLayout({
-    id: "pdcxa:feed-layout",
-    panelIds: ["list", "detail"],
-    storage: 一覧と詳細の幅の保存先,
-  });
 
   return (
     <ResizablePanelGroup
       className="group/feed min-h-0 min-w-0 flex-1 max-wide:contents!"
       data-view={view}
-      defaultLayout={defaultLayout}
-      onLayoutChanged={onLayoutChanged}
+      defaultLayout={savedLayout ? { ...savedLayout } : undefined}
+      onLayoutChanged={一覧と詳細の幅を覚える}
       orientation="horizontal"
     >
       <ResizablePanel

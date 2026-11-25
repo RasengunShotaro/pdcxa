@@ -4,6 +4,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { usePathname } from "next/navigation";
 import { type ReactNode, useEffect, useState } from "react";
 import { FeedSurface } from "@/components/elements/feed-layout";
+import type { 一覧と詳細の幅 } from "@/components/elements/feed-layout-cookie";
 import { FeedTabPanel } from "@/components/elements/feed-tab-panel";
 import {
   一覧に出すタブを決める,
@@ -39,9 +40,10 @@ function TimelineList() {
 
 interface TimelineLayoutProps {
   children: ReactNode;
+  savedLayout?: 一覧と詳細の幅;
 }
 
-export function TimelineLayout({ children }: TimelineLayoutProps) {
+export function TimelineLayout({ children, savedLayout }: TimelineLayoutProps) {
   const queryClient = useQueryClient();
 
   useEffect(() => {
@@ -49,5 +51,9 @@ export function TimelineLayout({ children }: TimelineLayoutProps) {
     queryClient.prefetchInfiniteQuery(notificationsQueryOptions());
   }, [queryClient]);
 
-  return <FeedSurface list={<TimelineList />}>{children}</FeedSurface>;
+  return (
+    <FeedSurface list={<TimelineList />} savedLayout={savedLayout}>
+      {children}
+    </FeedSurface>
+  );
 }
