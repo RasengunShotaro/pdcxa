@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
-import { expect, within } from "storybook/test";
+import { expect, userEvent, waitFor, within } from "storybook/test";
 import { AppShell } from "./app-shell";
 import { FeedSurface } from "./feed-layout";
 
@@ -77,6 +77,25 @@ export const DetailStaysOnScroll: Story = {
     await scrollFeedDown(canvasElement);
 
     await expect(detail.getBoundingClientRect().top).toBeGreaterThanOrEqual(0);
+  },
+};
+
+export const ResizeListWithKeyboard: Story = {
+  name: "一覧と詳細の境目で、一覧の幅を広げられる",
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const list = canvas.getByRole("region", { name: "タイムライン" });
+    const handle = canvas.getByRole("separator", {
+      name: "一覧と詳細の幅を変える",
+    });
+    const before = list.getBoundingClientRect().width;
+
+    handle.focus();
+    await userEvent.keyboard("{ArrowRight}{ArrowRight}{ArrowRight}");
+
+    await waitFor(() =>
+      expect(list.getBoundingClientRect().width).toBeGreaterThan(before),
+    );
   },
 };
 
