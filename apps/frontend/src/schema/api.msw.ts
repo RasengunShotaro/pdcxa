@@ -18,6 +18,7 @@ import type {
   CreateRePd201,
   CreateRePdBody,
   FetchBookmarkedPds200,
+  FetchFootprint200,
   FetchNotificationUnreadCount200,
   FetchNotifications200,
   FetchPds200,
@@ -44,6 +45,8 @@ export const getFetchUserDetailsResponseMock = (): FetchUserDetails200Item[] => 
 export const getFetchPdsResponseMock = (): FetchPds200 => ({"items":[{"isMyPd":false,"isBookmarked":false,"quoteCount":0,"quotedPd":null,"likeCount":3,"replyCount":1,"likes":[{"userId":"user_2abc"}],"id":"0190d2c0-0000-7000-8000-000000000001","content":"今日学んだことを共有します","createdAt":"2026-06-24T00:00:00.000Z","userId":"user_2abc","imageFileName":null}]})
 
 export const getFetchWeeklyStatsResponseMock = (): FetchWeeklyStats200 => ({"range":{"start":"2026-06-18","end":"2026-06-24"},"totals":{"pdCount":20,"rePdCount":30,"likeCount":50,"activeAuthorCount":4,"averagePdPerAuthor":5},"daily":[{"date":"2026-06-24","pdCount":5,"rePdCount":8,"likeCount":12}],"rankings":[{"userId":"user_2abc","pdCount":5,"rePdCount":8,"likeCount":12}]})
+
+export const getFetchFootprintResponseMock = (): FetchFootprint200 => ({"range":{"start":"2025-06-26","end":"2026-06-24"},"days":[{"date":"2026-06-24","pdCount":2,"rePdCount":3,"likeCount":6}],"currentStreak":4})
 
 export const getCreatePdResponseMock = (): CreatePd201 => ({"isMyPd":false,"isBookmarked":false,"quoteCount":0,"quotedPd":null,"likeCount":3,"replyCount":1,"likes":[{"userId":"user_2abc"}],"id":"0190d2c0-0000-7000-8000-000000000001","content":"今日学んだことを共有します","createdAt":"2026-06-24T00:00:00.000Z","userId":"user_2abc","imageFileName":null})
 
@@ -131,6 +134,18 @@ export const getFetchWeeklyStatsMockHandler = (overrideResponse?: FetchWeeklySta
     return HttpResponse.json(overrideResponse !== undefined
     ? (typeof overrideResponse === "function" ? await overrideResponse(info) : overrideResponse)
     : getFetchWeeklyStatsResponseMock(),
+      { status: 200
+      })
+  }, options)
+}
+
+export const getFetchFootprintMockHandler = (overrideResponse?: FetchFootprint200 | ((info: Parameters<HttpResponseResolver>[0]) => Promise<FetchFootprint200> | FetchFootprint200), options?: RequestHandlerOptions) => {
+  return http.get('*/pd/stats/footprint', async (info: Parameters<HttpResponseResolver>[0]) => {
+
+
+    return HttpResponse.json(overrideResponse !== undefined
+    ? (typeof overrideResponse === "function" ? await overrideResponse(info) : overrideResponse)
+    : getFetchFootprintResponseMock(),
       { status: 200
       })
   }, options)
@@ -286,6 +301,7 @@ export const getPdcxaApiMock = () => [
   getFetchUserDetailsMockHandler(),
   getFetchPdsMockHandler(),
   getFetchWeeklyStatsMockHandler(),
+  getFetchFootprintMockHandler(),
   getCreatePdMockHandler(),
   getCreateGifPdMockHandler(),
   getMutatePdLikeMockHandler(),

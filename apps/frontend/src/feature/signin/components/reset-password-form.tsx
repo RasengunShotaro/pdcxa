@@ -23,6 +23,12 @@ import {
   type CheckEmailFormSchema,
   checkEmailFormSchema,
 } from "../types/reset-form";
+import {
+  LOGIN_ALERT_CLASS,
+  LOGIN_FIELD_CLASS,
+  LOGIN_LABEL_CLASS,
+  LOGIN_SUBMIT_CLASS,
+} from "./login-scene/login-field";
 
 const RESET_FAILED = "問題が発生しました";
 const RESET_FAILED_DETAIL = "再度お試しください";
@@ -84,10 +90,13 @@ export function ResetPasswordForm({ flow }: ResetPasswordFormProps) {
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>メールアドレス</FormLabel>
+              <FormLabel className={LOGIN_LABEL_CLASS}>
+                メールアドレス
+              </FormLabel>
               <FormControl>
                 <Input
                   autoComplete="email"
+                  className={LOGIN_FIELD_CLASS}
                   inputMode="email"
                   placeholder="abcde@example.com"
                   type="email"
@@ -100,13 +109,17 @@ export function ResetPasswordForm({ flow }: ResetPasswordFormProps) {
         />
 
         {hasError ? (
-          <Alert variant="destructive">
+          <Alert className={LOGIN_ALERT_CLASS} variant="destructive">
             <TriangleAlert />
             <AlertDescription>{RESET_FAILED_DETAIL}</AlertDescription>
           </Alert>
         ) : null}
 
-        <Button className="w-full" disabled={isPending} type="submit">
+        <Button
+          className={LOGIN_SUBMIT_CLASS}
+          disabled={isPending}
+          type="submit"
+        >
           {isPending ? (
             <Loader2 aria-hidden="true" className="size-4 animate-spin" />
           ) : (

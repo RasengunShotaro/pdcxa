@@ -278,18 +278,11 @@ export const ReplyFromComposer: Story = {
       expect(canvas.getByText("気づいたことを共有します")).toBeInTheDocument(),
     );
 
+    const textarea = await canvas.findByRole("textbox");
+    await userEvent.type(textarea, "私もそう思いました");
     await userEvent.click(canvas.getByRole("button", { name: "RePDする" }));
 
-    const dialog = within(within(document.body).getByRole("dialog"));
-    const textarea = await dialog.findByRole("textbox");
-    await userEvent.type(textarea, "私もそう思いました");
-    await userEvent.click(dialog.getByRole("button", { name: "RePDする" }));
-
-    await waitFor(() =>
-      expect(
-        within(document.body).queryByRole("dialog"),
-      ).not.toBeInTheDocument(),
-    );
+    await waitFor(() => expect(textarea).toHaveValue(""));
     await waitFor(() =>
       expect(
         within(document.body).getByText("RePDしました"),

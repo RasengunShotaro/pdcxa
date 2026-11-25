@@ -4,9 +4,14 @@ import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { MouseEvent } from "react";
+import { cn } from "@/lib/utils";
 import { backDestination } from "./back-destination";
 
-export function BackLink() {
+interface BackLinkProps {
+  withLabel?: boolean;
+}
+
+export function BackLink({ withLabel = false }: BackLinkProps) {
   const router = useRouter();
 
   const handleClick = (event: MouseEvent<HTMLAnchorElement>) => {
@@ -26,12 +31,16 @@ export function BackLink() {
   return (
     <Link
       aria-label="戻る"
-      className="-ml-2 inline-flex size-10 shrink-0 items-center justify-center rounded-full text-foreground transition-[background-color,translate] hover:-translate-y-px hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
+      className={cn(
+        "inline-flex h-11 shrink-0 items-center justify-center gap-2 rounded-full text-[0.9375rem] leading-none font-bold transition-[background-color,translate] hover:-translate-x-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50",
+        withLabel ? "pr-3" : "-ml-2 w-11 text-ink hover:bg-fill",
+      )}
       href="/"
       onClick={handleClick}
       title="戻る"
     >
       <ArrowLeft aria-hidden="true" className="size-5" />
+      {withLabel ? "戻る" : null}
     </Link>
   );
 }

@@ -6,6 +6,10 @@ import { Button } from "@/components/ui/button";
 import type { RePd } from "@/feature/pd/types";
 import { useRePdLike } from "@/hooks/use-repd-like";
 import { cn } from "@/lib/utils";
+import {
+  PD_ACTION_ICON_CLASS,
+  PD_ACTION_PRESSED_ICON_CLASS,
+} from "../timeline/pd-action-style";
 
 interface RePdLikeButtonProps {
   rePd: RePd;
@@ -22,7 +26,7 @@ export function RePdLikeButton({ rePd }: RePdLikeButtonProps) {
     <Button
       aria-label={label}
       aria-pressed={isLiked}
-      className="h-8 w-auto rounded-full pr-1.5 pl-2.5 hover:bg-transparent dark:hover:bg-transparent"
+      className="h-9 w-auto rounded-[18px] pr-1.5 pl-2.5 hover:bg-transparent dark:hover:bg-transparent"
       disabled={rePd.isMyRePd || isPending}
       onClick={() => toggleLike()}
       size="icon"
@@ -33,8 +37,9 @@ export function RePdLikeButton({ rePd }: RePdLikeButtonProps) {
         <Heart
           aria-hidden="true"
           className={cn(
-            "size-5 transition-[color,fill] duration-150",
-            isLiked ? "fill-primary text-primary" : "text-muted-foreground",
+            PD_ACTION_ICON_CLASS,
+            "transition-[color,fill] duration-150",
+            isLiked ? PD_ACTION_PRESSED_ICON_CLASS : "text-ink-3",
           )}
         />
       </PopOnActivate>

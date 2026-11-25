@@ -30,6 +30,7 @@ import type {
   CreateRePdBody,
   FetchBookmarkedPds200,
   FetchBookmarkedPdsParams,
+  FetchFootprint200,
   FetchNotificationUnreadCount200,
   FetchNotifications200,
   FetchNotificationsParams,
@@ -606,6 +607,112 @@ export function useFetchWeeklyStats<TData = Awaited<ReturnType<typeof fetchWeekl
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
   const queryOptions = getFetchWeeklyStatsQueryOptions(options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export type fetchFootprintResponse200 = {
+  data: FetchFootprint200
+  status: 200
+}
+
+export type fetchFootprintResponseSuccess = (fetchFootprintResponse200) & {
+  headers: Headers;
+};
+;
+
+export type fetchFootprintResponse = (fetchFootprintResponseSuccess)
+
+export const getFetchFootprintUrl = () => {
+
+
+
+
+  return `/pd/stats/footprint`
+}
+
+export const fetchFootprint = async ( options?: Parameters<typeof orvalFetch>[1]): Promise<fetchFootprintResponse> => {
+
+  return orvalFetch<fetchFootprintResponse>(getFetchFootprintUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getFetchFootprintQueryKey = () => {
+    return [
+    `/pd/stats/footprint`
+    ] as const;
+    }
+
+
+export const getFetchFootprintQueryOptions = <TData = Awaited<ReturnType<typeof fetchFootprint>>, TError = unknown>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof fetchFootprint>>, TError, TData>>, request?: SecondParameter<typeof orvalFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getFetchFootprintQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof fetchFootprint>>> = ({ signal }) => fetchFootprint({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof fetchFootprint>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type FetchFootprintQueryResult = NonNullable<Awaited<ReturnType<typeof fetchFootprint>>>
+export type FetchFootprintQueryError = unknown
+
+
+export function useFetchFootprint<TData = Awaited<ReturnType<typeof fetchFootprint>>, TError = unknown>(
+  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof fetchFootprint>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof fetchFootprint>>,
+          TError,
+          Awaited<ReturnType<typeof fetchFootprint>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof orvalFetch>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useFetchFootprint<TData = Awaited<ReturnType<typeof fetchFootprint>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof fetchFootprint>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof fetchFootprint>>,
+          TError,
+          Awaited<ReturnType<typeof fetchFootprint>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof orvalFetch>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useFetchFootprint<TData = Awaited<ReturnType<typeof fetchFootprint>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof fetchFootprint>>, TError, TData>>, request?: SecondParameter<typeof orvalFetch>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useFetchFootprint<TData = Awaited<ReturnType<typeof fetchFootprint>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof fetchFootprint>>, TError, TData>>, request?: SecondParameter<typeof orvalFetch>}
+ , queryClient?: QueryClient
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getFetchFootprintQueryOptions(options)
 
   const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 

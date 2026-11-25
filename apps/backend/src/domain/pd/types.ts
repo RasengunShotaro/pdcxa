@@ -66,6 +66,25 @@ export type 日毎の集計 = {
   readonly 日毎のいいね数: 日次集計[];
 };
 
+export type 投稿者の日毎の活動 = {
+  readonly 日毎のPD数: 日次集計[];
+  readonly 日毎のRePD数: 日次集計[];
+  readonly 日毎のいいね数: 日次集計[];
+};
+
+export type あしあとの一日 = {
+  readonly date: string;
+  readonly pdCount: number;
+  readonly rePdCount: number;
+  readonly likeCount: number;
+};
+
+export type あしあと = {
+  readonly range: { readonly start: string; readonly end: string };
+  readonly days: あしあとの一日[];
+  readonly currentStreak: number;
+};
+
 export type 投稿者別集計群 = {
   readonly ユーザーごとのPD数: 投稿者別集計[];
   readonly ユーザーごとのいいね数: 投稿者別集計[];

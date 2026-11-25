@@ -51,15 +51,9 @@ export function NotificationListBody({
   }
 
   return (
-    <ul
-      className={
-        variant === "rows"
-          ? "divide-y divide-border border-b border-border"
-          : "space-y-2"
-      }
-    >
+    <ul className={variant === "rows" ? "px-2" : "space-y-2"}>
       {notifications.map((item) => (
-        <li key={notificationKey(item)}>
+        <li className="group/row" key={notificationKey(item)}>
           <NotificationItem item={item} onSelect={onSelect} variant={variant} />
         </li>
       ))}

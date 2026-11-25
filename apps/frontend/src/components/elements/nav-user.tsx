@@ -1,8 +1,6 @@
 "use client";
 
-import { ChevronsUpDown, LogOut, Palette, UserCog } from "lucide-react";
-import Link from "next/link";
-import { useTheme } from "next-themes";
+import { ChevronsUpDown, LogOut, Settings, UserCog } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -10,111 +8,86 @@ import {
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  useSidebar,
-} from "@/components/ui/sidebar";
 import { avatarInitials } from "@/feature/pd/components/timeline/avatar-initials";
 import { useCurrentUser } from "@/lib/auth/use-current-user";
 import { useSignOut } from "@/lib/auth/use-sign-out";
-
-const THEME_OPTIONS = [
-  { value: "light", label: "ライト" },
-  { value: "dark", label: "ダーク" },
-  { value: "system", label: "システムに合わせる" },
-] as const;
+import { useAppSheets } from "./app-sheets";
+import styles from "./app-shell.module.css";
 
 export function NavUser() {
   const { user } = useCurrentUser();
   const { signOut } = useSignOut();
-  const { isMobile } = useSidebar();
-  const { theme, setTheme } = useTheme();
+  const { openSheet } = useAppSheets();
 
   const displayName = user?.fullName ?? "ユーザー";
   const avatar = (
     <Avatar className="size-8 shrink-0">
       <AvatarImage alt="" src={user?.imageUrl} />
-      <AvatarFallback className="bg-primary-50 text-xs font-medium text-primary-600 dark:bg-primary/15 dark:text-primary-300">
+      <AvatarFallback className="bg-brand-soft text-xs font-bold text-ink">
         {avatarInitials(displayName)}
       </AvatarFallback>
     </Avatar>
   );
 
   return (
-    <SidebarMenu className="group-data-[collapsible=icon]:items-center">
-      <SidebarMenuItem>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <SidebarMenuButton
-              aria-label={displayName}
-              className="h-auto gap-3 rounded-lg p-2 data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground group-data-[collapsible=icon]:size-12! group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:p-2!"
-              size="lg"
-              tooltip={displayName}
-            >
-              {avatar}
-              <span className="flex min-w-0 flex-1 flex-col text-left group-data-[collapsible=icon]:hidden">
-                <span className="truncate text-sm leading-[1.4] font-medium text-foreground">
-                  {displayName}
-                </span>
-                {user?.userName ? (
-                  <span className="truncate text-xs leading-[1.4] text-slate-500 dark:text-slate-400">
-                    @{user.userName}
-                  </span>
-                ) : null}
-              </span>
-              <ChevronsUpDown className="ml-auto size-4 text-muted-foreground group-data-[collapsible=icon]:hidden" />
-            </SidebarMenuButton>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent
-            align="end"
-            className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
-            side={isMobile ? "bottom" : "right"}
-            sideOffset={4}
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <button
+          aria-label={displayName}
+          className={styles.profile}
+          type="button"
+        >
+          {avatar}
+          <span className={styles.profileText}>
+            <span className={styles.profileName}>{displayName}</span>
+            {user?.userName ? (
+              <span className={styles.profileHandle}>@{user.userName}</span>
+            ) : null}
+          </span>
+          <ChevronsUpDown
+            aria-hidden="true"
+            className={styles.profileChevron}
+          />
+        </button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent
+        align="start"
+        className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-2xl p-1.5"
+        side="top"
+        sideOffset={8}
+      >
+        <DropdownMenuLabel className="font-normal">
+          <div className="flex items-center gap-2 text-left text-sm">
+            {avatar}
+            <span className="flex-1 truncate font-bold">{displayName}</span>
+          </div>
+        </DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        <DropdownMenuGroup>
+          <DropdownMenuItem
+            className="rounded-[10px]"
+            onSelect={() => openSheet("profile")}
           >
-            <DropdownMenuLabel className="font-normal">
-              <div className="flex items-center gap-2 text-left text-sm">
-                {avatar}
-                <span className="flex-1 truncate font-medium">
-                  {displayName}
-                </span>
-              </div>
-            </DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem asChild>
-                <Link href="/profile">
-                  <UserCog />
-                  プロフィール設定
-                </Link>
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-            <DropdownMenuLabel className="flex items-center gap-2 text-xs font-normal text-muted-foreground">
-              <Palette aria-hidden="true" className="size-4" />
-              テーマ
-            </DropdownMenuLabel>
-            <DropdownMenuRadioGroup onValueChange={setTheme} value={theme}>
-              {THEME_OPTIONS.map((option) => (
-                <DropdownMenuRadioItem key={option.value} value={option.value}>
-                  {option.label}
-                </DropdownMenuRadioItem>
-              ))}
-            </DropdownMenuRadioGroup>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => signOut()}>
-              <LogOut />
-              ログアウト
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </SidebarMenuItem>
-    </SidebarMenu>
+            <UserCog />
+            プロフィール設定
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            className="rounded-[10px]"
+            onSelect={() => openSheet("settings")}
+          >
+            <Settings />
+            設定
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem className="rounded-[10px]" onClick={() => signOut()}>
+          <LogOut />
+          ログアウト
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }

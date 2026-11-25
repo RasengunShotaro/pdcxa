@@ -23,6 +23,7 @@ const PdRepositoryモック = (params: {
       Effect.succeed(params.日毎の集計),
     投稿者別集計を取得する: (_range: 集計期間) =>
       Effect.succeed(params.投稿者別集計),
+    投稿者の日毎の活動を取得する: 未使用,
   });
 
 describe("PD週間統計を取得する", () => {

@@ -65,6 +65,45 @@ export const SuccessIsLarge: Story = {
   },
 };
 
+export const ShowsAtTopCenter: Story = {
+  name: "トーストは画面の上の真ん中に出る",
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    await userEvent.click(canvas.getByRole("button", { name: "お知らせ" }));
+
+    await waitFor(() => {
+      const toaster = document.querySelector("[data-sonner-toaster]");
+      expect(toaster).toHaveAttribute("data-y-position", "top");
+      expect(toaster).toHaveAttribute("data-x-position", "center");
+    });
+  },
+};
+
+export const CanBeClosed: Story = {
+  name: "閉じるボタンでトーストを消せる",
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const body = within(document.body);
+    await userEvent.click(canvas.getByRole("button", { name: "種類なし" }));
+
+    const copied = (await body.findByText("コピーしました")).closest(
+      "[data-sonner-toast]",
+    );
+
+    await userEvent.click(
+      within(copied instanceof HTMLElement ? copied : document.body).getByRole(
+        "button",
+        { name: "閉じる" },
+      ),
+    );
+
+    await waitFor(() =>
+      expect(body.queryByText("コピーしました")).not.toBeInTheDocument(),
+    );
+  },
+};
+
 export const ErrorIsLarge: Story = {
   name: "エラーのトーストは本文より大きな文字で出る",
   play: async ({ canvasElement }) => {

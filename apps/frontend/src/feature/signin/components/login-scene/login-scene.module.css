@@ -1,0 +1,204 @@
+.glass {
+  --glass-top: rgb(255 255 255 / 0.74);
+  --glass-bottom: rgb(255 255 255 / 0.54);
+  --glass-edge-strong: rgb(255 255 255 / 0.95);
+  --glass-edge-weak: rgb(255 255 255 / 0.18);
+  --glass-gloss: rgb(255 255 255 / 0.38);
+  --glass-shadow: rgb(20 10 30 / 0.42);
+  --glass-fill: rgb(255 255 255);
+
+  isolation: isolate;
+  border-radius: var(--glass-radius);
+  background: linear-gradient(180deg, var(--glass-top), var(--glass-bottom));
+  backdrop-filter: blur(14px) saturate(1.8);
+  box-shadow: 0 28px 64px -24px var(--glass-shadow);
+}
+
+:global(.dark) .glass {
+  --glass-top: rgb(30 30 36 / 0.66);
+  --glass-bottom: rgb(10 10 14 / 0.58);
+  --glass-edge-strong: rgb(255 255 255 / 0.34);
+  --glass-edge-weak: rgb(255 255 255 / 0.05);
+  --glass-gloss: rgb(255 255 255 / 0.09);
+  --glass-shadow: rgb(0 0 0 / 0.7);
+  --glass-fill: rgb(24 24 28);
+}
+
+.glass::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  padding: 1px;
+  border-radius: inherit;
+  background: linear-gradient(
+    155deg,
+    var(--glass-edge-strong),
+    var(--glass-edge-weak) 38%,
+    var(--glass-edge-weak) 64%,
+    var(--glass-edge-strong)
+  );
+  mask:
+    linear-gradient(#000 0 0) content-box exclude,
+    linear-gradient(#000 0 0);
+  pointer-events: none;
+}
+
+.glass::after {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  z-index: -1;
+  border-radius: calc(var(--glass-radius) - 1px);
+  background: linear-gradient(180deg, var(--glass-gloss), transparent 46%);
+  pointer-events: none;
+}
+
+.sheet,
+.chip {
+  position: relative;
+}
+
+.sheet {
+  --glass-radius: 28px;
+  --sheet-padding: 20px;
+  --field-fill: rgb(255 255 255);
+
+  padding: var(--sheet-padding);
+}
+
+.chip {
+  --glass-radius: 22px;
+  --sheet-padding: 4px;
+
+  padding: var(--sheet-padding);
+}
+
+.sheet[data-leaving="true"] {
+  opacity: 0;
+  transition: opacity 140ms ease;
+}
+
+.inner {
+  border-radius: calc(var(--glass-radius, 28px) - var(--sheet-padding, 20px));
+}
+
+.field {
+  background-color: var(--field-fill, var(--background));
+}
+
+.otpSlot {
+  background-color: var(--field-fill, var(--background));
+}
+
+.otpSlot:first-child {
+  border-top-left-radius: calc(
+    var(--glass-radius, 28px) -
+    var(--sheet-padding, 20px)
+  );
+  border-bottom-left-radius: calc(
+    var(--glass-radius, 28px) -
+    var(--sheet-padding, 20px)
+  );
+}
+
+.otpSlot:last-child {
+  border-top-right-radius: calc(
+    var(--glass-radius, 28px) -
+    var(--sheet-padding, 20px)
+  );
+  border-bottom-right-radius: calc(
+    var(--glass-radius, 28px) -
+    var(--sheet-padding, 20px)
+  );
+}
+
+.ink {
+  color: rgb(255 255 255);
+  text-shadow:
+    0 1px 2px rgb(0 0 0 / 0.5),
+    0 0 1px rgb(0 0 0 / 0.55);
+}
+
+.ink img {
+  filter: invert(1) drop-shadow(0 1px 2px rgb(0 0 0 / 0.45));
+}
+
+.scrim {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: var(--glass-radius);
+  background: rgb(255 255 255 / 0.4);
+  pointer-events: none;
+}
+
+:global(.dark) .scrim {
+  background: rgb(0 0 0 / 0.3);
+}
+
+:global(.dark) .sheet {
+  --field-fill: rgb(24 24 28);
+}
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: #000;
+}
+
+.photo {
+  position: absolute;
+  inset: 0;
+  background-position: center;
+  background-size: cover;
+  opacity: 0;
+  transition:
+    opacity 400ms ease,
+    filter 300ms ease;
+}
+
+.photo[data-mirror="true"] {
+  transform: scaleX(-1);
+}
+
+.photo[data-ready="true"] {
+  opacity: 1;
+}
+
+:global(.dark) .photo {
+  filter: brightness(0.6);
+}
+
+.stillDrop {
+  position: absolute;
+  top: 47%;
+  left: 25%;
+  width: min(40vh, 60vw);
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  border-radius: 50%;
+  background:
+    radial-gradient(
+      ellipse 34% 16% at 34% 22%,
+      rgb(255 255 255 / 0.85),
+      transparent 70%
+    ),
+    radial-gradient(
+      circle at 50% 50%,
+      transparent 58%,
+      rgb(255 255 255 / 0.3) 100%
+    );
+  backdrop-filter: blur(3px) saturate(1.6) brightness(1.12);
+  box-shadow:
+    inset 0 0 0 1px rgb(255 255 255 / 0.4),
+    inset 0 -18px 40px -18px rgb(255 190 140 / 0.6),
+    0 60px 60px -40px rgb(0 0 0 / 0.55);
+}
+
+@media (max-aspect-ratio: 1 / 1) {
+  .stillDrop {
+    top: 26%;
+    left: 50%;
+  }
+}

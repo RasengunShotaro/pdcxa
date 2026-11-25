@@ -170,6 +170,50 @@ const rankingExample = {
   rePdCount: 8,
   likeCount: 12,
 };
+const footprintDayExample = {
+  date: "2026-06-24",
+  pdCount: 2,
+  rePdCount: 3,
+  likeCount: 6,
+};
+const footprintExample = {
+  range: { start: "2025-06-26", end: "2026-06-24" },
+  days: [footprintDayExample],
+  currentStreak: 4,
+};
+
+export const footprintSchema = z
+  .object({
+    range: z
+      .object({
+        start: z.string().openapi({ example: footprintExample.range.start }),
+        end: z.string().openapi({ example: footprintExample.range.end }),
+      })
+      .openapi({ example: footprintExample.range }),
+    days: z
+      .array(
+        z
+          .object({
+            date: z.string().openapi({ example: footprintDayExample.date }),
+            pdCount: z
+              .number()
+              .openapi({ example: footprintDayExample.pdCount }),
+            rePdCount: z
+              .number()
+              .openapi({ example: footprintDayExample.rePdCount }),
+            likeCount: z
+              .number()
+              .openapi({ example: footprintDayExample.likeCount }),
+          })
+          .openapi({ example: footprintDayExample }),
+      )
+      .openapi({ example: footprintExample.days }),
+    currentStreak: z
+      .number()
+      .openapi({ example: footprintExample.currentStreak }),
+  })
+  .openapi({ example: footprintExample });
+
 const weeklyStatsExample = {
   range: { start: "2026-06-18", end: "2026-06-24" },
   totals: {

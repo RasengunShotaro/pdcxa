@@ -1,5 +1,5 @@
-import { HomeView } from "@/feature/pd/components/timeline/home-view";
+import { HomeReadDefault } from "@/feature/pd/components/timeline/timeline-read-default";
 
 export default function Page() {
-  return <HomeView />;
+  return <HomeReadDefault />;
 }

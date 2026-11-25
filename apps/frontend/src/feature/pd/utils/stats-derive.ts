@@ -97,6 +97,17 @@ export const toActivityChartData = (
     };
   });
 
+export const 最多に対する割合を求める = ({
+  value,
+  max,
+}: {
+  value: number;
+  max: number;
+}): number => {
+  if (max <= 0 || value <= 0) return 0;
+  return Math.min(100, Math.round((value / max) * 100));
+};
+
 export const hasNoActivity = (totals: PdWeeklyStats["totals"]): boolean =>
   totals.pdCount === 0 && totals.rePdCount === 0 && totals.likeCount === 0;
 

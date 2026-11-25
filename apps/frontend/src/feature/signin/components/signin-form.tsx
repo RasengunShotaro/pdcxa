@@ -20,7 +20,14 @@ import { Input } from "@/components/ui/input";
 import { PasswordInput } from "@/components/ui/password-input";
 import type { SignInFlow } from "@/lib/auth/types";
 import { useSignInFlow } from "@/lib/auth/use-sign-in";
+import { アプリへ入る演出を始める } from "../transition/enter-app-transition";
 import { type SigninFormSchema, signinFormSchema } from "../types/signin-form";
+import {
+  LOGIN_ALERT_CLASS,
+  LOGIN_FIELD_CLASS,
+  LOGIN_LABEL_CLASS,
+  LOGIN_SUBMIT_CLASS,
+} from "./login-scene/login-field";
 
 const SIGN_IN_FAILED = "ログインに失敗しました";
 const SIGN_IN_FAILED_DETAIL =
@@ -63,6 +70,7 @@ export function SignInForm({ flow }: SignInFormProps) {
         await signIn.finalize({
           navigate: ({ decorateUrl }) => {
             const url = decorateUrl("/");
+            アプリへ入る演出を始める();
             if (url.startsWith("http")) {
               window.location.href = url;
             } else {
@@ -88,10 +96,13 @@ export function SignInForm({ flow }: SignInFormProps) {
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>メールアドレス</FormLabel>
+              <FormLabel className={LOGIN_LABEL_CLASS}>
+                メールアドレス
+              </FormLabel>
               <FormControl>
                 <Input
                   autoComplete="email"
+                  className={LOGIN_FIELD_CLASS}
                   inputMode="email"
                   placeholder="abcde@example.com"
                   type="email"
@@ -107,10 +118,11 @@ export function SignInForm({ flow }: SignInFormProps) {
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>パスワード</FormLabel>
+              <FormLabel className={LOGIN_LABEL_CLASS}>パスワード</FormLabel>
               <FormControl>
                 <PasswordInput
                   autoComplete="current-password"
+                  className={LOGIN_FIELD_CLASS}
                   placeholder="8文字以上のパスワード"
                   {...field}
                 />
@@ -121,13 +133,17 @@ export function SignInForm({ flow }: SignInFormProps) {
         />
 
         {hasError ? (
-          <Alert variant="destructive">
+          <Alert className={LOGIN_ALERT_CLASS} variant="destructive">
             <TriangleAlert />
             <AlertDescription>{SIGN_IN_FAILED_DETAIL}</AlertDescription>
           </Alert>
         ) : null}
 
-        <Button className="w-full" disabled={isPending} type="submit">
+        <Button
+          className={LOGIN_SUBMIT_CLASS}
+          disabled={isPending}
+          type="submit"
+        >
           {isPending ? (
             <Loader2 aria-hidden="true" className="size-4 animate-spin" />
           ) : (

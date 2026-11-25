@@ -27,6 +27,7 @@ export function InsertedListItem({
   return (
     <m.li
       animate={isInserted ? expanded : undefined}
+      className="group/row"
       initial={isInserted ? collapsed : false}
       transition={{ duration: 0.25, ease: [0, 0, 0.2, 1] }}
     >

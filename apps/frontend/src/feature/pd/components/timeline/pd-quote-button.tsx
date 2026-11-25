@@ -7,6 +7,7 @@ import type { Pd } from "@/feature/pd/types";
 import { 件数を短く表す } from "@/feature/pd/utils/format-count";
 import { PDを引用元にする } from "@/feature/pd/utils/quote";
 import { PdComposer } from "../composer/pd-composer";
+import { PD_ACTION_CLASS, PD_ACTION_ICON_CLASS } from "./pd-action-style";
 
 interface PdQuoteButtonProps {
   pd: Pd;
@@ -23,13 +24,13 @@ export function PdQuoteButton({ pd }: PdQuoteButtonProps) {
             ? `引用する（${pd.quoteCount}件の引用）`
             : "引用する"
         }
-        className="h-8 gap-1.5 rounded-full px-2 text-xs text-muted-foreground tabular-nums transition-[color,background-color,translate] hover:-translate-y-px hover:bg-accent hover:text-foreground"
+        className={PD_ACTION_CLASS}
         onClick={() => setOpen(true)}
         title="引用する"
         type="button"
         variant="ghost"
       >
-        <Repeat2 aria-hidden="true" className="size-4.5" />
+        <Repeat2 aria-hidden="true" className={PD_ACTION_ICON_CLASS} />
         {pd.quoteCount > 0 ? 件数を短く表す(pd.quoteCount) : null}
       </Button>
       {open ? (

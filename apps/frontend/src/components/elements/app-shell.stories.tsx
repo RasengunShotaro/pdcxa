@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
-import { expect, userEvent, within } from "storybook/test";
+import { expect, userEvent, waitFor, within } from "storybook/test";
 import { AppShell } from "./app-shell";
 
 const meta: Meta<typeof AppShell> = {
@@ -7,15 +7,33 @@ const meta: Meta<typeof AppShell> = {
   component: AppShell,
   parameters: {
     layout: "fullscreen",
+    viewport: {
+      options: {
+        desktop: {
+          name: "PC",
+          styles: { width: "1440px", height: "900px" },
+          type: "desktop",
+        },
+      },
+    },
   },
+  globals: { viewport: { value: "desktop" } },
   args: {
     userFooter: <span>U</span>,
+    backdrop: null,
     children: <p>メインコンテンツ</p>,
   },
 };
 export default meta;
 
 type Story = StoryObj<typeof AppShell>;
+
+const mainNav = (canvasElement: HTMLElement) =>
+  within(
+    within(canvasElement).getByRole("navigation", {
+      name: "メインナビゲーション",
+    }),
+  );
 
 export const Home: Story = {
   name: "ホームでは現在地としてホームを示す",
@@ -28,14 +46,10 @@ export const Home: Story = {
     await expect(
       canvas.getByRole("link", { name: "コンテンツへスキップ" }),
     ).toBeInTheDocument();
-    await expect(
-      canvas.getByRole("navigation", { name: "メインナビゲーション" }),
-    ).toBeInTheDocument();
 
-    await expect(canvas.getByRole("link", { name: "ホーム" })).toHaveAttribute(
-      "aria-current",
-      "page",
-    );
+    await expect(
+      mainNav(canvasElement).getByRole("link", { name: "ホーム" }),
+    ).toHaveAttribute("aria-current", "page");
   },
 };
 
@@ -59,21 +73,61 @@ export const LongUnbreakableContent: Story = {
   },
 };
 
-export const CollapseSidebar: Story = {
-  name: "サイドバー下部のボタンでサイドバーを閉じられる",
+export const ComposeFromSidebar: Story = {
+  name: "サイドバーの PDする を押すと、画面を移らずに投稿の入力が開く",
   parameters: {
     nextjs: { navigation: { pathname: "/" } },
   },
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
+    const body = within(canvasElement.ownerDocument.body);
 
     await userEvent.click(
-      canvas.getByRole("button", { name: "サイドバーを閉じる" }),
+      mainNav(canvasElement).getByRole("button", { name: "PDする" }),
     );
 
+    const dialog = await body.findByRole("dialog", { name: "PDする" });
+    await waitFor(() => expect(dialog).toBeVisible());
+  },
+};
+
+export const InvitationOpensAsSheet: Story = {
+  name: "サイドバーの招待を押すと、画面を移らずに招待のシートが開く",
+  parameters: {
+    nextjs: { navigation: { pathname: "/" } },
+  },
+  play: async ({ canvasElement }) => {
+    const body = within(canvasElement.ownerDocument.body);
+
+    await userEvent.click(
+      mainNav(canvasElement).getByRole("button", { name: "招待" }),
+    );
+
+    const dialog = await body.findByRole("dialog", { name: "PDCXAに招待する" });
+    await waitFor(() => expect(dialog).toBeVisible());
+  },
+};
+
+export const NoProfileInSidebar: Story = {
+  name: "サイドバーにはプロフィールを並べない",
+  parameters: {
+    nextjs: { navigation: { pathname: "/" } },
+  },
+  play: async ({ canvasElement }) => {
     await expect(
-      canvas.getByRole("button", { name: "サイドバーを開く" }),
-    ).toHaveAttribute("aria-expanded", "false");
+      mainNav(canvasElement).queryByRole("button", { name: "プロフィール" }),
+    ).toBeNull();
+  },
+};
+
+export const BookmarksInSidebar: Story = {
+  name: "サイドバーの保存済みから、保存した PD の一覧へ進める",
+  parameters: {
+    nextjs: { navigation: { pathname: "/" } },
+  },
+  play: async ({ canvasElement }) => {
+    await expect(
+      mainNav(canvasElement).getByRole("link", { name: "保存済み" }),
+    ).toHaveAttribute("href", "/bookmarks");
   },
 };
 
@@ -97,14 +151,14 @@ export const Stats: Story = {
     nextjs: { navigation: { pathname: "/stats" } },
   },
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
+    const nav = mainNav(canvasElement);
 
-    await expect(canvas.getByRole("link", { name: "統計" })).toHaveAttribute(
+    await expect(nav.getByRole("link", { name: "統計" })).toHaveAttribute(
       "aria-current",
       "page",
     );
-    await expect(
-      canvas.getByRole("link", { name: "ホーム" }),
-    ).not.toHaveAttribute("aria-current");
+    await expect(nav.getByRole("link", { name: "ホーム" })).not.toHaveAttribute(
+      "aria-current",
+    );
   },
 };

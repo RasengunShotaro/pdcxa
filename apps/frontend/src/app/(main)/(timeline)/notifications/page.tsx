@@ -1,5 +1,5 @@
-import { NotificationsView } from "@/feature/notification/components/notifications-view";
+import { NotificationsReadDefault } from "@/feature/pd/components/timeline/timeline-read-default";
 
 export default function Page() {
-  return <NotificationsView />;
+  return <NotificationsReadDefault />;
 }

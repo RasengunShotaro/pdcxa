@@ -47,19 +47,25 @@ export default function ActivityBarChartInner({
   );
 
   return (
-    <ChartContainer aria-label={ariaLabel} className="border-0" config={config}>
+    <ChartContainer
+      aria-label={ariaLabel}
+      className="border-0 bg-transparent p-0"
+      config={config}
+    >
       <ResponsiveContainer height={height} width="100%">
         <BarChart accessibilityLayer data={data} margin={{ top: 8 }}>
           <CartesianGrid strokeDasharray="4 4" vertical={false} />
           <XAxis
             axisLine={false}
             dataKey={xKey}
+            tick={{ fill: "var(--muted-foreground)" }}
             tickLine={false}
             tickMargin={8}
           />
           <YAxis
             allowDecimals={false}
             axisLine={false}
+            tick={{ fill: "var(--muted-foreground)" }}
             tickLine={false}
             width={28}
           />

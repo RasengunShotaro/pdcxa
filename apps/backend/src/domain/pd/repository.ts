@@ -4,6 +4,7 @@ import type {
   NewPd,
   PdPage,
   RawPd,
+  投稿者の日毎の活動,
   投稿者別集計群,
   日毎の集計,
   集計期間,
@@ -43,5 +44,9 @@ export class PdRepository extends Context.Service<
     readonly 投稿者別集計を取得する: (
       range: 集計期間,
     ) => Effect.Effect<投稿者別集計群, DatabaseError>;
+    readonly 投稿者の日毎の活動を取得する: (params: {
+      readonly userId: string;
+      readonly range: 集計期間;
+    }) => Effect.Effect<投稿者の日毎の活動, DatabaseError>;
   }
 >()("PdRepository") {}

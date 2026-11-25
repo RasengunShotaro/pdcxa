@@ -1,5 +1,4 @@
 import { CountUpNumber } from "@/components/elements/count-up-number";
-import { Card, CardContent } from "@/components/ui/card";
 import type { StatSummaryItem } from "@/feature/pd/utils/stats-derive";
 
 interface StatCardProps {
@@ -11,14 +10,14 @@ const toJapaneseNumber = (value: number): string =>
 
 export function StatCard({ item }: StatCardProps) {
   return (
-    <Card>
-      <CardContent className="space-y-1 p-4 sm:p-5">
-        <p className="text-sm text-muted-foreground">{item.label}</p>
-        <p className="text-3xl font-bold tabular-nums text-foreground">
-          <CountUpNumber format={toJapaneseNumber} value={item.value} />
-        </p>
-        <p className="text-sm text-muted-foreground">{item.supporting}</p>
-      </CardContent>
-    </Card>
+    <div className="flex flex-col gap-0.5 border-l border-line px-5 odd:border-l-0 odd:pl-0 @[620px]:odd:border-l @[620px]:odd:pl-5 @[620px]:first:border-l-0 @[620px]:first:pl-0">
+      <p className="text-[0.8125rem] leading-[1.4] text-ink-3">{item.label}</p>
+      <p className="text-[2.5rem] leading-[1.15] font-semibold text-ink tabular-nums">
+        <CountUpNumber format={toJapaneseNumber} value={item.value} />
+      </p>
+      <p className="text-[0.8125rem] leading-[1.4] text-ink-3">
+        {item.supporting}
+      </p>
+    </div>
   );
 }

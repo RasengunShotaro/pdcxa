@@ -10,7 +10,7 @@ import {
   expect,
   it,
 } from "vitest";
-import { pdBookmarks, pdLikes, pds } from "#/db/schema";
+import { pdBookmarks, pdLikes, pds, rePds } from "#/db/schema";
 import { PdRepository } from "#/domain/pd/repository";
 import type { DbClient as DrizzleDb } from "#/lib/db";
 import {
@@ -536,5 +536,153 @@ describe("PdRepositoryLive", () => {
     );
 
     expect(result).toEqual([bookmarked]);
+  });
+
+  const 投稿者の日毎の活動を取得する = (userId: string) =>
+    Effect.runPromise(
+      PdRepository.pipe(
+        Effect.flatMap((repo) =>
+          repo.投稿者の日毎の活動を取得する({
+            userId,
+            range: {
+              start: new Date("2026-06-01T00:00:00.000Z"),
+              end: new Date("2026-06-30T00:00:00.000Z"),
+            },
+          }),
+        ),
+        Effect.provide(レイヤー(ctx.db)),
+      ),
+    );
+
+  const PDを投稿する = (params: { userId: string; createdAt: string }) =>
+    ctx.db
+      .insert(pds)
+      .values({
+        id: uuidv7(),
+        content: "PD",
+        createdAt: new Date(params.createdAt),
+        userId: params.userId,
+      })
+      .returning({ id: pds.id });
+
+  it("本人が同じ日に投稿した PD をその日の件数としてまとめる", async () => {
+    await PDを投稿する({ userId: "me", createdAt: "2026-06-10T01:00:00.000Z" });
+    await PDを投稿する({ userId: "me", createdAt: "2026-06-10T05:00:00.000Z" });
+
+    const result = await 投稿者の日毎の活動を取得する("me");
+
+    expect(result.日毎のPD数.map((row) => Number(row.count))).toEqual([2]);
+  });
+
+  it("日本時間で日付が変わった後の PD は翌日の件数に入れる", async () => {
+    await PDを投稿する({ userId: "me", createdAt: "2026-06-10T15:30:00.000Z" });
+
+    const result = await 投稿者の日毎の活動を取得する("me");
+
+    expect(String(result.日毎のPD数[0]?.集計日).slice(0, 10)).toBe(
+      "2026-06-11",
+    );
+  });
+
+  it("他のユーザーの PD は本人の活動に数えない", async () => {
+    await PDを投稿する({
+      userId: "someone",
+      createdAt: "2026-06-10T01:00:00.000Z",
+    });
+
+    const result = await 投稿者の日毎の活動を取得する("me");
+
+    expect(result.日毎のPD数).toEqual([]);
+  });
+
+  it("本人の RePD をその日の件数として数え、他のユーザーの RePD は数えない", async () => {
+    const [target] = await PDを投稿する({
+      userId: "someone",
+      createdAt: "2026-06-09T01:00:00.000Z",
+    });
+    await ctx.db.insert(rePds).values([
+      {
+        pdId: target.id,
+        content: "自分の返信",
+        createdAt: new Date("2026-06-10T02:00:00.000Z"),
+        userId: "me",
+      },
+      {
+        pdId: target.id,
+        content: "他人の返信",
+        createdAt: new Date("2026-06-10T03:00:00.000Z"),
+        userId: "someone",
+      },
+    ]);
+
+    const result = await 投稿者の日毎の活動を取得する("me");
+
+    expect(result.日毎のRePD数.map((row) => Number(row.count))).toEqual([1]);
+  });
+
+  it("本人の PD についたいいねを、いいねされた日の件数として数える", async () => {
+    const [mine] = await PDを投稿する({
+      userId: "me",
+      createdAt: "2026-05-10T01:00:00.000Z",
+    });
+    await ctx.db.insert(pdLikes).values([
+      {
+        targetPdId: mine.id,
+        userId: "fan-1",
+        createdAt: new Date("2026-06-12T01:00:00.000Z"),
+      },
+      {
+        targetPdId: mine.id,
+        userId: "fan-2",
+        createdAt: new Date("2026-06-12T05:00:00.000Z"),
+      },
+    ]);
+
+    const result = await 投稿者の日毎の活動を取得する("me");
+
+    expect(
+      result.日毎のいいね数.map((row) => ({
+        日: String(row.集計日).slice(0, 10),
+        件数: Number(row.count),
+      })),
+    ).toEqual([{ 日: "2026-06-12", 件数: 2 }]);
+  });
+
+  it("期間より前にされたいいねは本人の活動に数えない", async () => {
+    const [mine] = await PDを投稿する({
+      userId: "me",
+      createdAt: "2026-05-10T01:00:00.000Z",
+    });
+    await ctx.db.insert(pdLikes).values({
+      targetPdId: mine.id,
+      userId: "fan-1",
+      createdAt: new Date("2026-05-20T01:00:00.000Z"),
+    });
+
+    const result = await 投稿者の日毎の活動を取得する("me");
+
+    expect(result.日毎のいいね数).toEqual([]);
+  });
+
+  it("他のユーザーの PD についたいいねは本人の活動に数えない", async () => {
+    const [others] = await PDを投稿する({
+      userId: "someone",
+      createdAt: "2026-06-10T01:00:00.000Z",
+    });
+    await ctx.db
+      .insert(pdLikes)
+      .values({ targetPdId: others.id, userId: "me" });
+
+    const result = await 投稿者の日毎の活動を取得する("me");
+
+    expect(result.日毎のいいね数).toEqual([]);
+  });
+
+  it("期間より前の PD は本人の活動に数えない", async () => {
+    await PDを投稿する({ userId: "me", createdAt: "2026-05-20T01:00:00.000Z" });
+
+    const result = await 投稿者の日毎の活動を取得する("me");
+
+    expect(result.日毎のPD数).toEqual([]);
   });
 });

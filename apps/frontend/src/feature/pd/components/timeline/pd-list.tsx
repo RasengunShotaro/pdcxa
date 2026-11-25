@@ -1,6 +1,7 @@
 "use client";
 
 import { Loader2 } from "lucide-react";
+import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
 import { ListError } from "@/components/elements/list-error";
 import { ListSkeleton } from "@/components/elements/list-skeleton";
@@ -8,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import type { Pd } from "@/feature/pd/types";
 import { InsertedListItem } from "./inserted-list-item";
 import { PdCard } from "./pd-card";
+import { 選択中のPDを決める } from "./selected-pd";
 import { useInfiniteScroll } from "./use-infinite-scroll";
 import { useInsertedRowIds } from "./use-inserted-row-ids";
 
@@ -22,6 +24,8 @@ interface PdListProps {
   onRetry: () => void;
   emptyState: ReactNode;
   showAuthor?: boolean;
+  density?: "compact" | "comfortable";
+  highlightsOpenPd?: boolean;
 }
 
 export function PdList({
@@ -35,7 +39,10 @@ export function PdList({
   onRetry,
   emptyState,
   showAuthor = true,
+  density = "comfortable",
+  highlightsOpenPd = false,
 }: PdListProps) {
+  const pathname = usePathname();
   const sentinelRef = useInfiniteScroll({
     hasNextPage,
     isFetchingNextPage,
@@ -46,6 +53,9 @@ export function PdList({
     isReady: !isPending,
     position: "head",
   });
+  const selectedPdId = highlightsOpenPd
+    ? 選択中のPDを決める({ pathname, firstPdId: pds[0]?.id })
+    : undefined;
 
   if (isPending && pds.length === 0) {
     return <ListSkeleton count={4} variant="rows" />;
@@ -65,10 +75,15 @@ export function PdList({
 
   return (
     <div>
-      <ul className="divide-y divide-border border-b border-border">
+      <ul className="px-2">
         {pds.map((pd) => (
           <InsertedListItem isInserted={insertedIds.has(pd.id)} key={pd.id}>
-            <PdCard pd={pd} showAuthor={showAuthor} />
+            <PdCard
+              density={density}
+              pd={pd}
+              selected={pd.id === selectedPdId}
+              showAuthor={showAuthor}
+            />
           </InsertedListItem>
         ))}
       </ul>
@@ -78,6 +93,7 @@ export function PdList({
       {hasNextPage ? (
         <div className="flex justify-center py-4">
           <Button
+            className="rounded-full"
             disabled={isFetchingNextPage}
             onClick={onLoadMore}
             type="button"

@@ -24,7 +24,7 @@ export function PdLikersPopover({
 }: PdLikersPopoverProps) {
   if (likeCount === 0) {
     return (
-      <span className="inline-flex h-8 items-center pr-2 pl-1 text-xs text-muted-foreground tabular-nums">
+      <span className="inline-flex h-9 items-center pr-2.5 pl-1 text-[0.8125rem] text-ink-3 tabular-nums">
         <AnimatedCount value={0} />
       </span>
     );
@@ -35,14 +35,14 @@ export function PdLikersPopover({
       <PopoverTrigger asChild>
         <Button
           aria-label="いいねした人を表示"
-          className="h-8 rounded-full pr-2.5 pl-1 text-xs text-muted-foreground tabular-nums hover:bg-transparent dark:hover:bg-transparent"
+          className="h-9 rounded-[18px] pr-2.5 pl-1 text-[0.8125rem] font-normal text-ink-3 tabular-nums hover:bg-transparent dark:hover:bg-transparent"
           type="button"
           variant="ghost"
         >
           <AnimatedCount format={件数を短く表す} value={likeCount} />
         </Button>
       </PopoverTrigger>
-      <PopoverContent align="start" className="w-64 p-2">
+      <PopoverContent align="start" className="w-64 rounded-2xl p-2">
         <p className="px-2 py-1.5 text-sm font-medium text-foreground">
           いいねした人
         </p>

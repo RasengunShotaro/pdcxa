@@ -9,6 +9,7 @@ import type { Bindings } from "#/lib/bindings";
 import { GIFを含むPDを作成する } from "#/services/pd/create-gif-pd";
 import { PDを作成する } from "#/services/pd/create-pd";
 import { ブックマークしたPD一覧を取得する } from "#/services/pd/fetch-bookmarked-pds";
+import { あしあとを取得する } from "#/services/pd/fetch-footprint";
 import { PD画像を取得する } from "#/services/pd/fetch-pd-image";
 import { PD一覧を取得する } from "#/services/pd/fetch-pds";
 import { PD週間統計を取得する } from "#/services/pd/fetch-weekly-stats";
@@ -22,6 +23,7 @@ import {
   fetchBookmarkedPdQuerySchema,
   fetchPdImageParamSchema,
   fetchPdQuerySchema,
+  footprintSchema,
   mutatePdBookmarkSchema,
   mutatePdLikeSchema,
   pdDetailSchema,
@@ -48,6 +50,15 @@ const fetchWeeklyStatsRoute = createRoute({
   path: "/stats/weekly",
   responses: {
     200: jsonContent(weeklyStatsSchema, "PD週間統計"),
+  },
+});
+
+const fetchFootprintRoute = createRoute({
+  operationId: "fetchFootprint",
+  method: "get",
+  path: "/stats/footprint",
+  responses: {
+    200: jsonContent(footprintSchema, "本人の日ごとの活動（あしあと）"),
   },
 });
 
@@ -169,6 +180,15 @@ export const pdApp = new OpenAPIHono<Bindings>()
       PD週間統計を取得する().pipe(
         Effect.map((統計) => c.json(統計, 200)),
         Effect.tapError((error) => Effect.logError(error.message)),
+      ),
+    ),
+  )
+  .openapi(fetchFootprintRoute, async (c) =>
+    runtime.runPromise(
+      あしあとを取得する().pipe(
+        Effect.map((あしあと) => c.json(あしあと, 200)),
+        Effect.tapError((error) => Effect.logError(error.message)),
+        Effect.provideService(AuthContext, { userId: c.get("userId") }),
       ),
     ),
   )

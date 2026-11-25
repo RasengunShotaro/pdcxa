@@ -11,6 +11,7 @@ import {
 } from "@/feature/pd/utils/stats-derive";
 import { ActivityTrend } from "./activity-trend";
 import { ContributorRanking } from "./contributor-ranking";
+import { FootprintHeatmap } from "./footprint-heatmap";
 import { StatCard } from "./stat-card";
 import { StatsSkeleton } from "./stats-skeleton";
 
@@ -38,23 +39,28 @@ export const StatsView = () => {
   const chartData = toActivityChartData(stats.daily);
 
   return (
-    <div className="space-y-6">
-      <header className="space-y-1">
-        <h1 className="text-xl font-bold text-foreground">直近7日間</h1>
-        <p className="text-sm text-muted-foreground">
+    <div className="@container flex flex-col gap-6">
+      <header className="flex items-baseline gap-3">
+        <h2 className="text-[1rem] leading-normal font-bold text-ink">
+          直近7日間
+        </h2>
+        <p className="text-[0.8125rem] text-ink-3">
           {formatRangeLabel(stats.range)}
         </p>
       </header>
 
-      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-y-[22px] @[620px]:grid-cols-4">
         {summary.map((item) => (
           <StatCard item={item} key={item.key} />
         ))}
       </div>
 
-      <ActivityTrend data={chartData} />
+      <div className="grid gap-7 @[760px]:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)] @[760px]:gap-10">
+        <ActivityTrend data={chartData} />
+        <ContributorRanking rankings={stats.rankings} />
+      </div>
 
-      <ContributorRanking rankings={stats.rankings} />
+      <FootprintHeatmap />
     </div>
   );
 };

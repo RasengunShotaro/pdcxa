@@ -29,73 +29,78 @@ function ProfileSkeleton() {
 }
 
 export function ProfileView() {
+  return (
+    <Card>
+      <CardContent className="space-y-4">
+        <h1 className="sr-only">プロフィール</h1>
+        <ProfileEditor />
+      </CardContent>
+    </Card>
+  );
+}
+
+export function ProfileEditor() {
   const { user } = useCurrentUser();
   const { updateProfileName } = useUpdateProfileName();
   const { updateProfilePicture } = useUpdateProfilePicture();
   const { updateProfileHandle } = useUpdateProfileHandle();
 
   return (
-    <Card>
-      <CardContent className="space-y-4">
-        <h1 className="sr-only">プロフィール</h1>
-        {user ? (
-          <>
-            <section
-              aria-labelledby="profile-picture-heading"
-              className="space-y-4"
+    <div className="space-y-4">
+      {user ? (
+        <>
+          <section
+            aria-labelledby="profile-picture-heading"
+            className="space-y-4"
+          >
+            <h2
+              className="text-base font-medium text-muted-foreground"
+              id="profile-picture-heading"
             >
-              <h2
-                className="text-base font-medium text-muted-foreground"
-                id="profile-picture-heading"
-              >
-                プロフィール画像
-              </h2>
-              <ProfilePictureField
-                displayName={user.fullName ?? "ユーザー"}
-                imageUrl={user.imageUrl}
-                onUpload={updateProfilePicture}
-              />
-            </section>
-            <Separator />
-            <section
-              aria-labelledby="profile-name-heading"
-              className="space-y-4"
+              プロフィール画像
+            </h2>
+            <ProfilePictureField
+              displayName={user.fullName ?? "ユーザー"}
+              imageUrl={user.imageUrl}
+              onUpload={updateProfilePicture}
+            />
+          </section>
+          <Separator />
+          <section aria-labelledby="profile-name-heading" className="space-y-4">
+            <h2
+              className="text-base font-medium text-muted-foreground"
+              id="profile-name-heading"
             >
-              <h2
-                className="text-base font-medium text-muted-foreground"
-                id="profile-name-heading"
-              >
-                表示名
-              </h2>
-              <ProfileNameField
-                defaultValues={{
-                  firstName: user.firstName ?? "",
-                  lastName: user.lastName ?? "",
-                }}
-                onSubmit={updateProfileName}
-              />
-            </section>
-            <Separator />
-            <section
-              aria-labelledby="profile-handle-heading"
-              className="space-y-4"
+              表示名
+            </h2>
+            <ProfileNameField
+              defaultValues={{
+                firstName: user.firstName ?? "",
+                lastName: user.lastName ?? "",
+              }}
+              onSubmit={updateProfileName}
+            />
+          </section>
+          <Separator />
+          <section
+            aria-labelledby="profile-handle-heading"
+            className="space-y-4"
+          >
+            <h2
+              className="text-base font-medium text-muted-foreground"
+              id="profile-handle-heading"
             >
-              <h2
-                className="text-base font-medium text-muted-foreground"
-                id="profile-handle-heading"
-              >
-                ID
-              </h2>
-              <ProfileHandleField
-                defaultValues={{ handle: user.userName ?? "" }}
-                onSubmit={updateProfileHandle}
-              />
-            </section>
-          </>
-        ) : (
-          <ProfileSkeleton />
-        )}
-      </CardContent>
-    </Card>
+              ID
+            </h2>
+            <ProfileHandleField
+              defaultValues={{ handle: user.userName ?? "" }}
+              onSubmit={updateProfileHandle}
+            />
+          </section>
+        </>
+      ) : (
+        <ProfileSkeleton />
+      )}
+    </div>
   );
 }
