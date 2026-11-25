@@ -2,13 +2,19 @@ import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { expect, userEvent, waitFor, within } from "storybook/test";
 import { AppShell } from "./app-shell";
 import { FeedSurface } from "./feed-layout";
+import type { 一覧と詳細の幅 } from "./feed-layout-cookie";
 
 const PD_LABELS = Array.from({ length: 40 }, (_, index) => `PD ${index + 1}`);
 
-function LongFeed() {
+interface LongFeedProps {
+  savedLayout?: 一覧と詳細の幅;
+}
+
+function LongFeed({ savedLayout }: LongFeedProps) {
   return (
     <AppShell backdrop={null} userFooter={<span>U</span>}>
       <FeedSurface
+        savedLayout={savedLayout}
         list={PD_LABELS.map((label) => (
           <p className="h-24 px-4 py-3" key={label}>
             {label}
@@ -96,6 +102,21 @@ export const ResizeListWithKeyboard: Story = {
     await waitFor(() =>
       expect(list.getBoundingClientRect().width).toBeGreaterThan(before),
     );
+  },
+};
+
+export const OpensWithSavedWidth: Story = {
+  name: "前に広げた一覧の幅で開く",
+  args: { savedLayout: { list: 60, detail: 40 } },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const list = canvas.getByRole("region", { name: "タイムライン" });
+    const handle = canvas.getByRole("separator", {
+      name: "一覧と詳細の幅を変える",
+    });
+
+    await expect(handle).toHaveAttribute("aria-valuenow", "60");
+    await expect(list.getBoundingClientRect().width).toBeGreaterThan(600);
   },
 };
 
