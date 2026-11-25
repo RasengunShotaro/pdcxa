@@ -44,7 +44,6 @@ export function PdDetailCard({ pd }: PdDetailCardProps) {
 
       <PdBody
         className="mt-5 text-[1.3125rem] leading-[1.9] max-wide:text-[1.125rem] max-wide:leading-[1.85]"
-        clamp={false}
         content={pd.content}
       />
 

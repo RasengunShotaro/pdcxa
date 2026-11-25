@@ -15,7 +15,8 @@ export type EnterAppMotion = "fade" | "dissolve" | "morph";
 
 const RAIL_MIN_VIEWPORT_WIDTH = 900;
 const FRAME_MAX_WIDTH = 1440;
-const FRAME_MARGIN = 24;
+const FRAME_SIDE_MARGIN = 16;
+const FRAME_BOTTOM_MARGIN = 24;
 const HEADER_HEIGHT = 80;
 const RAIL_WIDTH = 240;
 const RAIL_RADIUS = 24;
@@ -45,10 +46,10 @@ export const アプリのレールの位置を求める = ({
     return null;
   }
   return {
-    left: Math.max(0, (width - FRAME_MAX_WIDTH) / 2) + FRAME_MARGIN,
+    left: Math.max(0, (width - FRAME_MAX_WIDTH) / 2) + FRAME_SIDE_MARGIN,
     top: HEADER_HEIGHT,
     width: RAIL_WIDTH,
-    height: height - HEADER_HEIGHT - FRAME_MARGIN,
+    height: height - HEADER_HEIGHT - FRAME_BOTTOM_MARGIN,
     radius: RAIL_RADIUS,
   };
 };
