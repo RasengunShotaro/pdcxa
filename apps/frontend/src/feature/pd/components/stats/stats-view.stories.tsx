@@ -130,6 +130,27 @@ export const Populated: Story = {
   },
 };
 
+export const DailyTableOnlyForScreenReaders: Story = {
+  name: "日別の件数の表は読み上げでだけ読め、見出しも画面には重ならない",
+  parameters: Populated.parameters,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const table = await canvas.findByRole("table", {
+      name: "日別アクティビティ（PD・RePD・いいね）",
+    });
+    const hidingBox = table.parentElement;
+    const caption = table.querySelector("caption");
+
+    await expect(
+      hidingBox !== null &&
+        caption !== null &&
+        hidingBox.contains(caption) &&
+        getComputedStyle(hidingBox).overflow === "hidden" &&
+        hidingBox.getBoundingClientRect().width <= 1,
+    ).toBe(true);
+  },
+};
+
 export const ShowsFootprint: Story = {
   name: "自分のあしあとと、連続して動いた日数を表示する",
   parameters: Populated.parameters,
