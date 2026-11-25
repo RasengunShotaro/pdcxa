@@ -28,7 +28,7 @@ export function GlassSheet({
   return (
     <Dialog onOpenChange={onOpenChange} open={open}>
       <DialogContent className={styles.sheet} data-glass-sheet="">
-        <DialogHeader className="px-3 pt-3.5 pb-[18px] text-left">
+        <DialogHeader className="shrink-0 px-3 pt-3.5 pb-[18px] text-left">
           <DialogTitle className="text-[1.5rem] leading-[1.3] font-bold text-ink">
             {title}
           </DialogTitle>
@@ -36,7 +36,7 @@ export function GlassSheet({
             {description}
           </DialogDescription>
         </DialogHeader>
-        <div className="flex flex-col gap-3">{children}</div>
+        <div className={styles.body}>{children}</div>
       </DialogContent>
     </Dialog>
   );

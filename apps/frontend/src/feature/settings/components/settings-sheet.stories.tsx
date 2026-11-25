@@ -24,6 +24,46 @@ export default meta;
 
 type Story = StoryObj<typeof SettingsSheet>;
 
+export const ScrollsOnShortScreen: Story = {
+  name: "縦に短いスマホでは、見出しと閉じるボタンを残したまま、ログアウトまでスクロールできる",
+  parameters: {
+    viewport: {
+      options: {
+        shortPhone: {
+          name: "縦に短いスマホ",
+          styles: { width: "375px", height: "560px" },
+          type: "mobile",
+        },
+      },
+    },
+  },
+  globals: { viewport: { value: "shortPhone" } },
+  play: async () => {
+    const body = within(document.body);
+    const sheet = await body.findByRole("dialog", { name: "設定" });
+    const close = within(sheet).getByRole("button", { name: "Close" });
+    const logout = body.getByRole("button", { name: "ログアウト" });
+    await expect(logout.getBoundingClientRect().bottom).toBeGreaterThan(
+      sheet.getBoundingClientRect().bottom,
+    );
+
+    for (const element of sheet.querySelectorAll<HTMLElement>("*")) {
+      element.scrollTop = element.scrollHeight;
+    }
+    sheet.scrollTop = sheet.scrollHeight;
+
+    await waitFor(() => {
+      const sheetRect = sheet.getBoundingClientRect();
+      expect(logout.getBoundingClientRect().bottom).toBeLessThanOrEqual(
+        sheetRect.bottom,
+      );
+      expect(close.getBoundingClientRect().top).toBeGreaterThanOrEqual(
+        sheetRect.top,
+      );
+    });
+  },
+};
+
 export const ReduceTransparency: Story = {
   name: "透明度を下げるをオンにすると、ガラスが不透明な面に変わる",
   play: async () => {
