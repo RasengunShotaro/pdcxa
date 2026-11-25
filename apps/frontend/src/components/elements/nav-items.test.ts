@@ -6,6 +6,7 @@ import {
   TIMELINE_TABS,
   タブを切り替える向き,
   一覧に出すタブを決める,
+  一覧の持ち主を求める,
   殻の見出しを決める,
   画面の種類を決める,
   開いているPDのIDを求める,
@@ -138,6 +139,10 @@ describe("画面の種類を決める", () => {
     expect(画面の種類を決める("/pd/abc")).toBe("detail");
   });
 
+  it("個人のタイムラインは、その人の一覧の画面として扱う", () => {
+    expect(画面の種類を決める("/user/taro")).toBe("user");
+  });
+
   it("統計は単独のページとして扱う", () => {
     expect(画面の種類を決める("/stats")).toBe("page");
   });
@@ -163,6 +168,16 @@ describe("開いているPDのIDを求める", () => {
   });
 });
 
+describe("一覧の持ち主を求める", () => {
+  it("個人のタイムラインの一覧なら、その人の ID を返す", () => {
+    expect(一覧の持ち主を求める("/user/taro")).toBe("taro");
+  });
+
+  it("ホームの一覧なら持ち主はいない", () => {
+    expect(一覧の持ち主を求める("/")).toBeNull();
+  });
+});
+
 describe("一覧に出すタブを決める", () => {
   it("タブの画面ではそのタブの一覧を出す", () => {
     expect(
@@ -177,5 +192,20 @@ describe("一覧に出すタブを決める", () => {
         lastTabHref: "/notifications",
       }),
     ).toBe("/notifications");
+  });
+
+  it("個人のタイムラインでは、その人の一覧を出す", () => {
+    expect(
+      一覧に出すタブを決める({ pathname: "/user/taro", lastTabHref: "/" }),
+    ).toBe("/user/taro");
+  });
+
+  it("個人のタイムラインから PD を開いても、その人の一覧を残す", () => {
+    expect(
+      一覧に出すタブを決める({
+        pathname: "/pd/abc",
+        lastTabHref: "/user/taro",
+      }),
+    ).toBe("/user/taro");
   });
 });

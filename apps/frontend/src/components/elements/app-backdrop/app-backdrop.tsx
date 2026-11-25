@@ -1,9 +1,18 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useEffect } from "react";
 import { useAppearancePreferences } from "@/feature/settings/hooks/use-appearance-preferences";
 import { 描く背景を決める } from "@/feature/settings/utils/appearance-preferences";
-import { 背景の部品を選ぶ, 選べる背景 } from "./backdrop-registry";
+import { 選べる背景 } from "./backdrop-registry";
+
+const SkyBackdrop = dynamic(
+  () =>
+    import("../backdrops/sky/sky-backdrop").then(
+      (module) => module.SkyBackdrop,
+    ),
+  { ssr: false },
+);
 
 export function AppBackdrop() {
   const { settings } = useAppearancePreferences();
@@ -11,7 +20,6 @@ export function AppBackdrop() {
     backdrop: settings.backdrop,
     available: 選べる背景,
   });
-  const Backdrop = 背景の部品を選ぶ(kind);
 
   useEffect(() => {
     document.documentElement.dataset.backdrop = kind;
@@ -20,8 +28,8 @@ export function AppBackdrop() {
     };
   }, [kind]);
 
-  return Backdrop ? (
-    <Backdrop />
+  return kind === "sky" ? (
+    <SkyBackdrop />
   ) : (
     <div
       aria-hidden="true"

@@ -38,6 +38,9 @@ interface StartInput {
 
 const 写真を読み込む = async (src: string): Promise<ImageBitmap> => {
   const response = await fetch(src);
+  if (!response.ok) {
+    throw new Error(`背景の写真を読み込めませんでした: ${response.status}`);
+  }
   return createImageBitmap(await response.blob());
 };
 

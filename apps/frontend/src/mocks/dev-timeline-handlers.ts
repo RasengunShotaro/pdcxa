@@ -32,9 +32,11 @@ export const 開発用のタイムラインのハンドラ = [
       const pd = 開発用のPDを探す(pdId);
       return HttpResponse.json({ items: pd ? [pd] : [] });
     }
-    if (params.get("userName")) return undefined;
     return HttpResponse.json(
-      開発用のタイムラインを1ページ分返す({ cursor: params.get("cursor") }),
+      開発用のタイムラインを1ページ分返す({
+        cursor: params.get("cursor"),
+        userName: params.get("userName"),
+      }),
     );
   }),
   http.get("*/user/details", () =>

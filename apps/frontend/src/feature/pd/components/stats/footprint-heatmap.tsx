@@ -7,7 +7,8 @@ import {
   あしあとのマスを作る,
 } from "@/feature/pd/utils/footprint";
 import { useFetchFootprint } from "@/schema/api";
-import { FOOTPRINT_LEVEL_CLASS, FootprintGrid } from "./footprint-grid";
+import { FootprintGrid } from "./footprint-grid";
+import { FOOTPRINT_LEVEL_CLASS } from "./footprint-level-class";
 import { StatsBlock } from "./stats-block";
 
 const LEGEND_LEVELS: readonly FootprintLevel[] = [0, 1, 2, 3, 4];

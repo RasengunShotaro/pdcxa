@@ -82,12 +82,18 @@ export const isNavItemActive = ({
     ? pathname === "/"
     : pathname === href || pathname.startsWith(`${href}/`);
 
-export type ScreenKind = "timeline" | "detail" | "page";
+export type ScreenKind = "timeline" | "user" | "detail" | "page";
 
 const PD_DETAIL_PREFIX = "/pd/";
+const USER_TIMELINE_PREFIX = "/user/";
+
+const 個人のタイムラインか = (pathname: string): boolean =>
+  pathname.startsWith(USER_TIMELINE_PREFIX) &&
+  pathname.length > USER_TIMELINE_PREFIX.length;
 
 export const 画面の種類を決める = (pathname: string): ScreenKind => {
   if (TIMELINE_TABS.some((tab) => tab.href === pathname)) return "timeline";
+  if (個人のタイムラインか(pathname)) return "user";
   if (pathname.startsWith(PD_DETAIL_PREFIX)) return "detail";
   return "page";
 };
@@ -106,8 +112,17 @@ interface ListTabInput {
 export const 一覧に出すタブを決める = ({
   pathname,
   lastTabHref,
-}: ListTabInput): string =>
-  TIMELINE_TABS.find((tab) => tab.href === pathname)?.href ?? lastTabHref;
+}: ListTabInput): string => {
+  if (個人のタイムラインか(pathname)) return pathname;
+  return (
+    TIMELINE_TABS.find((tab) => tab.href === pathname)?.href ?? lastTabHref
+  );
+};
+
+export const 一覧の持ち主を求める = (listHref: string): string | null =>
+  個人のタイムラインか(listHref)
+    ? decodeURIComponent(listHref.slice(USER_TIMELINE_PREFIX.length))
+    : null;
 
 const DYNAMIC_PAGE_LABELS: readonly { prefix: string; label: string }[] = [
   { prefix: "/pd/", label: "PD詳細" },

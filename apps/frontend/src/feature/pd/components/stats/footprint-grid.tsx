@@ -8,7 +8,6 @@ import {
 } from "@/components/ui/tooltip";
 import {
   type FootprintCell,
-  type FootprintLevel,
   あしあとの件数を表す,
   あしあとの日付を表す,
   あしあとを週ごとに並べる,
@@ -16,14 +15,7 @@ import {
   矢印キーで移る日を決める,
 } from "@/feature/pd/utils/footprint";
 import { cn } from "@/lib/utils";
-
-export const FOOTPRINT_LEVEL_CLASS: Record<FootprintLevel, string> = {
-  0: "bg-fill",
-  1: "bg-brand/28",
-  2: "bg-brand/50",
-  3: "bg-brand/74",
-  4: "bg-brand",
-};
+import { FOOTPRINT_LEVEL_CLASS } from "./footprint-level-class";
 
 const AXIS_CLASS = "text-[0.6875rem] leading-none text-ink-3";
 

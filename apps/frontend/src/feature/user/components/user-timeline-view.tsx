@@ -16,7 +16,7 @@ export function UserTimelineView({ userName }: UserTimelineViewProps) {
   const detail = pds[0]?.userDetail;
 
   return (
-    <div className="mx-auto w-full max-w-[720px]">
+    <div className="w-full">
       <header className="flex items-center gap-2 px-3.5 pb-2">
         <BackLink />
         <h1 className="truncate text-[1.125rem] leading-[1.4] font-bold text-ink">
@@ -29,18 +29,17 @@ export function UserTimelineView({ userName }: UserTimelineViewProps) {
         userFullName={detail?.userFullName}
         userName={userName}
       />
-      <div className="-mx-2">
-        <PdTimeline
-          emptyState={
-            <EmptyState
-              icon={<MessageSquare aria-hidden="true" className="size-8" />}
-              message="まだ投稿がありません"
-            />
-          }
-          showAuthor={false}
-          userName={userName}
-        />
-      </div>
+      <PdTimeline
+        emptyState={
+          <EmptyState
+            icon={<MessageSquare aria-hidden="true" className="size-8" />}
+            message="まだ投稿がありません"
+          />
+        }
+        highlightsOpenPd
+        showAuthor={false}
+        userName={userName}
+      />
     </div>
   );
 }

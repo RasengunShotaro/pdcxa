@@ -26,6 +26,16 @@ export function HomeReadDefault() {
   return <FirstPdDetail isPending={isPending} pdId={pds[0]?.id} />;
 }
 
+interface UserReadDefaultProps {
+  userName: string;
+}
+
+export function UserReadDefault({ userName }: UserReadDefaultProps) {
+  const { pds, isPending } = usePd({ userName });
+
+  return <FirstPdDetail isPending={isPending} pdId={pds[0]?.id} />;
+}
+
 export function BookmarksReadDefault() {
   const { pds, isPending } = useBookmarkedPds();
 

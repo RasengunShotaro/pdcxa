@@ -1,4 +1,4 @@
-import { UserTimelineView } from "@/feature/user/components/user-timeline-view";
+import { UserReadDefault } from "@/feature/pd/components/timeline/timeline-read-default";
 
 interface UserPageProps {
   params: Promise<{
@@ -9,5 +9,5 @@ interface UserPageProps {
 export default async function UserPage({ params }: UserPageProps) {
   const { userName } = await params;
 
-  return <UserTimelineView userName={userName} />;
+  return <UserReadDefault userName={userName} />;
 }

@@ -71,13 +71,21 @@ export const 開発用のPDを探す = (pdId: string): FetchPds200ItemsItem | nu
 
 export const 開発用のタイムラインを1ページ分返す = ({
   cursor,
+  userName,
 }: {
   cursor: string | null;
+  userName?: string | null;
 }): FetchPds200 => {
+  const authorId = 開発用の投稿者たち.find(
+    (author) => author.userName === userName,
+  )?.id;
+  const 対象 = userName
+    ? 開発用のPD一覧.filter((pd) => pd.userId === authorId)
+    : 開発用のPD一覧;
   const start = cursor ? Number(cursor) : 0;
   const end = start + ページごとの件数;
   return {
-    items: 開発用のPD一覧.slice(start, end),
-    nextCursor: end < 全部の件数 ? String(end) : undefined,
+    items: 対象.slice(start, end),
+    nextCursor: end < 対象.length ? String(end) : undefined,
   };
 };

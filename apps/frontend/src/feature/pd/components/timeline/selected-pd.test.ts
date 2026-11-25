@@ -17,9 +17,18 @@ describe("選択中のPDを決める", () => {
     expect(selected).toBe("pd-1");
   });
 
-  it("一覧と詳細を並べない画面ではどの PD も選択中にしない", () => {
+  it("個人のタイムラインを見ているときは、その人の先頭の PD を選択中にする", () => {
     const selected = 選択中のPDを決める({
       pathname: "/user/taro",
+      firstPdId: "pd-1",
+    });
+
+    expect(selected).toBe("pd-1");
+  });
+
+  it("一覧と詳細を並べない画面ではどの PD も選択中にしない", () => {
+    const selected = 選択中のPDを決める({
+      pathname: "/stats",
       firstPdId: "pd-1",
     });
 

@@ -39,7 +39,7 @@ export function MobileBar() {
   const { settings } = useAppearancePreferences();
   const compact = useCompactOnScroll(!settings.reduceMotion);
   const screen = 画面の種類を決める(pathname);
-  const isHome = screen !== "page";
+  const isHome = screen === "timeline" || screen === "detail";
   const isStats = pathname === "/stats";
   const selection = (
     <m.span

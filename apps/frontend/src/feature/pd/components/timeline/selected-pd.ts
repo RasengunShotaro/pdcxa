@@ -14,5 +14,6 @@ export const 選択中のPDを決める = ({
 }: SelectedPdInput): string | undefined => {
   const openedPdId = 開いているPDのIDを求める(pathname);
   if (openedPdId) return openedPdId;
-  return 画面の種類を決める(pathname) === "timeline" ? firstPdId : undefined;
+  const screen = 画面の種類を決める(pathname);
+  return screen === "timeline" || screen === "user" ? firstPdId : undefined;
 };

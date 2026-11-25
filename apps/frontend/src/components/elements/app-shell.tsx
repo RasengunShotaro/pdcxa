@@ -89,7 +89,7 @@ export function AppShell({
           <MobileSettingsButton />
 
           <header className={styles.tools}>
-            {screen === "page" ? (
+            {screen === "page" || screen === "user" ? (
               heading ? (
                 <h1 className={styles.title}>{heading}</h1>
               ) : null

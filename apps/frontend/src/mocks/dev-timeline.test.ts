@@ -44,4 +44,15 @@ describe("開発用のタイムラインを1ページ分返す", () => {
 
     expect(page.items.some((pd) => pd.imageFileName !== null)).toBe(true);
   });
+
+  it("人を指定すると、その人の PD だけを返す", () => {
+    const page = 開発用のタイムラインを1ページ分返す({
+      cursor: null,
+      userName: "haruka",
+    });
+
+    expect(new Set(page.items.map((pd) => pd.userId))).toEqual(
+      new Set(["user_dev_haruka"]),
+    );
+  });
 });

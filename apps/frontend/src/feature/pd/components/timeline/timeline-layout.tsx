@@ -5,10 +5,14 @@ import { usePathname } from "next/navigation";
 import { type ReactNode, useEffect, useState } from "react";
 import { FeedSurface } from "@/components/elements/feed-layout";
 import { FeedTabPanel } from "@/components/elements/feed-tab-panel";
-import { 一覧に出すタブを決める } from "@/components/elements/nav-items";
+import {
+  一覧に出すタブを決める,
+  一覧の持ち主を求める,
+} from "@/components/elements/nav-items";
 import { NotificationsView } from "@/feature/notification/components/notifications-view";
 import { notificationsQueryOptions } from "@/feature/notification/hooks/use-notifications";
 import { BookmarksView } from "@/feature/pd/components/bookmarks/bookmarks-view";
+import { UserTimelineView } from "@/feature/user/components/user-timeline-view";
 import { pdListQueryOptions } from "@/hooks/use-pd";
 import { HomeView } from "./home-view";
 
@@ -21,11 +25,14 @@ function TimelineList() {
     setLastTabHref(tabHref);
   }
 
+  const owner = 一覧の持ち主を求める(tabHref);
+
   return (
     <FeedTabPanel key={tabHref}>
       {tabHref === "/notifications" ? <NotificationsView /> : null}
       {tabHref === "/bookmarks" ? <BookmarksView /> : null}
       {tabHref === "/" ? <HomeView /> : null}
+      {owner ? <UserTimelineView userName={owner} /> : null}
     </FeedTabPanel>
   );
 }
