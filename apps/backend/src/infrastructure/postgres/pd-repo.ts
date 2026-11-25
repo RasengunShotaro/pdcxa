@@ -332,6 +332,58 @@ export const PdRepositoryLive = Layer.effect(
           catch: toDatabaseError,
         }),
 
+      投稿者の日毎の活動を取得する: ({ userId, range }) =>
+        Effect.tryPromise({
+          try: async () => {
+            const PD日付 = sql<string>`date_trunc('day', (${pdsSchema.createdAt} AT TIME ZONE 'UTC') AT TIME ZONE 'Asia/Tokyo')`;
+            const RePD日付 = sql<string>`date_trunc('day', (${rePds.createdAt} AT TIME ZONE 'UTC') AT TIME ZONE 'Asia/Tokyo')`;
+
+            const いいね日付 = sql<string>`date_trunc('day', (${pdLikes.createdAt} AT TIME ZONE 'UTC') AT TIME ZONE 'Asia/Tokyo')`;
+            const 本人のPDの条件 = and(
+              eq(pdsSchema.userId, userId),
+              期間条件(range),
+            );
+
+            const [日毎のPD数, 日毎のRePD数, 日毎のいいね数] =
+              await Promise.all([
+                db
+                  .select({ 集計日: PD日付, count: sql<number>`count(*)` })
+                  .from(pdsSchema)
+                  .where(本人のPDの条件)
+                  .groupBy(PD日付),
+                db
+                  .select({ 集計日: RePD日付, count: sql<number>`count(*)` })
+                  .from(rePds)
+                  .where(
+                    and(
+                      eq(rePds.userId, userId),
+                      gte(rePds.createdAt, range.start),
+                      lte(rePds.createdAt, range.end),
+                    ),
+                  )
+                  .groupBy(RePD日付),
+                db
+                  .select({
+                    集計日: いいね日付,
+                    count: sql<number>`count(${pdLikes.userId})`,
+                  })
+                  .from(pdLikes)
+                  .innerJoin(pdsSchema, eq(pdLikes.targetPdId, pdsSchema.id))
+                  .where(
+                    and(
+                      eq(pdsSchema.userId, userId),
+                      gte(pdLikes.createdAt, range.start),
+                      lte(pdLikes.createdAt, range.end),
+                    ),
+                  )
+                  .groupBy(いいね日付),
+              ]);
+
+            return { 日毎のPD数, 日毎のRePD数, 日毎のいいね数 };
+          },
+          catch: toDatabaseError,
+        }),
+
       投稿者別集計を取得する: (range) =>
         Effect.tryPromise({
           try: async () => {
