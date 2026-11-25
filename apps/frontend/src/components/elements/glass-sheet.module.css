@@ -15,8 +15,8 @@
   width: min(440px, calc(100vw - 24px));
   max-width: none;
   max-height: calc(100dvh - 48px);
-  padding: var(--sheet-pad);
-  overflow-y: auto;
+  padding: var(--sheet-pad) var(--sheet-pad) 0;
+  overflow: hidden;
   border: 0;
   border-radius: var(--sheet-radius);
   background: linear-gradient(180deg, var(--sheet-top), var(--sheet-bottom));
@@ -68,6 +68,17 @@
     0 0;
   background: linear-gradient(180deg, var(--sheet-gloss), transparent);
   pointer-events: none;
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 0;
+  margin-inline: calc(-1 * var(--sheet-pad));
+  padding: 0 var(--sheet-pad) var(--sheet-pad);
+  overflow-y: auto;
+  overscroll-behavior: contain;
 }
 
 .sheet > button:last-child {
