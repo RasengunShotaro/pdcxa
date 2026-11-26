@@ -9,22 +9,46 @@
 
 ## 別 worktree へ作業を出すとき（Orca）
 
-作業を分割して別 worktree のエージェントに任せるときは、**supervised worker として出す**。完了を待ち、終わったら worktree を片付けるところまでが 1 セット。
+作業を分割して別のエージェントに任せるときは、**supervised worker（`orca orchestration worker-start`）として出す**。
 
-- **`orca worktree create --agent claude --prompt ...` の投げっぱなしを使わない。** これは full handoff で、完了も失敗もこちらに届かない（理由: 実際にこれで独立 worktree が切られ、ユーザーが手動で様子を見に行く必要が出た）
-- 手順は `orchestration` skill の supervised worker loop に従う:
+**手順の正本は、Orca の CLI に同梱された手引き（`orca skills get orchestration` と、そこから引く `--reference`）。** このファイル・公式サイト・過去のメモと食い違ったら、同梱の手引きに従う。手引きは CLI の版と揃っているが、公式サイトの説明は古いことがある（2026-11: 公式サイトは `check --wait` で待つ書き方のままで、同梱の手引きはそれを禁じていた）。このリポジトリが足すのは、手引きに無い次の取り決めだけ。
 
-  ```bash
-  orca orchestration run-create --objective "<全体の目的>" --json
-  orca orchestration task-create --spec "<worker A の作業>" --json
-  orca orchestration worker-start --task <task_id> --worktree new-child --agent claude --json
-  orca orchestration check --wait --json          # worker_done / escalation を待つ
-  orca orchestration worker-release --dispatch <dispatch_id> --json
-  ```
+- **作業場所（`--worktree`）は毎回書く。** 省くと、警告なしに呼び出し元の作業場所に入る（Orca の既知の不具合 #42415）
+- **新しい作業場所には、日本語の短い表示名を付ける。** `--name` は英語の kebab-case のまま（ブランチ名とフォルダ名になる）にし、`--display-name` に日本語を入れる（例: `--name feed-resize --display-name "一覧の幅の調整"`）。理由: Orca が自動で付ける名前は英語だけで、横の欄でどの作業か見分けにくい。付け忘れたら `orca worktree set --worktree <作業場所> --display-name "…"` で後から直す
+- **新しい作業場所は依存の取得（`bun install`）を伴う。** 読むだけの調査や、ほかと衝突しない小さな変更は `current` で出す
+- **Run の目的（`--objective`）は 1 行のゴールにする。** 依頼文の本文は `--spec-file` で渡す（理由: 依頼文を丸ごと目的に入れると、`run-list` で Run を見分けられなくなった）
+- **引き継ぎにも `worker-start --keep-open` を使う。** `worktree create --agent --prompt` で出したエージェントには `orchestration send` が届かず、後から直しを送れない（Orca #42320）
+- **worker の作業場所を消す前に中身を確認する**: `orca worktree rm --worktree <selector>`。Orca は「マージ済みと証明できないブランチ」を残すので、ブランチが消えないときは未 push / 未マージのサイン
 
-  独立した task は先に全部 `task-create` してから `worker-start` を並べ、その後にまとめて待つ（逐次に待たない）。
-- **worker が終わったら worktree を消す**: `orca worktree rm --worktree <selector>`。Orca は「マージ済みと証明できないブランチ」を残すので、ブランチが消えないときは未 push / 未マージのサイン。消す前に中身を確認する
-- **何でも worker に出さない。** worktree 新規作成は setup（`bun install` の依存解決）を伴うので、単一ファイル・短時間の作業は自分でやる。出すのは独立して並列化できる大きな仕事だけ（この節の上の判断基準と同じ）
+### worker どうしで環境の情報を共有する
+
+worker は別の worktree で動くが、手元の Docker（テスト用の DB コンテナ）・依存の版は共有している。1 つの worker が踏んだ環境の問題は、ほかの worker もほぼ必ず踏む。見つけた側が流さないと、全員が同じ原因を別々に調べ直す。
+
+1. **コーディネータは、分かっている取り決めを task の spec に書いて配る。** spec に「共有環境」の節を作り、最低限次を書く
+   - main を取り込んだら `bun install` をやり直す。依存の版が main に追いつかないと、lint やそのプラグインのテストが、コードと関係なく落ちる
+   - そのほか、作業中に分かった取り決め（下の 2 で受け取ったもの）
+2. **worker は、ほかの worker にも効く事実を見つけたら、worker_done を待たずにすぐコーディネータへ送る。**
+
+   ```bash
+   orca orchestration send --to run:<run_id> --subject "共有: <一行>" --body "<何が起きたか・原因・回避の手順>" --json
+   ```
+
+   送るもの: 共有の資源で起きた失敗とその原因、依存・ツールの版のずれ、main から取り込んだ変更でほかの流れにも効くもの、自分が変えた共有の型・ポート・テスト用スタブ（ほかの流れのテストが使っている可能性があるもの）。自分の担当の中だけで閉じる失敗は送らない
+3. **コーディネータは、受け取った共有を、動いているほかの worker へ流す。** あわせて、この後に出す task の spec の「共有環境」の節にも足す。
+
+   ```bash
+   orca orchestration send --to @all --subject "共有: <一行>" --body "<内容>" --json
+   ```
+
+   コーディネータが自分の作業で見つけたこと（質問への答えで決めた取り決めを含む）も同じように流す。送った内容は、作業中の worker には今のターンが終わったときに届く
+4. **揺れを疑ったテストの失敗は、根拠を付けて報告する。** 「揺れと判断」とだけ書かない。単独で回し直した結果と、そのとき同時に動いていたテストの場所を書く。場所は `pgrep -f vitest` で見つけたプロセスごとに `lsof -p <pid>` の `cwd` の行で分かる
+
+### worker の境界を渡る値は、単位と範囲まで spec で決める
+
+作る側と使う側を別々の worker に分けるときは、境界を渡る値（API の欄・ポートの引数・保存する形）の**単位と範囲**を、コーディネータが task の spec に書いて両方に配る。型が `number` のままだと、片方が割合（0〜1）、もう片方が百分率（0〜100）で作っても、型でも各 worker のテストでも止まらない。
+
+- 単位は、spec に書くだけでなく、API のスキーマの範囲（`min` / `max`）と `example` にも出す。例の値が単位を示す
+- 統合のときは、作る側の実装が出した本物の値を、使う側（API のスキーマ・画面の読み込み）に通すテストを 1 本置く（[typescript/testing.md](../typescript/testing.md) の「テストデータは、上流が実際に出す形で作る」）
 
 ## 判断のトリガ（実データ検証を先に）
 

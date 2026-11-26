@@ -8,18 +8,24 @@
 
 **検証より先に済ませる。** 後から取り込むと、step 3-4 を取り込み前のツリーに対して回したことになり、frontend の storybook まで含めて全部回し直しになる。
 
+PR 先は `main` 固定ではない。スタック PR の下段は親ブランチが PR 先になる。Orca は worktree 作成時に `branch.<ブランチ>.base` を書き込むので、そこから取る:
+
 ```bash
-git fetch origin main
-git merge --no-edit origin/main
+base=$(git config --get "branch.$(git branch --show-current).base" | sed -E 's#^refs/(heads|remotes/origin)/##')
+base=${base:-main}
+git fetch origin "$base"
+git merge --no-edit "origin/$base"
 ```
+
+`branch.<ブランチ>.base` の値は `refs/heads/main` と `refs/remotes/origin/main` の両形式がありうる。設定された PR 先が origin から消えている場合（スタック PR の親がマージ済みで削除された等）は `main` を使い、`gh pr create --base main` と明示する。
 
 ### 2. 変更ファイルの特定
 
 ```bash
-git diff origin/main --name-only
+git diff "origin/$base" --name-only
 ```
 
-ローカル `main` は stale なことがあり、無関係ファイルが diff に混入する。必ず `origin/main` を基準にする。
+ローカルのブランチは stale なことがあり、無関係ファイルが diff に混入する。必ず `origin/<PR 先>` を基準にする。
 
 変更されたファイルのパスから、以下のどの領域に変更があるかを判定する:
 - **backend**: `apps/backend/` 配下のファイルが変更されている
@@ -70,7 +76,7 @@ diff が [development-workflow.md](../rules/common/development-workflow.md) の�
 
 全てのチェックが通過したら、PRを作成する。
 
-- ベースブランチ: `main`
-- **`gh pr create` の前に `git push` する。** step 1 のマージがローカルに留まったまま PR を作ると、GitHub 側の head には PR 先が入っておらず「PR 先に遅れたまま」の PR ができる（`git merge-base --is-ancestor origin/main origin/<自ブランチ>` で確認できる）。新規ブランチは `-u` を付ける
+- ベースブランチ: step 1 で決めた PR 先
+- **`gh pr create` の前に `git push` する。** step 1 のマージがローカルに留まったまま PR を作ると、GitHub 側の head には PR 先が入っておらず「PR 先に遅れたまま」の PR ができる（`git merge-base --is-ancestor origin/<PR 先> origin/<自ブランチ>` で確認できる）。新規ブランチは `-u` を付ける
 - 変更内容を分析して適切なタイトルと説明を作成
 - `gh pr create` を使用

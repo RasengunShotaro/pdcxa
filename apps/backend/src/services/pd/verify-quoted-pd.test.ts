@@ -57,8 +57,8 @@ describe("引用元のPDを確かめる", () => {
   it("存在しない PD を引用しようとすると引用元が見つからない失敗になる", async () => {
     const result = await 確かめる("pd-missing", ["pd-1"]);
 
-    expect(Result.isFailure(result) && result.failure._tag).toBe(
-      "QuotedPdNotFoundError",
-    );
+    expect(result).toMatchObject({
+      failure: { _tag: "QuotedPdNotFoundError" },
+    });
   });
 });

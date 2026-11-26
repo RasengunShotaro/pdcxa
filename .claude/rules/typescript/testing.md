@@ -142,6 +142,26 @@ expect(f(1)).toBe(123);
 
 判別の目安: **「この値を変える PR を出したとき、ビジネス的合意が必要か」**。Yes → 仕様値、No → チューニング値。`slice(0, 3)` の `3` のように一見実装ぽくても、「username 接頭辞は tenant の頭 3 文字」がドメイン仕様として合意されているなら仕様値。
 
+### 流出の形
+
+式だけでなく、**本番の関数・本番の組み立て方を期待値に呼ぶ**のも同じ流出。実装が間違っていても、期待値も同じだけ間違うので通る（Khorikov『Unit Testing Principles』11 章 "Leaking domain knowledge to tests"）。
+
+```typescript
+// WRONG: 実装の換算式を写した（換算式が誤っていても通る）
+expect(置き.widthPx).toBe(Math.round((160 * 96) / 72));
+// WRONG: 本番の文言を組み立てる関数で期待値を作った（文言が壊れても通る）
+expect(outcome.message).toBe(通知の文言("山田"));
+
+// CORRECT: 入力から手で求めた答え
+expect(置き.widthPx).toBe(213);
+expect(outcome.message).toContain("山田");
+```
+
+- **期待値は入力から手で求める。テストを走らせて出た値を写さない**（写すと実装のバグを期待値に固定する）。手計算と実装が食い違ったら、まず実装を疑う
+- 単位の書き方（`10 * 1024 * 1024` バイト・`24 * 60 * 60` 秒）のように**リテラルだけの式**は流出ではない（lint も止めない）。`8 * 31 + 1` のように実装の採番の仕組みを写した式は、リテラルだけでも流出なので書かない
+- 決定性・同値性を確かめるテスト（`expect(鍵(a)).toBe(鍵(a))`・`expect(正規化("ＡＢＣ")).toBe(正規化("ABC"))`）は、性質そのものを観測しているので流出ではない
+- 不変条件で書いてよいのは、具体的な答えが入力に依らない性質のとき（「並びが昇順」「全行を漏らさない」）。具体的な入力を 1 つ決めたテストなら、答えもリテラルで書く
+
 ## 5. モック必須テストは設計の悪臭 — 削除候補
 
 **ここでいう「モック」とは**: `vi.fn()` / `jest.fn()` 等で外部 SDK・グローバル関数 (`fetch`, `Date.now` 等)・副作用持ち実装を **直接捕獲する** こと、および **`vi.stubGlobal` でブラウザ global (`matchMedia` / `ResizeObserver` / `navigator` 等) を monkeypatch する** ことを指す。
@@ -331,6 +351,13 @@ it("...", () => {
 
 §9（モック factory）と同じ思想で、**入力データもテストごとに独立にビルドする**。
 
+### テストデータは、上流が実際に出す形で作る
+
+Object Mother の既定値は、その値を作る上流の実装（DB の読み取り・外部 API の応答の変換・別の API）が実際に出す形・単位で書く。受け取る側の思い込みで書くと、思い込みどおりのスキーマと思い込みどおりのデータが合うだけで、テストは緑のまま本番の値を弾く（TAKKUN での事例: route テストが位置を割合で用意し、上流は百分率を出していた。テストは緑のまま、本番相当の環境で保存が 400 になった）。
+
+- 上流の実装のテストか、実データから値を取ってくる。分からなければ上流のコードを読んで単位を確かめてから書く
+- 境界のテストには、上流の実際の値をそのまま 1 件通すものを置く
+
 ### 「妥当だが存在しない ID」は実フォーマットで作る
 
 越境/404 テスト等で「バリデーションは通るが存在しない ID」が要るとき、`00000000-…-0000000000ff` のような任意のゼロ埋め値を使わない。`z.uuid()` / `z.string().uuid()` は **UUID の version/variant ビットも検証**するため、version nibble が 0 等の不正値は弾かれ、狙った 404 ではなく **400 (入力エラー) で先に落ちて**テストが誤った理由で失敗する (実際に踏んだ)。`uuidv7()` を呼ぶか、実在フォーマットの例 (`018f5e8a-9c30-7a01-…`) を使う。
@@ -367,10 +394,100 @@ it("別テナントから他テナントの ID を指定すると 404 を返す"
 - **service / repository 単体テスト = 任意の補強**。tenant スコープの判定が複雑（複数 BC を跨ぐ、role 別に挙動が変わる、etc.）で routes だけで網羅できないとき、下位層でも越境テストを足す。
 - 単体層に越境テストを書くだけで routes 統合テストを省略するのは NG。逆向き (routes だけで service の越境テストを省略する) は通常 OK。
 
+## 12. 条件の中に expect を置かない（腐った緑）
+
+`if` / `catch` / 三項演算子 / `&&` の中の expect は、条件が外れると**何も確かめずに緑になる**。「アサーションが一度も実行されないのに成功するテスト」は Rotten Green Test と呼ばれ、成熟したプロジェクトでも数年気づかれずに残っていた（Delplanque ら ICSE 2019・EMSE 2021）。Effect の Result / Exit の絞り込みで特に出やすい。
+
+```typescript
+// WRONG: isSuccess が false なら中の expect は走らない
+if (Result.isSuccess(r)) {
+  expect(r.success.name).toBe("A");
+}
+// WRONG: 失敗でないときは false が来るので、toBe(false) のテストなら通ってしまう
+expect(Result.isFailure(r) && r.failure.retryable).toBe(true);
+// WRONG: 条件が外れた側の -1 / "" でも一致しうる
+expect(結果.種類 === "画像" ? 結果.画像.length : -1).toBe(1);
+
+// CORRECT: 取り出して、取り出せなければ落とす
+expect(Result.getOrThrow(r).name).toBe("A");
+expect(結果).toMatchObject({ 種類: "画像", 画像: [expect.anything()] });
+```
+
+- 失敗側の取り出しは、取り出せないときに中身を添えて throw する小さな helper（`Resultの失敗を取り出す` / `Exitの失敗を取り出す` など）を用意して使う。失敗の理由もそのまま出る
+- 判別可能なユニオンは `toMatchObject({ kind: "…", … })` で形ごと書く
+- テストの中で本当に分岐が要る（入力ごとに期待が違う）なら、`it.each` でテストを分ける
+
+## 13. 失敗したときに差分が読める matcher を選ぶ
+
+テストは落ちたときに読まれる。真偽値に畳んでから比べると、落ちても `expected true, received false` しか出ず、何が違ったかを調べ直すことになる（eslint-plugin-jest の `prefer-to-have-length` / `prefer-to-contain` / `prefer-equality-matcher` と同じ考え方）。
+
+| 書かない | 書く |
+|---|---|
+| `expect(x.length).toBe(3)` | `expect(x).toHaveLength(3)` |
+| `expect(x.includes(a)).toBe(true)` | `expect(x).toContain(a)` |
+| `expect(a === b).toBe(true)` | `expect(a).toBe(b)` |
+| `expect(JSON.stringify(a)).toBe(JSON.stringify(b))` | `expect(a).toEqual(b)` |
+
+- **常に通るアサーションを書かない**: `expect(true).toBe(true)`・`expect(x).toBe(x)`・`expect(PdId(id)).toBeDefined()`（ブランド化は値を必ず返す）。何も確かめていない
+- `toBeDefined()` / `toBeTruthy()` は「在ること」自体が観点のときだけ使う。中身が分かっているなら中身を書く
+- 1 つの it に expect が 1 つも無いテストを書かない（`useExpect`）
+
+## 14. 非同期のアサーションは await する
+
+`expect(p).rejects.toThrow()` / `.resolves` は Promise を返す。await も return もしないとテストは先に終わり、**reject しなくても緑**になる。
+
+## 15. テストで実時間を待たない
+
+`setTimeout` の Promise で待つテストは遅く、CI の負荷で間に合わずに落ちる（The Sleeper / Wait and See）。Effect は `TestClock`、frontend は `vi.useFakeTimers`、DOM の変化は `waitFor` / `findBy*` で条件を待つ。
+
+## 16. skip・only・中身の無いテストを残さない
+
+- `it.skip("…", () => {})` のような中身の無い置き場は消す。「ここは E2E で見る」はテストではなく、緑の件数を水増しする
+- `it.only` / `describe.only` は残さない
+- 同じ名前のテストを並べない（どちらが落ちたか分からない）。名前は §3 の「単独で観点が読める」に従う
+
+## lint で止まるもの・レビューで見るもの
+
+実装は `apps/backend/biome-plugins/testing/`（`expect-assertions.grit`・`test-hygiene.grit`）と `biome.json` のテスト用 override、回帰は `apps/backend/biome-plugins/testing/rules.test.ts`。
+
+**lint で止まる**（`*.test.ts(x)` / `*.spec.ts(x)`）:
+
+- §4: 期待値に `*` `/` `%` か `Math.round/floor/ceil/trunc` を含む式（リテラルだけの式は通す）
+- §6: `as unknown as`
+- §12: 条件の中の expect（Biome の `noConditionalExpect`）、`expect(a ? b : c)` / `expect(a && b)`
+- §13: `.length` を toBe、`includes` を true / false、比較の結果を true / false、`JSON.stringify` どうし、同じ値どうし、リテラルを expect に渡す、expect の無いテスト（`useExpect`）
+- §14: await / return の無い `rejects` / `resolves`
+- §15: `setTimeout` を包んだ Promise
+- §16: `skip` / `only`（`noSkippedTests` / `noFocusedTests`）、同じ名前（`noIdenticalTestTitle`）、it の外の expect（`noMisplacedAssertion`）
+
+**レビューで見る**（構文では区別できない）:
+
+- 本番の関数・定数で期待値を作る流出（`expect(x).toBe(本番の関数(…))`）。決定性・同値性のテストと構文が同じ
+- `+` / `-` を使った流出（`前.endPage + 1` のような関係の確認と区別できない）と、`8 * 31 + 1` のようなリテラルだけの流出
+- テストを走らせて出た値を写した期待値
+- §5・§7 の実装詳細のテスト、§8 の層の重複
+- 弱い `toBeDefined` / `toBeTruthy`、`Effect.sleep` の実時間の待ち
+
+## 調べて採らなかったもの
+
+- **1 テスト 1 アサーションを lint で強制する**（eslint-plugin-jest `max-expects`）: §2 は「観点が 1 つ」であって expect の数ではない。`toMatchObject` 1 つに畳むか expect を並べるかは観点で決める
+- **スナップショットを禁止する**: lint の診断を pin する characterization test（`biome-plugins/*/rules.test.ts`）のように、出力の形そのものが観点のときは inline snapshot が正しい。大きな出力を中身を見ずに `-u` で更新するのはレビューで見る
+- **テストの中の `for` を禁じる**: 生成した全件に同じ性質を確かめるループは正当。条件の中の expect は §12 で止まる
+
+## 出典
+
+- Gerard Meszaros『xUnit Test Patterns』: Conditional Test Logic・Assertion Roulette・Mystery Guest・Fragile Test
+- Vladimir Khorikov『Unit Testing Principles, Practices, and Patterns』11 章: Leaking domain knowledge to tests・Code pollution・Working with time
+- Google Testing Blog「Testing on the Toilet: Don't Put Logic in Tests」(2014)・『Software Engineering at Google』12 章
+- Delplanque, Ducasse ほか「Rotten Green Tests」(ICSE 2019)・「Rotten green tests in Java, Pharo and Python」(EMSE 2021)
+- The Open Catalog of Test Smells（test-smell-catalog.readthedocs.io）
+- Kent C. Dodds「Common Testing Mistakes」: 実装詳細のテスト・カバレッジ 100% を目標にしない
+- Biome の test ドメインのルール（`noConditionalExpect` / `useExpect` / `noIdenticalTestTitle` / `noMisplacedAssertion` / `noSkippedTests` / `noFocusedTests`）・eslint-plugin-jest / @vitest/eslint-plugin のルール一覧
+
 ## 深刻度の指針 (レビュー時)
 
-- **高 (削除/書き直し必須)**: フレーキー、何も検証していない、期待値が実装と同じ式、mock でしか書けない実装詳細、**テナント越境拒絶のテスト欠落**
-- **中 (修正)**: 1テスト複数観点、`as unknown as`、層間重複、テスト名の SDK / Web Standard / DOM 技術語、前テスト依存のテスト名 (「〜も」「同じ」)、実装マジックナンバーの流出、トップレベル fixture に依存した assert
+- **高 (削除/書き直し必須)**: フレーキー、何も検証していない、期待値が実装と同じ式・本番の関数、mock でしか書けない実装詳細、**テナント越境拒絶のテスト欠落**、条件の中の expect（腐った緑）、await の無い `rejects` / `resolves`、実時間の待ち
+- **中 (修正)**: 1テスト複数観点、`as unknown as`、層間重複、テスト名の SDK / Web Standard / DOM 技術語、前テスト依存のテスト名 (「〜も」「同じ」)、実装マジックナンバーの流出、トップレベル fixture に依存した assert、差分が読めない matcher
 - **低 (見つけ次第)**: テスト名の微妙な不一致、mutable state
 
 ---

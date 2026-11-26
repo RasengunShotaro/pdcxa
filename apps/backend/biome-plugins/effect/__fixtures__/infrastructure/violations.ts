@@ -16,7 +16,6 @@ export const ok1 = Layer.effect(svc, eff);
 export const ok2 = Layer.provide(L, L);
 export const ok3 = Effect.tryPromise(() => Promise.resolve(1));
 export const ok4 = Effect.try(() => 1);
-export class Client extends Context.Service<
-  Client,
-  { readonly n: number }
->()("Client") {}
+export class Client extends Context.Service<Client, { readonly n: number }>()(
+  "Client",
+) {}

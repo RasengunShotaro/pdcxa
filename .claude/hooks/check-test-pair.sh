@@ -1,36 +1,32 @@
 #!/usr/bin/env bash
 # Stop hook: 変更/新規追加された src/**/*.ts(x) に対応するペア (.test / .spec / .stories) があるか確認する。
 # 警告のみ (exit 0)。判断は Claude / 開発者に委ねる。
-# 明らかにテスト不要な規約ファイル (Next.js app router 規約、shadcn UI 等) は最初から除外する。
-set -euo pipefail
+# 明らかにテスト不要な規約ファイル (Next.js app router 規約、shadcn UI、生成物) は最初から除外する。
+set -uo pipefail
 
-input=$(cat)
+. "$(dirname "$0")/lib/repo-root.sh"
 
-stop_hook_active=$(printf '%s' "$input" | python3 -c '
-import json, sys
-try:
-    data = json.load(sys.stdin)
-    print(data.get("stop_hook_active", False))
-except Exception:
-    print(False)
-')
+input=$(cat 2>/dev/null || true)
 
-if [[ "$stop_hook_active" == "True" ]]; then
-  exit 0
+if command -v jq >/dev/null 2>&1; then
+  if [ "$(printf '%s' "$input" | jq -r '.stop_hook_active // false' 2>/dev/null)" = "true" ]; then
+    exit 0
+  fi
 fi
 
-cd "${CLAUDE_PROJECT_DIR:-.}"
+cd "$(resolve_repo_root "$(hook_input_cwd "$input")")" || exit 0
 
 changed=()
 while IFS= read -r line; do
   [[ -n "$line" ]] && changed+=("$line")
 done < <(
-  git status --porcelain 2>/dev/null \
+  git status --porcelain --untracked-files=all 2>/dev/null \
     | sed -E 's/^...//' \
     | grep -E '(^|/)src/.*\.(ts|tsx)$' \
     | grep -v -E '\.(test|spec|stories|d)\.(ts|tsx)$' \
     | grep -v -E '(^|/)(layout|page|loading|error|not-found|template|default|route|global-error)\.(ts|tsx)$' \
     | grep -v -E '(^|/)components/ui/' \
+    | grep -v -E '(^|/)src/schema/' \
     || true
 )
 

@@ -14,5 +14,26 @@ or {
   },
   `Effect.catchIf` as $n where {
     register_diagnostic(span=$n, message="Effect.catchIf は禁止: エラー型が narrowing されず E から消えない。Effect.catchTag / catchTags を使う。", severity="error")
+  },
+  `Effect.fail($error)` as $n where {
+    $error <: or {
+      r"[\"'`][\s\S]*",
+      `new Error($message)`,
+      `new TypeError($message)`,
+      `new RangeError($message)`
+    },
+    register_diagnostic(span=$n, message="Effect.fail に文字列や素の Error を渡さない: catchTag で拾えず、失敗の種類が型に残らない。Data.TaggedError で失敗を定義して渡す。", severity="error")
+  },
+  or {
+    `Effect.catch($self, $handler)`,
+    `Effect.catchCause($self, $handler)`,
+    `Effect.catch($handler)`,
+    `Effect.catchCause($handler)`
+  } as $n where {
+    $handler <: or {
+      `() => $body`,
+      `($param) => $body` where { $param <: r"_[\s\S]*" }
+    },
+    register_diagnostic(span=$n, message="失敗を見ずに握り潰さない: 想定する失敗だけ catchTag で拾うか、受け取った error をログに残してから代わりの値にする。読めなかったことを「無い」「成功」に畳まない。", severity="error")
   }
 }

@@ -5,11 +5,14 @@
 # (リポジトリ全体を直接スキャンすると node_modules まで舐めて遅く・ノイジーになるため)。
 set -uo pipefail
 
-cd "${CLAUDE_PROJECT_DIR:-.}" || exit 0
+. "$(dirname "$0")/lib/repo-root.sh"
+
+input=$(cat 2>/dev/null || true)
+cd "$(resolve_repo_root "$(hook_input_cwd "$input")")" || exit 0
 
 # gitleaks が無い環境では fail-open (セッションを止めない)。導入方法だけ案内する。
 if ! command -v gitleaks >/dev/null 2>&1; then
-  echo "[gitleaks stop hook] gitleaks 未インストールのため secret スキャンを skip しました (brew install gitleaks)。" >&2
+  echo "[gitleaks] gitleaks 未インストールのため secret スキャンを skip しました (brew install gitleaks)。" >&2
   exit 0
 fi
 
@@ -59,7 +62,7 @@ NODE
 )
 
 {
-  echo "[gitleaks stop hook] 変更ファイルに secret の疑いがあります。コミット前に除去してください:"
+  echo "[gitleaks] 変更ファイルに secret の疑いがあります。コミット前に除去してください:"
   if [ -n "$findings" ]; then
     echo "$findings"
   else

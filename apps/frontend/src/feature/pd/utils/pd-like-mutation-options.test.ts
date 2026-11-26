@@ -127,11 +127,12 @@ const likePd = async (pd: Pd) => {
   await mutation.mutate();
 };
 
-const waitForQueriesIdle = async () => {
-  while (queryClient.isFetching() > 0) {
-    await new Promise((resolve) => setTimeout(resolve, 0));
-  }
-};
+const waitForQueriesIdle = () =>
+  vi.waitFor(() => {
+    if (queryClient.isFetching() > 0) {
+      throw new Error("タイムラインの取得がまだ終わっていない");
+    }
+  });
 
 describe("いいねと無限スクロールで蓄積したページ", () => {
   test("過去ページにいいねしても蓄積済みのページが維持される", async () => {
@@ -157,7 +158,7 @@ describe("いいねと無限スクロールで蓄積したページ", () => {
     const targetPd = currentData()?.pages[0].items[0] as Pd;
     await likePd(targetPd);
 
-    expect(fetchCalls.length).toBe(callsBeforeLike);
+    expect(fetchCalls).toHaveLength(callsBeforeLike);
 
     unsubscribe();
   });

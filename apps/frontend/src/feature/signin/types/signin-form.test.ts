@@ -15,20 +15,16 @@ describe("signinFormSchema", () => {
   test("メール形式が不正なら弾く", () => {
     const result = validate({ email: "not-an-email", password: "password1" });
     expect(result.success).toBe(false);
-    if (!result.success) {
-      expect(result.issues[0]?.message).toBe(
-        "メールアドレスの形式が正しくありません",
-      );
-    }
+    expect(result.issues?.[0]?.message).toBe(
+      "メールアドレスの形式が正しくありません",
+    );
   });
 
   test("パスワードが8文字未満なら弾く", () => {
     const result = validate({ email: "user@example.com", password: "short" });
     expect(result.success).toBe(false);
-    if (!result.success) {
-      expect(result.issues[0]?.message).toBe(
-        "パスワードは8文字以上である必要があります",
-      );
-    }
+    expect(result.issues?.[0]?.message).toBe(
+      "パスワードは8文字以上である必要があります",
+    );
   });
 });

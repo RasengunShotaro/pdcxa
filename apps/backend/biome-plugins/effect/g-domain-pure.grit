@@ -1,0 +1,15 @@
+or {
+  or {
+    `Effect.gen`,
+    `Effect.fn`,
+    `Effect.fnUntraced`
+  } as $n where {
+    register_diagnostic(span=$n, message="domain 層では Effect.gen / Effect.fn を書かない: domain は型・ポート・純関数だけにする。ポートを呼ぶ手続きは services のユースケースへ、判断は値を受け取って返す純関数にする。", severity="error")
+  },
+  `randomUUID()` as $n where {
+    register_diagnostic(span=$n, message="domain 層では UUID を生成しない: 同じ入力で同じ結果を返せなくなる。id はユースケースで作って引数で渡す。", severity="error")
+  },
+  `crypto.randomUUID()` as $n where {
+    register_diagnostic(span=$n, message="domain 層では UUID を生成しない: 同じ入力で同じ結果を返せなくなる。id はユースケースで作って引数で渡す。", severity="error")
+  }
+}
