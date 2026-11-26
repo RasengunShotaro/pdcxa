@@ -7,6 +7,7 @@ import {
   タブを切り替える向き,
   一覧に出すタブを決める,
   一覧の持ち主を求める,
+  個人の一覧から戻る先のタブを決める,
   殻の見出しを決める,
   画面の種類を決める,
   開いているPDのIDを求める,
@@ -207,5 +208,34 @@ describe("一覧に出すタブを決める", () => {
         lastTabHref: "/user/taro",
       }),
     ).toBe("/user/taro");
+  });
+});
+
+describe("個人の一覧から戻る先のタブを決める", () => {
+  it("タブの画面に来たら、そのタブを戻る先として覚える", () => {
+    expect(
+      個人の一覧から戻る先のタブを決める({
+        pathname: "/bookmarks",
+        lastHref: "/",
+      }),
+    ).toBe("/bookmarks");
+  });
+
+  it("PD を開いている間は、直前に見ていたタブを戻る先に残す", () => {
+    expect(
+      個人の一覧から戻る先のタブを決める({
+        pathname: "/pd/abc",
+        lastHref: "/notifications",
+      }),
+    ).toBe("/notifications");
+  });
+
+  it("個人のタイムラインに入っても、入る前に見ていたタブを戻る先に残す", () => {
+    expect(
+      個人の一覧から戻る先のタブを決める({
+        pathname: "/user/taro",
+        lastHref: "/bookmarks",
+      }),
+    ).toBe("/bookmarks");
   });
 });

@@ -22,3 +22,15 @@ export const FallsBackToHome: Story = {
     await expect(link).toHaveAttribute("href", "/");
   },
 };
+
+export const ReturnsToGivenTab: Story = {
+  name: "戻り先のタブを指定すると、そのタブへのリンクになる",
+  args: { href: "/bookmarks" },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    const link = canvas.getByRole("link", { name: "戻る" });
+
+    await expect(link).toHaveAttribute("href", "/bookmarks");
+  },
+};
