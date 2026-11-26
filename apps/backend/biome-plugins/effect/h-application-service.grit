@@ -1,0 +1,24 @@
+or {
+  or {
+    `$entity.status === $value`,
+    `$entity.status !== $value`,
+    `$entity.status == $value`,
+    `$entity.status != $value`,
+    `$entity?.status === $value`,
+    `$entity?.status !== $value`,
+    `$value === $entity.status`,
+    `$value !== $entity.status`,
+    `$value === $entity?.status`,
+    `$value !== $entity?.status`
+  } as $n where {
+    $value <: r"[\"'`][\s\S]*",
+    register_diagnostic(span=$n, message="service 層で status を文字列と比べない: 状態の意味（何ができる・済んでいるか）は domain の述語に置く。例: 削除できる巡回か(patrol)。", severity="error")
+  },
+  JsSwitchStatement(discriminant=$discriminant) as $n where {
+    $discriminant <: or {
+      `$entity.status`,
+      `$entity?.status`
+    },
+    register_diagnostic(span=$n, message="service 層で status を switch しない: 状態ごとの振る舞いは domain の関数に置く。", severity="error")
+  }
+}

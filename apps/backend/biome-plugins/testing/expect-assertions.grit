@@ -1,0 +1,115 @@
+or {
+  `$recv.$matcher($expected, $digits)`,
+  `$recv.$matcher($expected)`
+} as $n where {
+  $recv <: or {
+    `expect($actual, $...)`,
+    `expect<$type>($actual, $...)`,
+    `expect($actual, $...).not`,
+    `expect<$type>($actual, $...).not`,
+    `expect($actual, $...).rejects`,
+    `expect($actual, $...).resolves`,
+    `expect($actual, $...).rejects.not`,
+    `expect($actual, $...).resolves.not`
+  },
+  or {
+    and {
+      $recv <: or {
+        `expect($actual, $...).rejects`,
+        `expect($actual, $...).resolves`,
+        `expect($actual, $...).rejects.not`,
+        `expect($actual, $...).resolves.not`
+      },
+      $n <: not within `await $awaited`,
+      $n <: not within `return $returned`,
+      register_diagnostic(span=$n, message="rejects / resolves は await する: await しないとテストが先に終わり、失敗しても通ってしまう。", severity="error")
+    },
+    and {
+      $actual <: or {
+        `$cond ? $then : $else`,
+        `$left && $right`
+      },
+      register_diagnostic(span=$n, message="expect の中で分岐しない: 条件が外れた側の値（-1・空文字・false）でも一致してしまい、何を確かめたかが読めない。値を取り出してから、取り出した値に期待する形を書く。", severity="error")
+    },
+    and {
+      $actual <: or {
+        `true`,
+        `false`,
+        `null`,
+        `undefined`
+      },
+      register_diagnostic(span=$n, message="リテラルを expect に渡さない: 結果が書いた時点で決まっていて、テスト対象の振る舞いを何も確かめていない。", severity="error")
+    },
+    and {
+      $matcher <: or {
+        `toBe`,
+        `toEqual`,
+        `toStrictEqual`,
+        `toBeCloseTo`
+      },
+      $expected <: contains or {
+        `Math.round($args)`,
+        `Math.floor($args)`,
+        `Math.ceil($args)`,
+        `Math.trunc($args)`,
+        `$left * $right`,
+        `$left / $right`,
+        `$left % $right`
+      },
+      $expected <: not r"[\s\d_.eE*/%()+,-]+",
+      register_diagnostic(span=$n, message="期待値を計算で作らない: 実装と同じ式を期待値に書くと、式が間違っていてもテストが通る。手で求めた答えをリテラルで書く。", severity="error")
+    },
+    and {
+      $matcher <: or {
+        `toBe`,
+        `toEqual`
+      },
+      $actual <: or {
+        `$subject.length`,
+        `$subject?.length`
+      },
+      register_diagnostic(span=$n, message="件数は toHaveLength で比べる: .length を toBe で比べると、失敗したとき中身が出ず何が余った・欠けたかが分からない。", severity="error")
+    },
+    and {
+      $matcher <: `toBe`,
+      $expected <: or {
+        `true`,
+        `false`
+      },
+      $actual <: or {
+        `$subject.includes($item)`,
+        `$subject?.includes($item)`
+      },
+      register_diagnostic(span=$n, message="含むかは toContain で比べる: includes を true / false と比べると、失敗したとき中身が出ない。否定は not.toContain を使う。", severity="error")
+    },
+    and {
+      $matcher <: `toBe`,
+      $actual <: or {
+        `$left === $right`,
+        `$left !== $right`,
+        `$left == $right`,
+        `$left != $right`
+      },
+      register_diagnostic(span=$n, message="比較の結果を true / false と比べない: 失敗したとき両辺の値が出ない。expect(左辺).toBe(右辺) で書く。", severity="error")
+    },
+    and {
+      $matcher <: or {
+        `toBe`,
+        `toEqual`
+      },
+      $actual <: `JSON.stringify($left)`,
+      $expected <: `JSON.stringify($right)`,
+      register_diagnostic(span=$n, message="文字列にしてから比べない: キーの順番が違うだけで落ち、失敗したとき差分が読めない。toEqual でオブジェクトのまま比べる。", severity="error")
+    },
+    and {
+      $matcher <: or {
+        `toBe`,
+        `toEqual`,
+        `toStrictEqual`
+      },
+      $actual <: r"[\w$.\[\]?]+",
+      $expected <: $actual,
+      register_diagnostic(span=$n, message="同じ値どうしを比べない: 常に通るので何も確かめていない。", severity="error")
+    }
+  }
+}

@@ -12,11 +12,9 @@ describe("checkEmailFormSchema", () => {
   test("メール形式が不正なら弾く", () => {
     const result = v.safeParse(checkEmailFormSchema, { email: "bad" });
     expect(result.success).toBe(false);
-    if (!result.success) {
-      expect(result.issues[0]?.message).toBe(
-        "メールアドレスの形式が正しくありません",
-      );
-    }
+    expect(result.issues?.[0]?.message).toBe(
+      "メールアドレスの形式が正しくありません",
+    );
   });
 });
 
@@ -37,11 +35,9 @@ describe("resetPasswordFormSchema", () => {
       code: "123",
     });
     expect(result.success).toBe(false);
-    if (!result.success) {
-      expect(result.issues[0]?.message).toBe(
-        "確認コードは6文字である必要があります",
-      );
-    }
+    expect(result.issues?.[0]?.message).toBe(
+      "確認コードは6文字である必要があります",
+    );
   });
 
   test("パスワードが8文字未満なら弾く", () => {
@@ -59,10 +55,8 @@ describe("resetPasswordFormSchema", () => {
       confirmPassword: "different1",
     });
     expect(result.success).toBe(false);
-    if (!result.success) {
-      expect(
-        result.issues.some((i) => i.message === "パスワードが一致しません"),
-      ).toBe(true);
-    }
+    expect(result.issues?.map((issue) => issue.message)).toContain(
+      "パスワードが一致しません",
+    );
   });
 });

@@ -13,9 +13,7 @@ describe("rePdComposerSchema", () => {
   test("空白のみは弾く", () => {
     const result = validate("   \n  ");
     expect(result.success).toBe(false);
-    if (!result.success) {
-      expect(result.issues[0]?.message).toBe("空白だけでは返信できません");
-    }
+    expect(result.issues?.[0]?.message).toBe("空白だけでは返信できません");
   });
 
   test("200文字ちょうどは通る", () => {
@@ -25,8 +23,6 @@ describe("rePdComposerSchema", () => {
   test("201文字は弾く", () => {
     const result = validate("あ".repeat(201));
     expect(result.success).toBe(false);
-    if (!result.success) {
-      expect(result.issues[0]?.message).toBe("200文字以内で入力してください");
-    }
+    expect(result.issues?.[0]?.message).toBe("200文字以内で入力してください");
   });
 });

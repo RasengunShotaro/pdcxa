@@ -1,0 +1,15 @@
+or {
+  `Bun.sleep($duration)` as $n where {
+    register_diagnostic(span=$n, message="テストで実時間を待たない: 遅いうえに、CI の負荷で間に合わず落ちる。vi.useFakeTimers / Effect の TestClock で時間を進めるか、待つ条件を waitFor で書く。", severity="error")
+  },
+  `setTimeout($callback, $duration)` as $n where {
+    $n <: within or {
+      `new Promise($executor)`,
+      `new Promise<$type>($executor)`
+    },
+    register_diagnostic(span=$n, message="テストで実時間を待たない: 遅いうえに、CI の負荷で間に合わず落ちる。vi.useFakeTimers / Effect の TestClock で時間を進めるか、待つ条件を waitFor で書く。", severity="error")
+  },
+  `$value as unknown as $type` as $n where {
+    register_diagnostic(span=$n, message="テストで as unknown as を使わない: 型が合わない偽物を本物として渡すと、実際の形と食い違っても気づけない。使う欄だけの interface を受け取るよう本体を直すか、型どおりの値を組む。", severity="error")
+  }
+}

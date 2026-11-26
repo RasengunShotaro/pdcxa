@@ -1,0 +1,9 @@
+scripts:
+  setup: |
+    #!/usr/bin/env bash
+    exec ./scripts/worktree-setup.sh
+
+defaultTabs:
+  - title: agent
+    command: claude
+  - title: sh

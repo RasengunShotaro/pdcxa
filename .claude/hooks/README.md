@@ -10,6 +10,12 @@
 cd .claude/hooks && bun test
 ```
 
+## 作業場所の解決（lib/repo-root.sh）
+
+`CLAUDE_PROJECT_DIR` はセッションを起動したディレクトリで、Orca の worktree など別の作業場所で編集しているときは、そこを指さない。シェルのフックは `resolve_repo_root "$(hook_input_cwd "$input")"` で、フックに渡された `cwd` のリポジトリを最優先し、無ければ `CLAUDE_PROJECT_DIR`、それも無ければ今いるリポジトリの最上位を使う。
+
+`run-biome.sh` は、そのリポジトリの外のファイル（スクラッチパッドの報告書など）を編集したときは何もしない。
+
 ## inject-path-rules
 
 `paths:` frontmatter 付きの `.claude/rules/*.md` は、公式仕様では **Claude が該当ファイルを Read したときにだけ**ロードされる（"Path-scoped rules trigger when Claude reads files matching the pattern, not on every tool use" — [memory ドキュメント](https://code.claude.com/docs/en/memory)）。

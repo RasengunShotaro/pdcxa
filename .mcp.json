@@ -1,8 +1,7 @@
 {
   "mcpServers": {
     "melta-ui": {
-      "command": "node",
-      "args": ["./melta-ui/dist/index.js"]
+      "command": "./scripts/melta-ui-mcp.sh"
     },
     "shadcn": {
       "command": "npx",

@@ -64,6 +64,6 @@ describe("ガラスの屈折マップを作る", () => {
   });
 
   it("幅と高さぶんの RGBA を返す", () => {
-    expect(map.length).toBe(width * height * 4);
+    expect(map).toHaveLength(38400);
   });
 });

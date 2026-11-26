@@ -95,7 +95,7 @@ describe("投稿の経過時間を計算する", () => {
   test("Date型でない入力値の場合でも正しく経過時間が返ってくる", () => {
     const dateString = "2020-01-01T03:00:00.000Z";
 
-    const result = formatDateTime(dateString as unknown as Date); // drizzleの返り値は型ガードを貫通することがある
+    const result = formatDateTime(dateString);
 
     expect(result).toBe("9時間前");
   });

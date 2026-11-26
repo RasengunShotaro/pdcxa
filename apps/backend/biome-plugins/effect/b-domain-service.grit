@@ -9,8 +9,16 @@ or {
     $m <: r"provide.*|run.*",
     register_diagnostic(span=$n, message="domain / service 層では Effect.provide* / Effect.run* は禁止: R を開けたまま要求するだけにする。注入・実行は handler(合成ルート)へ。", severity="error")
   },
-  `Effect.$m` as $n where {
-    $m <: r"try|tryPromise|acquireRelease",
-    register_diagnostic(span=$n, message="domain / service 層では生 IO 構築子(try / tryPromise / acquireRelease)は禁止: IO は infra のポート越しに呼ぶ。", severity="error")
+  or {
+    `Effect.try`,
+    `Effect.tryPromise`,
+    `Effect.acquireRelease`,
+    `Effect.acquireUseRelease`,
+    `Effect.acquireDisposable`
+  } as $n where {
+    register_diagnostic(span=$n, message="domain / service 層では生 IO 構築子(try / tryPromise / acquire 系)は禁止: IO は infra のポート越しに呼ぶ。", severity="error")
+  },
+  `throw $e` as $n where {
+    register_diagnostic(span=$n, message="domain / service 層では throw は禁止: 呼び出し元が Effect なら defect 化して型付きエラーに乗らず catchTag で拾えない。純関数は null / 判別可能な戻り値を返し、Effect 内は Effect.fail を使う。", severity="error")
   }
 }

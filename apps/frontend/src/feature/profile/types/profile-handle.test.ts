@@ -23,10 +23,10 @@ describe("ID フォームの入力前チェック", () => {
       aHandle({ handle: "  pdcxa  " }),
     );
 
-    expect(result.success).toBe(true);
-    if (result.success) {
-      expect(result.output.handle).toBe("pdcxa");
-    }
+    expect(result).toMatchObject({
+      success: true,
+      output: { handle: "pdcxa" },
+    });
   });
 
   it("空のIDを拒否する", () => {

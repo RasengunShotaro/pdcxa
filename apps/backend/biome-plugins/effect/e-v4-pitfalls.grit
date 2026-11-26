@@ -1,0 +1,18 @@
+// Rule E — 全層・テストも含む: Effect v4 で型が通っても挙動が v3 と変わる書き方を止める。
+or {
+  `Effect.forkChild($args)` as $n where {
+    $n <: not r"[\s\S]*startImmediately[\s\S]*",
+    register_diagnostic(span=$n, message="Effect.forkChild は開始の仕方を明示する: v4 は既定で遅延開始で、親が先に失敗すると子は始まらず onInterrupt も走らない。options に startImmediately: true か false を渡す。", severity="error")
+  },
+  `Effect.die($defect)` as $n where {
+    $defect <: r"[\"'`][\s\S]*",
+    register_diagnostic(span=$n, message="Effect.die に文字列を渡さない: v4 は文字列をそのまま defect にする（v3 の dieMessage は Error に包んでいた）。new Error で包んで渡す。", severity="error")
+  },
+  `$matcher.toMatchObject($expected)` as $n where {
+    $expected <: contains or {
+      `_tag: "Failure"`,
+      `_tag: "Success"`
+    },
+    register_diagnostic(span=$n, message="Result / Exit の _tag を toMatchObject で照合しない: v4 では _tag がプロトタイプ側にあり一致しない。{ failure: ... } / { success: ... } で書くか、Result.isFailure などで判定する。", severity="error")
+  }
+}
