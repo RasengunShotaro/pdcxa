@@ -1,0 +1,20 @@
+or {
+  `new Date()` as $n where {
+    register_diagnostic(span=$n, message="domain / service 層では new Date() で現在時刻を読まない: テストで時刻を固定できない。Effect.gen の中は yield* DateTime.nowAsDate、純関数は現在時刻を引数で受け取る。", severity="error")
+  },
+  `Date.now()` as $n where {
+    register_diagnostic(span=$n, message="domain / service 層では Date.now() を読まない: テストで時刻を固定できない。Effect.gen の中は yield* Clock.currentTimeMillis、純関数は現在時刻を引数で受け取る。", severity="error")
+  },
+  `Math.random()` as $n where {
+    register_diagnostic(span=$n, message="domain / service 層では Math.random() を使わない: テストで再現できない。Effect の Random（Random.next など）を使う。", severity="error")
+  },
+  `process.env` as $n where {
+    register_diagnostic(span=$n, message="domain / service 層では process.env を読まない: 設定は lib/ の env か Config から読み、infra の Layer で閉じ込める。", severity="error")
+  },
+  `console.$m($args)` as $n where {
+    register_diagnostic(span=$n, message="domain / service 層では console.* を使わない: Effect.log / logWarning / logError で残す（ログの文脈と span が付く）。", severity="error")
+  },
+  `fetch($args)` as $n where {
+    register_diagnostic(span=$n, message="domain / service 層では fetch を直接呼ばない: 外部通信は infra の実装に置き、domain のポート越しに呼ぶ。", severity="error")
+  }
+}

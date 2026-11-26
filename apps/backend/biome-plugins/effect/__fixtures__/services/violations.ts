@@ -14,6 +14,10 @@ export const s1 = Layer.succeed(repo, 1);
 export const s2 = Effect.provideService(eff, repo, 1);
 export const s3 = Effect.runFork(eff);
 export const s4 = Effect.try(() => 1);
+export const s5 = (x: number): number => {
+  if (x < 0) throw new RangeError("負値");
+  return x;
+};
 
 // --- allowed (発火してはいけない) ---
 export const ok1 = Effect.gen(function* () {

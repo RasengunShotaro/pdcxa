@@ -116,7 +116,7 @@ describe("PDをタイムラインに楽観追加する", () => {
 
     PDをタイムラインに楽観追加する({ queryClient, pd: aPd("pd-new") });
 
-    expect(backend.fetchCalls.length).toBe(callsBefore);
+    expect(backend.fetchCalls).toHaveLength(callsBefore);
 
     unsubscribe();
   });

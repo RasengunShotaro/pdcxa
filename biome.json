@@ -7,6 +7,24 @@
   },
   "plugins": [
     {
+      "path": "apps/backend/biome-plugins/testing/expect-assertions.grit",
+      "includes": [
+        "**/*.test.ts",
+        "**/*.test.tsx",
+        "**/*.spec.ts",
+        "**/*.spec.tsx"
+      ]
+    },
+    {
+      "path": "apps/backend/biome-plugins/testing/test-hygiene.grit",
+      "includes": [
+        "**/*.test.ts",
+        "**/*.test.tsx",
+        "**/*.spec.ts",
+        "**/*.spec.tsx"
+      ]
+    },
+    {
       "path": "apps/backend/biome-plugins/effect/a-banned-everywhere.grit",
       "includes": ["**/backend/src/**", "!**/*.test.ts", "!**/test-support/**"]
     },
@@ -32,6 +50,35 @@
       "includes": [
         "**/backend/src/routes/**",
         "**/backend/src/handlers/**",
+        "!**/*.test.ts",
+        "!**/test-support/**"
+      ]
+    },
+    {
+      "path": "apps/backend/biome-plugins/effect/e-v4-pitfalls.grit",
+      "includes": ["**/backend/src/**"]
+    },
+    {
+      "path": "apps/backend/biome-plugins/effect/f-deterministic-core.grit",
+      "includes": [
+        "**/backend/src/domain/**",
+        "**/backend/src/services/**",
+        "!**/*.test.ts",
+        "!**/test-support/**"
+      ]
+    },
+    {
+      "path": "apps/backend/biome-plugins/effect/g-domain-pure.grit",
+      "includes": [
+        "**/backend/src/domain/**",
+        "!**/*.test.ts",
+        "!**/test-support/**"
+      ]
+    },
+    {
+      "path": "apps/backend/biome-plugins/effect/h-application-service.grit",
+      "includes": [
+        "**/backend/src/services/**",
         "!**/*.test.ts",
         "!**/test-support/**"
       ]
@@ -72,6 +119,9 @@
       "preset": "recommended",
       "suspicious": {
         "noUnknownAtRules": "off"
+      },
+      "complexity": {
+        "useMathMinMax": "off"
       }
     },
     "domains": {
@@ -93,6 +143,42 @@
         "rules": {
           "correctness": {
             "noComponentHookFactories": "off"
+          }
+        }
+      }
+    },
+    {
+      "includes": [
+        "**/*.test.ts",
+        "**/*.test.tsx",
+        "**/*.spec.ts",
+        "**/*.spec.tsx"
+      ],
+      "linter": {
+        "rules": {
+          "suspicious": {
+            "noFocusedTests": "error",
+            "noSkippedTests": "error",
+            "noMisplacedAssertion": "error",
+            "noDuplicateTestHooks": "error",
+            "noExportsInTest": "error",
+            "noConditionalExpect": "error",
+            "noIdenticalTestTitle": "error"
+          }
+        }
+      }
+    },
+    {
+      "includes": [
+        "**/backend/**/*.test.ts",
+        "**/frontend/**/*.test.ts",
+        "**/frontend/**/*.test.tsx",
+        "**/packages/**/*.test.ts"
+      ],
+      "linter": {
+        "rules": {
+          "suspicious": {
+            "useExpect": "error"
           }
         }
       }

@@ -15,8 +15,19 @@ export const a5 = Effect.catchIf(
   () => true,
   () => eff,
 );
+export const a6 = Effect.fail("時間切れ");
+export const a7 = Effect.fail(new Error("上限を超えた"));
+export const a8 = eff.pipe(Effect.catch(() => Effect.succeed(0)));
+export const a9 = Effect.catch(eff, (_error) => Effect.succeed(0));
+export const a10 = eff.pipe(Effect.catchCause(() => Effect.void));
 
 // --- allowed alternatives (発火してはいけない) ---
+export const ok5 = eff.pipe(
+  Effect.catch((error) =>
+    Effect.logWarning(`読めなかった: ${String(error)}`).pipe(Effect.as(0)),
+  ),
+);
+export const ok6 = eff.pipe(Effect.catchTag("TimeoutError", () => eff));
 export const ok1 = Effect.matchEffect(eff, {
   onFailure: () => eff,
   onSuccess: () => eff,

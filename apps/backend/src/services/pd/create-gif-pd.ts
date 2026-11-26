@@ -1,4 +1,4 @@
-import { Effect } from "effect";
+import { DateTime, Effect } from "effect";
 import { AuthContext } from "#/domain/auth/principal";
 import { PdRepository } from "#/domain/pd/repository";
 import { StorageService } from "#/domain/storage/service";
@@ -23,11 +23,12 @@ export const GIFを含むPDを作成する = ({
       image,
       userId,
     });
+    const createdAt = yield* DateTime.nowAsDate;
 
     const created = yield* repo.作成する({
       content,
       userId,
-      createdAt: new Date(),
+      createdAt,
       imageFileName,
       quotedPdId: 引用元,
     });
