@@ -9,16 +9,20 @@ import { UserTimelineHeader } from "./user-timeline-header";
 
 interface UserTimelineViewProps {
   userName: string;
+  backHref?: string;
 }
 
-export function UserTimelineView({ userName }: UserTimelineViewProps) {
+export function UserTimelineView({
+  userName,
+  backHref,
+}: UserTimelineViewProps) {
   const { pds } = usePd({ userName });
   const detail = pds[0]?.userDetail;
 
   return (
     <div className="w-full">
       <header className="flex items-center gap-2 px-3.5 pb-2">
-        <BackLink />
+        <BackLink href={backHref} />
         <h1 className="truncate text-[1.125rem] leading-[1.4] font-bold text-ink">
           {detail?.userFullName || `@${userName}`}
         </h1>

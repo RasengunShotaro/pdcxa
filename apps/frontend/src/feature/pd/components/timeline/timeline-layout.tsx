@@ -9,6 +9,7 @@ import { FeedTabPanel } from "@/components/elements/feed-tab-panel";
 import {
   一覧に出すタブを決める,
   一覧の持ち主を求める,
+  個人の一覧から戻る先のタブを決める,
 } from "@/components/elements/nav-items";
 import { NotificationsView } from "@/feature/notification/components/notifications-view";
 import { notificationsQueryOptions } from "@/feature/notification/hooks/use-notifications";
@@ -20,10 +21,18 @@ import { HomeView } from "./home-view";
 function TimelineList() {
   const pathname = usePathname();
   const [lastTabHref, setLastTabHref] = useState("/");
+  const [lastBackHref, setLastBackHref] = useState("/");
   const tabHref = 一覧に出すタブを決める({ pathname, lastTabHref });
+  const backHref = 個人の一覧から戻る先のタブを決める({
+    pathname,
+    lastHref: lastBackHref,
+  });
 
   if (tabHref !== lastTabHref) {
     setLastTabHref(tabHref);
+  }
+  if (backHref !== lastBackHref) {
+    setLastBackHref(backHref);
   }
 
   const owner = 一覧の持ち主を求める(tabHref);
@@ -33,7 +42,7 @@ function TimelineList() {
       {tabHref === "/notifications" ? <NotificationsView /> : null}
       {tabHref === "/bookmarks" ? <BookmarksView /> : null}
       {tabHref === "/" ? <HomeView /> : null}
-      {owner ? <UserTimelineView userName={owner} /> : null}
+      {owner ? <UserTimelineView backHref={backHref} userName={owner} /> : null}
     </FeedTabPanel>
   );
 }

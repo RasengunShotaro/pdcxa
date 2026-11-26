@@ -119,6 +119,17 @@ export const 一覧に出すタブを決める = ({
   );
 };
 
+interface BackTabInput {
+  pathname: string;
+  lastHref: string;
+}
+
+export const 個人の一覧から戻る先のタブを決める = ({
+  pathname,
+  lastHref,
+}: BackTabInput): string =>
+  TIMELINE_TABS.find((tab) => tab.href === pathname)?.href ?? lastHref;
+
 export const 一覧の持ち主を求める = (listHref: string): string | null =>
   個人のタイムラインか(listHref)
     ? decodeURIComponent(listHref.slice(USER_TIMELINE_PREFIX.length))
