@@ -23,14 +23,14 @@
     "test": "vitest"
   },
   "dependencies": {
-    "@clerk/backend": "^3.31.3",
-    "@clerk/hono": "^0.1.105",
+    "@clerk/backend": "^3.32.0",
+    "@clerk/hono": "^0.1.107",
     "@hono/zod-openapi": "^1.6.3",
     "@neondatabase/serverless": "^1.2.1",
     "dayjs": "^1.11.23",
     "drizzle-orm": "^0.45.4",
     "effect": "^4.1.5",
-    "hono": "^4.13.19",
+    "hono": "^4.13.21",
     "uuidv7": "^1.2.1",
     "wasm-image-optimization": "^2.0.13",
     "zod": "^4.6.7"
